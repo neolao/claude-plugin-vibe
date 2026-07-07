@@ -1,0 +1,10 @@
+{
+  "name": "vibe",
+  "version": "0.1.0",
+  "description": "Automated, TDD-first development workflow for vibe coding: backlog management, feature/fix implementation, multi-agent code review, release, changelog, and documentation — the human stays Product Owner only, all quality assurance is automated.",
+  "author": {
+    "name": "neolao"
+  },
+  "license": "MIT",
+  "keywords": ["vibe-coding", "tdd", "workflow", "code-review", "automation"]
+}

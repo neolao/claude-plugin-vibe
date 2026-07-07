@@ -1,0 +1,14 @@
+{
+  "name": "vibe",
+  "description": "Personal marketplace hosting the vibe coding workflow plugin.",
+  "owner": {
+    "name": "neolao"
+  },
+  "plugins": [
+    {
+      "name": "vibe",
+      "source": "./",
+      "description": "Automated, TDD-first development workflow for vibe coding: backlog management, feature/fix implementation, multi-agent code review, release, changelog, and documentation."
+    }
+  ]
+}
