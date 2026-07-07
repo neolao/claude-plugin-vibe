@@ -5,7 +5,14 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 ## Features
 
 <!-- vibe:begin:features -->
-_No `CHANGELOG.md` yet, so no released features to summarize here. Run `/vibe:changelog` (or `/vibe:release`) to start one, then re-run `/vibe:docs` to populate this section._
+- Automated, TDD-first workflow: implement features and fix bugs with tests written first, in the human's stead
+- A backlog to queue feature ideas before implementation
+- Multi-agent code review covering architecture, complexity, DDD, dependencies, hygiene, naming, performance, robustness, security, and SOLID principles — with a color-coded status line while it runs
+- A test-suite audit and a web-security audit, on demand
+- An internal codebase context map kept in sync automatically, so Claude ramps up fast on any session
+- Changelog maintenance from git history, following Keep a Changelog
+- README and `docs/` kept current automatically, with an index linking every doc file
+- A one-command versioned release: changelog finalized, docs refreshed, version bumped, commit and tag created
 <!-- vibe:end:features -->
 
 ## Installation
