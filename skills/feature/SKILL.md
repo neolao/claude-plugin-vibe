@@ -85,6 +85,25 @@ Compare the requested feature against the existing architecture (`.vibe/modules/
 
 If the requirement is ambiguous on a point that would lead to fundamentally different implementations: ask ONE clarifying question.
 
+### Scope check
+
+Assess whether the feature brief (from `$ARGUMENTS` or the resolved backlog item) describes **one coherent feature** or **multiple independent features** bundled together.
+
+Signs of an oversized scope:
+- The brief lists several distinct capabilities joined by "and"/"et"/commas, each independently shippable and testable on its own (e.g. "add CSV export, a dark mode, and email notifications")
+- Delivering it would touch several unrelated areas of the app with no shared purpose
+- The plan (Step 2) could not be described in a few short sentences without listing unrelated concerns
+
+This is different from one feature with several technical sub-tasks that all serve the same goal — that case is already handled by Step 2b's per-sub-task task list. The check here is about independent, separately valuable capabilities, not implementation steps of a single coherent feature.
+
+**If an oversized scope is detected:**
+1. Derive a short candidate title for each distinct capability found.
+2. Present them to the user: "Cette demande semble couvrir plusieurs fonctionnalités distinctes : [list of candidate titles]. Veux-tu que je découpe en plusieurs tâches séparées plutôt que de tout implémenter d'un coup ?"
+3. **If the user confirms the split:** do not implement anything now. Invoke the `vibe:backlog` skill (Skill tool, `skill: "vibe:backlog"`) with the candidate titles as a batch argument to create the separate backlog items, then report the created items and stop — the user can run `/vibe:feature NNN` on each one individually.
+4. **If the user declines:** proceed normally, treating the full scope as a single feature.
+
+**If no oversized scope is detected:** continue normally.
+
 ## Step 1b — Baseline check
 
 Before planning anything, establish the current state of the project.

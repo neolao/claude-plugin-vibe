@@ -20,7 +20,7 @@ If `$ARGUMENTS` is non-empty:
 - Inspect the structure of `$ARGUMENTS`:
   - **From-review mode**: the argument expresses the intent to create tasks from a previous review — e.g. "from review", "from last review", "depuis le review", "from vibe:review", "from the review findings", or any close variant. Go to **Step 2c — From-review creation**.
   - **Batch mode**: the argument contains multiple distinct items — i.e., a newline-separated list, a bulleted list (`-` or `*` prefixes), or a numbered list (`1.`, `2.`, …). Each line/entry represents a separate backlog item to create. Go to **Step 2b — Batch creation**.
-  - **Single mode**: the argument is a plain prose description (possibly multi-sentence but not a list). Go to **Step 3 — Compute next number**.
+  - **Single mode**: the argument is a plain prose description (possibly multi-sentence but not a list). Go to **Step 2d — Scope check**.
 
 ## Step 2c — From-review creation
 
@@ -34,6 +34,24 @@ Extract findings to convert into backlog items:
 For each extracted finding, compose a short item description (one line) that captures the issue and its location (file, function) if mentioned.
 
 Then treat this list exactly like a batch argument: go to **Step 2b — Batch creation** with this list.
+
+## Step 2d — Scope check (single mode only)
+
+Before computing the next number, assess whether the single-mode description in `$ARGUMENTS` actually bundles **multiple independent, separately shippable features** rather than describing one coherent item.
+
+Signs of an oversized scope:
+- Several distinct capabilities joined by "and"/"et"/commas, each independently valuable and testable on its own (e.g. "add CSV export, a dark mode, and email notifications")
+- The description would need acceptance criteria (Step 5) spanning unrelated areas of the app with no shared purpose
+
+This is different from one feature with several facets that all serve the same goal (e.g. "let users export reports as CSV or PDF" — one coherent capability, two formats).
+
+**If an oversized scope is detected:**
+1. Derive a short candidate title for each distinct capability found.
+2. Present them to the user: "Cette description semble couvrir plusieurs fonctionnalités distinctes : [list of candidate titles]. Veux-tu que je crée un item séparé pour chacune ?"
+3. **If the user confirms the split:** treat the candidate titles exactly like a batch argument — go to **Step 2b — Batch creation** using them as the list of item descriptions.
+4. **If the user declines:** continue with `$ARGUMENTS` as a single item — go to **Step 3 — Compute next number**.
+
+**If no oversized scope is detected:** continue normally — go to **Step 3 — Compute next number**.
 
 ## Step 2b — Batch creation
 
