@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `/vibe:backlog` and `/vibe:feature` now detect when a request bundles several independent capabilities and propose splitting it into separate backlog items instead of one oversized task
+
 ## [0.1.0] - 2026-07-07
 
 ### Added
