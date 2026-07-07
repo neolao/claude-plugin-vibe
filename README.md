@@ -2,6 +2,15 @@
 
 A Claude Code plugin for **vibe coding**: the human stays Product Owner only — describing requirements and evaluating outcomes — while Claude writes, tests, reviews, and ships the code. All quality assurance is automated (TDD, lint, multi-agent review); nothing is meant to be tested manually.
 
+## Installation
+
+Add the marketplace, then install the plugin, from within Claude Code:
+
+```
+/plugin marketplace add neolao/claude-plugin-vibe
+/plugin install vibe
+```
+
 ## Skills (commands)
 
 | Command | Purpose |
@@ -36,3 +45,7 @@ The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-sta
 3. `/vibe:feature 001` (or `/vibe:fix "bug description"`) to implement, TDD-first
 4. `/vibe:review` periodically to catch quality issues
 5. `/vibe:release patch|minor|major` to ship a version
+
+## License
+
+[MIT](LICENSE)
