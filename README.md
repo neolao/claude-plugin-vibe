@@ -25,6 +25,10 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 
 Each focuses on one dimension only (see `/vibe:init`'s "Review agents" table for activation rules per project).
 
+## Subagent status line
+
+The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-statusline.sh`), applied automatically once the plugin is enabled. It replaces the default `name · description · token count` row in the agent panel with a compact, color-coded line (status icon, bold name, description, token count) — most visible during `/vibe:review`, which runs up to 12 review agents/skills in parallel.
+
 ## Typical flow
 
 1. `/vibe:init` once, to set up `CLAUDE.md` and `.vibe/`
