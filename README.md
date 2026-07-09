@@ -6,7 +6,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 
 <!-- vibe:begin:features -->
 - Automated, TDD-first workflow: implement features and fix bugs with tests written first, in the human's stead
-- Every feature or fix is proven to actually work after implementation — exercised for real, nominal path plus an edge case or error path, instead of just trusting green tests
+- Every feature or fix is proven to actually work after implementation — exercised for real, nominal path plus an edge case or error path, instead of just trusting green tests; if the app itself won't launch (unusual project setup), it self-heals by recording a working launch recipe before giving up
 - A backlog to queue feature ideas before implementation, with automatic detection when a request bundles several independent capabilities so it can be split into separate items
 - Multi-agent code review covering architecture, complexity, DDD, dependencies, hygiene, naming, performance, robustness, security, SOLID principles, and tests (including real execution of the suite) — with a color-coded status line while it runs
 - A web-security audit, on demand

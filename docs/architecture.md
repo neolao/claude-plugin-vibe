@@ -8,7 +8,7 @@ An overview of how this plugin is put together, for anyone extending it or just 
 
 Each `/vibe:*` command is a self-contained instruction set that Claude Code reads when the command is invoked — no external service, no build step. Together they cover the full workflow: setting up project conventions, managing a backlog, implementing features and fixes with TDD, running a multi-agent review, keeping an internal codebase map in sync, updating the changelog, generating documentation, and cutting releases.
 
-Implementing a feature or fixing a bug doesn't stop at green tests: both commands hand off to Claude Code's native `verify` skill to exercise the change for real — nominal path plus an edge case or error path — before considering the work done.
+Implementing a feature or fixing a bug doesn't stop at green tests: both commands hand off to Claude Code's native `verify` skill to exercise the change for real — nominal path plus an edge case or error path — before considering the work done. If `verify` can't even launch the app because of how the project is set up (not because of the change itself), they fall back to `run-skill-generator` once to record a working launch recipe before trying again.
 
 ## Review agents
 
