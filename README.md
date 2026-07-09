@@ -27,6 +27,30 @@ Add the marketplace, then install the plugin, from within Claude Code:
 ```
 <!-- vibe:end:install -->
 
+## Usage
+
+<!-- vibe:begin:usage -->
+Each command is invoked as a Claude Code slash command, with natural-language arguments where relevant:
+
+```
+/vibe:init
+/vibe:backlog "Add a dark mode toggle to the settings page"
+/vibe:feature "Add a dark mode toggle to the settings page"
+/vibe:fix "Login form submits twice when pressing Enter"
+/vibe:review
+/vibe:review src/auth/
+/vibe:sync
+/vibe:changelog
+/vibe:changelog 1.2.0
+/vibe:docs
+/vibe:docs --full
+/vibe:release patch
+/vibe:release 1.2.0
+```
+
+`/vibe:backlog` with no argument lists pending items instead of adding one. `/vibe:review` with no path reviews the full codebase. `/vibe:changelog` and `/vibe:release` accept an explicit version (or `major`/`minor`/`patch` for `/vibe:release`) — omit it to keep entries under `[Unreleased]` or let `/vibe:release` infer the bump from them.
+<!-- vibe:end:usage -->
+
 ## Skills (commands)
 
 | Command | Purpose |
