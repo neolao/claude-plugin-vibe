@@ -8,13 +8,13 @@ An overview of how this plugin is put together, for anyone extending it or just 
 
 Each `/vibe:*` command is a self-contained instruction set that Claude Code reads when the command is invoked — no external service, no build step. Together they cover the full workflow: setting up project conventions, managing a backlog, implementing features and fixes with TDD, running a multi-agent review, keeping an internal codebase map in sync, updating the changelog, generating documentation, and cutting releases.
 
-Implementing a feature or fixing a bug doesn't stop at green tests: both commands hand off to Claude Code's native `verify` skill to exercise the change for real — nominal path plus an edge case or error path — before considering the work done. If `verify` can't even launch the app because of how the project is set up (not because of the change itself), they fall back to `run-skill-generator` once to record a working launch recipe before trying again.
+Implementing a feature or fixing a bug doesn't stop at green tests: both commands hand off to Claude Code's native `verify` skill to exercise the change for real — nominal path plus an edge case or error path — before considering the work done. If `verify` can't even launch the app because of how the project is set up (not because of the change itself), they fall back to `run-skill-generator` once to record a working launch recipe before trying again. Both commands also self-check every test they write against a shared definition of a tautological test — one that can't actually fail no matter what — so a green suite means the behavior was really verified, not just exercised.
 
 ## Review agents
 
 The review command fans out to a set of specialized agents, each auditing a single quality dimension — architecture, complexity, security, naming, dependencies, performance, tests, and more. They run in parallel and report independently, so a review covers many angles at once without slowing down.
 
-Most of these agents are strictly read-only. The exception is the test-review agent: instead of only reading test code, it actually runs the project's real test suite — including any isolated end-to-end or integration commands — so its findings are backed by real pass/fail evidence rather than inference alone.
+Most of these agents are strictly read-only. The exception is the test-review agent: instead of only reading test code, it actually runs the project's real test suite — including any isolated end-to-end or integration commands — so its findings are backed by real pass/fail evidence rather than inference alone. It applies the same tautological-test definition used when tests are written, and always flags a match as a high-severity finding rather than a minor note.
 
 ## Status line
 

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-07-10
+
 ### Fixed
 
 - `/vibe:feature` and `/vibe:fix` now actively check that tests written during implementation can't just pass no matter what (tautological tests), and `/vibe:review`'s test reviewer now hunts for and flags these tests more aggressively, always at high severity
@@ -56,7 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/neolao/claude-plugin-vibe/compare/v0.2.0...v1.0.0
 [0.2.0]: https://github.com/neolao/claude-plugin-vibe/compare/v0.1.0...v0.2.0
