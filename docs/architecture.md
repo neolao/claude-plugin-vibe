@@ -12,7 +12,9 @@ Implementing a feature or fixing a bug doesn't stop at green tests: both command
 
 ## Review agents
 
-The review command fans out to a set of specialized agents, each auditing a single quality dimension — architecture, complexity, security, naming, dependencies, performance, and more. They run in parallel and report independently, so a review covers many angles at once without slowing down.
+The review command fans out to a set of specialized agents, each auditing a single quality dimension — architecture, complexity, security, naming, dependencies, performance, tests, and more. They run in parallel and report independently, so a review covers many angles at once without slowing down.
+
+Most of these agents are strictly read-only. The exception is the test-review agent: instead of only reading test code, it actually runs the project's real test suite — including any isolated end-to-end or integration commands — so its findings are backed by real pass/fail evidence rather than inference alone.
 
 ## Status line
 

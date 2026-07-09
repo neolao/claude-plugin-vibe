@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-07-09
+
 ### Added
 
 - `agents/review-tests.md` — test-suite review is now a first-class `/vibe:review` subagent that actually executes the project's test suite (including isolated e2e/integration runs) to ground findings in real pass/fail evidence, not just static reading
@@ -44,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/neolao/claude-plugin-vibe/compare/v0.2.0...v1.0.0
 [0.2.0]: https://github.com/neolao/claude-plugin-vibe/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/neolao/claude-plugin-vibe/releases/tag/v0.1.0
