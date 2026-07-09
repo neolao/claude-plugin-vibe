@@ -51,7 +51,7 @@ Exclude: `node_modules/`, `vendor/`, `.venv/`, `dist/`, `build/`, `out/`, `targe
 
 Mark ALL `Run review-*` tasks `in_progress`, then launch every active agent **in parallel** — a single message containing one Agent/Skill call per active agent. They are all read-only, so there is no conflict; running them sequentially only wastes time.
 
-- `Run vibe:review-tests` — test relevance and quality: invoke the `vibe:review-tests` skill using the Skill tool (`skill: "vibe:review-tests"`). The skill runs as a forked subagent (Explore agent). Core principle: **tests must verify observable behaviour, not implementation details** — a test that breaks on refactoring without any behaviour change is a false test. Collect all findings (coverage gaps, relevance issues, quality issues).
+- `Run vibe:review-tests` — test relevance, quality, and real execution: invoke the `vibe:review-tests` agent via the Agent tool (`subagent_type: "vibe:review-tests"`). Unlike the other dimension agents, it actually executes the project's test suite (including isolated e2e/integration runs) to ground findings in real pass/fail evidence, not just static reading. Core principle: **tests must verify observable behaviour, not implementation details** — a test that breaks on refactoring without any behaviour change is a false test. Collect all findings (coverage gaps, relevance issues, quality issues).
 - `Run vibe:review-naming` — naming issues
 - `Run vibe:review-complexity` — complexity hotspots
 - `Run vibe:review-security` — code-level security: committed secrets, injections, dangerous primitives, missing access control, crypto misuse

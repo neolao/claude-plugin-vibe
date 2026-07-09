@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `agents/review-tests.md` — test-suite review is now a first-class `/vibe:review` subagent that actually executes the project's test suite (including isolated e2e/integration runs) to ground findings in real pass/fail evidence, not just static reading
+
+### Removed
+
+- `/vibe:review-tests` standalone command — folded into `/vibe:review` (see Added)
+
 ## [0.2.0] - 2026-07-09
 
 ### Added

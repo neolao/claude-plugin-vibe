@@ -89,7 +89,7 @@ Agents actifs pour `/vibe:review` sur ce projet :
 | `vibe:review-security` | ✅ | secrets, injections dans le script et les manifestes JSON |
 | `vibe:review-robustness` | ✅ | gestion d'erreurs du script shell |
 | `vibe:review-hygiene` | ✅ | fichiers skill/agent obsolètes, contenu dupliqué entre définitions |
-| `vibe:review-tests` | ❌ | pas de suite de tests dans ce dépôt, par choix délibéré — rien à auditer |
+| `vibe:review-tests` | ❌ | pas de suite de tests dans ce dépôt, par choix délibéré — rien à exécuter |
 | `vibe:review-dependencies` | ❌ | aucun manifeste de dépendances dans ce dépôt |
 | `vibe:review-solid` | ❌ | pas de code orienté objet/modulaire |
 | `vibe:review-ddd` | ❌ | pas de couche domaine explicite |

@@ -8,8 +8,8 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - Automated, TDD-first workflow: implement features and fix bugs with tests written first, in the human's stead
 - Every feature or fix is proven to actually work after implementation — exercised for real, nominal path plus an edge case or error path, instead of just trusting green tests
 - A backlog to queue feature ideas before implementation, with automatic detection when a request bundles several independent capabilities so it can be split into separate items
-- Multi-agent code review covering architecture, complexity, DDD, dependencies, hygiene, naming, performance, robustness, security, and SOLID principles — with a color-coded status line while it runs
-- A test-suite audit and a web-security audit, on demand
+- Multi-agent code review covering architecture, complexity, DDD, dependencies, hygiene, naming, performance, robustness, security, SOLID principles, and tests (including real execution of the suite) — with a color-coded status line while it runs
+- A web-security audit, on demand
 - An internal codebase context map kept in sync automatically, so Claude ramps up fast on any session
 - Changelog maintenance from git history, following Keep a Changelog
 - README and `docs/` kept current automatically, with an index linking every doc file
@@ -45,8 +45,8 @@ Add the marketplace, then install the plugin, from within Claude Code:
 
 `/vibe:review` orchestrates these specialized agents/skills in parallel:
 
-- **Agents**: `review-architecture`, `review-complexity`, `review-ddd`, `review-dependencies`, `review-hygiene`, `review-naming`, `review-performance`, `review-robustness`, `review-security`, `review-solid`
-- **Skills**: `review-tests`, `review-web-security`
+- **Agents**: `review-architecture`, `review-complexity`, `review-ddd`, `review-dependencies`, `review-hygiene`, `review-naming`, `review-performance`, `review-robustness`, `review-security`, `review-solid`, `review-tests`
+- **Skills**: `review-web-security`
 
 Each focuses on one dimension only (see `/vibe:init`'s "Review agents" table for activation rules per project).
 
