@@ -132,7 +132,9 @@ Tests are green — that is not proof the bug is actually gone. Adopt a skeptica
 
 **Self-correction loop:**
 - If the bug still manifests or `verify` reports a new error: diagnose, fix the code (not the stub, unless the stub was wrong), re-invoke `verify`.
-- Repeat up to **3 attempts** total. After 3 failures: stop and escalate to the user with `verify`'s exact findings and what was tried.
+- Repeat up to **3 attempts** total.
+- **If all 3 failures are about launching the app itself** (build errors, crashes on start, `verify` unable to get the app running at all) rather than about the bug's actual behavior: invoke the `run-skill-generator` skill (Skill tool, `skill: "run-skill-generator"`) to establish a working launch recipe for the project, then re-invoke `verify` once more.
+- If it still fails after that: stop and escalate to the user with `verify`'s exact findings and what was tried.
 
 Do not mark the task `completed` until `verify` confirms the scenario behaves correctly.
 

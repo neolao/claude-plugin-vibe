@@ -12,7 +12,7 @@
 - Every review agent lives in its own `agents/<name>.md` with `name` + `description`, one quality dimension per agent
 - `README.md` is the single hand-written entry point; `/vibe:docs` only rewrites content between `vibe:begin:*`/`vibe:end:*` markers
 - No language runtime, package manifest, test framework, or linter in this repo — quality assurance is manual review (see `CLAUDE.md`)
-- `/vibe:feature` and `/vibe:fix` delegate their post-implementation runtime verification to Claude Code's native `verify` skill instead of reimplementing "how to run this project" logic
+- `/vibe:feature` and `/vibe:fix` delegate their post-implementation runtime verification to Claude Code's native `verify` skill instead of reimplementing "how to run this project" logic; if `verify` fails 3 times purely on launch mechanics (not the behavior under test), they fall back to `run-skill-generator` once before escalating to the user
 
 ## Other context files
 - [`models.md`](models.md) — JSON/frontmatter shapes used across the plugin

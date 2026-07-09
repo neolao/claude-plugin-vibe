@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `/vibe:feature` and `/vibe:fix` now fall back to the native `run-skill-generator` skill when `verify` fails 3 times purely on launch mechanics (build errors, crash on start) rather than on the behavior under test, before escalating to the user
+
 ## [1.0.0] - 2026-07-09
 
 ### Added

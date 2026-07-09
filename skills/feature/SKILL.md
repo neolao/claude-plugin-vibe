@@ -250,7 +250,9 @@ Tests are green — that is not proof the feature works. Adopt a skeptical postu
 
 **Self-correction loop:**
 - If `verify` reports the behavior is wrong or still fails: diagnose, fix the code (not the stub, unless the stub was wrong), re-invoke `verify`.
-- Repeat up to **3 attempts** total. After 3 failures: stop and escalate to the user with `verify`'s exact findings and what was tried.
+- Repeat up to **3 attempts** total.
+- **If all 3 failures are about launching the app itself** (build errors, crashes on start, `verify` unable to get the app running at all) rather than about the behavior under test: invoke the `run-skill-generator` skill (Skill tool, `skill: "run-skill-generator"`) to establish a working launch recipe for the project, then re-invoke `verify` once more.
+- If it still fails after that: stop and escalate to the user with `verify`'s exact findings and what was tried.
 
 Do not mark the task `completed` until `verify` confirms correct behavior.
 
