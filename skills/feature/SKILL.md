@@ -215,6 +215,16 @@ Test names must describe behavior, not implementation:
 - ✅ `"returns 404 when user does not exist"`
 - ❌ `"test getUserById error case"`
 
+### Avoid tautological tests
+
+A test that cannot fail for a wrong implementation is worse than no test — it gives false confidence while masking real bugs behind a green suite. Before considering a test valid, check it does not fall into one of these patterns:
+- **Self-referential assertion**: the expected value is derived using the same computation as the code under test (e.g. asserting `result === input.map(x => x * 2)` when the implementation itself is `input.map(x => x * 2)` — a bug in the mapping ships undetected). Pin an exact, independently-derived expected value instead.
+- **Trivially true assertion**: `expect(true).toBe(true)`, asserting a mock returns exactly what it was just configured to return, asserting an object equals itself.
+- **Mock over-configuration**: mocking so much of the dependency chain that the assertion only checks the mock was called, never that real logic transformed the input correctly.
+- **No-op coverage**: the test exercises the code path but asserts something unrelated to the behavior it claims to cover (e.g. asserting the function didn't throw, when the actual risk is a wrong output value).
+
+Confirming the test fails before implementation (point 3 above) is necessary but **not sufficient** — a test can fail only because the function doesn't exist yet, and still be tautological once implemented. Self-check for each test: **could a subtly wrong implementation — one that returns a plausible but incorrect value — still make this test pass?** If yes, rewrite the assertion before moving on.
+
 Mark the task `completed`, then mark the corresponding "Implement" task `in_progress`.
 
 ## Step 4 — Implement (green)

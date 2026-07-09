@@ -39,7 +39,11 @@ Detect the stack from the manifest, then run the corresponding test command(s). 
 - Distinguish intentionally untested code (pure glue/wiring, trivial passthrough) from genuine gaps
 
 ### Relevance — do tests verify meaningful behaviour?
-- **Tautological tests**: assertions that can never fail (e.g. `expect(true).toBe(true)`, a mock asserted against itself)
+- **Tautological tests**: a test that cannot fail for a wrong implementation. For each test, actively apply this check — could a subtly wrong implementation (one that returns a plausible but incorrect value) still make this test pass? If yes, it's tautological regardless of whether it "looks" like a real test. Concrete patterns to scan for:
+  - *Self-referential assertion*: the expected value is computed with the same logic as the code under test (e.g. asserting `result === input.map(x => x * 2)` against an implementation that itself is `input.map(x => x * 2)`) — a bug in the shared logic ships undetected on both sides.
+  - *Trivially true assertion*: `expect(true).toBe(true)`, an object asserted equal to itself, a mock asserted to return exactly what it was just configured to return.
+  - *Mock over-configuration*: so much of the dependency chain is mocked that the assertion only checks the mock was called, never that real logic transformed the input correctly.
+  - *No-op coverage*: the test exercises the code path but asserts something unrelated to the behavior it claims to cover (e.g. "didn't throw" when the actual risk is a wrong output value).
 - **Testing implementation, not behaviour**: tests that would break on a pure refactor even though observable behaviour is unchanged
 - **Over-mocking**: so many mocks that the real production code path is bypassed — cross-check against Step 1: did the full run actually exercise real logic, or did it complete suspiciously fast for what it claims to cover?
 - **Under-asserting**: exercises code but doesn't assert anything meaningful about the result
@@ -62,6 +66,8 @@ For the most critical domain logic (from `CLAUDE.md`/`.vibe/index.md`): would a 
 ## Severity scale
 
 `critical` — a real bug in core logic would ship undetected; `high` — significant gap or misleading test, reduces confidence materially; `medium` — quality issue or minor gap; `low` — style/clarity issue, no real safety impact.
+
+**Tautological tests are never `low` or `medium`.** They actively mask bugs behind a false-positive green suite — rate `critical` if the untested logic is core/domain behaviour, `high` otherwise.
 
 ## Output format
 

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `/vibe:feature` and `/vibe:fix` now actively check that tests written during implementation can't just pass no matter what (tautological tests), and `/vibe:review`'s test reviewer now hunts for and flags these tests more aggressively, always at high severity
+
 ## [1.1.0] - 2026-07-09
 
 ### Changed

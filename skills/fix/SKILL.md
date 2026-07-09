@@ -97,6 +97,16 @@ Test name must describe the bug scenario:
 - ✅ `"does not crash when input list is empty"`
 - ❌ `"bug fix test"`
 
+### Avoid tautological tests
+
+A test that cannot fail for a wrong fix is worse than no test — it gives false confidence while masking the bug behind a green suite. Before considering the test valid, check it does not fall into one of these patterns:
+- **Self-referential assertion**: the expected value is derived using the same computation as the code under test, so a wrong fix would still satisfy it. Pin an exact, independently-derived expected value instead.
+- **Trivially true assertion**: `expect(true).toBe(true)`, asserting a mock returns exactly what it was just configured to return, asserting an object equals itself.
+- **Mock over-configuration**: mocking so much of the dependency chain that the assertion only checks the mock was called, never that the real logic now produces the correct result.
+- **No-op coverage**: the test exercises the buggy code path but asserts something unrelated to the actual bug (e.g. asserting the function didn't throw, when the bug was a wrong output value).
+
+Confirming the test fails before the fix (point 2 above) is necessary but **not sufficient** — a test can fail for the right reason today and still be tautological once "fixed" with the wrong change. Self-check: **could a plausible-but-wrong fix still make this test pass?** If yes, rewrite the assertion before moving on.
+
 Mark the task `completed`, then mark the `[Fix] Implement` task `in_progress`.
 
 ## Step 4 — Fix the bug (green)
