@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-09
+
 ### Added
 
 - `/vibe:backlog` and `/vibe:feature` now detect when a request bundles several independent capabilities and propose splitting it into separate backlog items instead of one oversized task
@@ -34,5 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/neolao/claude-plugin-vibe/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/neolao/claude-plugin-vibe/releases/tag/v0.1.0
