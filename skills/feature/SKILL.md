@@ -233,36 +233,26 @@ If tests fail:
 
 Mark the task `completed`, then mark the corresponding "Runtime smoke" task `in_progress`.
 
-## Step 4b — Runtime smoke test
+## Step 4b — Runtime verification (assume it's broken)
 
-Tests are green — now prove the feature actually works at runtime. Do not assume tests = working.
+Tests are green — that is not proof the feature works. Adopt a skeptical posture: assume it is broken until you have personally observed it behave correctly, for real, the way a suspicious QA engineer would. Do not replay the happy path once and declare victory.
 
-### Determine how to run the feature
+**Invoke the `verify` skill** (Skill tool, `skill: "verify"`) to exercise the change end-to-end and observe its real behavior. Give it as context:
+- the runtime verification scenario from the Step 2 plan
+- the acceptance criteria
+- at least one edge case or the error path to drive for real, in addition to the nominal path — not just asserted in a test, actually triggered and observed
 
-From (in order of priority):
-1. The "Runtime verification" plan from Step 2
-2. `CLAUDE.md` — look for run/dev/start scripts
-3. The project manifest (package.json scripts, Makefile targets, Cargo.toml, pyproject.toml, etc.)
-4. Project files: `docker-compose.yml`, `Dockerfile`, a `main.*` entry point, a CLI binary
+### Interpret the result
 
-Derive realistic inputs from the acceptance criteria.
+**If `verify` confirms the behavior is correct:** mark the "Runtime smoke" task `completed`, then mark the "Refactor + lint" task `in_progress`.
 
-### Execute
+**If `verify` reports it could not run due to missing configuration** (missing env var, config file, secret): identify exactly what is missing from its output, create a minimal stub — a `.env.test` with placeholder values, or a stub config file — sufficient to exercise the happy path, and re-invoke `verify`.
 
-Run the feature with realistic inputs.
+**Self-correction loop:**
+- If `verify` reports the behavior is wrong or still fails: diagnose, fix the code (not the stub, unless the stub was wrong), re-invoke `verify`.
+- Repeat up to **3 attempts** total. After 3 failures: stop and escalate to the user with `verify`'s exact findings and what was tried.
 
-**If it succeeds:** verify that the output or behavior matches what the acceptance criteria describe. Mark the "Runtime smoke" task `completed`, then mark the "Refactor + lint" task `in_progress`.
-
-**If it fails due to missing configuration** (missing env var, missing config file, missing secret):
-1. Identify exactly what is missing from the error output.
-2. Create a minimal stub — a `.env.test` with placeholder values, or a stub config file — sufficient to allow the feature to start and exercise the happy path.
-3. Re-run with the stub in place.
-
-**Self-correction loop (runtime):**
-- If it still fails: diagnose the error, fix the code (not the stub, unless the stub was wrong), re-run.
-- Repeat up to **3 attempts** total. After 3 failures: stop and escalate to the user with the exact command run, the exact error output, and what was tried.
-
-Do not mark the task `completed` until runtime execution produces the expected behavior.
+Do not mark the task `completed` until `verify` confirms correct behavior.
 
 ## Step 5 — Refactor (clean)
 

@@ -115,34 +115,26 @@ If tests fail after the fix:
 
 Mark the task `completed`, then mark the `[Fix] Runtime smoke` task `in_progress`.
 
-## Step 4b — Runtime smoke test
+## Step 4b — Runtime verification (assume it's broken)
 
-Tests are green — now prove the bug is actually gone at runtime. Do not assume tests = fixed.
+Tests are green — that is not proof the bug is actually gone. Adopt a skeptical posture: assume it is still broken until you have personally observed the correct behavior, for real, the way a suspicious QA engineer would. Do not replay the exact reported scenario once and declare victory.
 
-### Determine how to run the scenario
+**Invoke the `verify` skill** (Skill tool, `skill: "verify"`) to exercise the change end-to-end and observe its real behavior. Give it as context:
+- the verification scenario from the Step 2 plan
+- the bug's expected (correct) behavior from Step 1
+- at least one edge case or nearby scenario to drive for real, in addition to the exact scenario that triggered the bug — not just asserted in a test, actually triggered and observed
 
-From (in order of priority):
-1. The verification scenario from the plan in Step 2
-2. `CLAUDE.md` — look for run/dev/start scripts
-3. The project manifest (package.json scripts, Makefile targets, Cargo.toml, pyproject.toml, etc.)
-4. Project files: `docker-compose.yml`, `Dockerfile`, a `main.*` entry point, a CLI binary
+### Interpret the result
 
-Replay the exact scenario that triggered the bug, with realistic inputs.
+**If `verify` confirms the behavior matches the expected (correct) behavior:** mark the `[Fix] Runtime smoke` task `completed`, then mark the `[Fix] Refactor + lint` task `in_progress`.
 
-### Execute
+**If `verify` reports it could not run due to missing configuration** (missing env var, config file, secret): identify exactly what is missing from its output, create a minimal stub — a `.env.test` with placeholder values, or a stub config file — sufficient to allow the scenario to run, and re-invoke `verify`.
 
-**If it succeeds:** verify the behavior matches the expected (correct) behavior from Step 1. Mark the `[Fix] Runtime smoke` task `completed`, then mark the `[Fix] Refactor + lint` task `in_progress`.
+**Self-correction loop:**
+- If the bug still manifests or `verify` reports a new error: diagnose, fix the code (not the stub, unless the stub was wrong), re-invoke `verify`.
+- Repeat up to **3 attempts** total. After 3 failures: stop and escalate to the user with `verify`'s exact findings and what was tried.
 
-**If it fails due to missing configuration** (missing env var, missing config file, missing secret):
-1. Identify exactly what is missing from the error output.
-2. Create a minimal stub — a `.env.test` with placeholder values, or a stub config file — sufficient to allow the scenario to run.
-3. Re-run with the stub in place.
-
-**Self-correction loop (runtime):**
-- If the bug still manifests or a new error appears: diagnose, fix the code (not the stub, unless the stub was wrong), re-run.
-- Repeat up to **3 attempts** total. After 3 failures: stop and escalate to the user with the exact command run, the exact error output, and what was tried.
-
-Do not mark the task `completed` until the runtime scenario behaves correctly.
+Do not mark the task `completed` until `verify` confirms the scenario behaves correctly.
 
 ## Step 5 — Clean up
 

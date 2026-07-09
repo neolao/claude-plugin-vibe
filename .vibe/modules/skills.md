@@ -5,8 +5,8 @@
 **Exports:**
 - `/vibe:init` (`skills/init/SKILL.md`) — initialize/regenerate `CLAUDE.md` for vibe coding
 - `/vibe:backlog` (`skills/backlog/SKILL.md`) — list or add feature backlog items
-- `/vibe:feature` (`skills/feature/SKILL.md`) — implement a new feature via TDD, update CHANGELOG
-- `/vibe:fix` (`skills/fix/SKILL.md`) — fix a bug via TDD (reproduce first), update CHANGELOG
+- `/vibe:feature` (`skills/feature/SKILL.md`) — implement a new feature via TDD, verify it for real via the native `verify` skill (assume-it's-broken posture), update CHANGELOG
+- `/vibe:fix` (`skills/fix/SKILL.md`) — fix a bug via TDD (reproduce first), verify it for real via the native `verify` skill (assume-it's-broken posture), update CHANGELOG
 - `/vibe:review` (`skills/review/SKILL.md`) — orchestrate multi-agent code quality review
 - `/vibe:review-tests` (`skills/review-tests/SKILL.md`) — audit test suite coverage/quality (fork context)
 - `/vibe:review-web-security` (`skills/review-web-security/SKILL.md`) — audit web app for exploitable vulnerabilities (fork context)
