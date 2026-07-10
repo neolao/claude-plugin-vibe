@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-07-10
+
 ### Fixed
 
 - `/vibe:feature` and `/vibe:fix` now always commit modified files before ending their turn, no matter how the conversation unfolds (plan rejected, clarifying question, escalation), instead of only committing at the very end of a fully successful run — this prevents uncommitted work from being silently lost across `/clear` between sessions
@@ -62,7 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/neolao/claude-plugin-vibe/compare/v0.2.0...v1.0.0
