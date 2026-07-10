@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `/vibe:feature` and `/vibe:fix` now always commit modified files before ending their turn, no matter how the conversation unfolds (plan rejected, clarifying question, escalation), instead of only committing at the very end of a fully successful run — this prevents uncommitted work from being silently lost across `/clear` between sessions
+
 ## [1.1.1] - 2026-07-10
 
 ### Fixed
