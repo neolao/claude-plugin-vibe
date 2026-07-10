@@ -14,7 +14,7 @@
 - No language runtime, package manifest, test framework, or linter in this repo — quality assurance is manual review (see `CLAUDE.md`)
 - `/vibe:feature` and `/vibe:fix` delegate their post-implementation runtime verification to Claude Code's native `verify` skill instead of reimplementing "how to run this project" logic; if `verify` fails 3 times purely on launch mechanics (not the behavior under test), they fall back to `run-skill-generator` once before escalating to the user
 - `/vibe:feature`, `/vibe:fix`, and `review-tests` share one definition of [tautological test](glossary.md) — same four patterns, checked both when a test is written and again at review time
-- `/vibe:feature` and `/vibe:fix` always commit whatever was produced before ending a turn, regardless of where the flow stops (full completion, plan rejected, clarifying question, escalation) — a completed unit of work gets a normal `feat:`/`fix:`/`chore:` commit, unfinished work gets a `wip:` commit — so nothing is left uncommitted across a `/clear`
+- `/vibe:feature` and `/vibe:fix` never end a turn with uncommitted files, even on early exit (`feat:`/`fix:`/`chore:` for complete work, `wip:` otherwise)
 
 ## Other context files
 - [`models.md`](models.md) — JSON/frontmatter shapes used across the plugin

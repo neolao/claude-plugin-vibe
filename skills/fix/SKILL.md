@@ -8,17 +8,9 @@ argument-hint: <bug description in natural language>
 
 Fix the bug described in `$ARGUMENTS` following the vibe coding workflow: the user is the Product Owner only and never tests code manually.
 
-## Standing rule — always commit before ending your turn
+## Standing rule — never end a turn with uncommitted files
 
-This rule overrides normal step sequencing and applies no matter how this skill ends: full completion, a plan rejected by the user, a clarifying question asked, an escalation after a failed `verify` loop, or any other stop point.
-
-Before yielding control back to the user, check `git status --porcelain`. If any file created or modified during this run is not committed:
-- **If the normal flow reached its own Step 8 (Commit):** that step already handles it — nothing more to do.
-- **Otherwise:** commit everything as-is right now, even if the work is incomplete:
-  - If a coherent, complete unit of work exists (a reproducing test plus its fix), commit it with a normal `fix:` message for that slice.
-  - If the work is genuinely unfinished or exploratory (e.g. a failing reproduction test with no fix yet, a half-written fix, a change made just before an escalation), commit it anyway with `wip: [short description]` so nothing is lost, and say so explicitly in your final message to the user.
-
-Never end a turn in this repository with modified or created files left uncommitted.
+If this skill stops before its own Step 8 — plan rejected, clarifying question, escalation, or any other early exit — and files were created or modified, commit them before yielding control: `fix:` for a complete, coherent unit of work (a reproducing test plus its fix); otherwise `wip: [short description]`, flagged in your final message.
 
 ## Step 1 — Understand the bug
 

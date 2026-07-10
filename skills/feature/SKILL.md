@@ -8,17 +8,9 @@ argument-hint: <feature description in natural language>
 
 Implement the feature described in `$ARGUMENTS` following the vibe coding workflow: the user is the Product Owner only and never tests code manually.
 
-## Standing rule — always commit before ending your turn
+## Standing rule — never end a turn with uncommitted files
 
-This rule overrides normal step sequencing and applies no matter how this skill ends: full completion, a plan rejected by the user, a clarifying question asked, a blocking dependency, a duplicate/scope challenge, an escalation after a failed `verify` loop, or any other stop point.
-
-Before yielding control back to the user, check `git status --porcelain`. If any file created or modified during this run is not committed:
-- **If the normal flow reached its own Step 8 (Commit):** that step already handles it — nothing more to do.
-- **Otherwise:** commit everything as-is right now, even if the work is incomplete:
-  - If a coherent, complete unit of work exists (tests + implementation for a finished sub-task, or a fully-written backlog item/ADR), commit it with a conventional message matching what it actually is: `feat:` for a working code slice, `chore:` for supporting artifacts like backlog items or ADRs.
-  - If the work is genuinely unfinished or exploratory (e.g. a failing test with no fix yet, a half-written implementation, a change made just before an escalation), commit it anyway with `wip: [short description]` so nothing is lost, and say so explicitly in your final message to the user.
-
-Never end a turn in this repository with modified or created files left uncommitted.
+If this skill stops before its own Step 8 — plan rejected, clarifying question, escalation, or any other early exit — and files were created or modified, commit them before yielding control: `feat:`/`chore:` for a complete, coherent unit of work; otherwise `wip: [short description]`, flagged in your final message.
 
 ## Step 1 — Understand the requirement
 
