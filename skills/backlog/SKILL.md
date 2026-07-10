@@ -12,6 +12,10 @@ Manage the feature backlog stored in `.vibe/backlog/`. Each item is a Markdown f
 - **Single-line argument** → create one new backlog item from the description
 - **Multi-item argument** → create multiple backlog items (one per detected item)
 
+## Standing rule — never end a turn with uncommitted files
+
+If this skill creates one or more backlog files and stops before reaching its own reporting step (Step 7 or Step 7b) — e.g. an error interrupts batch creation partway through — commit the files that were successfully created before yielding control, flagged as `wip: [short description]` in your final message.
+
 ## Step 1 — Detect mode
 
 If `$ARGUMENTS` is empty or blank: go to **Step 2 — List**.
@@ -68,9 +72,9 @@ Before creating any file, display a preview table of all items that will be crea
 | 002 | Second derived title |
 | … | … |
 
-Then create each item in order by applying **Steps 3 → 6** for each entry, using the description of that entry as the argument. The number assigned at Step 3 must be re-computed after each file is written (so each new file gets the correct next number even if files already existed).
+Then create each item in order by applying **Steps 3 → 6** for each entry, using the description of that entry as the argument. The number assigned at Step 3 must be re-computed after each file is written (so each new file gets the correct next number even if files already existed). Do not commit per item — commit once for the whole batch (see **Step 6b — Commit**).
 
-After all items are created, go to **Step 7b — Batch report**.
+After all items are created, apply **Step 6b — Commit** (batch variant) to commit all of them together, then go to **Step 7b — Batch report**.
 
 ## Step 2 — List backlog items
 
@@ -150,12 +154,22 @@ depends_on: [003, 005]   # include only if dependencies were found in Step 5b; o
 [Relevant constraints, technical context, or open questions inferred from $ARGUMENTS. Write "None." if nothing to add.]
 ```
 
+## Step 6b — Commit
+
+Stage and commit the newly created backlog file(s) (exclude `.env` and secrets):
+
+- **Single item**: `chore: add backlog item NNN - [Title]`
+- **Batch / from-review**: one commit covering every file created in this run — `chore: add N backlog items`, with the titles listed one per line in the commit body
+
+This step applies every time one or more backlog files were created. It does not apply to Step 2 (listing), which never writes files.
+
 ## Step 7 — Report
 
 Display:
 - File created: `.vibe/backlog/NNN-slug.md`
 - Title: [title]
 - Acceptance criteria: N generated
+- Commit: [short hash and message from Step 6b]
 - Next steps: run `/vibe:feature NNN` or `/vibe:feature NNN-slug` to implement it
 
 ## Step 7b — Batch report
@@ -170,4 +184,5 @@ Display a summary table of all items created:
 
 Then display:
 - Total items created: N
+- Commit: [short hash and message from Step 6b]
 - Next steps: run `/vibe:feature NNN` for any item to start implementing it, or `/vibe:backlog` to review the full backlog.

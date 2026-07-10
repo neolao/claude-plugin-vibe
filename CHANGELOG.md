@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `/vibe:backlog` now commits newly created backlog items automatically (single item, batch, or from a review) instead of leaving them uncommitted
+
 ## [1.1.2] - 2026-07-10
 
 ### Fixed
