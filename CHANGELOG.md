@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `/vibe:review` no longer enumerates every file up front — it now passes the scope and exclusion list to each review agent, which scans the code itself, making review startup lighter
+- `/vibe:feature` no longer carries a duplicated duplicate-check instruction (the dedicated Duplicate check section already covers it)
+
 ### Fixed
 
 - The architecture review agent now checks the decisions recorded in the current ADR format (`.vibe/decisions/NNN-slug.md`); it previously only read the legacy single-file `.vibe/decisions.md`, so decisions recorded by `/vibe:feature` were silently ignored during reviews

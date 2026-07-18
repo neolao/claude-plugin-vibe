@@ -40,16 +40,16 @@ Apply fixes                   ← blockedBy "Deduplicate and prioritize"
 Sync .vibe/ and commit        ← blockedBy "Apply fixes"
 ```
 
-## Step 2 — Determine scope and collect files
+## Step 2 — Determine scope
 
-- If `$ARGUMENTS` is provided: review only the specified path or file.
-- If no argument: review the full codebase.
+- If `$ARGUMENTS` is provided: the scope is the specified path or file.
+- If no argument: the scope is the full codebase.
 
-Exclude: `node_modules/`, `vendor/`, `.venv/`, `dist/`, `build/`, `out/`, `target/`, generated files (`// generated`, `# auto-generated`), `*.config.*`, `*.json` (unless it contains logic), migration files.
+Do not enumerate files yourself — each agent scans the code on its own. Instead, pass the scope to every agent in Step 3, along with this exclusion list: `node_modules/`, `vendor/`, `.venv/`, `dist/`, `build/`, `out/`, `target/`, generated files (`// generated`, `# auto-generated`), `*.config.*`, `*.json` (unless it contains logic), migration files.
 
 ## Step 3 — Run active agents in parallel
 
-Mark ALL `Run review-*` tasks `in_progress`, then launch every active agent **in parallel** — a single message containing one Agent/Skill call per active agent. They are all read-only, so there is no conflict; running them sequentially only wastes time.
+Mark ALL `Run review-*` tasks `in_progress`, then launch every active agent **in parallel** — a single message containing one Agent/Skill call per active agent. Include the scope and exclusion list from Step 2 in each agent's prompt. They are all read-only, so there is no conflict; running them sequentially only wastes time.
 
 - `Run vibe:review-tests` — test relevance, quality, and real execution: invoke the `vibe:review-tests` agent via the Agent tool (`subagent_type: "vibe:review-tests"`). Unlike the other dimension agents, it actually executes the project's test suite (including isolated e2e/integration runs) to ground findings in real pass/fail evidence, not just static reading. Core principle: **tests must verify observable behaviour, not implementation details** — a test that breaks on refactoring without any behaviour change is a false test. Collect all findings (coverage gaps, relevance issues, quality issues).
 - `Run vibe:review-naming` — naming issues

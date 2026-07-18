@@ -84,7 +84,6 @@ Check each of the following sources:
 ### Design challenge
 
 Compare the requested feature against the existing architecture (`.vibe/modules/`, `.vibe/index.md`):
-- If the feature duplicates something that already exists: flag it and ask if it's intentional
 - If the feature contradicts an established pattern (e.g. a new module that should belong to an existing one): challenge the approach before implementing
 
 If the requirement is ambiguous on a point that would lead to fundamentally different implementations: ask ONE clarifying question.

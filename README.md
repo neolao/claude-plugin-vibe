@@ -61,6 +61,7 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 | `/vibe:feature` | Implement a new feature using TDD, then update the changelog |
 | `/vibe:fix` | Fix a bug using TDD (reproduce first), then update the changelog |
 | `/vibe:review` | Run a multi-agent code quality review and auto-apply fixes |
+| `/vibe:review-web-security` | Audit the web application for exploitable vulnerabilities |
 | `/vibe:sync` | Generate/update `.vibe/` — the codebase context map |
 | `/vibe:changelog` | Update `CHANGELOG.md` from git history |
 | `/vibe:docs` | Generate/refresh README managed sections and `docs/` |
