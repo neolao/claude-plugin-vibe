@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Pre-existing test failures spotted before starting a feature or a fix are no longer forgotten: at the end of the run, `/vibe:feature` and `/vibe:fix` propose recording them as a backlog item (unless one already tracks them)
 - Review cadence reminder: `/vibe:review` now records each run in `.vibe/last-review.md`, and `/vibe:feature`, `/vibe:fix` (after 5 or more changes) and `/vibe:backlog` (in the list view) remind when it's time to run a review again
+- Escalation memory: when a self-correction loop gives up after 3 attempts, `/vibe:feature`, `/vibe:fix` and `/vibe:review` now record the diagnosis in an append-only log (`.vibe/escalations.md`), which `/vibe:feature` and `/vibe:fix` consult at the start of every run — a dead end hit in one session is not rediscovered from scratch in the next
 - `/vibe:backlog remove NNN` — remove an active backlog item after explicit confirmation, cleaning up any `depends_on` references pointing to it (done items are kept as history and cannot be removed)
 - `/vibe:fix` now accepts a backlog item reference (`/vibe:fix NNN`), just like `/vibe:feature`: the item is resolved, its dependencies checked, marked in progress during the fix, and moved to done once the fix is committed — useful for bug items created from a review
 

@@ -12,6 +12,20 @@ Implement the feature described in `$ARGUMENTS` following the vibe coding workfl
 
 If this skill stops before its own Step 8 — plan rejected, clarifying question, escalation, or any other early exit — and files were created or modified, commit them before yielding control: `feat:`/`chore:` for a complete, coherent unit of work; otherwise `wip: [short description]`, flagged in your final message.
 
+## Escalation log — record every dead end
+
+Whenever a self-correction loop in this skill exhausts its 3 attempts and escalates to the user (Step 4, Step 4b), append an entry to `.vibe/escalations.md` (create the file if absent) **before** escalating — the standing rule above then commits it with the `wip:` commit, so the diagnosis survives the session:
+
+```markdown
+## [YYYY-MM-DD] /vibe:feature — [short title of the blocker]
+**Context:** [what was being attempted]
+**Attempts:** [summary of the 3 attempts]
+**Diagnosis:** [the precise cause / blocker]
+**Status:** open
+```
+
+The file is append-only. The only permitted mutation: when later work resolves an `open` entry, change its `Status:` to `resolved (YYYY-MM-DD)`.
+
 ## Step 1 — Understand the requirement
 
 ### Backlog resolution
@@ -51,6 +65,7 @@ Read `$ARGUMENTS` carefully. Then read:
 - `.vibe/index.md` if it exists — for a quick overview of modules and patterns
 - The relevant `.vibe/modules/[name].md` files for the areas likely involved
 - `.vibe/glossary.md` if it exists — to check terminology
+- `.vibe/escalations.md` if it exists — past dead ends; check whether an `open` entry concerns the area you are about to touch
 - Relevant existing source files to understand the current architecture
 
 ### Terminology check
@@ -242,7 +257,7 @@ If tests fail:
 - Diagnose the failure
 - Fix the code (not the tests, unless the test itself was wrong)
 - Re-run
-- Repeat up to 3 times before escalating to the user with a precise diagnosis
+- Repeat up to 3 times before escalating to the user with a precise diagnosis (append the entry to the escalation log first — see "Escalation log" above)
 
 Mark the task `completed`, then mark the corresponding "Runtime smoke" task `in_progress`.
 
@@ -265,7 +280,7 @@ Tests are green — that is not proof the feature works. Adopt a skeptical postu
 - If `verify` reports the behavior is wrong or still fails: diagnose, fix the code (not the stub, unless the stub was wrong), re-invoke `verify`.
 - Repeat up to **3 attempts** total.
 - **If all 3 failures are about launching the app itself** (build errors, crashes on start, `verify` unable to get the app running at all) rather than about the behavior under test: invoke the `run-skill-generator` skill (Skill tool, `skill: "run-skill-generator"`) to establish a working launch recipe for the project, then re-invoke `verify` once more.
-- If it still fails after that: stop and escalate to the user with `verify`'s exact findings and what was tried.
+- If it still fails after that: append the entry to the escalation log (see "Escalation log" above), then stop and escalate to the user with `verify`'s exact findings and what was tried.
 
 Do not mark the task `completed` until `verify` confirms correct behavior.
 
