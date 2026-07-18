@@ -18,6 +18,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - Changelog maintenance from git history, following Keep a Changelog
 - README and `docs/` kept current automatically, with an index linking every doc file
 - A one-command versioned release: changelog finalized, docs refreshed, version bumped, commit and tag created
+- A public website with looping animated terminal demos of the workflow, mobile-friendly, served straight from the repository with no build step
 <!-- vibe:end:features -->
 
 ## Requirements

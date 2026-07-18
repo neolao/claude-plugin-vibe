@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-07-18
+
+### Added
+
+- A public website showcasing the plugin — its benefits, every command, and the flagship skills replayed as looping animated terminal demos — at <https://neolao.github.io/claude-plugin-vibe/>, served straight from the repository with no build step
+
+### Changed
+
+- The README now states the requirements, shows how to verify an install and how to update or uninstall the plugin, includes a web-security usage example, and explains which generated files are meant to be committed
+
+### Fixed
+
+- The website displays correctly on phones: the commands table turns into stacked cards on small screens, and a stray horizontal page scroll was eliminated
+
 ## [1.2.0] - 2026-07-18
 
 ### Added
@@ -90,7 +104,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.3...v1.2.0
 [1.1.3]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.1...v1.1.2
