@@ -14,6 +14,38 @@ If this skill stops before its own Step 8 — plan rejected, clarifying question
 
 ## Step 1 — Understand the bug
 
+### Backlog resolution
+
+Before treating `$ARGUMENTS` as a free-form description, check whether it is a reference to a backlog item (e.g. a bug filed via `/vibe:backlog`, often from a `/vibe:review` finding).
+
+A backlog reference matches one of these patterns (the **entire** `$ARGUMENTS` must match — not just a prefix):
+- A pure number: `3`, `003`, `42`
+- A number followed by an optional slug: `003-login-crash`, `3-login-crash`
+
+Detection rule: `$ARGUMENTS` matches `^\d+(-[\w-]+)?$`.
+
+**If `$ARGUMENTS` is a backlog reference:**
+
+1. Extract the numeric part and normalize it to 3 digits with zero-padding (e.g. `3` → `003`).
+2. Search `.vibe/backlog/` for a file whose name starts with that 3-digit prefix: `003-*.md`.
+   - If the directory does not exist or no matching file is found: stop and report "No backlog item `NNN` found in `.vibe/backlog/`. Run `/vibe:backlog` to list existing items."
+3. Read the file:
+   - Extract the title (first `# ` heading).
+   - Extract the full `## Description` section.
+   - Extract the `## Acceptance Criteria` section.
+   - Extract the optional `depends_on` list from the frontmatter.
+4. **Dependency check:** if `depends_on` is non-empty, for each dependency number find the file `NNN-*.md` in `.vibe/backlog/` (top level or `done/`) and read its `status`.
+   - If ALL dependencies have `status: done`: continue normally.
+   - If ANY dependency is NOT done: display a warning listing each blocking item (number, title, status). Then ask the user: "Certaines dépendances ne sont pas encore terminées. Voulez-vous continuer quand même ?" — do not proceed until the user explicitly confirms.
+5. Update the frontmatter in the file: replace `status: todo` with `status: in_progress`.
+6. Store the resolved backlog file path (e.g. `.vibe/backlog/003-login-crash.md`) — it will be needed at Step 8.
+
+Use the extracted title + description + acceptance criteria as the bug report for all subsequent steps, in place of the raw `$ARGUMENTS` string.
+
+**If `$ARGUMENTS` does not match a backlog reference:** proceed normally — treat `$ARGUMENTS` as the free-form bug description.
+
+---
+
 Read `$ARGUMENTS` carefully. Identify:
 - What is the observed (broken) behavior?
 - What is the expected (correct) behavior?
@@ -80,6 +112,12 @@ Update CHANGELOG.md        ← blockedBy "[Fix] Refactor + lint"
 Update docs                ← blockedBy "Update CHANGELOG.md"
 Sync .vibe/                ← blockedBy "Update docs"
 Commit                     ← blockedBy "Sync .vibe/"
+```
+
+If the bug was loaded from a backlog file (detected in Step 1), append one additional task, blocked by "Commit":
+
+```
+Update backlog status  ← blockedBy "Commit"
 ```
 
 All tasks are created upfront. Do not start coding until the full list is created.
@@ -208,6 +246,14 @@ Stage all modified and created files (exclude `.env`, secrets) and commit:
 - Message format: `fix: [changelog entry text, written for a developer]`
 
 Mark the task `completed`.
+
+If the bug was loaded from a backlog file:
+- Mark the "Update backlog status" task `in_progress`.
+- Create `.vibe/backlog/done/` if it does not exist.
+- Move the backlog file: `git mv .vibe/backlog/NNN-slug.md .vibe/backlog/done/NNN-slug.md`
+- In the moved file, replace `status: in_progress` with `status: done` in the frontmatter.
+- Stage all changes and create a second commit: `chore: close backlog item NNN`
+- Mark the "Update backlog status" task `completed`.
 
 ## Step 9 — Report to user
 

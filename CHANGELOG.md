@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `/vibe:backlog remove NNN` — remove an active backlog item after explicit confirmation, cleaning up any `depends_on` references pointing to it (done items are kept as history and cannot be removed)
+- `/vibe:fix` now accepts a backlog item reference (`/vibe:fix NNN`), just like `/vibe:feature`: the item is resolved, its dependencies checked, marked in progress during the fix, and moved to done once the fix is committed — useful for bug items created from a review
 
 ### Changed
 
