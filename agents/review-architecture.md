@@ -59,10 +59,10 @@ SUGGESTION: Consolidate into a dedicated payment module
 
 ### 5. Decisions violated
 
-Read `.vibe/decisions.md` if it exists. For each recorded decision, check whether the current code respects it.
+Read every ADR in `.vibe/decisions/*.md`, skipping those whose frontmatter says `status: superseded by NNN`. If the directory does not exist, fall back to the legacy single-file `.vibe/decisions.md` if it exists. For each recorded decision, check whether the current code respects it.
 
 ```
-DECISION: [2026-05-01] Use repository pattern for all data access
+DECISION: 004-repository-pattern.md — Use repository pattern for all data access
 ISSUE: src/api/routes/user.ts queries the database directly (bypasses repository)
 SUGGESTION: Route all data access through the UserRepository
 ```

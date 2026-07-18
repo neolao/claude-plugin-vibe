@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- The architecture review agent now checks the decisions recorded in the current ADR format (`.vibe/decisions/NNN-slug.md`); it previously only read the legacy single-file `.vibe/decisions.md`, so decisions recorded by `/vibe:feature` were silently ignored during reviews
+- `/vibe:sync` no longer generates broken relative links in the `.vibe/index.md` it produces (links pointed to `.vibe/...` from inside `.vibe/` itself)
+
 ## [1.1.3] - 2026-07-10
 
 ### Fixed
