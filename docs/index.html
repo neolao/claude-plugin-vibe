@@ -52,7 +52,8 @@
   }
 
   *{ margin:0; padding:0; box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
+  html{ scroll-behavior:smooth; overflow-x: hidden; }
+  @supports (overflow: clip){ html, body{ overflow-x: clip; } }
   @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
 
   body{
@@ -96,7 +97,7 @@
   /* ---------- hero ---------- */
   .hero{ padding: 72px 0 40px; position:relative; }
   .hero::before{
-    content:""; position:absolute; left:50%; top:-120px; width:900px; height:560px;
+    content:""; position:absolute; left:50%; top:-120px; width:min(900px, 130vw); height:560px;
     transform:translateX(-50%); pointer-events:none;
     background: radial-gradient(closest-side, var(--glow), transparent 70%);
     opacity:.22; filter: blur(10px);
@@ -166,7 +167,7 @@
 
   /* ---------- benefits ---------- */
   .benefits{
-    display:grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr));
     gap: 18px;
   }
   .benefit{
