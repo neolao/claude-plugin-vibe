@@ -14,5 +14,6 @@
 - `review-security` — secrets, injections, dangerous primitives, crypto misuse
 - `review-solid` — SOLID principles in OO/modular code
 - `review-tests` — test coverage, relevance, and quality; executes the real test suite
+- `review-web-security` — web attack surface: path traversal, XSS, SSRF, security headers, cookies, application-level DoS (HTTP-exposing projects only)
 
 **Depends on:** [`modules/skills.md`](skills.md) (invoked by `/vibe:review`; activation rules recorded per-project in that project's own `CLAUDE.md`)

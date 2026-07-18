@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- The web security audit is no longer a standalone `/vibe:review-web-security` command, inconsistent with the other review dimensions — it is now a review agent orchestrated by `/vibe:review`, activated per project like the rest
+
 ## [1.3.0] - 2026-07-18
 
 ### Added

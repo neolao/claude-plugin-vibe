@@ -8,8 +8,6 @@ No application data models exist in this repo (no database, no request/response 
 | name | string | skill slug, matches directory name, invoked as `/vibe:<name>` |
 | description | string | one-line purpose, shown in skill listings |
 | argument-hint | string | optional — shown as placeholder for `$ARGUMENTS` |
-| context | string | optional — `"fork"` for skills that run in an isolated fork (e.g. `review-web-security`) |
-| agent | string | optional — agent type used when `context: fork` (e.g. `Explore`) |
 Defined in: `skills/*/SKILL.md`
 
 ## Agent frontmatter (`agents/*.md`)

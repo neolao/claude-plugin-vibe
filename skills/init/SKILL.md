@@ -83,7 +83,7 @@ Determine review agents to activate in CLAUDE.md:
 - `vibe:review-ddd`: activate if an explicit domain layer exists (`domain/`, `entities/`, `aggregates/`, `value-objects/`, or equivalent DDD vocabulary); skip otherwise
 - `vibe:review-architecture`: active if `.vibe/` exists (it will after Step 5 runs `/vibe:sync` — mark it active)
 - `vibe:review-performance`: activate if the project type is API, server, or full-stack; skip for CLIs, libraries, and scripts
-- `vibe:review-web-security` (skill — deep web audit): activate if the project exposes HTTP endpoints (web app, API, SSR frontend); skip otherwise
+- `vibe:review-web-security` (deep web audit): activate if the project exposes HTTP endpoints (web app, API, SSR frontend); skip otherwise
 
 ## Step 3 — Bootstrap / install tooling
 

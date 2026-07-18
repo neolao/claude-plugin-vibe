@@ -8,7 +8,7 @@
 - [`modules/plugin-manifest.md`](modules/plugin-manifest.md) — plugin/marketplace/settings manifests
 
 ## Observed patterns
-- Every skill lives in its own `skills/<name>/SKILL.md` with `name` + `description` (+ optional `argument-hint`, or `context: fork` + `agent` for skills that run in an isolated fork)
+- Every skill lives in its own `skills/<name>/SKILL.md` with `name` + `description` (+ optional `argument-hint`)
 - Every review agent lives in its own `agents/<name>.md` with `name` + `description`, one quality dimension per agent
 - `README.md` is the single hand-written entry point; `/vibe:docs` only rewrites content between `vibe:begin:*`/`vibe:end:*` markers
 - No language runtime, package manifest, test framework, or linter in this repo — quality assurance is manual review (see `CLAUDE.md`)

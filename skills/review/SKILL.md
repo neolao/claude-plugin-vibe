@@ -15,7 +15,7 @@ It lists which agents are active for this project and their scope.
 
 If the section is absent, apply these defaults:
 - **Always active:** `vibe:review-tests`, `vibe:review-naming`, `vibe:review-complexity`, `vibe:review-security`, `vibe:review-dependencies`, `vibe:review-robustness`, `vibe:review-hygiene`
-- **Conditional:** `vibe:review-solid` if the codebase contains classes or interfaces; `vibe:review-architecture` if `.vibe/` exists; `vibe:review-performance` if the project is an API/server/full-stack app; `vibe:review-web-security` (skill — deep web audit) if the project exposes HTTP endpoints
+- **Conditional:** `vibe:review-solid` if the codebase contains classes or interfaces; `vibe:review-architecture` if `.vibe/` exists; `vibe:review-performance` if the project is an API/server/full-stack app; `vibe:review-web-security` if the project exposes HTTP endpoints
 - **Skip:** `vibe:review-ddd` (explicit opt-in required)
 
 ## Step 1b — Create task list
@@ -49,7 +49,7 @@ Do not enumerate files yourself — each agent scans the code on its own. Instea
 
 ## Step 3 — Run active agents in parallel
 
-Mark ALL `Run review-*` tasks `in_progress`, then launch every active agent **in parallel** — a single message containing one Agent/Skill call per active agent. Include the scope and exclusion list from Step 2 in each agent's prompt. They are all read-only, so there is no conflict; running them sequentially only wastes time.
+Mark ALL `Run review-*` tasks `in_progress`, then launch every active agent **in parallel** — a single message containing one Agent call per active agent (`subagent_type: "vibe:review-<dimension>"`). Include the scope and exclusion list from Step 2 in each agent's prompt. They are all read-only, so there is no conflict; running them sequentially only wastes time.
 
 - `Run vibe:review-tests` — test relevance, quality, and real execution: invoke the `vibe:review-tests` agent via the Agent tool (`subagent_type: "vibe:review-tests"`). Unlike the other dimension agents, it actually executes the project's test suite (including isolated e2e/integration runs) to ground findings in real pass/fail evidence, not just static reading. Core principle: **tests must verify observable behaviour, not implementation details** — a test that breaks on refactoring without any behaviour change is a false test. Collect all findings (coverage gaps, relevance issues, quality issues).
 - `Run vibe:review-naming` — naming issues
@@ -62,7 +62,7 @@ Mark ALL `Run review-*` tasks `in_progress`, then launch every active agent **in
 - `Run vibe:review-ddd` — DDD alignment (if active)
 - `Run vibe:review-architecture` — architectural drift: module boundaries, circular deps, layer violations, violations of recorded decisions — ADRs in `.vibe/decisions/` (or legacy `.vibe/decisions.md`) (if active — requires `.vibe/`)
 - `Run vibe:review-performance` — clear performance defects: N+1, quadratic patterns, blocking I/O on hot paths, unbounded caches (if active)
-- `Run vibe:review-web-security` — deep web audit: invoke the `vibe:review-web-security` skill using the Skill tool (`skill: "vibe:review-web-security"`) — headers, cookies, XSS, SSRF, DoS (if active)
+- `Run vibe:review-web-security` — deep web audit: path traversal, XSS, SSRF, security headers, cookies, application-level DoS (if active)
 
 As each agent returns, collect its findings and mark its task `completed`.
 
@@ -71,13 +71,13 @@ As each agent returns, collect its findings and mark its task `completed`.
 Mark the `Deduplicate and prioritize` task `in_progress`.
 
 - Merge findings that point to the same issue from different angles
-- Normalize severities — the producers use different scales:
+- Normalize severities — the agents use different scales:
 
-| Producer scale | Normalized priority |
+| Agent scale | Normalized priority |
 |---|---|
-| `CRITICAL`, `HIGH` (skills), `critical`, `high`, `problem` (agents) | **High** |
-| `MEDIUM` (skills), `medium`, `warning` (agents) | **Medium** |
-| `LOW`, `INFO` (skills), `low` (agents) | **Low** |
+| `critical`, `high`, `problem` | **High** |
+| `medium`, `warning` | **Medium** |
+| `low`, `info` | **Low** |
 
 - Priority meaning:
   - **High** — affects correctness, security, or maintainability significantly
