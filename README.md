@@ -2,6 +2,8 @@
 
 A Claude Code plugin for **vibe coding**: the human stays Product Owner only — describing requirements and evaluating outcomes — while Claude writes, tests, reviews, and ships the code. All quality assurance is automated (TDD, lint, multi-agent review); nothing is meant to be tested manually.
 
+**Website:** [neolao.github.io/claude-plugin-vibe](https://neolao.github.io/claude-plugin-vibe/) — animated terminal demos of the workflow.
+
 ## Features
 
 <!-- vibe:begin:features -->

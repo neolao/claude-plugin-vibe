@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vibe — a Claude Code plugin for vibe coding</title>
+<meta name="description" content="You stay Product Owner. Claude writes, tests, reviews, and ships. A Claude Code plugin for TDD-first, fully automated vibe coding.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c1210'/%3E%3Ctext x='16' y='23' font-size='19' text-anchor='middle' fill='%2343d97e' font-family='monospace'%3E%E2%9D%AF%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --mono: "Cascadia Code", "JetBrains Mono", "Fira Code", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --serif: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, Cambria, serif;
+
+    --bg: #0a0e0c;
+    --bg-raise: #0f1512;
+    --ink: #d9e4dd;
+    --ink-strong: #f2f7f4;
+    --muted: #7f9188;
+    --line: #1d2822;
+
+    --green: #43d97e;
+    --green-dim: #2a8f55;
+    --amber: #f0b45b;
+    --red: #f26d6d;
+    --cyan: #6ec6ea;
+
+    --term-bg: #0b100e;
+    --term-chrome: #141b17;
+    --term-ink: #cfdbd4;
+    --term-muted: #6d7f76;
+    --term-line: #1e2a24;
+
+    --glow: rgba(67, 217, 126, .55);
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg: #f3f1ea;
+      --bg-raise: #eceade;
+      --ink: #26302a;
+      --ink-strong: #131a16;
+      --muted: #66756c;
+      --line: #d8d4c5;
+      --green: #178a4c;
+      --green-dim: #35a066;
+      --amber: #a96f14;
+      --red: #c04545;
+      --cyan: #1f7ea6;
+      --glow: rgba(23, 138, 76, .28);
+      color-scheme: light;
+    }
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.65;
+    overflow-x: hidden;
+    position: relative;
+  }
+  /* faint phosphor scanlines + grain */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      repeating-linear-gradient(to bottom, transparent 0 3px, rgba(127,145,136,.035) 3px 4px);
+  }
+  body::after{
+    content:""; position:fixed; inset:-50%; pointer-events:none; z-index:0; opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  main, header.top, footer{ position:relative; z-index:1; }
+
+  a{ color: var(--green); text-decoration: none; }
+  a:hover{ text-decoration: underline; text-underline-offset: 3px; }
+
+  .wrap{ max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- top bar ---------- */
+  header.top{
+    display:flex; justify-content:space-between; align-items:center;
+    max-width:1060px; margin:0 auto; padding:22px 24px;
+    font-family: var(--mono); font-size: 14px;
+  }
+  .brand{ color: var(--ink-strong); font-weight: 700; letter-spacing:.02em; }
+  .brand .prompt{ color: var(--green); }
+  header.top nav{ display:flex; gap:22px; }
+  header.top nav a{ color: var(--muted); }
+  header.top nav a:hover{ color: var(--green); text-decoration:none; }
+
+  /* ---------- hero ---------- */
+  .hero{ padding: 72px 0 40px; position:relative; }
+  .hero::before{
+    content:""; position:absolute; left:50%; top:-120px; width:900px; height:560px;
+    transform:translateX(-50%); pointer-events:none;
+    background: radial-gradient(closest-side, var(--glow), transparent 70%);
+    opacity:.22; filter: blur(10px);
+  }
+  .kicker{
+    font-family: var(--mono); font-size: 13px; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--green);
+  }
+  h1{
+    font-family: var(--mono);
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    line-height: 1.05; letter-spacing: -.02em;
+    color: var(--ink-strong); margin: 18px 0 8px;
+    text-wrap: balance;
+  }
+  h1 .dim{ color: var(--muted); font-weight: 400; }
+  h1 .hl{
+    color: var(--green);
+    text-shadow: 0 0 24px var(--glow);
+  }
+  .hero p.lede{
+    max-width: 560px; font-size: 1.22rem; line-height: 1.55;
+    color: var(--ink); margin: 20px 0 34px;
+  }
+  .hero p.lede em{ font-style: italic; color: var(--ink-strong); }
+
+  .install{
+    display:inline-flex; align-items:center; gap:14px; flex-wrap:wrap;
+    background: var(--term-bg); border:1px solid var(--term-line);
+    border-radius: 10px; padding: 14px 18px;
+    font-family: var(--mono); font-size: 14.5px; color: var(--term-ink);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.2), 0 18px 40px -18px rgba(0,0,0,.6);
+  }
+  .install .prompt{ color: var(--term-muted); }
+  .install code{ font-family: inherit; }
+  .copy-btn{
+    font-family: var(--mono); font-size: 12px; letter-spacing:.06em;
+    background: rgba(67,217,126,.08); color:#43d97e;
+    border:1px solid rgba(67,217,126,.35); border-radius:6px;
+    padding: 6px 12px; cursor: pointer; transition: background .15s ease;
+  }
+  .copy-btn:hover{ background: rgba(67,217,126,.18); }
+  .hero-links{ margin-top:18px; font-family:var(--mono); font-size:14px; display:flex; gap:24px; }
+  .hero-links a{ color: var(--muted); }
+  .hero-links a:hover{ color: var(--green); }
+
+  /* ---------- sections ---------- */
+  section{ padding: 72px 0 8px; }
+  .sec-label{
+    font-family: var(--mono); font-size: 13px; letter-spacing:.22em;
+    text-transform: uppercase; color: var(--green);
+    display:flex; align-items:center; gap:14px;
+  }
+  .sec-label::after{ content:""; height:1px; flex:1; background: var(--line); }
+  h2{
+    font-family: var(--mono); font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+    letter-spacing:-.01em; color: var(--ink-strong); margin: 14px 0 10px;
+    text-wrap: balance;
+  }
+  .sec-intro{ max-width: 640px; color: var(--muted); margin-bottom: 40px; font-size:1.05rem; }
+  .sec-intro code, td code, .flow code, .benefit code{
+    font-family: var(--mono); font-size: .86em;
+    background: var(--bg-raise); border:1px solid var(--line);
+    border-radius: 5px; padding: 1px 6px; color: var(--ink-strong);
+    white-space: nowrap;
+  }
+
+  /* ---------- benefits ---------- */
+  .benefits{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 18px;
+  }
+  .benefit{
+    border:1px solid var(--line); border-radius: 12px;
+    background: linear-gradient(160deg, var(--bg-raise), transparent 65%);
+    padding: 24px 22px 22px; position:relative; overflow:hidden;
+    transition: border-color .2s ease, transform .2s ease;
+  }
+  .benefit:hover{ border-color: var(--green-dim); transform: translateY(-2px); }
+  .benefit .num{
+    font-family: var(--mono); font-size: 12px; color: var(--green);
+    letter-spacing:.15em;
+  }
+  .benefit h3{
+    font-family: var(--mono); font-size: 1.02rem; color: var(--ink-strong);
+    margin: 10px 0 8px; letter-spacing:-.01em;
+  }
+  .benefit p{ font-size: .96rem; color: var(--muted); line-height:1.6; }
+
+  /* ---------- terminals ---------- */
+  .demos{ display:grid; gap: 44px; }
+  .demo{ display:grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 34px; align-items:start; }
+  .demo:nth-child(even){ direction: rtl; }
+  .demo:nth-child(even) > *{ direction: ltr; }
+  @media (max-width: 860px){
+    .demo, .demo:nth-child(even){ grid-template-columns: 1fr; direction:ltr; gap:18px; }
+  }
+  .demo-copy h3{
+    font-family: var(--mono); font-size: 1.15rem; color: var(--ink-strong);
+    margin-bottom: 10px;
+  }
+  .demo-copy h3 .cmd-name{ color: var(--green); }
+  .demo-copy p{ color: var(--muted); font-size: 1rem; max-width: 46ch; }
+  .demo-copy p b{ color: var(--ink); font-weight:600; }
+
+  .term{
+    background: var(--term-bg); border:1px solid var(--term-line);
+    border-radius: 12px; overflow:hidden;
+    box-shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 24px 60px -24px rgba(0,0,0,.7);
+  }
+  .term-bar{
+    display:flex; align-items:center; gap:8px;
+    background: var(--term-chrome); border-bottom:1px solid var(--term-line);
+    padding: 10px 14px;
+  }
+  .term-bar .dot{ width:11px; height:11px; border-radius:50%; }
+  .dot.r{ background:#f26d6d; } .dot.y{ background:#f0b45b; } .dot.g{ background:#43d97e; }
+  .term-bar .title{
+    margin-left:auto; margin-right:auto;
+    font-family: var(--mono); font-size: 12px; color: var(--term-muted);
+    transform: translateX(-24px);
+  }
+  .term-body{
+    padding: 16px 18px 18px;
+    font-family: var(--mono); font-size: 13.2px; line-height: 1.75;
+    color: var(--term-ink);
+    overflow-x: auto; white-space: pre;
+  }
+  .term-body .line{ min-height: 1.75em; }
+  .t-p{ color: var(--term-muted); }        /* prompt ❯ */
+  .t-cmd{ color: #6ec6ea; }                 /* typed command */
+  .t-ok{ color: #43d97e; }
+  .t-err{ color: #f26d6d; }
+  .t-warn{ color: #f0b45b; }
+  .t-dim{ color: #6d7f76; }
+  .t-bold{ color: #f2f7f4; font-weight: 700; }
+  .spin{ color: #f0b45b; display:inline-block; width:1ch; }
+  .cursor{
+    display:inline-block; width: .62em; height: 1.15em;
+    background: #43d97e; vertical-align: text-bottom;
+    box-shadow: 0 0 8px rgba(67,217,126,.8);
+    animation: blink 1.05s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity: 0; } }
+  @media (prefers-reduced-motion: reduce){ .cursor{ animation:none; } }
+
+  /* ---------- commands table ---------- */
+  .cmd-table{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; }
+  table{ width:100%; border-collapse: collapse; font-size: .95rem; }
+  th, td{ text-align:left; padding: 12px 18px; border-bottom:1px solid var(--line); }
+  tr:last-child td{ border-bottom:none; }
+  th{
+    font-family: var(--mono); font-size: 12px; letter-spacing:.14em;
+    text-transform:uppercase; color: var(--muted); font-weight: 600;
+    background: var(--bg-raise);
+  }
+  td:first-child{ white-space: nowrap; }
+  td:first-child code{ color: var(--green); background:transparent; border:none; padding:0; font-size:.92em; }
+  td:last-child{ color: var(--muted); }
+
+  /* ---------- review agents ---------- */
+  .agents{ display:flex; flex-wrap:wrap; gap:10px; }
+  .agent{
+    font-family: var(--mono); font-size: 13px;
+    border:1px solid var(--line); border-radius: 999px;
+    padding: 7px 15px; color: var(--ink);
+    background: var(--bg-raise);
+    transition: border-color .15s ease, color .15s ease;
+  }
+  .agent:hover{ border-color: var(--green-dim); color: var(--green); }
+  .agent .h{ color: var(--green); margin-right: 7px; }
+
+  /* ---------- flow ---------- */
+  .flow{ list-style:none; counter-reset: step; max-width: 700px; }
+  .flow li{
+    counter-increment: step; position: relative;
+    padding: 0 0 30px 58px;
+  }
+  .flow li::before{
+    content: "0" counter(step);
+    position:absolute; left:0; top:-2px;
+    font-family: var(--mono); font-size: 13px; color: var(--green);
+    border:1px solid var(--green-dim); border-radius: 8px;
+    width: 40px; height: 30px; display:flex; align-items:center; justify-content:center;
+    background: var(--bg-raise);
+  }
+  .flow li::after{
+    content:""; position:absolute; left:20px; top: 34px; bottom: 4px;
+    width:1px; background: var(--line);
+  }
+  .flow li:last-child::after{ display:none; }
+  .flow li b{ font-family: var(--mono); font-size:.95em; color: var(--ink-strong); font-weight:600; }
+  .flow li span{ color: var(--muted); }
+
+  /* ---------- footer ---------- */
+  footer{
+    margin-top: 90px; border-top:1px solid var(--line);
+    padding: 36px 0 48px;
+  }
+  footer .wrap{
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:16px;
+    font-family: var(--mono); font-size: 13.5px; color: var(--muted);
+  }
+  footer a{ color: var(--muted); }
+  footer a:hover{ color: var(--green); }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal{ opacity:0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+    .benefit:hover{ transform:none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><span class="prompt">❯</span> vibe</div>
+  <nav>
+    <a href="#skills">skills</a>
+    <a href="#commands">commands</a>
+    <a href="#flow">flow</a>
+    <a href="https://github.com/neolao/claude-plugin-vibe">github</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <p class="kicker">a claude code plugin</p>
+    <h1>You describe.<br><span class="hl">Claude ships.</span><br><span class="dim">Nothing manual.</span></h1>
+    <p class="lede">Vibe coding, made rigorous: the human stays <em>Product Owner only</em> — describing requirements and judging outcomes — while Claude writes the tests first, implements, proves the change actually runs, reviews its own work with twelve specialized agents, and cuts the release.</p>
+    <div class="install">
+      <span><span class="prompt">❯</span> <code id="install-cmd">/plugin marketplace add neolao/claude-plugin-vibe</code></span>
+      <button class="copy-btn" id="copy" type="button" aria-label="Copy install command">copy</button>
+    </div>
+    <div class="hero-links">
+      <a href="https://github.com/neolao/claude-plugin-vibe">→ source on GitHub</a>
+      <a href="./architecture.md">→ architecture notes</a>
+    </div>
+  </div>
+
+  <section id="why">
+    <div class="wrap">
+      <p class="sec-label reveal">why vibe</p>
+      <h2 class="reveal">Quality is automated, not hoped for</h2>
+      <p class="sec-intro reveal">Every guarantee a careful team enforces by discipline, the plugin enforces by workflow — on any project it's installed on.</p>
+      <div class="benefits">
+        <div class="benefit reveal"><span class="num">01</span><h3>TDD-first, always</h3><p>Features and fixes start with a failing test, written in your stead — and every test is checked against a shared definition of a <em>tautological test</em>, so green means something.</p></div>
+        <div class="benefit reveal"><span class="num">02</span><h3>Proven, not just green</h3><p>After implementation the change is exercised for real — nominal path plus an edge case — instead of trusting the suite. If the app won't even launch, it records a working launch recipe and retries.</p></div>
+        <div class="benefit reveal"><span class="num">03</span><h3>Twelve-angle review</h3><p>One command fans out specialized agents — security, complexity, naming, robustness, tests, and more — in parallel, each auditing a single dimension, then fixes what they find.</p></div>
+        <div class="benefit reveal"><span class="num">04</span><h3>A backlog that commits itself</h3><p>Queue ideas as numbered items, singly or in bulk; bundled requests are split into independent items automatically. Implement any of them later just by number.</p></div>
+        <div class="benefit reveal"><span class="num">05</span><h3>Feedback loops that close</h3><p>Pre-existing test failures are offered for tracking, a reminder fires when several changes ship unreviewed, and every dead end is logged with its diagnosis so no session rediscovers it.</p></div>
+        <div class="benefit reveal"><span class="num">06</span><h3>Nothing silently lost</h3><p>Work is committed before every turn ends — even interruptions — and a one-command release finalizes the changelog, refreshes docs, bumps the version, and tags.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <p class="sec-label reveal">skills in action</p>
+      <h2 class="reveal">Watch a session, not a promise</h2>
+      <p class="sec-intro reveal">Each demo below replays a scripted <code>/vibe:*</code> session, exactly as the workflow behaves.</p>
+
+      <div class="demos">
+
+        <div class="demo reveal">
+          <div class="demo-copy">
+            <h3><span class="cmd-name">/vibe:feature</span> — TDD, then proof</h3>
+            <p>Pick a backlog item by number. The test comes <b>first</b> and fails for the right reason; only then is the feature implemented. Green tests aren't the finish line — the change is exercised end-to-end before the commit, and the changelog is updated on the way out.</p>
+          </div>
+          <div class="term" data-demo="feature">
+            <div class="term-bar" aria-hidden="true"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude — /vibe:feature</span></div>
+            <div class="term-body" role="img" aria-label="Terminal demo of /vibe:feature: a failing test is written first, the feature is implemented, tests pass, the change is verified end-to-end, then committed."></div>
+          </div>
+        </div>
+
+        <div class="demo reveal">
+          <div class="demo-copy">
+            <h3><span class="cmd-name">/vibe:review</span> — twelve auditors at once</h3>
+            <p>Review agents run <b>in parallel</b>, each on a single quality dimension, with a color-coded status line. The test-review agent doesn't just read your tests — it <b>runs the real suite</b> and flags tests that can't actually fail. Findings are fixed, not filed away.</p>
+          </div>
+          <div class="term" data-demo="review">
+            <div class="term-bar" aria-hidden="true"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude — /vibe:review</span></div>
+            <div class="term-body" role="img" aria-label="Terminal demo of /vibe:review: several review agents run in parallel, report findings, and the findings are fixed automatically."></div>
+          </div>
+        </div>
+
+        <div class="demo reveal">
+          <div class="demo-copy">
+            <h3><span class="cmd-name">/vibe:backlog</span> — ideas, safely queued</h3>
+            <p>Toss in a request; if it bundles several independent capabilities it's <b>split automatically</b> into separate numbered items, each committed on the spot. List them anytime — and get nudged when too much has shipped without a review.</p>
+          </div>
+          <div class="term" data-demo="backlog">
+            <div class="term-bar" aria-hidden="true"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude — /vibe:backlog</span></div>
+            <div class="term-body" role="img" aria-label="Terminal demo of /vibe:backlog: a bundled request is split into two items, committed, then the backlog is listed with a review reminder."></div>
+          </div>
+        </div>
+
+        <div class="demo reveal">
+          <div class="demo-copy">
+            <h3><span class="cmd-name">/vibe:release</span> — a version in one command</h3>
+            <p>Changelog finalized under the new version, docs refreshed, version bumped, commit and tag created. The bump can be explicit (<code>1.3.0</code>) or inferred from the unreleased entries (<code>major</code> / <code>minor</code> / <code>patch</code>).</p>
+          </div>
+          <div class="term" data-demo="release">
+            <div class="term-bar" aria-hidden="true"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude — /vibe:release</span></div>
+            <div class="term-body" role="img" aria-label="Terminal demo of /vibe:release: changelog finalized, docs refreshed, version bumped, release committed and tagged."></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="commands">
+    <div class="wrap">
+      <p class="sec-label reveal">the toolbox</p>
+      <h2 class="reveal">Ten commands, one workflow</h2>
+      <div class="cmd-table reveal">
+        <table>
+          <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>/vibe:init</code></td><td>Initialize or regenerate the project's CLAUDE.md for vibe coding</td></tr>
+            <tr><td><code>/vibe:backlog</code></td><td>List or add feature backlog items</td></tr>
+            <tr><td><code>/vibe:feature</code></td><td>Implement a new feature using TDD, then update the changelog</td></tr>
+            <tr><td><code>/vibe:fix</code></td><td>Fix a bug using TDD (reproduce first), then update the changelog</td></tr>
+            <tr><td><code>/vibe:review</code></td><td>Run a multi-agent code quality review and auto-apply fixes</td></tr>
+            <tr><td><code>/vibe:review-web-security</code></td><td>Audit the web application for exploitable vulnerabilities</td></tr>
+            <tr><td><code>/vibe:sync</code></td><td>Generate or update the internal codebase context map</td></tr>
+            <tr><td><code>/vibe:changelog</code></td><td>Update CHANGELOG.md from git history</td></tr>
+            <tr><td><code>/vibe:docs</code></td><td>Generate or refresh README managed sections and docs/</td></tr>
+            <tr><td><code>/vibe:release</code></td><td>Bump version, finalize the changelog, commit and tag a release</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="review-agents">
+    <div class="wrap">
+      <p class="sec-label reveal">the reviewers</p>
+      <h2 class="reveal">Twelve dimensions, audited in parallel</h2>
+      <p class="sec-intro reveal">Each agent focuses on exactly one quality dimension. <code>/vibe:init</code> decides which ones apply to your project.</p>
+      <div class="agents reveal">
+        <span class="agent"><span class="h">▲</span>architecture</span>
+        <span class="agent"><span class="h">▲</span>complexity</span>
+        <span class="agent"><span class="h">▲</span>ddd</span>
+        <span class="agent"><span class="h">▲</span>dependencies</span>
+        <span class="agent"><span class="h">▲</span>hygiene</span>
+        <span class="agent"><span class="h">▲</span>naming</span>
+        <span class="agent"><span class="h">▲</span>performance</span>
+        <span class="agent"><span class="h">▲</span>robustness</span>
+        <span class="agent"><span class="h">▲</span>security</span>
+        <span class="agent"><span class="h">▲</span>solid</span>
+        <span class="agent"><span class="h">▲</span>tests</span>
+        <span class="agent"><span class="h">▲</span>web-security</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="flow">
+    <div class="wrap">
+      <p class="sec-label reveal">typical flow</p>
+      <h2 class="reveal">From empty repo to tagged release</h2>
+      <ol class="flow reveal">
+        <li><b>/vibe:init</b> <span>— once, to set up CLAUDE.md and the codebase context map. Both are committed with your project, so every session and every teammate starts from the same conventions.</span></li>
+        <li><b>/vibe:backlog "some feature idea"</b> <span>— queue work as it comes to mind.</span></li>
+        <li><b>/vibe:feature 001</b> <span>— or <code>/vibe:fix "bug description"</code> — implement, TDD-first, proven end-to-end.</span></li>
+        <li><b>/vibe:review</b> <span>— periodically, to catch quality issues across twelve dimensions.</span></li>
+        <li><b>/vibe:release patch|minor|major</b> <span>— ship a version.</span></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span><span style="color:var(--green)">❯</span> vibe — you stay Product Owner; Claude writes, tests, reviews, and ships.</span>
+    <span><a href="https://github.com/neolao/claude-plugin-vibe">GitHub</a> · <a href="https://github.com/neolao/claude-plugin-vibe/blob/main/LICENSE">MIT license</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- copy button ---------- */
+  var copyBtn = document.getElementById("copy");
+  copyBtn.addEventListener("click", function(){
+    var text = document.getElementById("install-cmd").textContent;
+    function done(){ copyBtn.textContent = "copied ✓"; setTimeout(function(){ copyBtn.textContent = "copy"; }, 1600); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, done);
+    } else { done(); }
+  });
+
+  /* ---------- scroll reveal ---------- */
+  var revealEls = document.querySelectorAll(".reveal");
+  if (reduced || !("IntersectionObserver" in window)) {
+    revealEls.forEach(function(el){ el.classList.add("in"); });
+  } else {
+    var ro = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add("in"); ro.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(function(el){ ro.observe(el); });
+  }
+
+  /* ---------- spinner ticker ---------- */
+  var SPIN = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"];
+  var spinIdx = 0;
+  setInterval(function(){
+    spinIdx = (spinIdx + 1) % SPIN.length;
+    var els = document.querySelectorAll(".spin");
+    for (var i = 0; i < els.length; i++) els[i].textContent = SPIN[spinIdx];
+  }, 80);
+
+  /* ---------- demo scripts ----------
+     line types:
+       cmd  — typed char by char after a prompt
+       out  — printed as a whole line (html allowed); optional d = delay before it
+       run  — printed with a spinner, swaps to `done` html after `after` ms
+       gap  — blank line
+  */
+  var P = '<span class="t-p">❯</span> ';
+  var DEMOS = {
+    feature: [
+      { t:"cmd", text:"/vibe:feature 001" },
+      { t:"out", d:500, html:'<span class="t-dim">●</span> backlog <span class="t-bold">001-dark-mode-toggle</span> → <span class="t-warn">in_progress</span>' },
+      { t:"out", d:600, html:'<span class="t-dim">●</span> writing the failing test first…' },
+      { t:"out", d:900, html:'  <span class="t-err">✗</span> settings.spec.ts <span class="t-dim">— "toggles dark mode" fails (good: nothing implemented yet)</span>' },
+      { t:"out", d:700, html:'<span class="t-dim">●</span> implementing…' },
+      { t:"out", d:1100, html:'  <span class="t-ok">✓</span> settings.spec.ts <span class="t-dim">—</span> <span class="t-ok">13 passed</span><span class="t-dim">, 0 failed</span>' },
+      { t:"run", d:400, html:'<span class="t-dim">●</span> verify: exercising the change for real…', after:1600, done:'<span class="t-dim">●</span> verify: exercising the change for real… <span class="t-ok">ok</span>' },
+      { t:"out", d:1000, html:'  <span class="t-ok">✓</span> nominal <span class="t-dim">— toggle switches the theme</span>' },
+      { t:"out", d:500, html:'  <span class="t-ok">✓</span> edge <span class="t-dim">— preference survives a reload</span>' },
+      { t:"out", d:600, html:'<span class="t-dim">●</span> CHANGELOG.md <span class="t-dim">updated under</span> [Unreleased] › Added' },
+      { t:"out", d:600, html:'<span class="t-dim">●</span> git commit <span class="t-cyan" style="color:#6ec6ea">-m</span> <span class="t-warn">"feat: dark mode toggle in settings"</span>' },
+      { t:"gap" },
+      { t:"out", d:400, html:'<span class="t-ok">✔ shipped</span> <span class="t-dim">— backlog 001 moved to</span> done/' }
+    ],
+    review: [
+      { t:"cmd", text:"/vibe:review" },
+      { t:"out", d:500, html:'<span class="t-dim">●</span> fanning out <span class="t-bold">7 review agents</span> in parallel…' },
+      { t:"run", d:300, html:'  <span class="t-bold">security</span>    <span class="t-dim">scanning for secrets & injections</span>', after:2300, done:'  <span class="t-ok">✓</span> <span class="t-bold">security</span>    <span class="t-ok">clean</span>' },
+      { t:"run", d:150, html:'  <span class="t-bold">naming</span>      <span class="t-dim">auditing identifiers</span>', after:2900, done:'  <span class="t-ok">✓</span> <span class="t-bold">naming</span>      <span class="t-dim">1 finding</span>' },
+      { t:"run", d:150, html:'  <span class="t-bold">complexity</span>  <span class="t-dim">measuring nesting & length</span>', after:3400, done:'  <span class="t-ok">✓</span> <span class="t-bold">complexity</span>  <span class="t-dim">1 finding</span>' },
+      { t:"run", d:150, html:'  <span class="t-bold">robustness</span>  <span class="t-dim">tracing error paths</span>', after:2600, done:'  <span class="t-ok">✓</span> <span class="t-bold">robustness</span>  <span class="t-ok">clean</span>' },
+      { t:"run", d:150, html:'  <span class="t-bold">tests</span>       <span class="t-dim">running the real suite…</span>', after:4200, done:'  <span class="t-ok">✓</span> <span class="t-bold">tests</span>       <span class="t-warn">1 tautological test flagged</span>' },
+      { t:"out", d:4600, html:'<span class="t-dim">●</span> applying fixes…' },
+      { t:"out", d:800, html:'  <span class="t-ok">✓</span> renamed <span class="t-dim">data2</span> → <span class="t-bold">pendingInvoices</span>' },
+      { t:"out", d:600, html:'  <span class="t-ok">✓</span> split a 62-line function in parser.ts' },
+      { t:"out", d:600, html:'  <span class="t-ok">✓</span> rewrote an assertion that could never fail' },
+      { t:"gap" },
+      { t:"out", d:400, html:'<span class="t-ok">✔ review complete</span> <span class="t-dim">— 3 findings, 3 fixed · logged to</span> .vibe/last-review.md' }
+    ],
+    backlog: [
+      { t:"cmd", text:'/vibe:backlog "Export reports as PDF and add a weekly email digest"' },
+      { t:"out", d:600, html:'<span class="t-dim">●</span> detected <span class="t-bold">2 independent capabilities</span> — splitting:' },
+      { t:"out", d:500, html:'  <span class="t-ok">+</span> 004-export-reports-pdf' },
+      { t:"out", d:300, html:'  <span class="t-ok">+</span> 005-weekly-email-digest' },
+      { t:"out", d:500, html:'<span class="t-dim">●</span> git commit <span style="color:#6ec6ea">-m</span> <span class="t-warn">"chore: backlog items 004, 005"</span>' },
+      { t:"gap" },
+      { t:"cmd", d:900, text:"/vibe:backlog" },
+      { t:"out", d:500, html:'  <span class="t-dim">002</span> onboarding-tour         <span class="t-warn">pending</span>' },
+      { t:"out", d:200, html:'  <span class="t-dim">003</span> csv-import              <span class="t-warn">pending</span>' },
+      { t:"out", d:200, html:'  <span class="t-dim">004</span> export-reports-pdf      <span class="t-warn">pending</span>' },
+      { t:"out", d:200, html:'  <span class="t-dim">005</span> weekly-email-digest     <span class="t-warn">pending</span>' },
+      { t:"gap" },
+      { t:"out", d:500, html:'<span class="t-warn">⚑</span> <span class="t-dim">6 changes shipped since the last review — consider</span> /vibe:review' }
+    ],
+    release: [
+      { t:"cmd", text:"/vibe:release minor" },
+      { t:"out", d:600, html:'<span class="t-dim">●</span> CHANGELOG.md <span class="t-dim">—</span> [Unreleased] <span class="t-dim">→</span> <span class="t-bold">[1.3.0] - 2026-07-18</span>' },
+      { t:"run", d:400, html:'<span class="t-dim">●</span> refreshing README managed sections & docs/', after:1800, done:'<span class="t-dim">●</span> refreshing README managed sections & docs/ <span class="t-ok">ok</span>' },
+      { t:"out", d:2200, html:'<span class="t-dim">●</span> version <span class="t-dim">1.2.0 →</span> <span class="t-bold">1.3.0</span>' },
+      { t:"out", d:600, html:'<span class="t-dim">●</span> git commit <span style="color:#6ec6ea">-m</span> <span class="t-warn">"chore: release v1.3.0"</span>' },
+      { t:"out", d:400, html:'<span class="t-dim">●</span> git tag <span class="t-bold">v1.3.0</span>' },
+      { t:"gap" },
+      { t:"out", d:500, html:'<span class="t-ok">✔ v1.3.0</span> <span class="t-dim">ready —</span> git push --follow-tags <span class="t-dim">when you are</span>' }
+    ]
+  };
+
+  var TYPE_MS = 34;      // per character
+  var LOOP_PAUSE = 4200; // pause before replay
+
+  function renderStatic(body, script){
+    body.textContent = "";
+    script.forEach(function(step){
+      var line = document.createElement("div");
+      line.className = "line";
+      if (step.t === "cmd") {
+        line.innerHTML = P + '<span class="t-cmd"></span>';
+        line.querySelector(".t-cmd").textContent = step.text;
+      }
+      else if (step.t === "run") line.innerHTML = step.done;
+      else if (step.t === "out") line.innerHTML = step.html;
+      else line.innerHTML = "&nbsp;";
+      body.appendChild(line);
+    });
+  }
+
+  function Player(body, script){
+    this.body = body;
+    this.script = script;
+    this.gen = 0;
+    this.timers = [];
+    this.running = false;
+  }
+  Player.prototype.clearTimers = function(){
+    this.timers.forEach(clearTimeout);
+    this.timers = [];
+  };
+  Player.prototype.stop = function(){
+    this.gen++;
+    this.clearTimers();
+    this.running = false;
+  };
+  Player.prototype.wait = function(ms, gen, fn){
+    var self = this;
+    var id = setTimeout(function(){
+      if (self.gen === gen) fn();
+    }, ms);
+    this.timers.push(id);
+  };
+  Player.prototype.start = function(){
+    if (this.running) return;
+    this.running = true;
+    this.gen++;
+    this.playFrom(0, this.gen);
+  };
+  Player.prototype.playFrom = function(idx, gen){
+    var self = this;
+    if (gen !== this.gen) return;
+    if (idx === 0) this.body.textContent = "";
+
+    if (idx >= this.script.length) {
+      this.wait(LOOP_PAUSE, gen, function(){ self.playFrom(0, gen); });
+      return;
+    }
+    var step = this.script[idx];
+    var delay = step.d || 0;
+
+    this.wait(delay, gen, function(){
+      var line = document.createElement("div");
+      line.className = "line";
+
+      if (step.t === "gap") {
+        line.innerHTML = "&nbsp;";
+        self.body.appendChild(line);
+        self.playFrom(idx + 1, gen);
+
+      } else if (step.t === "cmd") {
+        line.innerHTML = P + '<span class="t-cmd"></span><span class="cursor" aria-hidden="true"></span>';
+        self.body.appendChild(line);
+        var target = line.querySelector(".t-cmd");
+        var i = 0;
+        (function typeChar(){
+          if (gen !== self.gen) return;
+          if (i < step.text.length) {
+            target.textContent += step.text.charAt(i++);
+            self.wait(TYPE_MS, gen, typeChar);
+          } else {
+            self.wait(320, gen, function(){
+              var c = line.querySelector(".cursor");
+              if (c) c.remove();
+              self.playFrom(idx + 1, gen);
+            });
+          }
+        })();
+
+      } else if (step.t === "run") {
+        // the spinner takes the place of a leading "● " bullet, or prefixes the line
+        var m = step.html.match(/^(\s*)([\s\S]*)$/);
+        var rest = m[2].replace(/^<span class="t-dim">●<\/span> /, "");
+        line.innerHTML = m[1] + '<span class="spin">⠋</span> ' + rest;
+        self.body.appendChild(line);
+        self.wait(step.after, gen, function(){
+          line.innerHTML = step.done;
+        });
+        self.playFrom(idx + 1, gen);
+
+      } else { // out
+        line.innerHTML = step.html;
+        self.body.appendChild(line);
+        self.playFrom(idx + 1, gen);
+      }
+    });
+  };
+
+  document.querySelectorAll(".term[data-demo]").forEach(function(term){
+    var body = term.querySelector(".term-body");
+    var script = DEMOS[term.getAttribute("data-demo")];
+    if (!script) return;
+
+    // reserve final height to avoid layout jumps while animating
+    renderStatic(body, script);
+    body.style.minHeight = body.scrollHeight + "px";
+
+    if (reduced || !("IntersectionObserver" in window)) return; // keep static render
+
+    body.textContent = "";
+    var player = new Player(body, script);
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) player.start();
+        else player.stop();
+      });
+    }, { threshold: 0.25 });
+    io.observe(term);
+  });
+})();
+</script>
+</body>
+</html>

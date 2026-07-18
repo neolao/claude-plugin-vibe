@@ -77,6 +77,7 @@ Mark the `Update docs/` task `in_progress`.
 | `docs/configuration.md` | Environment variables and options — name, purpose, default, required or not — derived from `.env.example` and how the code reads them | the project has configuration (env vars, config file) |
 
 Rules:
+- **GitHub Pages site files in `docs/` are off-limits**: never modify, and never list in the README documentation index, `docs/index.html`, `docs/.nojekyll`, or any non-Markdown asset (`.html`, `.css`, `.js`, images). The index covers documentation files (Markdown) only.
 - Never create an empty or near-empty file — skip a file if there is no substance for it.
 - **Without `--full`**: incremental — regenerate a file only if its sources changed (compare against the current file content; if nothing meaningful changed, leave it untouched).
 - **With `--full`**: regenerate every applicable file from scratch.
