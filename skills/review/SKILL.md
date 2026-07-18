@@ -15,7 +15,7 @@ It lists which agents are active for this project and their scope.
 
 If the section is absent, apply these defaults:
 - **Always active:** `vibe:review-tests`, `vibe:review-naming`, `vibe:review-complexity`, `vibe:review-security`, `vibe:review-dependencies`, `vibe:review-robustness`, `vibe:review-hygiene`, `vibe:review-antipatterns`, `vibe:review-simplicity`, `vibe:review-overengineering`
-- **Conditional:** `vibe:review-solid` if the codebase contains classes or interfaces; `vibe:review-architecture` if `.vibe/` exists; `vibe:review-performance` if the project is an API/server/full-stack app; `vibe:review-web-security` if the project exposes HTTP endpoints; `vibe:review-pentest` if the project exposes a runnable networked application that can be exercised in a safe local environment
+- **Conditional:** `vibe:review-solid` if the codebase contains classes or interfaces; `vibe:review-architecture` if `.vibe/` exists; `vibe:review-performance` if the project is an API/server/full-stack app; `vibe:review-web-security` if the project exposes HTTP endpoints; `vibe:review-pentest` if the project exposes a runnable networked application that can be exercised in a safe local environment; `vibe:review-hexagonal` if the project explicitly follows a hexagonal (ports & adapters) architecture — declared in an ADR or `CLAUDE.md`, or evident from a `ports/`/`adapters/` structure
 - **Skip:** `vibe:review-ddd` (explicit opt-in required)
 
 ## Step 1b — Create task list
@@ -39,6 +39,7 @@ Run vibe:review-overengineering    ← no dependency
 [Run vibe:review-performance]      ← no dependency (if active)
 [Run vibe:review-web-security]     ← no dependency (if active)
 [Run vibe:review-pentest]          ← no dependency (if active)
+[Run vibe:review-hexagonal]        ← no dependency (if active)
 Deduplicate and prioritize    ← blockedBy ALL "Run review-*" tasks
 Apply fixes                   ← blockedBy "Deduplicate and prioritize"
 Sync .vibe/ and commit        ← blockedBy "Apply fixes"
@@ -71,6 +72,7 @@ Mark ALL `Run review-*` tasks `in_progress`, then launch every active agent **in
 - `Run vibe:review-performance` — clear performance defects: N+1, quadratic patterns, blocking I/O on hot paths, unbounded caches (if active)
 - `Run vibe:review-web-security` — deep web audit: path traversal, XSS, SSRF, security headers, cookies, application-level DoS (if active)
 - `Run vibe:review-pentest` — dynamic penetration test against a locally-run instance: proves auth bypass, IDOR, injection, business-logic abuse, and exploit chains against the live app (if active — authorized local scope only)
+- `Run vibe:review-hexagonal` — ports & adapters compliance: port ownership, leaky port contracts, adapter purity, wiring (if active — hexagonal projects only)
 
 As each agent returns, collect its findings and mark its task `completed`.
 

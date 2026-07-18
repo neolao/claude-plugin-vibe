@@ -8,6 +8,7 @@
 - `review-complexity` — cyclomatic complexity, function length, nesting
 - `review-ddd` — Domain-Driven Design alignment (domain-heavy projects only)
 - `review-dependencies` — dependency health, vulnerabilities, abandoned packages
+- `review-hexagonal` — hexagonal architecture (ports & adapters) compliance: port ownership, leaky port contracts, adapter purity, wiring (hexagonal projects only)
 - `review-hygiene` — dead code, unused exports, stale TODOs, duplication
 - `review-naming` — naming quality across the codebase
 - `review-overengineering` — design-level YAGNI: speculative abstractions, unused configurability, premature optimization

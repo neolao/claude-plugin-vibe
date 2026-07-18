@@ -11,7 +11,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - Work is always committed before ending a turn, even if interrupted, so nothing is silently lost across a session reset
 - Every feature or fix is proven to actually work after implementation — exercised for real, nominal path plus an edge case or error path, instead of just trusting green tests; if the app itself won't launch (unusual project setup), it self-heals by recording a working launch recipe before giving up
 - A backlog to queue feature ideas before implementation — items are committed automatically as they're added, singly or in bulk — with automatic detection when a request bundles several independent capabilities so it can be split into separate items; items can also be removed on demand (after confirmation), and picked up directly by number when implementing a feature or a fix
-- Multi-agent code review covering anti-patterns, architecture, complexity, DDD, dependencies, hygiene, naming, overengineering, performance, robustness, security, simplicity, SOLID principles, tests (including real execution of the suite and aggressive flagging of tests that can't actually fail), web security, and dynamic penetration testing against a locally-run instance of the app — every check belongs to exactly one agent, so the same issue is never reported twice — with a color-coded status line while it runs
+- Multi-agent code review covering anti-patterns, architecture, complexity, DDD, dependencies, hexagonal architecture (ports & adapters, for projects that chose it), hygiene, naming, overengineering, performance, robustness, security, simplicity, SOLID principles, tests (including real execution of the suite and aggressive flagging of tests that can't actually fail), web security, and dynamic penetration testing against a locally-run instance of the app — every check belongs to exactly one agent, so the same issue is never reported twice — with a color-coded status line while it runs
 - Feedback loops that close themselves: test failures that predate a piece of work are offered for backlog tracking instead of being forgotten, a reminder appears once several changes have shipped without a review, and every dead end (three failed self-correction attempts) is logged with its diagnosis so the next session doesn't rediscover it from scratch
 - An internal codebase context map kept in sync automatically, so Claude ramps up fast on any session
 - Changelog maintenance from git history, following Keep a Changelog
@@ -95,13 +95,13 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 
 `/vibe:review` orchestrates these specialized agents in parallel:
 
-- `review-antipatterns`, `review-architecture`, `review-complexity`, `review-ddd`, `review-dependencies`, `review-hygiene`, `review-naming`, `review-overengineering`, `review-pentest`, `review-performance`, `review-robustness`, `review-security`, `review-simplicity`, `review-solid`, `review-tests`, `review-web-security`
+- `review-antipatterns`, `review-architecture`, `review-complexity`, `review-ddd`, `review-dependencies`, `review-hexagonal`, `review-hygiene`, `review-naming`, `review-overengineering`, `review-pentest`, `review-performance`, `review-robustness`, `review-security`, `review-simplicity`, `review-solid`, `review-tests`, `review-web-security`
 
 Each focuses on one dimension only (see `/vibe:init`'s "Review agents" table for activation rules per project).
 
 ## Subagent status line
 
-The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-statusline.sh`), applied automatically once the plugin is enabled. It replaces the default `name · description · token count` row in the agent panel with a compact, color-coded line (status icon, bold name, description, token count) — most visible during `/vibe:review`, which runs up to 16 review agents in parallel.
+The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-statusline.sh`), applied automatically once the plugin is enabled. It replaces the default `name · description · token count` row in the agent panel with a compact, color-coded line (status icon, bold name, description, token count) — most visible during `/vibe:review`, which runs up to 17 review agents in parallel.
 
 ## Typical flow
 

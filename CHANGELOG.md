@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- A new `hexagonal` review agent auditing ports & adapters compliance — port ownership, technology leaking through port contracts, business logic in adapters, wiring outside the composition root — activated only for projects that explicitly follow a hexagonal architecture (declared in an ADR or `CLAUDE.md`, or evident from the structure), since not every project lends itself to it
+
 ## [1.4.0] - 2026-07-19
 
 ### Added

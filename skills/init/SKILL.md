@@ -85,6 +85,7 @@ Determine review agents to activate in CLAUDE.md:
 - `vibe:review-performance`: activate if the project type is API, server, or full-stack; skip for CLIs, libraries, and scripts
 - `vibe:review-web-security` (deep web audit): activate if the project exposes HTTP endpoints (web app, API, SSR frontend); skip otherwise
 - `vibe:review-pentest` (dynamic penetration test): activate if the project exposes a runnable networked application (web app, API, server) that can be launched and probed in a safe local environment; skip for libraries, static sites, and CLIs with no network surface
+- `vibe:review-hexagonal`: activate if the project explicitly follows a hexagonal (ports & adapters) architecture — declared in an ADR or `CLAUDE.md`, or evident from a `ports/`/`adapters/` (or `driving/`/`driven/`) structure; skip otherwise — never impose hexagonal on a project that has not chosen it
 
 ## Step 3 — Bootstrap / install tooling
 
@@ -240,6 +241,7 @@ Agents active for `/vibe:review` on this project:
 | `vibe:review-performance` | [✅ / ❌] | [active if API/server/full-stack / inactive: CLI, library, or script] |
 | `vibe:review-web-security` | [✅ / ❌] | [active if the project exposes HTTP endpoints / inactive: no HTTP surface] |
 | `vibe:review-pentest` | [✅ / ❌] | [active if a runnable networked app can be probed locally / inactive: no runnable network surface] |
+| `vibe:review-hexagonal` | [✅ / ❌] | [active if the project declares a hexagonal (ports & adapters) architecture / inactive: no such commitment] |
 ```
 
 ---

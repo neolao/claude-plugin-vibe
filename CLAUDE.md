@@ -111,3 +111,4 @@ Agents actifs pour `/vibe:review` sur ce projet :
 | `vibe:review-performance` | ❌ | pas d'API/serveur |
 | `vibe:review-web-security` | ❌ | pas de surface HTTP exposée |
 | `vibe:review-pentest` | ❌ | pas d'application exécutable exposée sur le réseau à sonder |
+| `vibe:review-hexagonal` | ❌ | pas d'architecture hexagonale — définitions Markdown sans code applicatif |
