@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-18
+
 ### Added
 
 - Pre-existing test failures spotted before starting a feature or a fix are no longer forgotten: at the end of the run, `/vibe:feature` and `/vibe:fix` propose recording them as a backlog item (unless one already tracks them)
@@ -88,7 +90,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.3...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.3...v1.2.0
 [1.1.3]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.0...v1.1.1
