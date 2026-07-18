@@ -304,6 +304,41 @@
   footer a{ color: var(--muted); }
   footer a:hover{ color: var(--green); }
 
+  /* ---------- mobile ---------- */
+  @media (max-width: 640px){
+    section{ padding: 52px 0 8px; }
+    header.top{ flex-wrap:wrap; gap:10px 18px; }
+    header.top nav{ gap:16px; }
+    .term-bar .title{ transform:none; }
+    .hero{ padding: 48px 0 32px; }
+    .hero p.lede{ font-size: 1.1rem; }
+
+    .install{
+      display:flex; width:100%; align-items:flex-start;
+      justify-content:space-between; gap:12px;
+    }
+    .install > span{ min-width:0; }
+    .install code{ overflow-wrap: anywhere; }
+    .copy-btn{ flex-shrink:0; }
+    .hero-links{ flex-direction:column; gap:10px; }
+
+    .term-body{ font-size: 12.2px; padding: 13px 14px 15px; }
+
+    /* commands table → stacked cards */
+    .cmd-table{ border:none; border-radius:0; overflow:visible; }
+    .cmd-table table, .cmd-table tbody, .cmd-table tr, .cmd-table td{ display:block; width:100%; }
+    .cmd-table thead{ display:none; }
+    .cmd-table tr{
+      border:1px solid var(--line); border-radius:10px;
+      background: var(--bg-raise); margin-bottom:10px;
+    }
+    .cmd-table td{ border:none; padding: 4px 16px 12px; white-space: normal; }
+    .cmd-table td:first-child{ padding: 12px 16px 0; }
+    .cmd-table td:first-child code{ font-size: .98em; }
+
+    .flow li{ padding-left: 52px; }
+  }
+
   /* ---------- reveal on scroll ---------- */
   .reveal{ opacity:0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
   .reveal.in{ opacity:1; transform:none; }
