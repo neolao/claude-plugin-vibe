@@ -352,3 +352,7 @@ If Step 1b recorded pre-existing test failures:
 1. Check the active backlog items (`.vibe/backlog/*.md`) for one that already covers these failures — compare titles and descriptions against the failing test names.
 2. If a matching item exists: mention it in the report ("already tracked by backlog item NNN").
 3. Otherwise: end the report by asking the user — "N tests étaient déjà en échec avant ce travail — veux-tu que je les enregistre au backlog ?". If the user confirms, invoke the `vibe:backlog` skill (Skill tool, `skill: "vibe:backlog"`) with a one-line description listing the failing tests.
+
+### Review cadence hint
+
+If `.vibe/last-review.md` exists: count the `feat:`/`fix:` commits made since the `commit` hash it records (e.g. `git log <hash>..HEAD --oneline`, keeping only `feat:`/`fix:` messages). If the count is **5 or more**, append one line to the report: "💡 N changements depuis le dernier review — pense à lancer `/vibe:review`." If the marker does not exist or the count is below 5: say nothing.

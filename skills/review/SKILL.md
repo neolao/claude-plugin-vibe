@@ -104,13 +104,22 @@ Do NOT auto-fix Low findings — report them only.
 
 Mark the task `completed`.
 
-## Step 6 — Sync .vibe/ and commit (if fixes were applied)
+## Step 6 — Sync .vibe/, record the run, and commit
 
 Mark the `Sync .vibe/ and commit` task `in_progress`.
 
-If any fixes were applied in Step 5:
-1. **Invoke the `vibe:sync` skill** using the Skill tool (`skill: "vibe:sync"`) — to update affected module documentation
-2. Stage all modified files and commit: `refactor: apply code quality fixes from vibe:review`
+1. If any fixes were applied in Step 5: **invoke the `vibe:sync` skill** using the Skill tool (`skill: "vibe:sync"`) — to update affected module documentation.
+2. Write (or overwrite) the review cadence marker `.vibe/last-review.md` — it is read by `/vibe:feature`, `/vibe:fix`, and `/vibe:backlog` to suggest the next review:
+
+```markdown
+# Last review
+date: YYYY-MM-DD
+commit: [current HEAD hash]
+```
+
+3. Commit — this happens on **every** run, fixes or not:
+   - If fixes were applied: stage all modified files (including the marker) and commit `refactor: apply code quality fixes from vibe:review`
+   - If no fix was applied: commit the marker alone — `chore: record vibe:review run`
 
 Mark the task `completed`.
 

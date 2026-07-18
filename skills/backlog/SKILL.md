@@ -114,6 +114,10 @@ After all items are created, apply **Step 6b — Commit** (batch variant) to com
 
 If `.vibe/backlog/done/` contains files, append a note: "N item(s) done — see `.vibe/backlog/done/`."
 
+5. Review cadence status, as a final line:
+   - If `.vibe/last-review.md` exists: read its `date` and `commit` values, count the `feat:`/`fix:` commits made since that hash, and display "Dernier review : YYYY-MM-DD (N changements depuis)."
+   - Otherwise: display "Aucun review enregistré — lancer `/vibe:review` établira la base."
+
 Stop here — do not create anything.
 
 ## Step 3 — Compute the next number
