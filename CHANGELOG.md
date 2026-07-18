@@ -7,9 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-07-19
+
+### Added
+
+- Four new review agents orchestrated by `/vibe:review`: `antipatterns` (named, recognizable anti-patterns such as god objects and primitive obsession), `simplicity` (expression-level convolution), `overengineering` (design-level YAGNI enforcement), and `pentest` (dynamic penetration testing that proves vulnerabilities against a locally-run instance of the app)
+
 ### Fixed
 
 - The web security audit is no longer a standalone `/vibe:review-web-security` command, inconsistent with the other review dimensions — it is now a review agent orchestrated by `/vibe:review`, activated per project like the rest
+- Review agents no longer compete over the same checks: every finding that two agents used to claim (positional boolean parameters, stdlib reimplementation, skipped tests, primitive obsession, path traversal and IDOR on HTTP routes, unbounded caches, god objects) now has a single owning agent, and the other one explicitly delegates to it — reviews produce fewer duplicate findings
 
 ## [1.3.0] - 2026-07-18
 
@@ -108,7 +115,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.3...v1.2.0
 [1.1.3]: https://github.com/neolao/claude-plugin-vibe/compare/v1.1.2...v1.1.3
