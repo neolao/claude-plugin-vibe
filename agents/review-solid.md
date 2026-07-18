@@ -63,6 +63,7 @@ End with a one-line summary: `X SOLID violations found (S:N O:N L:N I:N D:N).`
 ## What NOT to do
 
 - Do not apply SOLID rigidly to functional code that has no classes or interfaces — adapt the spirit to the paradigm
+- Do not re-report a god object/god function as an S violation — that is `review-antipatterns`'s named pattern; keep S findings for subtler mixed responsibilities
 - Do not flag violations in test files — tests are intentionally coupled to implementation
 - Do not rewrite code — only identify and suggest direction
 - Do not invent violations — only flag what is clearly present in the provided code

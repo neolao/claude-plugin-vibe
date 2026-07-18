@@ -37,7 +37,6 @@ Flag regardless of metrics:
 - Early return opportunities missed (deep nesting that could be flattened with guard clauses)
 - Inline logic that could be extracted to a named function for readability
 - More than 3 parameters in a function signature (suggest an options object)
-- Boolean parameters that control behavior (`doSomething(true, false)` — use named options)
 
 ## Output format
 
@@ -58,5 +57,6 @@ End with:
 ## What NOT to do
 
 - Do not flag test files for length — test files are naturally longer
+- Do not flag positional boolean parameters (`doSomething(true, false)`) — that is `review-antipatterns`'s boolean blindness
 - Do not suggest splitting functions just to hit a metric — only flag when readability genuinely suffers
 - Do not rewrite code — only identify and suggest direction

@@ -37,7 +37,6 @@ Look for:
 
 ### Value objects
 Look for:
-- Primitive obsession where value objects would add clarity and safety (`string` for email/money/id instead of typed value objects)
 - Value objects that are mutable (value objects must be immutable)
 
 ### Repository pattern
@@ -70,6 +69,7 @@ End with a one-line summary: `X DDD issues found across Y files.`
 ## What NOT to do
 
 - Do not apply DDD patterns to infrastructure code (config files, migrations, CLI entry points)
+- Do not report primitive obsession (`string` for email/money/id where a value object belongs) — that is `review-antipatterns`'s job
 - Do not flag the absence of patterns that were never part of the project's design intent — only flag violations of patterns that are clearly in use
 - Do not rewrite code — only identify and suggest direction
 - Do not invent a domain model — work with what's in the provided code

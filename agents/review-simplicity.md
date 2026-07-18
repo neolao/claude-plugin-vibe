@@ -20,8 +20,7 @@ You are a code simplicity reviewer. Your only job is to find code that is **more
 - Callbacks or lambdas that just forward their arguments
 
 ### Non-idiomatic detours
-- Multi-line logic that a standard idiom of the language expresses in one clear construct (comprehensions, `map`/`filter`, destructuring, optional chaining, `Object.entries`, etc.)
-- Manual loops rebuilding what a well-known stdlib call does — flag only when the idiomatic version is clearly more readable
+- Multi-line logic that a standard idiom of the language expresses in one clear construct (comprehensions, `map`/`filter`, destructuring, optional chaining, `Object.entries`, etc.) — flag only when the idiomatic version is clearly more readable
 
 ### Unused generality in signatures
 - Parameters that receive the same single value at every call site in the codebase
@@ -46,6 +45,7 @@ End with a one-line summary: `X simplicity issues found (problems: N, warnings: 
 ## What NOT to do
 
 - Do not apply complexity thresholds or metrics — that is `review-complexity`'s job
+- Do not flag hand-rolled reimplementations of the stdlib or an existing dependency — that is `review-antipatterns`'s wheel reinvention
 - Do not flag design-level speculative abstractions (unused interfaces, premature patterns) — that is `review-overengineering`'s job
 - Do not propose "clever" one-liners that trade readability for brevity — code golf is not simplification
 - Do not flag deliberate verbosity that aids debugging or readability (named intermediate results with meaningful names)

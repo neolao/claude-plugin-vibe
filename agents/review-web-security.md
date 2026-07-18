@@ -40,7 +40,7 @@ Check server hooks, middleware, or framework config for: `Content-Security-Polic
 
 ### Denial of Service (application-level)
 - Endpoints triggering expensive operations (resize, archive generation, scan) without rate limiting or size caps
-- Unbounded memory growth from large inputs, concurrent operations, or unbounded in-memory caches
+- Unbounded memory growth from large request payloads or unbounded concurrent operations an attacker can trigger
 
 ### Information disclosure
 - Catch blocks or error handlers returning raw exception messages, stack traces, or internal paths to the client
@@ -64,6 +64,7 @@ End with a one-line summary: `X web security issues found (critical: N, high: N,
 ## What NOT to do
 
 - Do not report theoretical concerns with no concrete exploitation path — if you cannot show how it is exploitable, mark it `low` or omit it
-- Do not re-report code-level security (committed secrets, SQL/command injection, dangerous primitives, crypto misuse) — that is `review-security`'s scope
+- Do not re-report code-level security (committed secrets, SQL/command injection, dangerous primitives, crypto misuse) — that is `review-security`'s scope, as is path traversal fed by non-HTTP input (CLI args, config, processed files)
+- Do not flag unbounded in-memory caches or growth unrelated to attacker-controlled requests — that is `review-performance`'s scope
 - Do not audit dependency CVEs — that is `review-dependencies`'s scope
 - Do not rewrite code — only identify and suggest direction
