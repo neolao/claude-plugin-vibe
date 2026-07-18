@@ -17,6 +17,7 @@
 - `/vibe:feature` and `/vibe:fix` never end a turn with uncommitted files, even on early exit (`feat:`/`fix:`/`chore:` for complete work, `wip:` otherwise)
 - `/vibe:backlog` commits its own changes (item creation — single, batch, or from-review — and removals, which always require confirmation and never touch `done/`) — it does not leave backlog changes uncommitted for a later skill to pick up
 - Backlog references (`NNN` or `NNN-slug`, regex `^\d+(-[\w-]+)?$`) are resolved identically by `/vibe:feature` and `/vibe:fix`: item marked `in_progress` at start, moved to `done/` and closed by a `chore:` commit after the main commit
+- Self-correction loops that exhaust their 3 attempts append a diagnosis entry to `.vibe/escalations.md` (append-only, read back at the start of `/vibe:feature`/`/vibe:fix`); `/vibe:review` records each run in `.vibe/last-review.md`, surfaced as a cadence hint by feature/fix reports and the backlog list
 
 ## Other context files
 - [`models.md`](models.md) — JSON/frontmatter shapes used across the plugin

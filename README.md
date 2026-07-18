@@ -11,6 +11,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - A backlog to queue feature ideas before implementation — items are committed automatically as they're added, singly or in bulk — with automatic detection when a request bundles several independent capabilities so it can be split into separate items; items can also be removed on demand (after confirmation), and picked up directly by number when implementing a feature or a fix
 - Multi-agent code review covering architecture, complexity, DDD, dependencies, hygiene, naming, performance, robustness, security, SOLID principles, and tests (including real execution of the suite and aggressive flagging of tests that can't actually fail) — with a color-coded status line while it runs
 - A web-security audit, on demand
+- Feedback loops that close themselves: test failures that predate a piece of work are offered for backlog tracking instead of being forgotten, a reminder appears once several changes have shipped without a review, and every dead end (three failed self-correction attempts) is logged with its diagnosis so the next session doesn't rediscover it from scratch
 - An internal codebase context map kept in sync automatically, so Claude ramps up fast on any session
 - Changelog maintenance from git history, following Keep a Changelog
 - README and `docs/` kept current automatically, with an index linking every doc file
