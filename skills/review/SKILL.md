@@ -18,6 +18,16 @@ If the section is absent, apply these defaults:
 - **Conditional:** `vibe:review-solid` if the codebase contains classes or interfaces; `vibe:review-architecture` if `.vibe/` exists; `vibe:review-performance` if the project is an API/server/full-stack app; `vibe:review-web-security` if the project exposes HTTP endpoints; `vibe:review-pentest` if the project exposes a runnable networked application that can be exercised in a safe local environment; `vibe:review-hexagonal` if the project explicitly follows a hexagonal (ports & adapters) architecture — declared in an ADR or `CLAUDE.md`, or evident from a `ports/`/`adapters/` structure
 - **Skip:** `vibe:review-ddd` (explicit opt-in required)
 
+### Step 1a — Re-check the table against the current project state
+
+If the section exists, do not trust it blindly — the project may have changed since `/vibe:init` wrote it. For each row, re-evaluate the agent's activation condition (the same rules as the defaults above) against the project as it is now, then reconcile:
+
+- **The reason column is what decides.** If it records a deliberate user choice (e.g. "by deliberate choice", "explicit opt-out"), respect the row as-is — never override it.
+- If it states a project fact that is **no longer true** — "no HTTP surface" while routes now exist, "run /vibe:sync first" while `.vibe/` now exists, "no test suite" while one has appeared — update the row in `CLAUDE.md`: flip the status and rewrite the reason to match reality. The same applies in both directions (an agent may also become inactive, e.g. an HTTP surface that was removed).
+- Every row changed this way MUST be listed in the final report (Step 7), so the user can spot and revert a wrong flip. The updated `CLAUDE.md` is committed with the rest of the run in Step 6.
+
+Use the reconciled table to determine the active agents for this run.
+
 ## Step 1b — Create task list
 
 Based on the active agents determined in Step 1, create tasks using TaskCreate. Always include the three mandatory agents. Add optional agents only if active. The `Run review-*` tasks are independent (no `blockedBy` between them) — they run in parallel. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
@@ -128,8 +138,8 @@ commit: [current HEAD hash]
 ```
 
 3. Commit — this happens on **every** run, fixes or not:
-   - If fixes were applied: stage all modified files (including the marker) and commit `refactor: apply code quality fixes from vibe:review`
-   - If no fix was applied: commit the marker alone — `chore: record vibe:review run`
+   - If fixes were applied: stage all modified files (including the marker and, if Step 1a updated the agent table, `CLAUDE.md`) and commit `refactor: apply code quality fixes from vibe:review`
+   - If no fix was applied: commit the marker (plus `CLAUDE.md` if Step 1a updated the agent table) — `chore: record vibe:review run`
 
 Mark the task `completed`.
 
@@ -141,6 +151,7 @@ Structure the report as follows:
 ## Review summary
 
 Agents run: [list]
+Agent table updated: [each row flipped by Step 1a — agent, old → new status, why; omit this line if none]
 Files reviewed: N
 Total findings: N (High: N, Medium: N, Low: N)
 

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `/vibe:review` no longer trusts a stale agent table: at each run it re-checks every activation condition against the current state of the project — a CLI that grew an HTTP API automatically gains the web audits, and an audit whose surface disappeared is turned off — while reasons recording a deliberate choice are never overridden; every change is applied to the table, listed in the review report, and committed with the run
 - A new `hexagonal` review agent auditing ports & adapters compliance — port ownership, technology leaking through port contracts, business logic in adapters, wiring outside the composition root — activated only for projects that explicitly follow a hexagonal architecture (declared in an ADR or `CLAUDE.md`, or evident from the structure), since not every project lends itself to it
 
 ## [1.4.0] - 2026-07-19
