@@ -25,6 +25,17 @@ claude-plugin-vibe/
 <!-- L'import ci-dessous charge la carte compacte du dépôt dans chaque session. Maintenu par /vibe:sync. -->
 @.vibe/index.md
 
+## Site GitHub Pages <!-- keep -->
+
+Le site vitrine <https://neolao.github.io/claude-plugin-vibe/> est servi par GitHub Pages depuis `docs/` sur `main`. **Aucun build** : `docs/index.html` est une page unique autonome (CSS/JS inline, zéro CDN) — modifier le fichier et pousser suffit, le déploiement prend une à deux minutes.
+
+À savoir pour la faire évoluer :
+- Les démos de terminal sont des animations scriptées dans l'objet JS `DEMOS` en bas de `index.html` (types de lignes : `cmd` tapée au clavier, `out` affichée, `run` avec spinner résolu via `after`+`done`, `gap`). Ajouter une démo = un bloc `.term` avec `data-demo="<clé>"` + une entrée dans `DEMOS`.
+- Le contenu marketing (bénéfices, tableau des commandes, agents, typical flow) est dérivé du README : le resynchroniser à la main quand les skills changent — `/vibe:docs` a interdiction de toucher aux fichiers du site (`index.html`, `.nojekyll`, assets non-Markdown), voir `skills/docs/SKILL.md`.
+- `docs/.nojekyll` doit rester présent (GitHub Pages sert alors le HTML tel quel).
+- Ne pas réintroduire les pièges mobiles corrigés : `overflow-x: clip` sur `html`+`body`, halo du hero plafonné à `min(900px, 130vw)`, tableau des commandes en cartes empilées sous 640 px.
+- Vérification sans navigateur : `node --check` sur le script inline extrait, contrôle d'équilibre des balises (parseur HTML Python), `python3 -m http.server` dans `docs/`.
+
 ## Development workflow (Vibe Coding)
 
 L'utilisateur reste **Product Owner uniquement** : il décrit ce qu'il veut (nouveau skill, nouvel agent, évolution du README) et évalue le résultat — il n'écrit pas et ne teste pas manuellement les fichiers.
