@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `/vibe:backlog remove NNN` — remove an active backlog item after explicit confirmation, cleaning up any `depends_on` references pointing to it (done items are kept as history and cannot be removed)
+
 ### Changed
 
 - `/vibe:review` no longer enumerates every file up front — it now passes the scope and exclusion list to each review agent, which scans the code itself, making review startup lighter

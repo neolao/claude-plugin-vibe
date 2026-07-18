@@ -1,7 +1,7 @@
 ---
 name: backlog
-description: Manage the feature backlog — list tasks or add one or several items
-argument-hint: "[feature description to add] | (empty to list all)"
+description: Manage the feature backlog — list tasks, add one or several items, or remove an item
+argument-hint: "[feature description to add] | remove NNN | (empty to list all)"
 ---
 
 # /vibe:backlog — Feature Backlog Manager
@@ -11,6 +11,7 @@ Manage the feature backlog stored in `.vibe/backlog/`. Each item is a Markdown f
 - **No argument** → list all backlog items with their current status
 - **Single-line argument** → create one new backlog item from the description
 - **Multi-item argument** → create multiple backlog items (one per detected item)
+- **Remove argument** → delete an active backlog item, after confirmation
 
 ## Standing rule — never end a turn with uncommitted files
 
@@ -22,6 +23,7 @@ If `$ARGUMENTS` is empty or blank: go to **Step 2 — List**.
 
 If `$ARGUMENTS` is non-empty:
 - Inspect the structure of `$ARGUMENTS`:
+  - **Remove mode**: the argument expresses the intent to delete or cancel an existing item — e.g. "remove 3", "delete 003-oauth", "supprime 12", "annule l'item 7", or any close variant containing a backlog reference (the reference part matches `^\d+(-[\w-]+)?$`). Go to **Step 2e — Remove an item**.
   - **From-review mode**: the argument expresses the intent to create tasks from a previous review — e.g. "from review", "from last review", "depuis le review", "from vibe:review", "from the review findings", or any close variant. Go to **Step 2c — From-review creation**.
   - **Batch mode**: the argument contains multiple distinct items — i.e., a newline-separated list, a bulleted list (`-` or `*` prefixes), or a numbered list (`1.`, `2.`, …). Each line/entry represents a separate backlog item to create. Go to **Step 2b — Batch creation**.
   - **Single mode**: the argument is a plain prose description (possibly multi-sentence but not a list). Go to **Step 2d — Scope check**.
@@ -56,6 +58,21 @@ This is different from one feature with several facets that all serve the same g
 4. **If the user declines:** continue with `$ARGUMENTS` as a single item — go to **Step 3 — Compute next number**.
 
 **If no oversized scope is detected:** continue normally — go to **Step 3 — Compute next number**.
+
+## Step 2e — Remove an item
+
+1. Extract the numeric part of the reference and normalize it to 3 digits with zero-padding (e.g. `3` → `003`).
+2. Search `.vibe/backlog/` (top level only — **not** `done/`: a completed item is history, it is never removed) for a file named `NNN-*.md`.
+   - If no match at the top level but one exists in `done/`: report "Item `NNN` is already done (`.vibe/backlog/done/…`) — done items are kept as history and cannot be removed." and stop.
+   - If no match anywhere: report "No backlog item `NNN` found in `.vibe/backlog/`. Run `/vibe:backlog` to list existing items." and stop.
+3. Read the file: extract the title (first `# ` heading) and the `status` from the frontmatter.
+4. Scan the other active items (`.vibe/backlog/*.md`) for a `depends_on` list containing `NNN` — these dependencies will become orphaned.
+5. Ask the user for confirmation before deleting anything, showing: the item number, title, and status (warn explicitly if `status: in_progress`), plus the list of items that depend on it, if any. Do not proceed without explicit confirmation; if the user declines, stop without modifying anything.
+6. On confirmation:
+   - `git rm .vibe/backlog/NNN-slug.md`
+   - In each dependent item found in point 4, remove `NNN` from its `depends_on` list (drop the line entirely if the list becomes empty).
+7. Commit the removal and any dependency cleanups together: `chore: remove backlog item NNN - [Title]`
+8. Report: the file removed, the dependent items cleaned up (if any), and the commit hash and message. Stop here.
 
 ## Step 2b — Batch creation
 
@@ -170,7 +187,7 @@ Display:
 - Title: [title]
 - Acceptance criteria: N generated
 - Commit: [short hash and message from Step 6b]
-- Next steps: run `/vibe:feature NNN` or `/vibe:feature NNN-slug` to implement it
+- Next steps: run `/vibe:feature NNN` (or `/vibe:fix NNN` if the item is a bug) to implement it
 
 ## Step 7b — Batch report
 
@@ -185,4 +202,4 @@ Display a summary table of all items created:
 Then display:
 - Total items created: N
 - Commit: [short hash and message from Step 6b]
-- Next steps: run `/vibe:feature NNN` for any item to start implementing it, or `/vibe:backlog` to review the full backlog.
+- Next steps: run `/vibe:feature NNN` (or `/vibe:fix NNN` for a bug) on any item to start implementing it, or `/vibe:backlog` to review the full backlog.
