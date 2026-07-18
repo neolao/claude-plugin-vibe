@@ -95,13 +95,13 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 
 `/vibe:review` orchestrates these specialized agents in parallel:
 
-- `review-architecture`, `review-complexity`, `review-ddd`, `review-dependencies`, `review-hygiene`, `review-naming`, `review-performance`, `review-robustness`, `review-security`, `review-solid`, `review-tests`, `review-web-security`
+- `review-antipatterns`, `review-architecture`, `review-complexity`, `review-ddd`, `review-dependencies`, `review-hygiene`, `review-naming`, `review-overengineering`, `review-pentest`, `review-performance`, `review-robustness`, `review-security`, `review-simplicity`, `review-solid`, `review-tests`, `review-web-security`
 
 Each focuses on one dimension only (see `/vibe:init`'s "Review agents" table for activation rules per project).
 
 ## Subagent status line
 
-The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-statusline.sh`), applied automatically once the plugin is enabled. It replaces the default `name · description · token count` row in the agent panel with a compact, color-coded line (status icon, bold name, description, token count) — most visible during `/vibe:review`, which runs up to 12 review agents in parallel.
+The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-statusline.sh`), applied automatically once the plugin is enabled. It replaces the default `name · description · token count` row in the agent panel with a compact, color-coded line (status icon, bold name, description, token count) — most visible during `/vibe:review`, which runs up to 16 review agents in parallel.
 
 ## Typical flow
 

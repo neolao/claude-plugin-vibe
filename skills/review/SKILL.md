@@ -14,8 +14,8 @@ Read `CLAUDE.md` and find the `## Review agents` section.
 It lists which agents are active for this project and their scope.
 
 If the section is absent, apply these defaults:
-- **Always active:** `vibe:review-tests`, `vibe:review-naming`, `vibe:review-complexity`, `vibe:review-security`, `vibe:review-dependencies`, `vibe:review-robustness`, `vibe:review-hygiene`
-- **Conditional:** `vibe:review-solid` if the codebase contains classes or interfaces; `vibe:review-architecture` if `.vibe/` exists; `vibe:review-performance` if the project is an API/server/full-stack app; `vibe:review-web-security` if the project exposes HTTP endpoints
+- **Always active:** `vibe:review-tests`, `vibe:review-naming`, `vibe:review-complexity`, `vibe:review-security`, `vibe:review-dependencies`, `vibe:review-robustness`, `vibe:review-hygiene`, `vibe:review-antipatterns`, `vibe:review-simplicity`, `vibe:review-overengineering`
+- **Conditional:** `vibe:review-solid` if the codebase contains classes or interfaces; `vibe:review-architecture` if `.vibe/` exists; `vibe:review-performance` if the project is an API/server/full-stack app; `vibe:review-web-security` if the project exposes HTTP endpoints; `vibe:review-pentest` if the project exposes a runnable networked application that can be exercised in a safe local environment
 - **Skip:** `vibe:review-ddd` (explicit opt-in required)
 
 ## Step 1b — Create task list
@@ -30,11 +30,15 @@ Run vibe:review-security           ← no dependency
 Run vibe:review-dependencies       ← no dependency
 Run vibe:review-robustness         ← no dependency
 Run vibe:review-hygiene            ← no dependency
+Run vibe:review-antipatterns       ← no dependency
+Run vibe:review-simplicity         ← no dependency
+Run vibe:review-overengineering    ← no dependency
 [Run vibe:review-solid]            ← no dependency (if active)
 [Run vibe:review-ddd]              ← no dependency (if active)
 [Run vibe:review-architecture]     ← no dependency (if active)
 [Run vibe:review-performance]      ← no dependency (if active)
 [Run vibe:review-web-security]     ← no dependency (if active)
+[Run vibe:review-pentest]          ← no dependency (if active)
 Deduplicate and prioritize    ← blockedBy ALL "Run review-*" tasks
 Apply fixes                   ← blockedBy "Deduplicate and prioritize"
 Sync .vibe/ and commit        ← blockedBy "Apply fixes"
@@ -58,11 +62,15 @@ Mark ALL `Run review-*` tasks `in_progress`, then launch every active agent **in
 - `Run vibe:review-dependencies` — dependency health: runs the stack's audit tool (CVEs), abandoned packages, version hygiene, unused deps
 - `Run vibe:review-robustness` — failure behavior: swallowed errors, unawaited promises, missing timeouts, unclosed resources
 - `Run vibe:review-hygiene` — dead code, leftovers, stale TODOs, copy-paste duplication
+- `Run vibe:review-antipatterns` — named anti-patterns: god objects, primitive obsession, stringly-typed code, mutable global state, temporal coupling, wheel reinvention
+- `Run vibe:review-simplicity` — expression-level convolution: redundant conditions, pointless indirection, non-idiomatic detours, reducible logic
+- `Run vibe:review-overengineering` — design-level YAGNI: speculative abstractions, unused configurability, premature optimization, disproportionate layering
 - `Run vibe:review-solid` — SOLID violations (if active)
 - `Run vibe:review-ddd` — DDD alignment (if active)
 - `Run vibe:review-architecture` — architectural drift: module boundaries, circular deps, layer violations, violations of recorded decisions — ADRs in `.vibe/decisions/` (or legacy `.vibe/decisions.md`) (if active — requires `.vibe/`)
 - `Run vibe:review-performance` — clear performance defects: N+1, quadratic patterns, blocking I/O on hot paths, unbounded caches (if active)
 - `Run vibe:review-web-security` — deep web audit: path traversal, XSS, SSRF, security headers, cookies, application-level DoS (if active)
+- `Run vibe:review-pentest` — dynamic penetration test against a locally-run instance: proves auth bypass, IDOR, injection, business-logic abuse, and exploit chains against the live app (if active — authorized local scope only)
 
 As each agent returns, collect its findings and mark its task `completed`.
 

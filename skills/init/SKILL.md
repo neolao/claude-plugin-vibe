@@ -78,12 +78,13 @@ From the table above, flag any missing test framework or style tooling → insta
 
 Determine review agents to activate in CLAUDE.md:
 
-- `vibe:review-tests`, `vibe:review-naming`, `vibe:review-complexity`, `vibe:review-security`, `vibe:review-dependencies`, `vibe:review-robustness`, `vibe:review-hygiene`: always active
+- `vibe:review-tests`, `vibe:review-naming`, `vibe:review-complexity`, `vibe:review-security`, `vibe:review-dependencies`, `vibe:review-robustness`, `vibe:review-hygiene`, `vibe:review-antipatterns`, `vibe:review-simplicity`, `vibe:review-overengineering`: always active
 - `vibe:review-solid`: activate if the project uses classes, interfaces, or a modular architecture; skip for scripts or functional code
 - `vibe:review-ddd`: activate if an explicit domain layer exists (`domain/`, `entities/`, `aggregates/`, `value-objects/`, or equivalent DDD vocabulary); skip otherwise
 - `vibe:review-architecture`: active if `.vibe/` exists (it will after Step 5 runs `/vibe:sync` — mark it active)
 - `vibe:review-performance`: activate if the project type is API, server, or full-stack; skip for CLIs, libraries, and scripts
 - `vibe:review-web-security` (deep web audit): activate if the project exposes HTTP endpoints (web app, API, SSR frontend); skip otherwise
+- `vibe:review-pentest` (dynamic penetration test): activate if the project exposes a runnable networked application (web app, API, server) that can be launched and probed in a safe local environment; skip for libraries, static sites, and CLIs with no network surface
 
 ## Step 3 — Bootstrap / install tooling
 
@@ -230,11 +231,15 @@ Agents active for `/vibe:review` on this project:
 | `vibe:review-dependencies` | ✅ | always active |
 | `vibe:review-robustness` | ✅ | always active |
 | `vibe:review-hygiene` | ✅ | always active |
+| `vibe:review-antipatterns` | ✅ | always active |
+| `vibe:review-simplicity` | ✅ | always active |
+| `vibe:review-overengineering` | ✅ | always active |
 | `vibe:review-solid` | [✅ / ❌] | [active if OO or modular architecture detected / inactive: functional or scripting style] |
 | `vibe:review-ddd` | [✅ / ❌] | [active if domain layer detected / inactive: no explicit domain model] |
 | `vibe:review-architecture` | [✅ / ❌] | [active if `.vibe/` exists / inactive: run `/vibe:sync` first] |
 | `vibe:review-performance` | [✅ / ❌] | [active if API/server/full-stack / inactive: CLI, library, or script] |
 | `vibe:review-web-security` | [✅ / ❌] | [active if the project exposes HTTP endpoints / inactive: no HTTP surface] |
+| `vibe:review-pentest` | [✅ / ❌] | [active if a runnable networked app can be probed locally / inactive: no runnable network surface] |
 ```
 
 ---

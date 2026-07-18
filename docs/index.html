@@ -365,7 +365,7 @@
   <div class="wrap hero">
     <p class="kicker">a claude code plugin</p>
     <h1>You describe.<br><span class="hl">Claude ships.</span><br><span class="dim">Nothing manual.</span></h1>
-    <p class="lede">Vibe coding, made rigorous: the human stays <em>Product Owner only</em> — describing requirements and judging outcomes — while Claude writes the tests first, implements, proves the change actually runs, reviews its own work with twelve specialized agents, and cuts the release.</p>
+    <p class="lede">Vibe coding, made rigorous: the human stays <em>Product Owner only</em> — describing requirements and judging outcomes — while Claude writes the tests first, implements, proves the change actually runs, reviews its own work with sixteen specialized agents, and cuts the release.</p>
     <div class="install">
       <span><span class="prompt">❯</span> <code id="install-cmd">/plugin marketplace add neolao/claude-plugin-vibe</code></span>
       <button class="copy-btn" id="copy" type="button" aria-label="Copy install command">copy</button>
@@ -384,7 +384,7 @@
       <div class="benefits">
         <div class="benefit reveal"><span class="num">01</span><h3>TDD-first, always</h3><p>Features and fixes start with a failing test, written in your stead — and every test is checked against a shared definition of a <em>tautological test</em>, so green means something.</p></div>
         <div class="benefit reveal"><span class="num">02</span><h3>Proven, not just green</h3><p>After implementation the change is exercised for real — nominal path plus an edge case — instead of trusting the suite. If the app won't even launch, it records a working launch recipe and retries.</p></div>
-        <div class="benefit reveal"><span class="num">03</span><h3>Twelve-angle review</h3><p>One command fans out specialized agents — security, complexity, naming, robustness, tests, and more — in parallel, each auditing a single dimension, then fixes what they find.</p></div>
+        <div class="benefit reveal"><span class="num">03</span><h3>Sixteen-angle review</h3><p>One command fans out specialized agents — security, complexity, naming, robustness, tests, and more — in parallel, each auditing a single dimension, then fixes what they find.</p></div>
         <div class="benefit reveal"><span class="num">04</span><h3>A backlog that commits itself</h3><p>Queue ideas as numbered items, singly or in bulk; bundled requests are split into independent items automatically. Implement any of them later just by number.</p></div>
         <div class="benefit reveal"><span class="num">05</span><h3>Feedback loops that close</h3><p>Pre-existing test failures are offered for tracking, a reminder fires when several changes ship unreviewed, and every dead end is logged with its diagnosis so no session rediscovers it.</p></div>
         <div class="benefit reveal"><span class="num">06</span><h3>Nothing silently lost</h3><p>Work is committed before every turn ends — even interruptions — and a one-command release finalizes the changelog, refreshes docs, bumps the version, and tags.</p></div>
@@ -413,7 +413,7 @@
 
         <div class="demo reveal">
           <div class="demo-copy">
-            <h3><span class="cmd-name">/vibe:review</span> — twelve auditors at once</h3>
+            <h3><span class="cmd-name">/vibe:review</span> — sixteen auditors at once</h3>
             <p>Review agents run <b>in parallel</b>, each on a single quality dimension, with a color-coded status line. The test-review agent doesn't just read your tests — it <b>runs the real suite</b> and flags tests that can't actually fail. Findings are fixed, not filed away.</p>
           </div>
           <div class="term" data-demo="review">
@@ -474,18 +474,22 @@
   <section id="review-agents">
     <div class="wrap">
       <p class="sec-label reveal">the reviewers</p>
-      <h2 class="reveal">Twelve dimensions, audited in parallel</h2>
+      <h2 class="reveal">Sixteen dimensions, audited in parallel</h2>
       <p class="sec-intro reveal">Each agent focuses on exactly one quality dimension. <code>/vibe:init</code> decides which ones apply to your project.</p>
       <div class="agents reveal">
+        <span class="agent"><span class="h">▲</span>antipatterns</span>
         <span class="agent"><span class="h">▲</span>architecture</span>
         <span class="agent"><span class="h">▲</span>complexity</span>
         <span class="agent"><span class="h">▲</span>ddd</span>
         <span class="agent"><span class="h">▲</span>dependencies</span>
         <span class="agent"><span class="h">▲</span>hygiene</span>
         <span class="agent"><span class="h">▲</span>naming</span>
+        <span class="agent"><span class="h">▲</span>overengineering</span>
+        <span class="agent"><span class="h">▲</span>pentest</span>
         <span class="agent"><span class="h">▲</span>performance</span>
         <span class="agent"><span class="h">▲</span>robustness</span>
         <span class="agent"><span class="h">▲</span>security</span>
+        <span class="agent"><span class="h">▲</span>simplicity</span>
         <span class="agent"><span class="h">▲</span>solid</span>
         <span class="agent"><span class="h">▲</span>tests</span>
         <span class="agent"><span class="h">▲</span>web-security</span>
@@ -501,7 +505,7 @@
         <li><b>/vibe:init</b> <span>— once, to set up CLAUDE.md and the codebase context map. Both are committed with your project, so every session and every teammate starts from the same conventions.</span></li>
         <li><b>/vibe:backlog "some feature idea"</b> <span>— queue work as it comes to mind.</span></li>
         <li><b>/vibe:feature 001</b> <span>— or <code>/vibe:fix "bug description"</code> — implement, TDD-first, proven end-to-end.</span></li>
-        <li><b>/vibe:review</b> <span>— periodically, to catch quality issues across twelve dimensions.</span></li>
+        <li><b>/vibe:review</b> <span>— periodically, to catch quality issues across sixteen dimensions.</span></li>
         <li><b>/vibe:release patch|minor|major</b> <span>— ship a version.</span></li>
       </ol>
     </div>
@@ -578,7 +582,7 @@
     ],
     review: [
       { t:"cmd", text:"/vibe:review" },
-      { t:"out", d:500, html:'<span class="t-dim">●</span> fanning out <span class="t-bold">7 review agents</span> in parallel…' },
+      { t:"out", d:500, html:'<span class="t-dim">●</span> fanning out <span class="t-bold">10 review agents</span> in parallel…' },
       { t:"run", d:300, html:'  <span class="t-bold">security</span>    <span class="t-dim">scanning for secrets & injections</span>', after:2300, done:'  <span class="t-ok">✓</span> <span class="t-bold">security</span>    <span class="t-ok">clean</span>' },
       { t:"run", d:150, html:'  <span class="t-bold">naming</span>      <span class="t-dim">auditing identifiers</span>', after:2900, done:'  <span class="t-ok">✓</span> <span class="t-bold">naming</span>      <span class="t-dim">1 finding</span>' },
       { t:"run", d:150, html:'  <span class="t-bold">complexity</span>  <span class="t-dim">measuring nesting & length</span>', after:3400, done:'  <span class="t-ok">✓</span> <span class="t-bold">complexity</span>  <span class="t-dim">1 finding</span>' },
