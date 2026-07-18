@@ -18,6 +18,10 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - A one-command versioned release: changelog finalized, docs refreshed, version bumped, commit and tag created
 <!-- vibe:end:features -->
 
+## Requirements
+
+[Claude Code](https://claude.com/claude-code) with plugin support — if the `/plugin` command is not recognized, update Claude Code to the latest version.
+
 ## Installation
 
 <!-- vibe:begin:install -->
@@ -26,6 +30,21 @@ Add the marketplace, then install the plugin, from within Claude Code:
 ```
 /plugin marketplace add neolao/claude-plugin-vibe
 /plugin install vibe
+```
+
+Verify the install with `/plugin list` — `vibe` should appear as enabled, and the `/vibe:*` commands become available.
+
+To update later, refresh the marketplace and reload:
+
+```
+/plugin marketplace update vibe
+/reload-plugins
+```
+
+To uninstall:
+
+```
+/plugin uninstall vibe
 ```
 <!-- vibe:end:install -->
 
@@ -44,6 +63,7 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 /vibe:fix 003
 /vibe:review
 /vibe:review src/auth/
+/vibe:review-web-security
 /vibe:sync
 /vibe:changelog
 /vibe:changelog 1.2.0
@@ -91,6 +111,8 @@ The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-sta
 3. `/vibe:feature 001` (or `/vibe:fix "bug description"`) to implement, TDD-first
 4. `/vibe:review` periodically to catch quality issues
 5. `/vibe:release patch|minor|major` to ship a version
+
+`/vibe:init` and `/vibe:sync` generate `CLAUDE.md` and the `.vibe/` context map inside *your* project — both are meant to be committed with it, so every session (and every teammate) starts from the same conventions and codebase map.
 
 ## Documentation
 
