@@ -3,7 +3,7 @@
 **Role:** Specialized review sub-agents, each auditing one quality dimension; orchestrated in parallel by `/vibe:review`. All are read-only (no source edits) except `review-tests`, which also executes the project's real test suite (including isolated e2e/integration runs) to ground its findings in actual pass/fail evidence.
 **Files:** `agents/*.md`
 **Exports:**
-- `review-architecture` — architectural drift, module boundaries, layering
+- `review-architecture` — architectural drift, module boundaries, layering, violations of ADRs in `.vibe/decisions/` (legacy `.vibe/decisions.md` as fallback)
 - `review-complexity` — cyclomatic complexity, function length, nesting
 - `review-ddd` — Domain-Driven Design alignment (domain-heavy projects only)
 - `review-dependencies` — dependency health, vulnerabilities, abandoned packages

@@ -8,7 +8,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - Automated, TDD-first workflow: implement features and fix bugs with tests written first, in the human's stead, actively checked against writing tests that can't actually fail (tautological tests)
 - Work is always committed before ending a turn, even if interrupted, so nothing is silently lost across a session reset
 - Every feature or fix is proven to actually work after implementation — exercised for real, nominal path plus an edge case or error path, instead of just trusting green tests; if the app itself won't launch (unusual project setup), it self-heals by recording a working launch recipe before giving up
-- A backlog to queue feature ideas before implementation — items are committed automatically as they're added, singly or in bulk — with automatic detection when a request bundles several independent capabilities so it can be split into separate items
+- A backlog to queue feature ideas before implementation — items are committed automatically as they're added, singly or in bulk — with automatic detection when a request bundles several independent capabilities so it can be split into separate items; items can also be removed on demand (after confirmation), and picked up directly by number when implementing a feature or a fix
 - Multi-agent code review covering architecture, complexity, DDD, dependencies, hygiene, naming, performance, robustness, security, SOLID principles, and tests (including real execution of the suite and aggressive flagging of tests that can't actually fail) — with a color-coded status line while it runs
 - A web-security audit, on demand
 - An internal codebase context map kept in sync automatically, so Claude ramps up fast on any session
@@ -36,8 +36,11 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 ```
 /vibe:init
 /vibe:backlog "Add a dark mode toggle to the settings page"
+/vibe:backlog remove 003
 /vibe:feature "Add a dark mode toggle to the settings page"
+/vibe:feature 003
 /vibe:fix "Login form submits twice when pressing Enter"
+/vibe:fix 003
 /vibe:review
 /vibe:review src/auth/
 /vibe:sync
@@ -49,7 +52,7 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 /vibe:release 1.2.0
 ```
 
-`/vibe:backlog` with no argument lists pending items instead of adding one. `/vibe:review` with no path reviews the full codebase. `/vibe:changelog` and `/vibe:release` accept an explicit version (or `major`/`minor`/`patch` for `/vibe:release`) — omit it to keep entries under `[Unreleased]` or let `/vibe:release` infer the bump from them.
+`/vibe:backlog` with no argument lists pending items instead of adding one; `remove NNN` deletes an active item after confirmation. `/vibe:feature` and `/vibe:fix` accept either a natural-language description or a backlog item number — the item is then marked done automatically once shipped. `/vibe:review` with no path reviews the full codebase. `/vibe:changelog` and `/vibe:release` accept an explicit version (or `major`/`minor`/`patch` for `/vibe:release`) — omit it to keep entries under `[Unreleased]` or let `/vibe:release` infer the bump from them.
 <!-- vibe:end:usage -->
 
 ## Skills (commands)
