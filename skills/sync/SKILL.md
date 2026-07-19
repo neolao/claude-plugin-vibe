@@ -88,21 +88,29 @@ Detect domain term candidates from: class names, type names, interface names, an
 
 A valid glossary term is a **business concept** the project owns and names — something that defines *what the domain does*, not *how the code achieves it*. Ask: would a domain expert (someone who knows the project's business domain but not this codebase) recognize this term as meaningful? If not, it does not belong here.
 
-If `.vibe/glossary.md` already exists:
-1. **Audit existing terms** against the exclusion criteria above. For each term that violates them, flag it as a candidate for removal.
-2. If any candidates are found, **list them to the user** with a one-line reason for each, and ask for confirmation before removing them. Do not remove anything without explicit approval.
-3. **Preserve all approved definitions**, only add newly detected terms.
+The glossary is **fully generated and self-cleaning** — no confirmation is ever requested, no definition is left for a human to refine. Every entry is traceable to the code through its `Sources:` line; that traceability is what makes each lifecycle decision below automatic.
 
-New terms are added with a minimal entry — definitions are to be refined by the user:
+Entry format:
 
 ```markdown
 # Ubiquitous Language
 
 ## [Domain term]
-**Definition:** [what this concept means in the domain — fill in]
-**Code:** `ClassName`, `functionName()` in `src/...`
-**Do not confuse with:** [similar but distinct term, if applicable]
+[1–3 sentence definition derived from how the code actually uses the concept: what it is, its responsibility, its relations to other glossary terms. Never a stub — if no real definition can be derived from the code, the term does not belong here.]
+**Do not confuse with:** [similar but distinct glossary term, if applicable]
+_Sources: `src/orders/checkout.ts`, `src/orders/cart.ts`_
 ```
+
+Lifecycle — applied automatically, each change listed in the Step 9 report, never subject to confirmation:
+
+- **Add** — a newly detected concept gets an entry with a derived definition and its `Sources:` line.
+- **Redefine** — rewrite an entry only when the code usage backing it actually changed, so diffs stay minimal.
+- **Remove (exclusion)** — an existing term that violates the exclusion criteria above is removed, with a one-line reason.
+- **Remove (orphan)** — an existing term whose `Sources:` files no longer exist, and for which no new usage is found in the code, is removed, with a one-line reason.
+- **Incremental mode** — re-derive only the entries with at least one source in the changed set (same mechanics as modules, Step 2). Still resolve every entry's `Sources:` line to catch orphans: that check is a file-existence test, not a re-scan.
+- **`--full`** — re-derive every entry from scratch.
+
+**Migrating a legacy glossary** (entries without a `Sources:` line, from the era of hand-refined definitions): if the existing definition is non-empty, not a stub, and does not contradict the code, keep its text and add the `Sources:` line. Replace it only if it is a stub (e.g. "fill in") or contradicts the code. Mention each migrated or replaced entry in the report.
 
 ## Step 8 — Write `.vibe/index.md`
 
@@ -134,7 +142,7 @@ Note: `.vibe/decisions/` is maintained by `/vibe:feature` — not auto-generated
 `.vibe/` mixes regenerable artifacts with irreplaceable data — this README tells humans and agents which is which.
 
 - **Full mode:** (re)write the file.
-- **Incremental mode:** create it only if absent (the content is static).
+- **Incremental mode:** rewrite it if absent or if its content no longer matches the template below (e.g. the template changed in a newer plugin version); otherwise leave it.
 
 ```markdown
 # .vibe/ — Project context
@@ -144,7 +152,7 @@ Maintained by the `/vibe:*` commands. Lifecycle of each entry:
 | Entry | Lifecycle |
 |---|---|
 | `README.md`, `index.md`, `modules/`, `models.md` | ♻ Regenerable — recreated by `/vibe:sync`, do not edit by hand |
-| `glossary.md` | ⚠ Hybrid — structure generated, **definitions refined by hand**: never delete without review |
+| `glossary.md` | ♻ Regenerable — fully derived from code, auto-cleaned by each sync, do not edit by hand |
 | `decisions/` | 🔒 ADRs — append-only, never regenerated, do not delete |
 | `backlog/` | 🔒 Work data — never regenerated, do not delete |
 | `escalations.md` | 🔒 Work data — append-only escalation log, do not delete |
@@ -160,5 +168,5 @@ Never delete the whole `.vibe/` directory: only the ♻ entries can be recovered
 - Mode used: full or incremental
 - N modules updated (out of N total)
 - N data models updated
-- N terms in glossary (N new, N preserved)
+- N terms in glossary (N added, N redefined, N removed — each removal with its one-line reason)
 - Do NOT print file contents unless asked

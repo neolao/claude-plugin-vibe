@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- The project glossary is now fully autonomous — no manual editing or confirmation ever needed. Definitions are derived from how the code actually uses each concept and carry their sources, so every entry stays traceable; at each sync, terms whose subject disappeared from the code or that never belonged to the business vocabulary are removed automatically and simply listed in the report, and hand-written definitions from before are preserved as long as they still match the code
 - Documentation generation no longer stops at a fixed two-file catalog: it inventories every aspect of the project a new developer would need explained and creates one document per aspect — data model, API surface, workflows, testing, local setup, or anything else substantial — with Mermaid diagrams embedded where a picture explains better than prose. Generated docs are now written for developers (real module names, file paths, and commands, always taken from the actual code), while the README keeps its end-user voice; guardrails prevent inflation (no near-empty files, no paraphrasing of existing sources, and a generated doc whose subject disappeared from the code is deleted)
 
 ## [1.5.0] - 2026-07-19

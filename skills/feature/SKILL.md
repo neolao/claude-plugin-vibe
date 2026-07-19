@@ -73,7 +73,7 @@ Read `$ARGUMENTS` carefully. Then read:
 Compare the terms used in `$ARGUMENTS` against `.vibe/glossary.md`:
 - If a term in `$ARGUMENTS` is a synonym or near-synonym of a glossary term: stop and correct the user — "The term X is not in the glossary, did you mean Y?"
 - If a term is ambiguous (could map to multiple glossary concepts): ask for clarification before proceeding
-- If a new term appears that is not in the glossary and is not obviously technical: flag it — "X is not in the glossary. Is this a new business concept to add?"
+- If a new term appears that is not in the glossary and is not obviously technical: do not block and do not ask — if the feature really introduces this concept into the code, the `.vibe/` sync in Step 7 will detect it and add it with a definition derived from the code; just note the new term in the final report
 
 Do not proceed with implementation until terminology is aligned.
 
