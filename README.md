@@ -15,7 +15,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - Feedback loops that close themselves: test failures that predate a piece of work are offered for backlog tracking instead of being forgotten, a reminder appears once several changes have shipped without a review, the set of active review agents is re-checked against the project's current shape at every review (a project that grows an HTTP surface automatically gains the web audits — deliberate opt-outs are never overridden), and every dead end (three failed self-correction attempts) is logged with its diagnosis so the next session doesn't rediscover it from scratch
 - An internal codebase context map kept in sync automatically, so Claude ramps up fast on any session
 - Changelog maintenance from git history, following Keep a Changelog
-- README and `docs/` kept current automatically, with an index linking every doc file
+- README and developer documentation kept current automatically — as many documents (with diagrams where they help) as the project needs for a new developer to understand it, with an index linking every doc file
 - A one-command versioned release: changelog finalized, docs refreshed, version bumped, commit and tag created
 - A public website with looping animated terminal demos of the workflow, mobile-friendly, served straight from the repository with no build step
 <!-- vibe:end:features -->
@@ -88,7 +88,7 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 | `/vibe:review` | Run a multi-agent code quality review and auto-apply fixes |
 | `/vibe:sync` | Generate/update `.vibe/` — the codebase context map |
 | `/vibe:changelog` | Update `CHANGELOG.md` from git history |
-| `/vibe:docs` | Generate/refresh README managed sections and `docs/` |
+| `/vibe:docs` | Generate/refresh README managed sections and developer docs in `docs/` (diagrams included) |
 | `/vibe:release` | Bump version, finalize the changelog, commit and tag a release |
 
 ## Review agents
