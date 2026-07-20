@@ -2,26 +2,50 @@
 
 # Architecture
 
-An overview of how this plugin is put together, for anyone extending it or just curious how it works.
+This plugin has **no runtime of its own**: it is a set of Markdown instruction files (skills and agents) consumed directly by Claude Code, plus one shell script and three JSON manifests. There is no build step, no package manifest, no test framework — deliberately (see `docs/development.md`).
 
-## Slash commands
+## Repository layout
 
-Each `/vibe:*` command is a self-contained instruction set that Claude Code reads when the command is invoked — no external service, no build step. Together they cover the full workflow: setting up project conventions, managing a backlog, implementing features and fixes with TDD, running a multi-agent review, keeping an internal codebase map in sync, updating the changelog, generating documentation, and cutting releases.
+```
+claude-plugin-vibe/
+├── .claude-plugin/
+│   ├── plugin.json        # plugin identity: name "vibe", version, keywords
+│   └── marketplace.json   # marketplace listing pointing at this repo
+├── skills/<name>/SKILL.md # one directory per /vibe:* slash command (9 skills)
+├── agents/review-*.md     # one file per review dimension (17 agents)
+├── scripts/subagent-statusline.sh  # renders the agent-panel status line
+├── settings.json          # wires the subagentStatusLine hook to the script
+└── docs/                  # this developer documentation + the GitHub Pages site
+```
 
-Implementing a feature or fixing a bug doesn't stop at green tests: both commands hand off to Claude Code's native `verify` skill to exercise the change for real — nominal path plus an edge case or error path — before considering the work done. If `verify` can't even launch the app because of how the project is set up (not because of the change itself), they fall back to `run-skill-generator` once to record a working launch recipe before trying again. Both commands also self-check every test they write against a shared definition of a tautological test — one that can't actually fail no matter what — so a green suite means the behavior was really verified, not just exercised. Both also commit whatever was produced before ending their turn no matter where the conversation stops — full completion or an early interruption — so work never sits uncommitted across a session reset. The backlog command follows the same never-leave-work-uncommitted principle: every item it creates, whether added one at a time or in bulk, is committed on the spot — and removing an item (always with confirmation, never a completed one) is committed the same way. Backlog items can be picked up by number by either implementation command — feature work or bug fix alike — which marks them in progress while being worked on and moves them to the done pile once the change is committed.
+## How the parts connect
 
-Three feedback mechanisms keep the workflow honest over time. Test failures that predate a piece of work are offered for backlog tracking at the end of the run instead of being silently forgotten. Each review run is recorded, so after several changes ship without one, the workflow reminds that a review is due. And whenever a self-correction loop gives up after its three attempts, the diagnosis is written to an append-only log that the implementation commands read back at the start of every run — a dead end hit in one session informs the next instead of being rediscovered.
+```mermaid
+flowchart LR
+    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>9 slash commands"]
+    skills -- "/vibe:review fans out" --> agents["agents/review-*.md<br/>17 review agents"]
+    skills -- "generate & read" --> vibe[".vibe/ context map<br/>(in the target project)"]
+    manifests[".claude-plugin/*.json<br/>settings.json"] -- "register commands & hook" --> skills
+    manifests -- "subagentStatusLine hook" --> statusline["scripts/subagent-statusline.sh"]
+    agents -- "progress shown by" --> statusline
+```
 
-## Review agents
+## Skills (`skills/`)
 
-The review command fans out to a set of specialized agents, each auditing a single quality dimension — anti-patterns, architecture, complexity, domain-driven design, dependencies, hexagonal architecture (ports & adapters), hygiene, naming, overengineering, performance, robustness, security, simplicity, SOLID principles, tests, web security, and penetration testing. They run in parallel and report independently, so a review covers many angles at once without slowing down. Which agents apply to a given project is recorded per project, and re-checked against the project's current shape at the start of every review: an audit whose surface has appeared since (say, a command-line tool that grew a web API) is switched on automatically, one whose surface disappeared is switched off, and deliberate opt-outs are never overridden — every such change is reported so it can be reverted. Every check belongs to exactly one agent: where two dimensions border each other (for example simplicity versus overengineering, or code-level versus web security), each agent's instructions explicitly delegate the neighboring checks to their owner, so the same issue is never reported from two angles.
+Each `/vibe:<name>` command is a self-contained instruction set in `skills/<name>/SKILL.md`, with frontmatter `name`, `description`, and optional `argument-hint`. The nine skills cover the full workflow: `init`, `backlog`, `feature`, `fix`, `review`, `sync`, `changelog`, `docs`, `release`.
 
-Most of these agents are strictly read-only. Two go further. The test-review agent actually runs the project's real test suite — including any isolated end-to-end or integration commands — so its findings are backed by real pass/fail evidence rather than inference alone; it applies the same tautological-test definition used when tests are written, and always flags a match as a high-severity finding rather than a minor note. The penetration-testing agent launches a local, disposable instance of the project's own application and probes it from the outside, reporting only vulnerabilities it actually reproduced — and it is strictly bounded to that local instance, never a shared or third-party system.
+Skills invoke each other through the Skill tool rather than duplicating logic: `feature` and `fix` call `sync` (and `docs`/`changelog` steps) before committing; `init` calls `sync` to bootstrap `.vibe/`; `release` refreshes docs and changelog. Runtime verification is delegated to Claude Code's native `verify` skill. The dynamic side of these flows is documented in `docs/workflows.md`.
 
-## Status line
+## Review agents (`agents/`)
 
-A small utility renders a custom status line for the agent panel, most useful when several review agents run side by side during a review — it shows each agent's progress, name, and description at a glance.
+Each `agents/review-<dimension>.md` audits exactly one quality dimension (frontmatter: `name`, `description`). `/vibe:review` reads the activation table in the target project's `CLAUDE.md`, re-checks each activation condition against the project's current state, then runs the active agents in parallel. Overlapping checks are explicitly delegated: each check belongs to one owning agent, so the same issue is never reported from two angles.
 
-## Plugin packaging
+Most agents are read-only; two are not: `review-tests` executes the project's real test suite, and `review-pentest` probes a locally-launched instance of the target application.
 
-The plugin declares itself to Claude Code and to its marketplace through a couple of manifest files, and wires the status line utility so it activates automatically once the plugin is installed.
+## Status line (`scripts/` + `settings.json`)
+
+`settings.json` declares a `subagentStatusLine` hook pointing at `scripts/subagent-statusline.sh`. The script reads a JSON payload (`{columns, tasks: [...]}`) on stdin, and emits one `{id, content}` JSON line per agent row via `jq` — status icon, bold name, description, token count, truncated to the terminal width. It is most visible during `/vibe:review`, which can run up to 17 agents side by side.
+
+## Generated state in target projects
+
+The plugin writes into the *target* project (not into this repo, except for dogfooding): `CLAUDE.md` (by `init`), the `.vibe/` context map — `index.md`, `modules/`, `models.md`, a fully code-derived `glossary.md`, plus work data `backlog/`, `decisions/`, `escalations.md`, `last-review.md` (by `sync` and the workflow skills). The lifecycle of each entry is recorded in the generated `.vibe/README.md`.

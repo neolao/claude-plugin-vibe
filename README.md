@@ -14,6 +14,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - Multi-agent code review covering anti-patterns, architecture, complexity, DDD, dependencies, hexagonal architecture (ports & adapters, for projects that chose it), hygiene, naming, overengineering, performance, robustness, security, simplicity, SOLID principles, tests (including real execution of the suite and aggressive flagging of tests that can't actually fail), web security, and dynamic penetration testing against a locally-run instance of the app — every check belongs to exactly one agent, so the same issue is never reported twice — with a color-coded status line while it runs
 - Feedback loops that close themselves: test failures that predate a piece of work are offered for backlog tracking instead of being forgotten, a reminder appears once several changes have shipped without a review, the set of active review agents is re-checked against the project's current shape at every review (a project that grows an HTTP surface automatically gains the web audits — deliberate opt-outs are never overridden), and every dead end (three failed self-correction attempts) is logged with its diagnosis so the next session doesn't rediscover it from scratch
 - An internal codebase context map kept in sync automatically, so Claude ramps up fast on any session
+- A self-maintaining project glossary: definitions are derived from how the code actually uses each concept and carry their sources; terms whose subject disappeared from the code or that never belonged to the business vocabulary are removed automatically at each sync — no manual editing or confirmation ever needed
 - Changelog maintenance from git history, following Keep a Changelog
 - README and developer documentation kept current automatically — as many documents (with diagrams where they help) as the project needs for a new developer to understand it, with an index linking every doc file
 - A one-command versioned release: changelog finalized, docs refreshed, version bumped, commit and tag created
@@ -116,7 +117,10 @@ The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-sta
 ## Documentation
 
 <!-- vibe:begin:docs-index -->
-- [docs/architecture.md](docs/architecture.md) — how the plugin's commands, review agents, status line, and packaging fit together
+- [docs/architecture.md](docs/architecture.md) — the plugin's moving parts (skills, review agents, status line, manifests) and how they connect, with a component diagram
+- [docs/development.md](docs/development.md) — how to work on the plugin itself: conventions, frontmatter shapes, the no-tests-by-design policy, and the release process
+- [docs/website.md](docs/website.md) — how the demo website works: scripted terminal demos, deployment, and the pitfalls not to reintroduce
+- [docs/workflows.md](docs/workflows.md) — the lifecycles behind the commands (feature/fix flow, backlog items, self-correction and escalation, review feedback loops), with diagrams
 <!-- vibe:end:docs-index -->
 
 ## License
