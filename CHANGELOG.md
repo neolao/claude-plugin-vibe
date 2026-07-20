@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `/vibe:review` no longer errors out while waiting for its 12 parallel review agents to finish — it now simply waits for their automatic completion notifications instead of attempting to schedule a wakeup
+
 ## [1.6.0] - 2026-07-20
 
 ### Added

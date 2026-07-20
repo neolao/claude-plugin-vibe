@@ -66,6 +66,8 @@ Do not enumerate files yourself — each agent scans the code on its own. Instea
 
 Mark ALL `Run review-*` tasks `in_progress`, then launch every active agent **in parallel** — a single message containing one Agent call per active agent (`subagent_type: "vibe:review-<dimension>"`). Include the scope and exclusion list from Step 2 in each agent's prompt. They are all read-only, so there is no conflict; running them sequentially only wastes time.
 
+Once launched, simply wait: each agent's completion arrives automatically as a notification when it finishes — there is nothing else to do to "wait" for them. Do not schedule a wakeup or poll for their status; that machinery is for external state the harness cannot track (a CI run, a remote queue), not for agents launched via the Agent tool, which already notify on completion.
+
 - `Run vibe:review-tests` — test relevance, quality, and real execution: invoke the `vibe:review-tests` agent via the Agent tool (`subagent_type: "vibe:review-tests"`). Unlike the other dimension agents, it actually executes the project's test suite (including isolated e2e/integration runs) to ground findings in real pass/fail evidence, not just static reading. Core principle: **tests must verify observable behaviour, not implementation details** — a test that breaks on refactoring without any behaviour change is a false test. Collect all findings (coverage gaps, relevance issues, quality issues).
 - `Run vibe:review-naming` — naming issues
 - `Run vibe:review-complexity` — complexity hotspots
