@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-07-20
+
 ### Added
 
 - The project glossary is now fully autonomous — no manual editing or confirmation ever needed. Definitions are derived from how the code actually uses each concept and carry their sources, so every entry stays traceable; at each sync, terms whose subject disappeared from the code or that never belonged to the business vocabulary are removed automatically and simply listed in the report, and hand-written definitions from before are preserved as long as they still match the code
@@ -127,7 +129,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.2.0...v1.3.0
