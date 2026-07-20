@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-07-20
+
 ### Fixed
 
 - `/vibe:review` no longer errors out while waiting for its parallel review agents to finish — it now simply waits for their automatic completion notifications instead of attempting to schedule a wakeup
+
+### Changed
+
+- The subagent status-line panel shown during `/vibe:review`, `/vibe:feature`, and `/vibe:fix` now reports a clear diagnostic instead of going silently blank on malformed input, and its status-to-icon logic reads as a plain lookup instead of a branching chain
 
 ## [1.6.0] - 2026-07-20
 
@@ -133,7 +139,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.1...HEAD
+[1.6.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.3.0...v1.4.0

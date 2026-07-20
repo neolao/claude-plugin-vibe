@@ -44,7 +44,7 @@ Most agents are read-only; two are not: `review-tests` executes the project's re
 
 ## Status line (`scripts/` + `settings.json`)
 
-`settings.json` declares a `subagentStatusLine` hook pointing at `scripts/subagent-statusline.sh`. The script reads a JSON payload (`{columns, tasks: [...]}`) on stdin, and emits one `{id, content}` JSON line per agent row via `jq` — status icon, bold name, description, token count, truncated to the terminal width. It is most visible during `/vibe:review`, which can run up to 17 agents side by side.
+`settings.json` declares a `subagentStatusLine` hook pointing at `scripts/subagent-statusline.sh`. The script reads a JSON payload (`{columns, tasks: [...]}`) on stdin, and emits one `{id, content}` JSON line per agent row via `jq` — status icon (looked up from the task's status through a small alias table), bold name, description, token count, truncated to the terminal width. On malformed input it logs a diagnostic to stderr and exits cleanly instead of going silently blank. It is most visible during `/vibe:review`, which can run up to 17 agents side by side.
 
 ## Generated state in target projects
 
