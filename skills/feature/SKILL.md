@@ -14,6 +14,8 @@ If this skill stops before its own Step 8 — plan rejected, clarifying question
 
 ## Escalation log — record every dead end
 
+_Entry format kept identical to `skills/fix/SKILL.md` and `skills/review/SKILL.md` — canonical shape documented in `.vibe/models.md` ("Escalation entry"); update all three together._
+
 Whenever a self-correction loop in this skill exhausts its 3 attempts and escalates to the user (Step 4, Step 4b), append an entry to `.vibe/escalations.md` (create the file if absent) **before** escalating — the standing rule above then commits it with the `wip:` commit, so the diagnosis survives the session:
 
 ```markdown
@@ -29,6 +31,8 @@ The file is append-only. The only permitted mutation: when later work resolves a
 ## Step 1 — Understand the requirement
 
 ### Backlog resolution
+
+_Kept identical to `skills/fix/SKILL.md`'s Backlog resolution — update both together._
 
 Before treating `$ARGUMENTS` as a free-form description, check whether it is a reference to a backlog item.
 

@@ -1,25 +1,31 @@
 #!/bin/sh
+set -eu
 # Custom subagent panel rows — status icon, bold name, description, token count.
 # Input: {..., "columns": N, "tasks": [{id,name,type,status,description,label,startTime,tokenCount,tokenSamples,cwd}, ...]}
 # Output: one JSON line per row to override: {"id": "...", "content": "..."}
 
 input=$(cat)
 
-echo "$input" | jq -c '
+if ! output=$(printf '%s' "$input" | jq -c '
   (.columns // 60) as $columns |
   .tasks[]? |
-  . as $t |
-  ($t.status // "running") as $status |
-  (
-    if $status == "completed" or $status == "success" then "[32m✓[0m"
-    elif $status == "failed" or $status == "error" then "[31m✗[0m"
-    elif $status == "running" or $status == "in_progress" then "[33m▶[0m"
-    else "[2m○[0m"
-    end
-  ) as $icon |
-  ($t.name // $t.label // "agent") as $name |
-  ($t.tokenCount // 0) as $tok |
-  (($t.description // "") | gsub("\n"; " ")) as $desc |
-  ($icon + " [1m" + $name + "[0m — " + $desc + " · " + ($tok|tostring) + " tok") as $line |
-  {id: $t.id, content: ($line[0:$columns])}
-'
+  . as $task |
+  ({
+    completed: "[32m✓[0m",
+    success: "[32m✓[0m",
+    failed: "[31m✗[0m",
+    error: "[31m✗[0m",
+    running: "[33m▶[0m",
+    in_progress: "[33m▶[0m"
+  }[$task.status // "running"] // "[2m○[0m") as $icon |
+  ($task.name // $task.label // "agent") as $name |
+  ($task.tokenCount // 0) as $tokenCount |
+  (($task.description // "") | gsub("\n"; " ")) as $desc |
+  {id: $task.id, content: (($icon + " [1m" + $name + "[0m — " + $desc + " · " + ($tokenCount|tostring) + " tok")[0:$columns])}
+' 2>&1); then
+  echo "subagent-statusline: jq failed on hook input" >&2
+  echo "$output" >&2
+  exit 0
+fi
+
+echo "$output"

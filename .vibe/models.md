@@ -52,7 +52,7 @@ Title = first `# ` heading of the body. Defined in: `skills/backlog/SKILL.md`
 Body: `# Short title` + **Context** / **Decision** / **Reason** / **Rejected alternatives**. Append-only. Defined in: `skills/feature/SKILL.md`
 
 ## Escalation entry (`.vibe/escalations.md`)
-Append-only `## [YYYY-MM-DD] /vibe:<skill> — short title` sections with **Context** / **Attempts** / **Diagnosis** / **Status** (`open`, later flippable to `resolved (YYYY-MM-DD)`). Defined in: `skills/feature/SKILL.md`, `skills/fix/SKILL.md`
+Append-only `## [YYYY-MM-DD] /vibe:<skill> — short title` sections with **Context** / **Attempts** / **Diagnosis** / **Status** (`open`, later flippable to `resolved (YYYY-MM-DD)`). Defined in: `skills/feature/SKILL.md`, `skills/fix/SKILL.md`, `skills/review/SKILL.md`
 
 ## Glossary entry (`.vibe/glossary.md`)
 `## Term` heading + 1–3 sentence code-derived definition + optional `**Do not confuse with:**` + `_Sources:_` line listing the files where the concept lives (drives orphan detection and incremental re-derivation). Defined in: `skills/sync/SKILL.md`

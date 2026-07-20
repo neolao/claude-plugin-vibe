@@ -120,7 +120,7 @@ For each fix:
 2. Run the test command (from manifest) to confirm nothing broke
 3. Run the lint command (from manifest)
 4. If tests break: revert, diagnose, try an alternative approach — repeat up to 3 times
-5. If still failing after 3 attempts: append an entry to the escalation log `.vibe/escalations.md` (create the file if absent; append-only — heading `## [YYYY-MM-DD] /vibe:review — [short title]` followed by `**Context:**`, `**Attempts:**`, `**Diagnosis:**`, `**Status:** open` lines), then skip that fix and escalate to the user with a precise diagnosis
+5. If still failing after 3 attempts: append an entry to the escalation log `.vibe/escalations.md` (create the file if absent; append-only — heading `## [YYYY-MM-DD] /vibe:review — [short title]` followed by `**Context:**`, `**Attempts:**`, `**Diagnosis:**`, `**Status:** open` lines — same shape as `skills/feature/SKILL.md` and `skills/fix/SKILL.md`, canonical form in `.vibe/models.md` ("Escalation entry"); update all three together), then skip that fix and escalate to the user with a precise diagnosis
 
 Do NOT auto-fix Low findings — report them only.
 
