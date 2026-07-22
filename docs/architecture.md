@@ -34,7 +34,7 @@ flowchart LR
 
 Each `/vibe:<name>` command is a self-contained instruction set in `skills/<name>/SKILL.md`, with frontmatter `name`, `description`, and optional `argument-hint`. Nine skills are user-invocable slash commands covering the full workflow: `init`, `backlog`, `feature`, `fix`, `review`, `sync`, `changelog`, `docs`, `release`. A tenth, `tasks`, sets `user-invocable: false` — hidden from the `/` menu, callable only by the other nine through the Skill tool.
 
-Skills invoke each other through the Skill tool rather than duplicating logic: `feature` and `fix` call `sync` (and `docs`/`changelog` steps) before committing; `init` calls `sync` to bootstrap `.vibe/`; `release` refreshes docs and changelog. `init`, `feature`, `fix`, `review`, `docs`, and `release` all delegate task-list creation to `tasks`, which owns the only fallback logic (a scratchpad checklist) for when `TaskCreate` is unavailable in the environment. Runtime verification is delegated to Claude Code's native `verify` skill. The dynamic side of these flows is documented in `docs/workflows.md`.
+Skills invoke each other through the Skill tool rather than duplicating logic: `feature` and `fix` call `sync` (and `docs`/`changelog` steps) before committing; `init` calls `sync` to bootstrap `.vibe/`; `release` refreshes docs and changelog. `init`, `feature`, `fix`, `review`, `docs`, and `release` all delegate task-list creation to `tasks`, which owns the only fallback logic (a scratchpad checklist) for when `TaskCreate` is unavailable in the environment. Runtime verification is delegated to Claude Code's native `run` skill. The dynamic side of these flows is documented in `docs/workflows.md`.
 
 ## Review agents (`agents/`)
 

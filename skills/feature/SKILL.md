@@ -269,24 +269,23 @@ Mark the task `completed`, then mark the corresponding "Runtime smoke" task `in_
 
 Tests are green — that is not proof the feature works. Adopt a skeptical posture: assume it is broken until you have personally observed it behave correctly, for real, the way a suspicious QA engineer would. Do not replay the happy path once and declare victory.
 
-**Invoke the `verify` skill** (Skill tool, `skill: "verify"`) to exercise the change end-to-end and observe its real behavior. Give it as context:
+**Invoke the `run` skill** (Skill tool, `skill: "run"`) to launch and drive the app, exercising the change end-to-end and observing its real behavior. Give it as context:
 - the runtime verification scenario from the Step 2 plan
 - the acceptance criteria
 - at least one edge case or the error path to drive for real, in addition to the nominal path — not just asserted in a test, actually triggered and observed
 
 ### Interpret the result
 
-**If `verify` confirms the behavior is correct:** mark the "Runtime smoke" task `completed`, then mark the "Refactor + lint" task `in_progress`.
+**If `run` confirms the behavior is correct:** mark the "Runtime smoke" task `completed`, then mark the "Refactor + lint" task `in_progress`.
 
-**If `verify` reports it could not run due to missing configuration** (missing env var, config file, secret): identify exactly what is missing from its output, create a minimal stub — a `.env.test` with placeholder values, or a stub config file — sufficient to exercise the happy path, and re-invoke `verify`.
+**If `run` reports it could not launch the app due to missing configuration** (missing env var, config file, secret): identify exactly what is missing from its output, create a minimal stub — a `.env.test` with placeholder values, or a stub config file — sufficient to exercise the happy path, and re-invoke `run`.
 
 **Self-correction loop:**
-- If `verify` reports the behavior is wrong or still fails: diagnose, fix the code (not the stub, unless the stub was wrong), re-invoke `verify`.
+- If `run` reports the behavior is wrong, still fails, or it cannot get the app launched at all: diagnose, fix the code (not the stub, unless the stub was wrong), re-invoke `run`.
 - Repeat up to **3 attempts** total.
-- **If all 3 failures are about launching the app itself** (build errors, crashes on start, `verify` unable to get the app running at all) rather than about the behavior under test: invoke the `run-skill-generator` skill (Skill tool, `skill: "run-skill-generator"`) to establish a working launch recipe for the project, then re-invoke `verify` once more.
-- If it still fails after that: append the entry to the escalation log (see "Escalation log" above), then stop and escalate to the user with `verify`'s exact findings and what was tried.
+- If it still fails after that: append the entry to the escalation log (see "Escalation log" above), then stop and escalate to the user with `run`'s exact findings and what was tried.
 
-Do not mark the task `completed` until `verify` confirms correct behavior.
+Do not mark the task `completed` until `run` confirms correct behavior.
 
 ## Step 5 — Refactor (clean)
 

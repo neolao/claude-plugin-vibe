@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `/vibe:feature` and `/vibe:fix` no longer fail their runtime verification step with a "cannot be used with Skill tool" error — they now drive the app through the current native runtime-check skill instead of the retired one, and no longer need a separate fallback skill to figure out how to launch the project first
+
 ## [1.6.2] - 2026-07-22
 
 ### Fixed

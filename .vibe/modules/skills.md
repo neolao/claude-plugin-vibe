@@ -5,8 +5,8 @@
 **Exports:**
 - `/vibe:init` (`skills/init/SKILL.md`) — initialize/regenerate `CLAUDE.md` for vibe coding
 - `/vibe:backlog` (`skills/backlog/SKILL.md`) — list, add, or remove (`remove NNN`, confirmation required, done items excluded) feature backlog items, committing each creation/removal itself
-- `/vibe:feature` (`skills/feature/SKILL.md`) — implement a new feature via TDD (free-form description or backlog reference `NNN`), verify it for real via the native `verify` skill (assume-it's-broken posture), update CHANGELOG
-- `/vibe:fix` (`skills/fix/SKILL.md`) — fix a bug via TDD (reproduce first; free-form description or backlog reference `NNN`), verify it for real via the native `verify` skill (assume-it's-broken posture), update CHANGELOG
+- `/vibe:feature` (`skills/feature/SKILL.md`) — implement a new feature via TDD (free-form description or backlog reference `NNN`), verify it for real via the native `run` skill (assume-it's-broken posture), update CHANGELOG
+- `/vibe:fix` (`skills/fix/SKILL.md`) — fix a bug via TDD (reproduce first; free-form description or backlog reference `NNN`), verify it for real via the native `run` skill (assume-it's-broken posture), update CHANGELOG
 - `/vibe:review` (`skills/review/SKILL.md`) — orchestrate multi-agent code quality review, re-checking the CLAUDE.md agent activation table against the current project state at each run (deliberate opt-outs respected), recording each run in `.vibe/last-review.md`
 - `/vibe:sync` (`skills/sync/SKILL.md`) — generate/update `.vibe/` codebase map; the glossary it maintains is fully code-derived and self-cleaning (`Sources:` anchors, automatic add/redefine/remove, no confirmation)
 - `/vibe:changelog` (`skills/changelog/SKILL.md`) — update `CHANGELOG.md` from git history

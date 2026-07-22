@@ -13,13 +13,13 @@ flowchart TD
     A["/vibe:feature 'description' or NNN"] --> B["Terminology check against .vibe/glossary.md<br/>+ duplicate check (backlog, modules)"]
     B --> C["Plan — non-obvious decisions recorded<br/>as ADRs in .vibe/decisions/NNN-slug.md"]
     C --> D["TDD: failing test → implementation → green<br/>(self-checked against tautological tests)"]
-    D --> E["verify: exercise the change for real<br/>(nominal path + edge/error path)"]
+    D --> E["run: exercise the change for real<br/>(nominal path + edge/error path)"]
     E --> F["CHANGELOG.md under Unreleased"]
     F --> G["/vibe:docs + /vibe:sync refresh"]
     G --> H["Commit feat:/fix: — a turn never ends<br/>with uncommitted files (wip: on early exit)"]
 ```
 
-If `verify` fails three times on launch mechanics only (not on the behavior under test), the skill falls back once to `run-skill-generator` to record a working launch recipe before escalating.
+`run` launches the app itself — finding or establishing how to start the project — so no separate fallback skill is needed if launch mechanics are the blocker; after 3 failed attempts the skill escalates directly.
 
 ## Task tracking
 
@@ -52,7 +52,7 @@ stateDiagram-v2
 
 ## Self-correction and escalation
 
-Every corrective loop in `feature`/`fix` (failing test, lint, `verify`) is bounded to three attempts:
+Every corrective loop in `feature`/`fix` (failing test, lint, `run`) is bounded to three attempts:
 
 ```mermaid
 flowchart LR
