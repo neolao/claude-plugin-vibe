@@ -21,6 +21,22 @@ flowchart TD
 
 If `verify` fails three times on launch mechanics only (not on the behavior under test), the skill falls back once to `run-skill-generator` to record a working launch recipe before escalating.
 
+## Task tracking
+
+`init`, `feature`, `fix`, `review`, `docs`, and `release` never call `TaskCreate` directly — each invokes the internal `skills/tasks/SKILL.md` once per run, right after its plan is approved, passing the task list (subjects + `blockedBy` chains) as `$ARGUMENTS`:
+
+```mermaid
+flowchart LR
+    S["Calling skill's plan approved"] --> T["vibe:tasks invoked"]
+    T --> A{"TaskCreate available?"}
+    A -- yes --> C["Tasks created via TaskCreate<br/>+ addBlockedBy chains"]
+    A -- no --> F["Fallback announced explicitly<br/>+ task-list.md checklist written to scratchpad"]
+    C --> M["Calling skill's 'mark task ...' steps<br/>→ TaskUpdate"]
+    F --> N["Calling skill's 'mark task ...' steps<br/>→ edit task-list.md"]
+```
+
+`tasks` owns the only fallback logic in the plugin for this failure mode, so every caller degrades the same way instead of each reinventing its own message. The scratchpad checklist preserves the declared order but does not enforce `blockedBy` — unlike a real `TaskCreate` chain, nothing stops a step from being checked out of order; the constraint holds only because the calling skill always executes its own steps sequentially.
+
 ## Backlog item lifecycle
 
 Items live in `.vibe/backlog/NNN-slug.md` (shape in `.vibe/models.md`), created and committed on the spot by `/vibe:backlog`:

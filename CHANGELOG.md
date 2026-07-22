@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.2] - 2026-07-22
+
 ### Fixed
 
 - `/vibe:init`, `/vibe:feature`, `/vibe:fix`, `/vibe:review`, `/vibe:docs`, and `/vibe:release` no longer produce a confusing message when the dedicated task system isn't available in the environment — they now announce the fallback clearly and track progress through a checklist instead
@@ -143,7 +145,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.1...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.2...HEAD
+[1.6.2]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.4.0...v1.5.0

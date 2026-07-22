@@ -11,7 +11,7 @@ claude-plugin-vibe/
 ├── .claude-plugin/
 │   ├── plugin.json        # plugin identity: name "vibe", version, keywords
 │   └── marketplace.json   # marketplace listing pointing at this repo
-├── skills/<name>/SKILL.md # one directory per /vibe:* slash command (9 skills)
+├── skills/<name>/SKILL.md # one directory per skill (9 /vibe:* slash commands + 1 internal)
 ├── agents/review-*.md     # one file per review dimension (17 agents)
 ├── scripts/subagent-statusline.sh  # renders the agent-panel status line
 ├── settings.json          # wires the subagentStatusLine hook to the script
@@ -22,7 +22,7 @@ claude-plugin-vibe/
 
 ```mermaid
 flowchart LR
-    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>9 slash commands"]
+    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>9 slash commands + tasks (internal)"]
     skills -- "/vibe:review fans out" --> agents["agents/review-*.md<br/>17 review agents"]
     skills -- "generate & read" --> vibe[".vibe/ context map<br/>(in the target project)"]
     manifests[".claude-plugin/*.json<br/>settings.json"] -- "register commands & hook" --> skills
@@ -32,9 +32,9 @@ flowchart LR
 
 ## Skills (`skills/`)
 
-Each `/vibe:<name>` command is a self-contained instruction set in `skills/<name>/SKILL.md`, with frontmatter `name`, `description`, and optional `argument-hint`. The nine skills cover the full workflow: `init`, `backlog`, `feature`, `fix`, `review`, `sync`, `changelog`, `docs`, `release`.
+Each `/vibe:<name>` command is a self-contained instruction set in `skills/<name>/SKILL.md`, with frontmatter `name`, `description`, and optional `argument-hint`. Nine skills are user-invocable slash commands covering the full workflow: `init`, `backlog`, `feature`, `fix`, `review`, `sync`, `changelog`, `docs`, `release`. A tenth, `tasks`, sets `user-invocable: false` — hidden from the `/` menu, callable only by the other nine through the Skill tool.
 
-Skills invoke each other through the Skill tool rather than duplicating logic: `feature` and `fix` call `sync` (and `docs`/`changelog` steps) before committing; `init` calls `sync` to bootstrap `.vibe/`; `release` refreshes docs and changelog. Runtime verification is delegated to Claude Code's native `verify` skill. The dynamic side of these flows is documented in `docs/workflows.md`.
+Skills invoke each other through the Skill tool rather than duplicating logic: `feature` and `fix` call `sync` (and `docs`/`changelog` steps) before committing; `init` calls `sync` to bootstrap `.vibe/`; `release` refreshes docs and changelog. `init`, `feature`, `fix`, `review`, `docs`, and `release` all delegate task-list creation to `tasks`, which owns the only fallback logic (a scratchpad checklist) for when `TaskCreate` is unavailable in the environment. Runtime verification is delegated to Claude Code's native `verify` skill. The dynamic side of these flows is documented in `docs/workflows.md`.
 
 ## Review agents (`agents/`)
 
