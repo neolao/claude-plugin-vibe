@@ -8,6 +8,7 @@ No application data models exist in this repo (no database, no request/response 
 | name | string | skill slug, matches directory name, invoked as `/vibe:<name>` |
 | description | string | one-line purpose, shown in skill listings |
 | argument-hint | string | optional — shown as placeholder for `$ARGUMENTS` |
+| user-invocable | boolean | optional, default `true` — `false` hides the skill from the `/` menu while leaving it invocable by other skills via the Skill tool; used by `skills/tasks/SKILL.md` |
 Defined in: `skills/*/SKILL.md`
 
 ## Agent frontmatter (`agents/*.md`)
@@ -56,3 +57,6 @@ Append-only `## [YYYY-MM-DD] /vibe:<skill> — short title` sections with **Cont
 
 ## Glossary entry (`.vibe/glossary.md`)
 `## Term` heading + 1–3 sentence code-derived definition + optional `**Do not confuse with:**` + `_Sources:_` line listing the files where the concept lives (drives orphan detection and incremental re-derivation). Defined in: `skills/sync/SKILL.md`
+
+## Task list creation (`skills/tasks/SKILL.md`)
+`fix`, `feature`, `review`, `docs`, `release`, and `init` no longer call `TaskCreate` directly — each invokes the internal, non-user-invocable `vibe:tasks` skill once (Skill tool, task list as `$ARGUMENTS`) to create its task list. `vibe:tasks` owns the only fallback logic: if `TaskCreate` is unavailable, it says so explicitly and writes the list as a Markdown checklist (`- [ ] ...`) to `task-list.md` in the scratchpad directory instead — the calling skill's later `Mark the task ... completed` instructions are then carried out through whichever mechanism `vibe:tasks` selected. Defined in: `skills/tasks/SKILL.md`

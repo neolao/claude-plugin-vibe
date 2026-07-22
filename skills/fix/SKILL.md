@@ -118,9 +118,9 @@ Do not write a single line of code until the user approves the plan. If the user
 
 ## Step 2b — Create task list
 
-Once the plan is approved, create the full task list using TaskCreate before writing any code. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
+Once the plan is approved and before writing any code, invoke the `vibe:tasks` skill (Skill tool) to create the full task list below. **Keep subject names short (≤ 30 chars)** — they appear in the status line. `vibe:tasks` creates the tasks via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable — either way, its instructions then govern how every later "Mark the task ... completed" instruction in this skill is carried out.
 
-Create these tasks in order, chaining them with `addBlockedBy`:
+Pass these tasks as `$ARGUMENTS`, in order, chained with `blockedBy`:
 
 ```
 [Fix] Write failing test   ← no dependency

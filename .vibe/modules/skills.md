@@ -12,5 +12,6 @@
 - `/vibe:changelog` (`skills/changelog/SKILL.md`) — update `CHANGELOG.md` from git history
 - `/vibe:docs` (`skills/docs/SKILL.md`) — refresh README managed sections (end-user voice) + developer docs in `docs/`: open-ended file set driven by an aspect inventory, Mermaid diagrams where they help
 - `/vibe:release` (`skills/release/SKILL.md`) — bump version, finalize CHANGELOG, commit and tag
+- `vibe:tasks` (`skills/tasks/SKILL.md`) — internal, `user-invocable: false`: creates a task list for the invoking skill via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable; invoked by `init`, `feature`, `fix`, `review`, `docs`, and `release`, never directly by users
 
 **Depends on:** [`modules/plugin-manifest.md`](plugin-manifest.md) (skills are registered/shipped as part of the plugin)

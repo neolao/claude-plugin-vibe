@@ -178,9 +178,9 @@ ADR files are append-only: NEVER modify or delete an existing file in `.vibe/dec
 
 ## Step 2b — Create task list
 
-Once the plan is approved, create the full task list using TaskCreate before writing any code. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
+Once the plan is approved and before writing any code, invoke the `vibe:tasks` skill (Skill tool) to create the full task list below. **Keep subject names short (≤ 30 chars)** — they appear in the status line. `vibe:tasks` creates the tasks via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable — either way, its instructions then govern how every later "Mark the task ... completed" instruction in this skill is carried out.
 
-**For each development sub-task** identified in the plan, create 4 tasks in this order using `addBlockedBy` to chain them:
+Pass these as `$ARGUMENTS`. **For each development sub-task** identified in the plan, create 4 tasks in this order using `addBlockedBy` to chain them:
 
 ```
 [SubTask A] Write tests      ← no dependency (or blockedBy last task of previous sub-task)

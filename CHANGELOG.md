@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `/vibe:init`, `/vibe:feature`, `/vibe:fix`, `/vibe:review`, `/vibe:docs`, and `/vibe:release` no longer produce a confusing message when the dedicated task system isn't available in the environment — they now announce the fallback clearly and track progress through a checklist instead
+
 ## [1.6.1] - 2026-07-20
 
 ### Fixed

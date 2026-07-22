@@ -23,7 +23,9 @@ Create a versioned release following Semantic Versioning.
 
 ## Step 1b — Create task list
 
-Create the full task list using TaskCreate. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
+Invoke the `vibe:tasks` skill (Skill tool) to create the full task list below. **Keep subject names short (≤ 30 chars)** — they appear in the status line. `vibe:tasks` creates the tasks via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable — either way, its instructions then govern how every later "Mark the task ... completed" instruction in this skill is carried out.
+
+Pass these as `$ARGUMENTS`:
 
 ```
 Run pre-release checks    ← no dependency

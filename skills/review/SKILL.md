@@ -30,7 +30,9 @@ Use the reconciled table to determine the active agents for this run.
 
 ## Step 1b — Create task list
 
-Based on the active agents determined in Step 1, create tasks using TaskCreate. Always include the three mandatory agents. Add optional agents only if active. The `Run review-*` tasks are independent (no `blockedBy` between them) — they run in parallel. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
+Based on the active agents determined in Step 1, invoke the `vibe:tasks` skill (Skill tool) to create the tasks below. Always include the three mandatory agents. Add optional agents only if active. The `Run review-*` tasks are independent (no `blockedBy` between them) — they run in parallel. **Keep subject names short (≤ 30 chars)** — they appear in the status line. `vibe:tasks` creates the tasks via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable — either way, its instructions then govern how every later "Mark ... task" instruction in this skill is carried out.
+
+Pass these as `$ARGUMENTS`:
 
 ```
 Run vibe:review-tests              ← no dependency

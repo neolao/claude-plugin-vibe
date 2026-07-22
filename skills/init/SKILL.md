@@ -55,9 +55,9 @@ If Step 1 found at least one manifest, skip this step entirely.
 
 ## Step 1c — Create task list
 
-Based on what was found in Steps 1 and 1b, create tasks using TaskCreate. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
+Based on what was found in Steps 1 and 1b, invoke the `vibe:tasks` skill (Skill tool) to create the tasks below. **Keep subject names short (≤ 30 chars)** — they appear in the status line. `vibe:tasks` creates the tasks via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable — either way, its instructions then govern how every later "Mark the task ... completed" instruction in this skill is carried out.
 
-If the project is empty (Step 1b was triggered) **or** missing tooling was detected:
+If the project is empty (Step 1b was triggered) **or** missing tooling was detected, pass this as `$ARGUMENTS`:
 
 ```
 Bootstrap / install tooling      ← no dependency
@@ -65,7 +65,7 @@ Write CLAUDE.md                  ← blockedBy "Bootstrap / install tooling"
 Run lint, tests, and vibe:sync   ← blockedBy "Write CLAUDE.md"
 ```
 
-If no missing tooling and project already has a manifest:
+If no missing tooling and project already has a manifest, pass this instead:
 
 ```
 Write CLAUDE.md                  ← no dependency
