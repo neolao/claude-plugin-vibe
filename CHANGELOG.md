@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-07-23
+
 ### Added
 
 - `/vibe:init` now creates the project's `README.md` if it's missing, and adds any of the standard sections it's missing if it already exists — no more starting a project without a README ready for the rest of the workflow
@@ -161,7 +163,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.3...v1.7.0
 [1.6.3]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.2...v1.6.3
 [1.6.2]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.1...v1.6.2
