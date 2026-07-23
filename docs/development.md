@@ -29,6 +29,10 @@ Do not introduce a `package.json`, test framework, or linter without an explicit
 
 Same approach: one file `agents/review-<dimension>.md` with frontmatter `name` + `description`, auditing exactly **one** quality dimension. If a check borders an existing agent's territory, add an explicit delegation note in both files — every check must have a single owning agent. Conditionally-relevant agents (e.g. `review-hexagonal`, `review-pentest`) state their activation condition in the description.
 
+## Adding or changing an expert agent
+
+One file `agents/expert-<domain>.md`, frontmatter `name` + `description` (the description states the trigger — "Consult when the task…" — since it drives per-task selection). Body: the shared "Modes" section (kept byte-identical across all `expert-*` files — plan consultation returns `REQUIREMENTS`/`RISKS`/`TEST SCENARIOS`, implementation consultation answers one question) plus a short domain checklist. Before adding a new domain, check it doesn't already have a `review-*` counterpart — the roster is deliberately scoped to avoid that overlap (`.vibe/decisions/001-expert-personas-scope.md`). Keep each file terse: it is loaded into context on every consultation.
+
 ## Conventions that must hold
 
 - No secrets or credentials in any file.

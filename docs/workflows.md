@@ -11,8 +11,9 @@ The lifecycles implemented by the `/vibe:*` commands. Static structure is covere
 ```mermaid
 flowchart TD
     A["/vibe:feature 'description' or NNN"] --> B["Terminology check against .vibe/glossary.md<br/>+ duplicate check (backlog, modules)"]
-    B --> C["Plan — non-obvious decisions recorded<br/>as ADRs in .vibe/decisions/NNN-slug.md"]
-    C --> D["TDD: failing test → implementation → green<br/>(self-checked against tautological tests)"]
+    B --> C["Plan drafted, then up to 3 matching<br/>agents/expert-*.md consulted in parallel"]
+    C --> C2["Plan — non-obvious decisions recorded<br/>as ADRs in .vibe/decisions/NNN-slug.md"]
+    C2 --> D["TDD: failing test → implementation → green<br/>(self-checked against tautological tests,<br/>experts answer on-demand questions)"]
     D --> E["run: exercise the change for real<br/>(nominal path + edge/error path)"]
     E --> F["CHANGELOG.md under Unreleased"]
     F --> G["/vibe:docs + /vibe:sync refresh"]
@@ -20,6 +21,8 @@ flowchart TD
 ```
 
 `run` launches the app itself — finding or establishing how to start the project — so no separate fallback skill is needed if launch mechanics are the blocker; after 3 failed attempts the skill escalates directly.
+
+Expert consultation is selection-based, not mandatory: an expert is invoked only if its domain (UI/UX, visual design, REST API, CLI, data, Linux/system, operations) clearly matches the task — often zero experts for a narrow bug fix. Each expert returns `REQUIREMENTS`/`RISKS`/`TEST SCENARIOS` folded into the plan at consultation time, and can be asked one further question per sub-task during implementation if a design question in its domain isn't answered by the codebase or the approved plan.
 
 ## Task tracking
 

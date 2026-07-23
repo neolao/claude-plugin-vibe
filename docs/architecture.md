@@ -12,7 +12,8 @@ claude-plugin-vibe/
 │   ├── plugin.json        # plugin identity: name "vibe", version, keywords
 │   └── marketplace.json   # marketplace listing pointing at this repo
 ├── skills/<name>/SKILL.md # one directory per skill (9 /vibe:* slash commands + 1 internal)
-├── agents/review-*.md     # one file per review dimension (17 agents)
+├── agents/review-*.md     # one file per review dimension (17 agents, after-the-fact critics)
+├── agents/expert-*.md     # one file per domain expert (7 agents, before/during prescriptive consultants)
 ├── scripts/subagent-statusline.sh  # renders the agent-panel status line
 ├── settings.json          # wires the subagentStatusLine hook to the script
 └── docs/                  # this developer documentation + the GitHub Pages site
@@ -24,6 +25,7 @@ claude-plugin-vibe/
 flowchart LR
     user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>9 slash commands + tasks (internal)"]
     skills -- "/vibe:review fans out" --> agents["agents/review-*.md<br/>17 review agents"]
+    skills -- "/vibe:feature, /vibe:fix consult" --> experts["agents/expert-*.md<br/>7 domain experts"]
     skills -- "generate & read" --> vibe[".vibe/ context map<br/>(in the target project)"]
     manifests[".claude-plugin/*.json<br/>settings.json"] -- "register commands & hook" --> skills
     manifests -- "subagentStatusLine hook" --> statusline["scripts/subagent-statusline.sh"]
@@ -41,6 +43,10 @@ Skills invoke each other through the Skill tool rather than duplicating logic: `
 Each `agents/review-<dimension>.md` audits exactly one quality dimension (frontmatter: `name`, `description`). `/vibe:review` reads the activation table in the target project's `CLAUDE.md`, re-checks each activation condition against the project's current state, then runs the active agents in parallel. Overlapping checks are explicitly delegated: each check belongs to one owning agent, so the same issue is never reported from two angles.
 
 Most agents are read-only; two are not: `review-tests` executes the project's real test suite, and `review-pentest` probes a locally-launched instance of the target application.
+
+## Expert agents (`agents/expert-*.md`)
+
+Where review agents critique code that already exists, `agents/expert-<domain>.md` agents prescribe requirements *before or during* implementation — consulted by `/vibe:feature` and `/vibe:fix` while planning (up to 3, selected per-task by matching the brief against agent descriptions) and on demand for one precise question per sub-task while coding. The roster (`ui-ux`, `frontend-design`, `api-rest`, `cli-dx`, `data`, `linux`, `ops`) is deliberately limited to domains with no `review-*` counterpart, to avoid two near-duplicate definitions of the same expertise — recorded in `.vibe/decisions/001-expert-personas-scope.md`. Unlike review agents, there is no per-project activation table: selection happens per task, not per project.
 
 ## Status line (`scripts/` + `settings.json`)
 
