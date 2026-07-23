@@ -18,7 +18,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - Set up once, per project: the language documentation, backlog items, and comments should be written in, remembered across every run and reused as the default the next time it's asked
 - A self-maintaining project glossary: definitions are derived from how the code actually uses each concept and carry their sources; terms whose subject disappeared from the code or that never belonged to the business vocabulary are removed automatically at each sync — no manual editing or confirmation ever needed
 - Changelog maintenance from git history, following Keep a Changelog
-- README and developer documentation kept current automatically — as many documents (with diagrams where they help) as the project needs for a new developer to understand it, with an index linking every doc file
+- README and developer documentation kept current automatically — as many documents (with diagrams where they help) as the project needs for a new developer to understand it, with an index linking every doc file; a project without a README yet gets one created automatically the first time it's set up, and an existing README gets any missing standard section added
 - A one-command versioned release: changelog finalized, docs refreshed, version bumped, commit and tag created
 - A public website with looping animated terminal demos of the workflow, mobile-friendly, served straight from the repository with no build step
 <!-- vibe:end:features -->
@@ -84,7 +84,7 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 
 | Command | Purpose |
 |---|---|
-| `/vibe:init` | Initialize or regenerate the project's `CLAUDE.md` for vibe coding |
+| `/vibe:init` | Initialize or regenerate the project's `CLAUDE.md` and `README.md` for vibe coding |
 | `/vibe:backlog` | List or add feature backlog items (`.vibe/backlog/`) |
 | `/vibe:feature` | Implement a new feature using TDD, then update the changelog |
 | `/vibe:fix` | Fix a bug using TDD (reproduce first), then update the changelog |

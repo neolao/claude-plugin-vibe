@@ -3,7 +3,7 @@
 **Role:** Slash-command definitions (`/vibe:*`) that drive the vibe-coding workflow — each is a self-contained instruction set read by Claude Code when the command is invoked.
 **Files:** `skills/*/SKILL.md` (one directory per skill)
 **Exports:**
-- `/vibe:init` (`skills/init/SKILL.md`) — initialize/regenerate `CLAUDE.md` for vibe coding, including a language question (documentation, backlog items, comments) recorded in a `## Project language` section
+- `/vibe:init` (`skills/init/SKILL.md`) — initialize/regenerate `CLAUDE.md` for vibe coding, including a language question (documentation, backlog items, comments) recorded in a `## Project language` section; also ensures `README.md` exists and has its standard managed sections, by delegating to `vibe:docs` rather than writing README content itself
 - `/vibe:backlog` (`skills/backlog/SKILL.md`) — list, add, or remove (`remove NNN`, confirmation required, done items excluded) feature backlog items, committing each creation/removal itself
 - `/vibe:feature` (`skills/feature/SKILL.md`) — implement a new feature via TDD (free-form description or backlog reference `NNN`), verify it for real via the native `run` skill (assume-it's-broken posture), update CHANGELOG
 - `/vibe:fix` (`skills/fix/SKILL.md`) — fix a bug via TDD (reproduce first; free-form description or backlog reference `NNN`), verify it for real via the native `run` skill (assume-it's-broken posture), update CHANGELOG

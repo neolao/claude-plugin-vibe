@@ -1,6 +1,6 @@
 ---
 name: init
-description: Initialize or regenerate the project CLAUDE.md for vibe coding (TDD-first, no manual testing)
+description: Initialize or regenerate the project CLAUDE.md and README.md for vibe coding (TDD-first, no manual testing)
 argument-hint: "[optional: project description]"
 ---
 
@@ -73,6 +73,7 @@ If the project is empty (Step 1b was triggered) **or** missing tooling was detec
 Bootstrap / install tooling      ← no dependency
 Write CLAUDE.md                  ← blockedBy "Bootstrap / install tooling"
 Run lint, tests, and vibe:sync   ← blockedBy "Write CLAUDE.md"
+Create/update README             ← blockedBy "Run lint, tests, and vibe:sync"
 ```
 
 If no missing tooling and project already has a manifest, pass this instead:
@@ -80,6 +81,7 @@ If no missing tooling and project already has a manifest, pass this instead:
 ```
 Write CLAUDE.md                  ← no dependency
 Run lint, tests, and vibe:sync   ← blockedBy "Write CLAUDE.md"
+Create/update README             ← blockedBy "Run lint, tests, and vibe:sync"
 ```
 
 ## Step 2 — Identify gaps
@@ -270,10 +272,27 @@ Mark the `Run lint, tests, and vibe:sync` task `in_progress`.
 
 Mark the task `completed`.
 
-4. Report to the user (concise, no full CLAUDE.md dump unless asked):
+## Step 5b — Create or complete README.md
+
+Mark the `Create/update README` task `in_progress`.
+
+`/vibe:init` sets up the project's vibe-coding conventions — that includes README.md, which the rest of the workflow (`/vibe:feature`, `/vibe:docs`, `/vibe:release`) relies on having managed sections to keep current. Do not leave this to chance:
+
+**Invoke the `vibe:docs` skill** using the Skill tool (`skill: "vibe:docs"`). It already handles every case correctly on its own:
+- No `README.md` at all → it creates one with a minimal skeleton (title, one-paragraph description) plus the four managed sections (features, install, usage, docs index).
+- A `README.md` exists but has no managed sections → it lists the sections that could be added and asks the user which ones to add.
+- A `README.md` exists with managed sections already → it refreshes their content in place, nothing outside the markers is touched.
+
+Do not reimplement this logic here — always delegate to `vibe:docs` rather than writing or checking README content directly.
+
+Mark the task `completed`.
+
+## Step 6 — Report
+
+Report to the user (concise, no full CLAUDE.md dump unless asked):
    - Detected stack and project type
    - Chosen project language
    - What was installed or configured (if anything)
    - Lint status + test status
    - One sentence describing what CLAUDE.md now enforces
-   - Mention that `/vibe:docs` is available to generate project documentation (README managed sections + docs/)
+   - README status: created / sections added / already up to date

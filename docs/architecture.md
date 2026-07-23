@@ -48,4 +48,4 @@ Most agents are read-only; two are not: `review-tests` executes the project's re
 
 ## Generated state in target projects
 
-The plugin writes into the *target* project (not into this repo, except for dogfooding): `CLAUDE.md` (by `init`), the `.vibe/` context map — `index.md`, `modules/`, `models.md`, a fully code-derived `glossary.md`, plus work data `backlog/`, `decisions/`, `escalations.md`, `last-review.md` (by `sync` and the workflow skills). The lifecycle of each entry is recorded in the generated `.vibe/README.md`.
+The plugin writes into the *target* project (not into this repo, except for dogfooding): `CLAUDE.md` and `README.md` (by `init`, which delegates the README's managed sections to `docs`), the `.vibe/` context map — `index.md`, `modules/`, `models.md`, a fully code-derived `glossary.md`, plus work data `backlog/`, `decisions/`, `escalations.md`, `last-review.md` (by `sync` and the workflow skills). The lifecycle of each entry is recorded in the generated `.vibe/README.md`.

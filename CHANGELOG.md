@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `/vibe:init` now creates the project's `README.md` if it's missing, and adds any of the standard sections it's missing if it already exists — no more starting a project without a README ready for the rest of the workflow
+
 ## [1.7.0] - 2026-07-23
 
 ### Added
