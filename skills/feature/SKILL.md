@@ -141,6 +141,19 @@ Record the baseline results — they will be referenced in Step 2 and Step 9.
 
 ## Step 2 — Plan (must be validated before proceeding)
 
+### Expert consultation
+
+_Kept identical to `skills/fix/SKILL.md`'s Expert consultation — update both together._
+
+Draft the technical plan (your working notes) first, then confront the brief and those notes against the descriptions of the available `vibe:expert-*` agents. These are consulting experts: they prescribe domain requirements *before* implementation — the `review-*` agents remain the after-the-fact critics.
+
+- Select the experts whose domain clearly matches the task — the most relevant ones, **3 maximum**. If none clearly matches, consult none: no consultation "on principle".
+- Invoke the selected experts **in parallel** (Task tool, agent type `vibe:expert-<name>`), each with a *plan consultation* prompt: the feature brief plus the relevant technical plan notes.
+- Integrate their output before presenting the plan: fold `REQUIREMENTS` and `TEST SCENARIOS` into the plan (what will be built / what will be tested), and `RISKS` into the assumptions or your working notes.
+- You remain the architect: if an expert requirement conflicts with the project's established patterns or with another expert, decide — and record why in your working notes.
+
+### Presenting the plan
+
 Present the implementation plan to the user and **wait for explicit approval** before writing any code.
 
 The user is a Product Owner, not a developer: present the plan in plain, non-technical language. **Never mention file names, class/function/method/variable names, module names, or other implementation details.**
@@ -151,6 +164,7 @@ The plan must cover, in a few short sentences:
 - **Ce qui va être testé** — the scenarios that will be verified, phrased as user actions and expected results (the normal case, a couple of edge cases, and what happens when something goes wrong)
 - **Comment on va vérifier que ça marche vraiment** — a plain description of how the feature will be exercised for real once built (e.g. "on va lancer l'appli et essayer d'exporter un rapport")
 - **Hypothèses** — any assumption made because the request was ambiguous, in plain language; mention if pre-existing test failures were found (Step 1b) without technical detail
+- **Regards experts appliqués** — only if experts were consulted: the domains, in plain words (e.g. « ergonomie », « API », « données ») — never the agent names or their raw output
 
 Keep the technical plan (exact modules/files touched, new files to create, technical test strategy, runtime verification command and arguments) as your own working notes — it guides the implementation but is not part of what you show the user.
 
@@ -254,6 +268,12 @@ Mark the task `completed`, then mark the corresponding "Implement" task `in_prog
 Write the minimum implementation to make the tests pass. Do not over-engineer.
 
 Run the test command after each meaningful change. Iterate until all tests pass.
+
+### On-demand expert consultation
+
+_Applies to Steps 3–5. Kept identical to `skills/fix/SKILL.md`'s On-demand expert consultation — update both together._
+
+If a design question arises squarely within the domain of a `vibe:expert-*` agent and neither the codebase, the approved plan, nor a Step 2 expert brief answers it: consult that expert (*implementation consultation* mode — one precise question plus minimal code context) instead of guessing. Limit: **one consultation per expert per sub-task**. Record the recommendation in your working notes; it refines the implementation but never reopens the approved plan — if it would, escalate to the user instead.
 
 ### Self-correction loop
 
@@ -363,6 +383,7 @@ Summarize concisely:
 - Lint status
 - The changelog entry that was added
 - Any assumption made in Step 1
+- Experts consulted (if any): each domain and one notable requirement it contributed
 
 ### Pre-existing failures follow-up
 

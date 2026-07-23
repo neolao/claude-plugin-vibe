@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `/vibe:feature` and `/vibe:fix` now consult specialized domain experts (UI/UX, visual design, REST API, CLI, data & persistence, Linux/system, operations) while planning — up to 3 matching experts enrich the plan with the domain requirements a Product Owner wouldn't think to state, and can each answer one precise question during implementation
+
 ## [1.8.0] - 2026-07-23
 
 ### Added

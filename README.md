@@ -11,6 +11,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - Work is always committed before ending a turn, even if interrupted, so nothing is silently lost across a session reset
 - Every feature or fix is proven to actually work after implementation — exercised for real, nominal path plus an edge case or error path, instead of just trusting green tests; it works out how to launch the app on its own, even on an unusual project setup, before giving up
 - A backlog to queue feature ideas before implementation — items are committed automatically as they're added, singly or in bulk — with automatic detection when a request bundles several independent capabilities so it can be split into separate items; items can also be removed on demand (after confirmation), and picked up directly by number when implementing a feature or a fix
+- Specialized domain experts consulted automatically while planning a feature or a fix — UI/UX, visual design, REST API, CLI, data & persistence, Linux/system, operations — each contributing the requirements a Product Owner wouldn't think to state (empty/loading/error states, HTTP status codes, safe migrations…) before a single line of code is written
 - Multi-agent code review covering anti-patterns, architecture, complexity, DDD, dependencies, hexagonal architecture (ports & adapters, for projects that chose it), hygiene, naming, overengineering, performance, robustness, security, simplicity, SOLID principles, tests (including real execution of the suite and aggressive flagging of tests that can't actually fail), web security, and dynamic penetration testing against a locally-run instance of the app — every check belongs to exactly one agent, so the same issue is never reported twice — with a color-coded status line while it runs
 - Feedback loops that close themselves: test failures that predate a piece of work are offered for backlog tracking instead of being forgotten, a reminder appears once several changes have shipped without a review, the set of active review agents is re-checked against the project's current shape at every review (a project that grows an HTTP surface automatically gains the web audits — deliberate opt-outs are never overridden), and every dead end (three failed self-correction attempts) is logged with its diagnosis so the next session doesn't rediscover it from scratch
 - Every workflow keeps tracking its progress and announces it clearly even in environments where the dedicated task system isn't available, instead of surfacing a confusing error
@@ -102,6 +103,14 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 
 Each focuses on one dimension only (see `/vibe:init`'s "Review agents" table for activation rules per project).
 
+## Expert agents
+
+`/vibe:feature` and `/vibe:fix` automatically consult up to 3 of these prescriptive experts while planning, based on what the task touches — each can also answer one precise question during implementation:
+
+- `expert-ui-ux`, `expert-frontend-design`, `expert-api-rest`, `expert-cli-dx`, `expert-data`, `expert-linux`, `expert-ops`
+
+Experts prescribe requirements *before* the code exists; the review agents above critique the code *after* — the two families deliberately cover disjoint domains.
+
 ## Subagent status line
 
 The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-statusline.sh`), applied automatically once the plugin is enabled. It replaces the default `name · description · token count` row in the agent panel with a compact, color-coded line (status icon, bold name, description, token count) — most visible during `/vibe:review`, which runs up to 17 review agents in parallel.
@@ -110,7 +119,7 @@ The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-sta
 
 1. `/vibe:init` once, to set up `CLAUDE.md` and `.vibe/`
 2. `/vibe:backlog "some feature idea"` to queue work
-3. `/vibe:feature 001` (or `/vibe:fix "bug description"`) to implement, TDD-first
+3. `/vibe:feature 001` (or `/vibe:fix "bug description"`) to implement, TDD-first — the matching domain experts (UI/UX, API, data…) weigh in on the plan automatically
 4. `/vibe:review` periodically to catch quality issues
 5. `/vibe:release patch|minor|major` to ship a version
 

@@ -3,14 +3,15 @@
 
 ## Modules
 - [`modules/skills.md`](modules/skills.md) — the `/vibe:*` slash-command definitions driving the workflow
-- [`modules/agents.md`](modules/agents.md) — specialized review sub-agents used by `/vibe:review`
+- [`modules/agents.md`](modules/agents.md) — specialized sub-agents: `review-*` used by `/vibe:review`, `expert-*` consulted by `/vibe:feature`/`/vibe:fix`
 - [`modules/scripts.md`](modules/scripts.md) — the shell script rendering the subagent status line
 - [`modules/plugin-manifest.md`](modules/plugin-manifest.md) — plugin/marketplace/settings manifests
 
 ## Observed patterns
 - Every skill lives in its own `skills/<name>/SKILL.md` with `name` + `description` (+ optional `argument-hint`); `skills/tasks/SKILL.md` additionally sets `user-invocable: false` — hidden from the `/` menu, invocable only by other skills via the Skill tool
 - `/vibe:fix`, `/vibe:feature`, `/vibe:review`, `/vibe:docs`, `/vibe:release`, and `/vibe:init` never call `TaskCreate` directly — each invokes the internal `vibe:tasks` skill once per run to create its task list; `vibe:tasks` alone owns the fallback to a scratchpad checklist when `TaskCreate` is unavailable (see `models.md`)
-- Every review agent lives in its own `agents/<name>.md` with `name` + `description`, one quality dimension per agent
+- Every agent lives in its own `agents/<name>.md` with `name` + `description`, in one of two families: `review-*` (one quality dimension per agent, critiques existing code after the fact) and `expert-*` (one domain per agent, prescribes requirements before/during implementation — roster limited to domains without a `review-*` counterpart, see `decisions/001`)
+- `/vibe:feature` and `/vibe:fix` consult matching `expert-*` agents at plan time (per-task selection against agent descriptions, 3 max, in parallel, REQUIREMENTS/RISKS/TEST SCENARIOS folded into the plan) and on demand during implementation (one precise question per expert per sub-task); no per-project activation table, unlike the `review-*` family
 - `README.md` is the single hand-written entry point; `/vibe:docs` only rewrites content between `vibe:begin:*`/`vibe:end:*` markers (end-user voice), while `docs/*.md` files are fully generated developer docs — an open-ended set driven by an aspect inventory, with Mermaid diagrams where they help (GitHub Pages site files in `docs/` are off-limits)
 - `/vibe:init` ensures `README.md` exists with its standard managed sections at the end of every run by delegating to `vibe:docs` instead of writing or checking README content itself — same delegation pattern as the `run` skill call below
 - No language runtime, package manifest, test framework, or linter in this repo — quality assurance is manual review (see `CLAUDE.md`)
