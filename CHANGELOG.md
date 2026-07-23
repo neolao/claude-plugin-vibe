@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `/vibe:init` now asks which language the project's documentation, backlog items, comments, and other generated content should be written in, and records the choice in a new "Project language" section of the generated `CLAUDE.md`
+
 ## [1.6.3] - 2026-07-23
 
 ### Fixed

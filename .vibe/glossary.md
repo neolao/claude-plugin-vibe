@@ -5,6 +5,11 @@ The development methodology this plugin implements: the human acts as Product Ow
 **Do not confuse with:** generic "AI pair programming" — vibe coding here specifically excludes manual testing by the human
 _Sources: `skills/feature/SKILL.md`, `skills/fix/SKILL.md`, `skills/init/SKILL.md`_
 
+## Project language
+The language chosen by the user at `/vibe:init` time for a project's generated content — documentation, backlog items, code comments — recorded in the `## Project language` section of that project's `CLAUDE.md`; re-asked on every `/vibe:init` run, defaulting to the value already on record.
+**Do not confuse with:** the programming language / tech stack detected in `CLAUDE.md`'s "Stack" line
+_Sources: `skills/init/SKILL.md`_
+
 ## Managed section
 A region of `README.md` delimited by `<!-- vibe:begin:X -->` / `<!-- vibe:end:X -->` markers that `/vibe:docs` is allowed to rewrite; everything outside these markers is hand-written and never touched.
 **Do not confuse with:** the fully-generated files under `docs/` (no partial markers — the whole file is regenerated)

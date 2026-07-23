@@ -53,7 +53,17 @@ Save the answers and treat them as the project description for Step 4. Use the c
 
 If Step 1 found at least one manifest, skip this step entirely.
 
-## Step 1c — Create task list
+## Step 1c — Project language
+
+Ask which language this project's generated content should use — documentation, backlog items, code comments, and any other content the vibe skills write on the project's behalf. This step always runs, whether or not Step 1b was triggered.
+
+Use the `AskUserQuestion` tool:
+- **Question**: "Dans quelle langue le contenu généré pour ce projet (documentation, items de backlog, commentaires, etc.) doit-il être écrit ?"
+- **Options**: if the existing `CLAUDE.md` (if any) already has a `## Project language` section, put its current value first, labeled "(actuel)", as the recommended choice; otherwise offer "Français" and "English" as the first two options. The user can always type a different language via "Other".
+
+Save the answer — it is written into the `## Project language` section of `CLAUDE.md` in Step 4.
+
+## Step 1d — Create task list
 
 Based on what was found in Steps 1 and 1b, invoke the `vibe:tasks` skill (Skill tool) to create the tasks below. **Keep subject names short (≤ 30 chars)** — they appear in the status line. `vibe:tasks` creates the tasks via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable — either way, its instructions then govern how every later "Mark the task ... completed" instruction in this skill is carried out.
 
@@ -145,6 +155,10 @@ Mark the task `completed`.
 
 **Stack:** [actual detected stack, e.g. Python 3.12 / FastAPI / Pytest / Ruff]
 **Type:** [CLI / REST API / frontend / library / full-stack / other]
+
+## Project language
+
+[Language chosen in Step 1c] — all documentation, backlog items, code comments, and other generated content for this project must be written in [language chosen in Step 1c].
 
 ## Architecture
 
@@ -258,6 +272,7 @@ Mark the task `completed`.
 
 4. Report to the user (concise, no full CLAUDE.md dump unless asked):
    - Detected stack and project type
+   - Chosen project language
    - What was installed or configured (if anything)
    - Lint status + test status
    - One sentence describing what CLAUDE.md now enforces
