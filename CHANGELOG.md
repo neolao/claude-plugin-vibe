@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-07-23
+
 ### Added
 
 - `/vibe:init` now asks which language the project's documentation, backlog items, comments, and other generated content should be written in, and records the choice in a new "Project language" section of the generated `CLAUDE.md`
@@ -155,7 +157,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.3...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.3...v1.7.0
 [1.6.3]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.2...v1.6.3
 [1.6.2]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.6.0...v1.6.1
