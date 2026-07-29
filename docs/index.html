@@ -177,6 +177,7 @@
     transition: border-color .2s ease, transform .2s ease;
   }
   .benefit:hover{ border-color: var(--green-dim); transform: translateY(-2px); }
+  .benefit.wide{ grid-column: 1 / -1; }
   .benefit .num{
     font-family: var(--mono); font-size: 12px; color: var(--green);
     letter-spacing:.15em;
@@ -365,7 +366,7 @@
   <div class="wrap hero">
     <p class="kicker">a claude code plugin</p>
     <h1>You describe.<br><span class="hl">Claude ships.</span><br><span class="dim">Nothing manual.</span></h1>
-    <p class="lede">Vibe coding, made rigorous: the human stays <em>Product Owner only</em> — describing requirements and judging outcomes — while Claude writes the tests first, implements, proves the change actually runs, reviews its own work with seventeen specialized agents, and cuts the release.</p>
+    <p class="lede">Vibe coding, made rigorous: the human stays <em>Product Owner only</em> — describing requirements and judging outcomes — while Claude writes the tests first, implements, proves the change actually runs, reviews its own work with seventeen specialized agents, and cuts the release — one item at a time, or the whole backlog unattended.</p>
     <div class="install">
       <span><span class="prompt">❯</span> <code id="install-cmd">/plugin marketplace add neolao/claude-plugin-vibe</code></span>
       <button class="copy-btn" id="copy" type="button" aria-label="Copy install command">copy</button>
@@ -388,6 +389,7 @@
         <div class="benefit reveal"><span class="num">04</span><h3>A backlog that commits itself</h3><p>Queue ideas as numbered items, singly or in bulk; bundled requests are split into independent items automatically. Implement any of them later just by number.</p></div>
         <div class="benefit reveal"><span class="num">05</span><h3>Feedback loops that close</h3><p>Pre-existing test failures are offered for tracking, a reminder fires when several changes ship unreviewed, and every dead end is logged with its diagnosis so no session rediscovers it.</p></div>
         <div class="benefit reveal"><span class="num">06</span><h3>Nothing silently lost</h3><p>Work is committed before every turn ends — even interruptions — and a one-command release finalizes the changelog, refreshes docs, bumps the version, and tags.</p></div>
+        <div class="benefit wide reveal"><span class="num">07</span><h3>A backlog that empties itself</h3><p>One command works the queue with no approval step and no questions: items are picked, implemented and shipped one after another, each in isolation so a long run stays affordable. Progress is committed at every item boundary — so a closed session, a crash, or a usage limit hit mid-item is picked back up exactly where it stopped, and an item that turns out to be a dead end is set aside with its reason instead of stalling the rest.</p></div>
       </div>
     </div>
   </section>
@@ -435,6 +437,17 @@
 
         <div class="demo reveal">
           <div class="demo-copy">
+            <h3><span class="cmd-name">/vibe:auto</span> — the backlog, unattended</h3>
+            <p>No approval step, no questions: eligible items are picked lowest-first and shipped one after another. A dead end is <b>set aside with its reason</b>, not left to stall the queue — and because progress is committed at every item boundary, an interruption (even a usage limit mid-item) resumes exactly where it stopped.</p>
+          </div>
+          <div class="term" data-demo="auto">
+            <div class="term-bar" aria-hidden="true"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude — /vibe:auto</span></div>
+            <div class="term-body" role="img" aria-label="Terminal demo of /vibe:auto: backlog items are implemented one after another without approval, one item is set aside as blocked, the session is interrupted by a usage limit and the next run resumes exactly where it stopped."></div>
+          </div>
+        </div>
+
+        <div class="demo reveal">
+          <div class="demo-copy">
             <h3><span class="cmd-name">/vibe:release</span> — a version in one command</h3>
             <p>Changelog finalized under the new version, docs refreshed, version bumped, commit and tag created. The bump can be explicit (<code>1.3.0</code>) or inferred from the unreleased entries (<code>major</code> / <code>minor</code> / <code>patch</code>).</p>
           </div>
@@ -451,7 +464,7 @@
   <section id="commands">
     <div class="wrap">
       <p class="sec-label reveal">the toolbox</p>
-      <h2 class="reveal">Nine commands, one workflow</h2>
+      <h2 class="reveal">Ten commands, one workflow</h2>
       <div class="cmd-table reveal">
         <table>
           <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
@@ -460,6 +473,7 @@
             <tr><td><code>/vibe:backlog</code></td><td>List or add feature backlog items</td></tr>
             <tr><td><code>/vibe:feature</code></td><td>Implement a new feature using TDD, then update the changelog</td></tr>
             <tr><td><code>/vibe:fix</code></td><td>Fix a bug using TDD (reproduce first), then update the changelog</td></tr>
+            <tr><td><code>/vibe:auto</code></td><td>Work the backlog autonomously — no approval steps, resumes after any interruption</td></tr>
             <tr><td><code>/vibe:review</code></td><td>Run a multi-agent code quality review and auto-apply fixes</td></tr>
             <tr><td><code>/vibe:sync</code></td><td>Generate or update the internal codebase context map</td></tr>
             <tr><td><code>/vibe:changelog</code></td><td>Update CHANGELOG.md from git history</td></tr>
@@ -505,6 +519,7 @@
         <li><b>/vibe:init</b> <span>— once, to set up CLAUDE.md and the codebase context map. Both are committed with your project, so every session and every teammate starts from the same conventions.</span></li>
         <li><b>/vibe:backlog "some feature idea"</b> <span>— queue work as it comes to mind.</span></li>
         <li><b>/vibe:feature 001</b> <span>— or <code>/vibe:fix "bug description"</code> — implement, TDD-first, proven end-to-end.</span></li>
+        <li><b>/vibe:auto</b> <span>— or let the whole queue run unattended: items are shipped one after another, and any interruption resumes where it stopped.</span></li>
         <li><b>/vibe:review</b> <span>— periodically, to catch quality issues across seventeen dimensions.</span></li>
         <li><b>/vibe:release patch|minor|major</b> <span>— ship a version.</span></li>
       </ol>
@@ -609,6 +624,20 @@
       { t:"out", d:200, html:'  <span class="t-dim">005</span> weekly-email-digest     <span class="t-warn">pending</span>' },
       { t:"gap" },
       { t:"out", d:500, html:'<span class="t-warn">⚑</span> <span class="t-dim">6 changes shipped since the last review — consider</span> /vibe:review' }
+    ],
+    auto: [
+      { t:"cmd", text:"/vibe:auto" },
+      { t:"out", d:500, html:'<span class="t-dim">●</span> <span class="t-bold">3 eligible items</span> <span class="t-dim">— no approval step, no questions</span>' },
+      { t:"run", d:400, html:'  <span class="t-dim">002</span> export-reports-pdf <span class="t-dim">— feature</span>', after:2400, done:'  <span class="t-ok">✓</span> <span class="t-dim">002</span> export-reports-pdf <span class="t-dim">— shipped</span> <span class="t-warn">a1b2c3d</span>' },
+      { t:"run", d:2600, html:'  <span class="t-dim">003</span> csv-import <span class="t-dim">— feature</span>', after:2200, done:'  <span class="t-err">⚠</span> <span class="t-dim">003</span> csv-import <span class="t-warn">blocked</span> <span class="t-dim">— import fails above 50 MB, 3 attempts</span>' },
+      { t:"out", d:2400, html:'    <span class="t-dim">set aside with its reason — the queue keeps going</span>' },
+      { t:"run", d:500, html:'  <span class="t-dim">004</span> login-crash <span class="t-dim">— fix</span>', after:1800, done:'  <span class="t-warn">⚑</span> <span class="t-dim">004</span> login-crash <span class="t-dim">— session cut: usage limit reached</span>' },
+      { t:"gap" },
+      { t:"cmd", d:900, text:"/vibe:auto" },
+      { t:"out", d:500, html:'<span class="t-dim">●</span> <span class="t-bold">resuming</span> <span class="t-dim">— 004 was in flight, partial work committed as</span> <span class="t-warn">wip:</span>' },
+      { t:"run", d:500, html:'  <span class="t-dim">004</span> login-crash <span class="t-dim">— fix</span>', after:2000, done:'  <span class="t-ok">✓</span> <span class="t-dim">004</span> login-crash <span class="t-dim">— shipped</span> <span class="t-warn">e5f6a7b</span>' },
+      { t:"gap" },
+      { t:"out", d:600, html:'<span class="t-ok">✔ run complete</span> <span class="t-dim">— 2 shipped, 1 blocked · backlog drained</span>' }
     ],
     release: [
       { t:"cmd", text:"/vibe:release minor" },
