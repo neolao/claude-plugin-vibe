@@ -22,7 +22,7 @@ flowchart TD
 
 `run` launches the app itself — finding or establishing how to start the project — so no separate fallback skill is needed if launch mechanics are the blocker; after 3 failed attempts the skill escalates directly.
 
-Expert consultation is selection-based, not mandatory: an expert is invoked only if its domain (UI/UX, visual design, REST API, CLI, data, Linux/system, operations) clearly matches the task — often zero experts for a narrow bug fix. Each expert returns `REQUIREMENTS`/`RISKS`/`TEST SCENARIOS` folded into the plan at consultation time, and can be asked one further question per sub-task during implementation if a design question in its domain isn't answered by the codebase or the approved plan.
+Expert consultation is selection-based, not mandatory: an expert is invoked only if its domain (UI/UX, visual design, REST API, CLI, data, Linux/system, operations) clearly matches the task — often zero experts for a narrow bug fix. Domain mismatch is the *only* sanctioned reason to consult nobody: `feature`, `fix`, and `review` each state inline that their agent invocations are part of the command the user ran, so a session-level rule of the form "no sub-agents unless the user asks" cannot be read as a reason to skip them or to hand the decision back to the user. Each expert returns `REQUIREMENTS`/`RISKS`/`TEST SCENARIOS` folded into the plan at consultation time, and can be asked one further question per sub-task during implementation if a design question in its domain isn't answered by the codebase or the approved plan.
 
 ## Task tracking
 
