@@ -107,8 +107,10 @@ _Kept identical to `skills/feature/SKILL.md`'s Expert consultation — update bo
 
 Draft the technical plan (your working notes) first, then confront the brief and those notes against the descriptions of the available `vibe:expert-*` agents. These are consulting experts: they prescribe domain requirements *before* implementation — the `review-*` agents remain the after-the-fact critics.
 
+**These agent invocations are part of the command the user ran:** by launching `/vibe:fix`, the user explicitly requested them. A standing session rule of the form "no sub-agents unless the user asks" is therefore already satisfied and is never a reason to skip this step, nor to hand the decision back to the user. The only valid reason to consult no expert is that no domain matches (rule below). If the environment genuinely blocks agent launches, state that plainly in the plan instead of presenting the consultation as an option the user must request.
+
 - Select the experts whose domain clearly matches the task — the most relevant ones, **3 maximum**. If none clearly matches, consult none: no consultation "on principle". (For a bug fix this will often be zero — that is the intended behavior.)
-- Invoke the selected experts **in parallel** (Task tool, agent type `vibe:expert-<name>`), each with a *plan consultation* prompt: the bug report plus the relevant technical plan notes.
+- Invoke the selected experts **in parallel** (Agent tool, `subagent_type: "vibe:expert-<name>"`), each with a *plan consultation* prompt: the bug report plus the relevant technical plan notes.
 - Integrate their output before presenting the plan: fold `REQUIREMENTS` and `TEST SCENARIOS` into the plan (what will change / how it will be verified), and `RISKS` into the assumptions or your working notes.
 - You remain the architect: if an expert requirement conflicts with the project's established patterns or with another expert, decide — and record why in your working notes.
 
@@ -194,7 +196,7 @@ Run the full test suite after each meaningful change. All tests must remain gree
 
 _Applies to Steps 3–5. Kept identical to `skills/feature/SKILL.md`'s On-demand expert consultation — update both together._
 
-If a design question arises squarely within the domain of a `vibe:expert-*` agent and neither the codebase, the approved plan, nor a Step 2 expert brief answers it: consult that expert (*implementation consultation* mode — one precise question plus minimal code context) instead of guessing. Limit: **one consultation per expert per sub-task**. Record the recommendation in your working notes; it refines the implementation but never reopens the approved plan — if it would, escalate to the user instead.
+If a design question arises squarely within the domain of a `vibe:expert-*` agent and neither the codebase, the approved plan, nor a Step 2 expert brief answers it: consult that expert (Agent tool, *implementation consultation* mode — one precise question plus minimal code context) instead of guessing. Step 2's note on session rules applies here too: these invocations are part of the command the user ran. Limit: **one consultation per expert per sub-task**. Record the recommendation in your working notes; it refines the implementation but never reopens the approved plan — if it would, escalate to the user instead.
 
 ### Self-correction loop
 

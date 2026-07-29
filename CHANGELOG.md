@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `/vibe:feature`, `/vibe:fix` and `/vibe:review` no longer skip their specialized agents when the session carries a general "don't launch sub-agents unless asked" rule — running the command *is* the request, so the expert consultations and the review dimensions happen as designed instead of being offered back to the user as an optional extra
+
 ## [1.9.0] - 2026-07-24
 
 ### Added
