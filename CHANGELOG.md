@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-07-29
+
 ### Added
 
 - `/vibe:auto` works the backlog on its own: it picks eligible items one after another and ships them with no approval step or question, handling each in isolation so a long run stays affordable. Progress is committed at every item boundary, so an interruption — closed session, crash, usage limit reached mid-item — is picked back up exactly where it stopped on the next run (`/loop 45m /vibe:auto` keeps it going unattended), and an item that turns out to be a dead end is set aside with its reason instead of stalling the rest
@@ -180,7 +182,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.9.1...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.10.0...HEAD
+[1.10.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.9.1...v1.10.0
 [1.9.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.8.0...v1.9.0
 [1.8.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.7.0...v1.8.0
