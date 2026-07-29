@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `/vibe:auto` works the backlog on its own: it picks eligible items one after another and ships them with no approval step or question, handling each in isolation so a long run stays affordable. Progress is committed at every item boundary, so an interruption — closed session, crash, usage limit reached mid-item — is picked back up exactly where it stopped on the next run (`/loop 45m /vibe:auto` keeps it going unattended), and an item that turns out to be a dead end is set aside with its reason instead of stalling the rest
+- `/vibe:feature` and `/vibe:fix` accept an `--auto` suffix to run a single item the same way, without any question or plan approval
+
 ## [1.9.1] - 2026-07-29
 
 ### Fixed

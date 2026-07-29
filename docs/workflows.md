@@ -49,9 +49,32 @@ stateDiagram-v2
     [*] --> todo: /vibe:backlog "idea" (single or batch)
     todo --> in_progress: picked up by /vibe:feature NNN or /vibe:fix NNN
     in_progress --> done: moved to backlog/done/ by a chore commit after the main commit
+    in_progress --> blocked: dead end during an autonomous run (--auto)
+    blocked --> in_progress: /vibe:feature NNN or /vibe:fix NNN run again
     todo --> [*]: /vibe:backlog remove NNN (confirmation required)
     done --> [*]
 ```
+
+## Autonomous run (`/vibe:auto`)
+
+`/vibe:auto` drains the backlog with no human gate. Each item is handled by a dedicated sub-agent — strictly one at a time, since they share the Git working tree — which runs `/vibe:feature` or `/vibe:fix` with the `--auto` suffix; only a one-line `AUTO-RESULT:` verdict flows back, keeping the runner's context constant over a long run.
+
+In `--auto` mode, each human gate has a fixed automatic resolution (table kept identical in both skills): ambiguities are decided and recorded as assumptions, the plan is self-approved, a duplicate or an unmet dependency sets the item to `blocked`, and a broken build aborts the whole run.
+
+```mermaid
+flowchart LR
+    start(["/vibe:auto [limit]"]) --> resume{".vibe/auto-state.md<br/>status: running ?"}
+    resume -- yes --> recover["wip: commit dirty tree<br/>re-run current item (attempt ≤ 2)"] --> pick
+    resume -- no --> pick["Pick lowest eligible item<br/>(todo, deps done)"]
+    pick --> state["Write + commit state<br/>(item boundary)"] --> agent["Sub-agent → /vibe:feature|fix NNN --auto"]
+    agent --> verdict{"AUTO-RESULT"}
+    verdict -- done --> pick
+    verdict -- blocked --> pick
+    verdict -- aborted --> stop(["Close run, report"])
+    pick -- "none eligible / limit reached" --> stop
+```
+
+Because the state file is committed at every item boundary, any interruption — crash, closed session, usage limit reached mid-item — is recovered by simply invoking `/vibe:auto` again. The skill never schedules itself: unattended restarts are delegated to the native `/loop` command (`/loop 45m /vibe:auto`).
 
 ## Self-correction and escalation
 
@@ -64,7 +87,7 @@ flowchart LR
     try -- no --> esc["Append diagnosis to .vibe/escalations.md<br/>(append-only, Status: open)"] --> user(["Escalate to the user"])
 ```
 
-Escalation entries are read back at the start of every `feature`/`fix` run, so a dead end hit in one session informs the next; resolving work flips the entry to `resolved`.
+Escalation entries are read back at the start of every `feature`/`fix` run, so a dead end hit in one session informs the next; resolving work flips the entry to `resolved`. In `--auto` mode there is no one to escalate to: the entry is still written, the partial work is still committed as `wip:`, and the item is set to `blocked` so the autonomous run can move on.
 
 ## Feedback loops around review
 

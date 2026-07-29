@@ -6,7 +6,7 @@ argument-hint: "[feature description to add] | remove NNN | (empty to list all)"
 
 # /vibe:backlog — Feature Backlog Manager
 
-Manage the feature backlog stored in `.vibe/backlog/`. Each item is a Markdown file named `NNN-slug.md` with a YAML frontmatter `status` field (`todo`, `in_progress`, or `done`).
+Manage the feature backlog stored in `.vibe/backlog/`. Each item is a Markdown file named `NNN-slug.md` with a YAML frontmatter `status` field (`todo`, `in_progress`, `blocked`, or `done`). `blocked` is set by an autonomous run (`/vibe:auto`, or `--auto`) that hit a dead end on the item; the reason is recorded in a `## Blocked` section at the end of the file.
 
 - **No argument** → list all backlog items with their current status
 - **Single-line argument** → create one new backlog item from the description
@@ -113,6 +113,8 @@ After all items are created, apply **Step 6b — Commit** (batch variant) to com
 | 004 | Light theme | `todo` | — |
 
 If `.vibe/backlog/done/` contains files, append a note: "N item(s) done — see `.vibe/backlog/done/`."
+
+For each `blocked` item, append one line under the table with its number and the reason from its `## Blocked` section, plus: "Relancer `/vibe:feature NNN` (ou `/vibe:fix NNN`) remet l'item en jeu."
 
 5. Review cadence status, as a final line:
    - If `.vibe/last-review.md` exists: read its `date` and `commit` values, count the `feat:`/`fix:` commits made since that hash, and display "Dernier review : YYYY-MM-DD (N changements depuis)."

@@ -11,7 +11,7 @@ claude-plugin-vibe/
 ├── .claude-plugin/
 │   ├── plugin.json        # plugin identity: name "vibe", version, keywords
 │   └── marketplace.json   # marketplace listing pointing at this repo
-├── skills/<name>/SKILL.md # one directory per skill (9 /vibe:* slash commands + 1 internal)
+├── skills/<name>/SKILL.md # one directory per skill (10 /vibe:* slash commands + 1 internal)
 ├── agents/review-*.md     # one file per review dimension (17 agents, after-the-fact critics)
 ├── agents/expert-*.md     # one file per domain expert (7 agents, before/during prescriptive consultants)
 ├── scripts/subagent-statusline.sh  # renders the agent-panel status line
@@ -23,7 +23,7 @@ claude-plugin-vibe/
 
 ```mermaid
 flowchart LR
-    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>9 slash commands + tasks (internal)"]
+    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>10 slash commands + tasks (internal)"]
     skills -- "/vibe:review fans out" --> agents["agents/review-*.md<br/>17 review agents"]
     skills -- "/vibe:feature, /vibe:fix consult" --> experts["agents/expert-*.md<br/>7 domain experts"]
     skills -- "generate & read" --> vibe[".vibe/ context map<br/>(in the target project)"]
@@ -34,7 +34,7 @@ flowchart LR
 
 ## Skills (`skills/`)
 
-Each `/vibe:<name>` command is a self-contained instruction set in `skills/<name>/SKILL.md`, with frontmatter `name`, `description`, and optional `argument-hint`. Nine skills are user-invocable slash commands covering the full workflow: `init`, `backlog`, `feature`, `fix`, `review`, `sync`, `changelog`, `docs`, `release`. A tenth, `tasks`, sets `user-invocable: false` — hidden from the `/` menu, callable only by the other nine through the Skill tool.
+Each `/vibe:<name>` command is a self-contained instruction set in `skills/<name>/SKILL.md`, with frontmatter `name`, `description`, and optional `argument-hint`. Ten skills are user-invocable slash commands covering the full workflow: `init`, `backlog`, `feature`, `fix`, `auto`, `review`, `sync`, `changelog`, `docs`, `release`. An eleventh, `tasks`, sets `user-invocable: false` — hidden from the `/` menu, callable only by the others through the Skill tool.
 
 Skills invoke each other through the Skill tool rather than duplicating logic: `feature` and `fix` call `sync` (and `docs`/`changelog` steps) before committing; `init` calls `sync` to bootstrap `.vibe/`; `release` refreshes docs and changelog. `init`, `feature`, `fix`, `review`, `docs`, and `release` all delegate task-list creation to `tasks`, which owns the only fallback logic (a scratchpad checklist) for when `TaskCreate` is unavailable in the environment. Runtime verification is delegated to Claude Code's native `run` skill. The dynamic side of these flows is documented in `docs/workflows.md`.
 

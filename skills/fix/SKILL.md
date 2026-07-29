@@ -12,6 +12,42 @@ Fix the bug described in `$ARGUMENTS` following the vibe coding workflow: the us
 
 If this skill stops before its own Step 8 — plan rejected, clarifying question, escalation, or any other early exit — and files were created or modified, commit them before yielding control: `fix:` for a complete, coherent unit of work (a reproducing test plus its fix); otherwise `wip: [short description]`, flagged in your final message.
 
+## Autonomous mode (`--auto`)
+
+_Kept in sync with `skills/feature/SKILL.md`'s Autonomous mode — same rules and same verdict contract; only the gate rows differ, since each skill has its own gates. Update both together._
+
+If `$ARGUMENTS` ends with ` --auto`: strip that suffix, set **autonomous mode** for the whole run, and use the remaining text as `$ARGUMENTS` everywhere below (backlog reference or free-form description alike). `/vibe:auto` sets this flag on every item it processes; a user can also set it by hand.
+
+In autonomous mode there is no one to answer a question: every human gate resolves itself, and the run ends with a machine-readable verdict. Everything else is unchanged — TDD red/green, expert consultation, runtime verification via `run` and its 3 attempts, CHANGELOG, docs, sync, commits, backlog closing.
+
+| Gate | Normal behavior | Autonomous resolution |
+|---|---|---|
+| Terminology ambiguous (Step 1) | ask | pick the closest glossary sense, record it as an assumption |
+| Bug report too vague (Step 1) | one clarifying question | reproduce the most likely reading of the report, record it as an assumption |
+| Unmet dependencies (Step 1) | "continue anyway?" | give up → verdict `blocked — depends on NNN (not done)` |
+| Broken build (Step 1b) | report and stop | give up → verdict `aborted — broken build` |
+| Plan approval (Step 2) | wait for explicit approval | plan self-approved; write it into the report instead of presenting it |
+| 3 failed attempts (Steps 4, 4b) | escalate to the user | escalation-log entry + `wip:` commit + verdict `blocked — [one-line diagnosis]` |
+| Pre-existing test failures (Step 9) | ask "track them in the backlog?" | create the backlog item via `vibe:backlog` without asking |
+
+When a gate ends the run early and the brief came from a backlog item:
+- verdict `blocked` → in that item's frontmatter, replace `status: in_progress` with `status: blocked` and append a `## Blocked` section (`YYYY-MM-DD` + the one-line reason) at the end of the file;
+- verdict `aborted` → nothing is wrong with the item itself: put it back to `status: todo`.
+
+Either way the standing rule still applies: commit before yielding control.
+
+### Verdict line
+
+In autonomous mode, the final report ends with exactly one of these lines, and nothing after it:
+
+```
+AUTO-RESULT: done
+AUTO-RESULT: blocked — [short reason]
+AUTO-RESULT: aborted — [short reason]
+```
+
+`done` = the bug is fixed and the item is closed. `blocked` = this item is a dead end, the caller can move on to another. `aborted` = the environment itself is unusable, the caller must stop.
+
 ## Escalation log — record every dead end
 
 _Entry format kept identical to `skills/feature/SKILL.md` and `skills/review/SKILL.md` — canonical shape documented in `.vibe/models.md` ("Escalation entry"); update all three together._
@@ -55,7 +91,7 @@ Detection rule: `$ARGUMENTS` matches `^\d+(-[\w-]+)?$`.
 4. **Dependency check:** if `depends_on` is non-empty, for each dependency number find the file `NNN-*.md` in `.vibe/backlog/` (top level or `done/`) and read its `status`.
    - If ALL dependencies have `status: done`: continue normally.
    - If ANY dependency is NOT done: display a warning listing each blocking item (number, title, status). Then ask the user: "Certaines dépendances ne sont pas encore terminées. Voulez-vous continuer quand même ?" — do not proceed until the user explicitly confirms.
-5. Update the frontmatter in the file: replace `status: todo` with `status: in_progress`.
+5. Update the frontmatter in the file: replace `status: todo` (or `status: blocked` — running the skill on a blocked item puts it back in play; its `## Blocked` section stays as history) with `status: in_progress`.
 6. Store the resolved backlog file path (e.g. `.vibe/backlog/003-login-crash.md`) — it will be needed at Step 8.
 
 Use the extracted title + description + acceptance criteria as the bug report for all subsequent steps, in place of the raw `$ARGUMENTS` string.
