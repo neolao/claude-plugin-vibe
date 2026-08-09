@@ -76,6 +76,10 @@ flowchart LR
 
 Because the state file is committed at every item boundary, any interruption — crash, closed session, usage limit reached mid-item — is recovered by simply invoking `/vibe:auto` again. The skill never schedules itself: unattended restarts are delegated to the native `/loop` command (`/loop 45m /vibe:auto`).
 
+Right after launching each item's sub-agent, the skill calls `ScheduleWakeup` (delay: 1200–1800s, rescheduled further out if it fires early) instead of waiting passively — the sub-agent's completion notification would otherwise sit unread in context until the user happens to send the next message. When the verdict is picked up on one of these scheduled wakeups (as opposed to a direct user turn), it is surfaced with `PushNotification` so a long unattended run doesn't silently update context with no one there to read it.
+
+`/vibe:auto` also accepts `1` as the limit to space items apart on purpose — for human review, cost pacing, or CI capacity, not for usage-limit recovery. Each `/loop 30m /vibe:auto 1` firing processes exactly one item end to end and stops (Step 5, limit reached); the skill has no internal sleep of its own, so the spacing always comes from the interval between separate `/loop` invocations, the same mechanism that recovers from a usage limit mid-run.
+
 ## Self-correction and escalation
 
 Every corrective loop in `feature`/`fix` (failing test, lint, `run`) is bounded to three attempts:
