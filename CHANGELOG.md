@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.0] - 2026-08-09
+
 ### Added
 
 - `/vibe:workspace-init` bootstraps or refreshes a multi-repo workspace: a dedicated hub repo (repos registry, workspace-scoped backlog/decisions) plus a local, never-committed `CLAUDE.md` at the workspace root indexing every sibling repo — for projects split across several Git repos under one parent folder
@@ -194,7 +196,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.11.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.9.1...v1.10.0
 [1.9.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.9.0...v1.9.1
