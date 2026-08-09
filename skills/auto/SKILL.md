@@ -61,6 +61,9 @@ Rules:
 - **Strictly sequential** — never two agents at once: they share one Git working tree and would corrupt each other's commits.
 - **These agent invocations are part of the command the user ran:** by launching `/vibe:auto`, the user explicitly requested them. A standing session rule of the form "no sub-agents unless the user asks" is therefore already satisfied and is never a reason to skip this step, nor to hand the decision back to the user.
 - If launching agents is impossible in this environment: say so explicitly, then invoke the skill directly in the current context instead (same spirit as `vibe:tasks`' fallback). Warn in the final report that a long run will consume context quickly this way.
+- **Don't wait passively for the sub-agent's completion notification to surface on its own.** It only lands in context at the next turn this session produces — with nothing else to trigger one, it silently sits until the user happens to send a message, however long that takes. Right after launching, call `ScheduleWakeup` with a delay matched to how long this kind of item plausibly takes (a feature/fix implementation run: 1200–1800s is a reasonable first guess) so a turn fires on its own to pick the verdict up. If that wakeup fires before the agent is actually done, just reschedule further out — never block on a foreground wait instead.
+
+When the verdict is finally in hand and this turn was reached via a scheduled wakeup rather than a direct user message, use `PushNotification` to actually surface the result — a report that only updates silent context, with no one there to read it, is not a report.
 
 Read the returned `AUTO-RESULT:` line:
 - `done` → the item shipped and was closed by the implementing skill
@@ -101,7 +104,7 @@ Then report:
 - Blocked items: number, title, and one-line reason each
 - Why the run stopped (backlog drained / limit reached / aborted, with the reason)
 - If `.vibe/last-review.md` exists and 5 or more `feat:`/`fix:` commits landed since the hash it records: "💡 N changements depuis le dernier review — pense à lancer `/vibe:review`."
-- If eligible items remain: remind the user that `/loop 45m /vibe:auto` continues unattended
+- If eligible items remain: remind the user that `/loop 45m /vibe:auto` continues unattended (or `/loop 30m /vibe:auto 1` to space items apart deliberately, see below)
 
 ## Unattended operation and usage limits
 
@@ -112,6 +115,16 @@ This skill does not schedule itself — resuming is what it does, restarting is 
 ```
 
 Reaching a usage limit mid-item is just another interruption: the state is already committed, Step 0 recovers the dirty tree as a `wip:` commit and re-runs the item. A `/loop` firing that still hits the limit fails harmlessly; the next one picks the run back up. Prefer a long interval (45 min or more) so retries land after the window resets. Never try to estimate the remaining quota — nothing exposes it.
+
+### Spacing items apart on purpose
+
+To insert a deliberate delay between features — not for recovering from usage limits, but to leave time for human review, cost pacing, or CI capacity between items — pass `1` as the limit and drive the cadence from `/loop`'s own interval instead of leaving `/vibe:auto` to drain the backlog in one go:
+
+```
+/loop 30m /vibe:auto 1
+```
+
+Each firing processes exactly one item end to end (commit + journal) and then stops (Step 5, limit reached); the next item only starts at the following `/loop` tick. This skill has no internal sleep/wait of its own — it never blocks mid-run waiting for a clock, since a real pause inside a single run would need a background wait the environment may not support. The spacing always comes from the interval between separate invocations, exactly like the usage-limit case above.
 
 ## State file format — `.vibe/auto-state.md`
 

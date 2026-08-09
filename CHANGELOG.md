@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `/vibe:auto` schedules a wakeup right after launching each item's sub-agent instead of waiting passively for its completion notification, and sends a push notification when the verdict lands on a scheduled wakeup — so a long unattended run surfaces its results instead of silently sitting in context
+- `/vibe:auto` accepts a `1` argument to process exactly one item per invocation, for deliberate pacing with `/loop 30m /vibe:auto 1` (human review, cost pacing, CI capacity) instead of draining the backlog in one go
+
 ## [1.10.0] - 2026-07-29
 
 ### Added
