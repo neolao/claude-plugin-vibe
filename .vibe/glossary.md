@@ -38,6 +38,21 @@ _Sources: `skills/feature/SKILL.md`, `skills/fix/SKILL.md`_
 The append-only diagnosis entry written to `.vibe/escalations.md` when a self-correction loop exhausts its attempts (context, attempts, precise cause, `Status: open`), read back at the start of every `/vibe:feature` and `/vibe:fix` run so a dead end hit once is never rediscovered; later work that resolves it flips its status to `resolved`.
 _Sources: `skills/feature/SKILL.md`, `skills/fix/SKILL.md`_
 
+## Workspace root
+The parent folder holding several sibling repo checkouts as a multi-repo project — never itself a Git repo. `/vibe:workspace-init` writes a local, never-committed `CLAUDE.md` there indexing the hub repo and every sibling; `/vibe:next-task` is meant to be run from it (or, absent one, falls back to operating on the single repo it's run from).
+**Do not confuse with:** Hub repo — the workspace root is the plain parent folder, not a Git repo itself
+_Sources: `skills/workspace-init/SKILL.md`, `skills/next-task/SKILL.md`_
+
+## Hub repo
+A Git repo with no application code, dedicated to cross-repo planning across a workspace: a `repos.md` registry of sibling repos plus a workspace-scoped `.vibe/backlog/`+`.vibe/decisions/` for decisions that span more than one repo. Recognized structurally — any directory with `.git/` and `repos.md` at its root — rather than by a fixed name. Its own backlog items are never implementable work; they are never picked up by `/vibe:feature`/`/vibe:fix`/`/vibe:auto`.
+**Do not confuse with:** Backlog item — a hub repo's items are Product Owner decisions about the workspace, not units of code to ship
+_Sources: `skills/workspace-init/SKILL.md`, `skills/next-task/SKILL.md`_
+
+## Cross-repo blocker
+A dependency between backlog items in different repos, expressed as free prose in `## Notes`/`## Description` or a repo's `CLAUDE.md` — never as structured data, since `depends_on` only ever references items in the same repo by design. `/vibe:next-task` reads and resolves this prose, distinguishing a reference to another item reaching `status: done` from a reference to that repo actually publishing a tagged release (the latter confirmed against the Git remote, not assumed from a status).
+**Do not confuse with:** `depends_on` — the structured, same-repo-only dependency field on a Backlog item
+_Sources: `skills/next-task/SKILL.md`_
+
 ## Tautological test
 A test that cannot fail for a wrong implementation, so it gives false confidence while masking real bugs behind a green suite. Four recognized patterns: self-referential assertion, trivially true assertion, mock over-configuration, no-op coverage. Self-check: could a plausible-but-wrong implementation still pass this test?
 **Do not confuse with:** a low-coverage test (asserts too little but *can* fail) or a flaky test (fails/passes inconsistently for unrelated reasons)

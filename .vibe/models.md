@@ -72,4 +72,16 @@ Last line of `/vibe:feature`/`/vibe:fix` reports in `--auto` mode, and the only 
 `## Term` heading + 1–3 sentence code-derived definition + optional `**Do not confuse with:**` + `_Sources:_` line listing the files where the concept lives (drives orphan detection and incremental re-derivation). Defined in: `skills/sync/SKILL.md`
 
 ## Task list creation (`skills/tasks/SKILL.md`)
-`fix`, `feature`, `review`, `docs`, `release`, and `init` no longer call `TaskCreate` directly — each invokes the internal, non-user-invocable `vibe:tasks` skill once (Skill tool, task list as `$ARGUMENTS`) to create its task list. `vibe:tasks` owns the only fallback logic: if `TaskCreate` is unavailable, it says so explicitly and writes the list as a Markdown checklist (`- [ ] ...`) to `task-list.md` in the scratchpad directory instead — the calling skill's later `Mark the task ... completed` instructions are then carried out through whichever mechanism `vibe:tasks` selected. Defined in: `skills/tasks/SKILL.md`
+`fix`, `feature`, `review`, `docs`, `release`, `init`, and `workspace-init` no longer call `TaskCreate` directly — each invokes the internal, non-user-invocable `vibe:tasks` skill once (Skill tool, task list as `$ARGUMENTS`) to create its task list. `vibe:tasks` owns the only fallback logic: if `TaskCreate` is unavailable, it says so explicitly and writes the list as a Markdown checklist (`- [ ] ...`) to `task-list.md` in the scratchpad directory instead — the calling skill's later `Mark the task ... completed` instructions are then carried out through whichever mechanism `vibe:tasks` selected. Defined in: `skills/tasks/SKILL.md`
+
+## Repos registry (`repos.md`, at a hub repo's root)
+| Column | Type | Notes |
+|---|---|---|
+| Repo | string | sibling directory name |
+| Status | enum | `active` (candidate for `/vibe:next-task`) \| `planned` (no code yet) \| `idea` (not even a repo yet) |
+| Role | string | one-line, never inferred — asked via `AskUserQuestion` when it can't be defaulted |
+| Remote | string | Git remote URL, or `—` |
+Plus a free-text `## Naming convention` section. Written/refreshed by `/vibe:workspace-init`; read by `/vibe:next-task` to select candidate repos. Its presence alongside `.git/` at a directory's root is the structural marker that identifies a **hub repo** — no fixed name required. Defined in: `skills/workspace-init/SKILL.md`, `skills/next-task/SKILL.md`
+
+## Workspace-root `CLAUDE.md` pointer
+A local, never-committed `CLAUDE.md` written by `/vibe:workspace-init` at the workspace root (the parent folder holding sibling repo checkouts — never itself a Git repo). Its `## Hub repo` line names the hub repo's directory; both `workspace-init` (on later runs) and `next-task` read this pointer instead of re-scanning siblings, falling back to a scan only when the pointer is missing or its target no longer carries the hub repo marker. Defined in: `skills/workspace-init/SKILL.md`, `skills/next-task/SKILL.md`

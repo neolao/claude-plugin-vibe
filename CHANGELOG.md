@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `/vibe:workspace-init` bootstraps or refreshes a multi-repo workspace: a dedicated hub repo (repos registry, workspace-scoped backlog/decisions) plus a local, never-committed `CLAUDE.md` at the workspace root indexing every sibling repo — for projects split across several Git repos under one parent folder
+- `/vibe:next-task` picks the next eligible backlog item across every active repo in a workspace (or within the current repo alone if no workspace is detected), hands it off to `/vibe:feature`/`/vibe:fix`/`/vibe:auto`, then pushes and releases automatically — the only skill in this plugin that publishes on its own
+
 ## [1.11.0] - 2026-08-09
 
 ### Added

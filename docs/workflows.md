@@ -26,7 +26,7 @@ Expert consultation is selection-based, not mandatory: an expert is invoked only
 
 ## Task tracking
 
-`init`, `feature`, `fix`, `review`, `docs`, and `release` never call `TaskCreate` directly — each invokes the internal `skills/tasks/SKILL.md` once per run, right after its plan is approved, passing the task list (subjects + `blockedBy` chains) as `$ARGUMENTS`:
+`init`, `feature`, `fix`, `review`, `docs`, `release`, and `workspace-init` never call `TaskCreate` directly — each invokes the internal `skills/tasks/SKILL.md` once per run, right after its plan is approved, passing the task list (subjects + `blockedBy` chains) as `$ARGUMENTS`:
 
 ```mermaid
 flowchart LR
@@ -106,3 +106,30 @@ Escalation entries are read back at the start of every `feature`/`fix` run, so a
 ## Release
 
 `/vibe:release [major|minor|patch|X.Y.Z]` finalizes `CHANGELOG.md` (moving `[Unreleased]` under the new version), refreshes docs, bumps `version` in `.claude-plugin/plugin.json`, then commits and tags.
+
+## Multi-repo workspace: pick, implement, publish
+
+`/vibe:next-task` (defined in `skills/next-task/SKILL.md`) is the only command in the plugin that pushes and releases on its own — `feature`, `fix`, and `auto` deliberately stop at a local commit:
+
+```mermaid
+flowchart TD
+    A["/vibe:next-task [NNN | auto [N]]"] --> B{"Hub repo detected?<br/>(workspace-root CLAUDE.md pointer,<br/>or a sibling with .git/+repos.md)"}
+    B -- yes --> C["Workspace scope: candidates from<br/>every 'active' repo in repos.md"]
+    B -- "no, but cwd has .vibe/backlog/" --> D["Mono-repo scope: candidates<br/>from the current repo only"]
+    C --> E["Resolve cross-repo blockers/priority<br/>(free prose, not depends_on) + score"]
+    D --> F["Pick lowest eligible item"]
+    E --> G["Present pick + confirm<br/>(skipped in auto mode)"]
+    F --> G
+    G --> H["Hand off: /vibe:feature|fix NNN,<br/>or /vibe:auto [N] in auto mode"]
+    H --> I["git push"]
+    I --> J{"CHANGELOG.md<br/>[Unreleased] non-empty?"}
+    J -- yes --> K["/vibe:release patch|minor|major<br/>(bump inferred, never left blank)<br/>then push commit + tags"]
+    J -- no --> L["Skip release"]
+    K --> M["gh release create (best-effort,<br/>github.com remotes only)"]
+    L --> N["Report: implemented, pushed,<br/>released, downstream unblocked"]
+    M --> N
+```
+
+`/vibe:workspace-init` (`skills/workspace-init/SKILL.md`) sets up what `next-task` relies on for workspace scope: it writes/refreshes the hub repo's `repos.md` registry (never guessing a new sibling's status/role — asked when a `.vibe/backlog/` isn't there to infer `active` from) and the workspace-root `CLAUDE.md`, then commits inside the hub repo only — it never pushes, unlike `next-task`.
+
+A cross-repo blocker distinguishes two different waits, both read from prose rather than any structured field: waiting on another repo's backlog item reaching `status: done`, versus waiting on that repo actually publishing a tagged release — the latter is only confirmed once `next-task`'s own push/release step lands a matching Git tag on the remote, checked again after every run (Step 9) to report any repo this just unblocked.

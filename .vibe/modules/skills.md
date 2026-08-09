@@ -13,6 +13,8 @@
 - `/vibe:changelog` (`skills/changelog/SKILL.md`) — update `CHANGELOG.md` from git history
 - `/vibe:docs` (`skills/docs/SKILL.md`) — refresh README managed sections (end-user voice) + developer docs in `docs/`: open-ended file set driven by an aspect inventory, Mermaid diagrams where they help
 - `/vibe:release` (`skills/release/SKILL.md`) — bump version, finalize CHANGELOG, commit and tag
-- `vibe:tasks` (`skills/tasks/SKILL.md`) — internal, `user-invocable: false`: creates a task list for the invoking skill via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable; invoked by `init`, `feature`, `fix`, `review`, `docs`, and `release`, never directly by users
+- `/vibe:workspace-init` (`skills/workspace-init/SKILL.md`) — bootstrap/refresh a hub repo (structural marker: `.git/`+`repos.md` at its root, no fixed name) tracking every sibling repo in `repos.md`, plus a local never-committed workspace-root `CLAUDE.md`; commits inside the hub repo only, never pushes
+- `/vibe:next-task` (`skills/next-task/SKILL.md`) — pick the next eligible backlog item across every `active` repo in a workspace (or within the current repo alone if no workspace is detected), hand it to `vibe:feature`/`vibe:fix`/`vibe:auto`, then push and — if the changelog warrants it — release; the only skill in the plugin that pushes/publishes on its own
+- `vibe:tasks` (`skills/tasks/SKILL.md`) — internal, `user-invocable: false`: creates a task list for the invoking skill via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable; invoked by `init`, `feature`, `fix`, `review`, `docs`, `release`, and `workspace-init`, never directly by users
 
 **Depends on:** [`modules/plugin-manifest.md`](plugin-manifest.md) (skills are registered/shipped as part of the plugin)

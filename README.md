@@ -22,6 +22,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - Changelog maintenance from git history, following Keep a Changelog
 - README and developer documentation kept current automatically — as many documents (with diagrams where they help) as the project needs for a new developer to understand it, with an index linking every doc file; a project without a README yet gets one created automatically the first time it's set up, and an existing README gets any missing standard section added
 - A one-command versioned release: changelog finalized, docs refreshed, version bumped, commit and tag created
+- Support for projects split across several Git repositories under one parent folder: one command sets up a dedicated hub repo tracking every sibling repo's status and role, and another picks the next eligible task across all of them (or within a single repo if that's all there is), implements it, then pushes and publishes the release on its own — the one place in the whole workflow that does so automatically
 - A public website with looping animated terminal demos of the workflow, mobile-friendly, served straight from the repository with no build step
 <!-- vibe:end:features -->
 
@@ -79,9 +80,12 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 /vibe:docs --full
 /vibe:release patch
 /vibe:release 1.2.0
+/vibe:workspace-init
+/vibe:next-task
+/vibe:next-task auto 1
 ```
 
-`/vibe:backlog` with no argument lists pending items instead of adding one; `remove NNN` deletes an active item after confirmation. `/vibe:feature` and `/vibe:fix` accept either a natural-language description or a backlog item number — the item is then marked done automatically once shipped. `/vibe:auto` works the backlog on its own, with no approval step: with no argument it keeps going until no item is eligible, with a number it stops after that many items — and running it again after any interruption resumes exactly where it stopped (pair it with `/loop 45m /vibe:auto` to keep going unattended, or `/loop 30m /vibe:auto 1` to space items apart on purpose — one item per tick — for human review, cost pacing, or CI capacity). `/vibe:review` with no path reviews the full codebase. `/vibe:changelog` and `/vibe:release` accept an explicit version (or `major`/`minor`/`patch` for `/vibe:release`) — omit it to keep entries under `[Unreleased]` or let `/vibe:release` infer the bump from them.
+`/vibe:backlog` with no argument lists pending items instead of adding one; `remove NNN` deletes an active item after confirmation. `/vibe:feature` and `/vibe:fix` accept either a natural-language description or a backlog item number — the item is then marked done automatically once shipped. `/vibe:auto` works the backlog on its own, with no approval step: with no argument it keeps going until no item is eligible, with a number it stops after that many items — and running it again after any interruption resumes exactly where it stopped (pair it with `/loop 45m /vibe:auto` to keep going unattended, or `/loop 30m /vibe:auto 1` to space items apart on purpose — one item per tick — for human review, cost pacing, or CI capacity). `/vibe:review` with no path reviews the full codebase. `/vibe:changelog` and `/vibe:release` accept an explicit version (or `major`/`minor`/`patch` for `/vibe:release`) — omit it to keep entries under `[Unreleased]` or let `/vibe:release` infer the bump from them. `/vibe:workspace-init`, run from the parent folder holding several sibling repo checkouts, sets up (or refreshes) a dedicated repo tracking all of them; `/vibe:next-task` then picks the next eligible task across every active repo it lists, implements it, and pushes/releases automatically — run alone it just picks and confirms, `auto [N]` skips confirmation and is meant for `/loop`.
 <!-- vibe:end:usage -->
 
 ## Skills (commands)
@@ -98,6 +102,8 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 | `/vibe:changelog` | Update `CHANGELOG.md` from git history |
 | `/vibe:docs` | Generate/refresh README managed sections and developer docs in `docs/` (diagrams included) |
 | `/vibe:release` | Bump version, finalize the changelog, commit and tag a release |
+| `/vibe:workspace-init` | Bootstrap/refresh a multi-repo workspace's hub repo and local workspace-root `CLAUDE.md` |
+| `/vibe:next-task` | Pick the next eligible task across a workspace (or the current repo), implement it, then push and release |
 
 ## Review agents
 
