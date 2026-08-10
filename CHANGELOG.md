@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.0] - 2026-08-10
+
 ### Added
 
 - Task and backlog-item transitions now print a compact one-line status marker in chat (`●` starting, `✓` done, `⚠` blocked) instead of prose, across `/vibe:auto`, `/vibe:next-task`, and every skill going through `/vibe:tasks` — keeps a long run skimmable
@@ -15,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - The showcase website's commands table, review-agent list, and dimension counts were out of date (missing `/vibe:workspace-init`/`/vibe:next-task`, the `hexagonal` review agent, a stale "Sixteen dimensions" count); it now also covers the multi-repo workspace capability and the 7 expert agents, previously undocumented there
+- The showcase website's `/vibe:auto` description still described the old lowest-first item selection instead of the dependency/priority ranking shipped in a previous release
+- The subagent status-line no longer aborts silently if it can't read its input — it now logs a diagnostic instead
 
 ## [1.12.1] - 2026-08-10
 
@@ -212,7 +216,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.12.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.13.0...HEAD
+[1.13.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.10.0...v1.11.0
