@@ -39,17 +39,20 @@ Among the `*.md` files directly in `.vibe/backlog/` (never `done/`), keep those 
 - every number in `depends_on` resolves to an item with `status: done` (same resolution as `skills/backlog/SKILL.md` Step 2)
 - not already processed in this run (see the journal)
 
-`status: blocked` and `status: in_progress` items are never selected. Among eligible items, take the **lowest number**.
+`status: blocked` and `status: in_progress` items are never selected.
+
+Among eligible items, the lowest number is no longer an automatic pick — it is only the last tie-break. Rank eligible items by:
+1. **Highest count of other `status: todo` items in this same repo's `.vibe/backlog/` whose own `depends_on` lists this item's number** — an item other work is waiting on is more pertinent than one nothing depends on yet.
+2. **Defect priority**: at a tie on (1), classify each tied candidate the same way Step 2 does (defect vocabulary — bug, crash, error, regression, "doesn't work", "broken", or an item created from a `/vibe:review` finding → fix; anything else → feature) — a fix outranks a feature. A live regression is more pertinent to address than new work, regardless of when either was filed.
+3. **Lowest number** — final tie-break, only when (1) and (2) don't distinguish.
+
+Take the top-ranked item. Its classification from criterion 2 is already known — it feeds Step 2 directly.
 
 If no item is eligible: go to Step 6 — the run is over.
 
 ## Step 2 — Classify: feature or fix
 
-Read the item's title and description:
-- Defect vocabulary — bug, crash, error, regression, "doesn't work", "broken", or an item created from a `/vibe:review` finding → `vibe:fix`
-- Anything else, and any ambiguous case → `vibe:feature`
-
-Record the choice in the journal.
+Already determined while ranking candidates in Step 1 — record that choice in the journal, no need to reclassify.
 
 ## Step 3 — Run the item in a dedicated sub-agent
 

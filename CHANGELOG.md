@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `/vibe:auto` no longer auto-picks the lowest-numbered eligible item — it now ranks candidates by how many other same-repo items depend on them, then by defect priority (fix over feature), with the lowest number only as a final tie-break, so the run addresses the most pertinent item first
+- `/vibe:next-task` auto mode no longer delegates to `/vibe:auto`'s own item selection (which could silently pick a different item than the one Step 5 chose) — it now drives the feature/fix loop directly on the exact repo, and self-heals a `/vibe:release` blocked by a pre-existing test failure already tracked as a backlog item
+
 ## [1.12.0] - 2026-08-09
 
 ### Added

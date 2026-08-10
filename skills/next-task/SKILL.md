@@ -69,10 +69,16 @@ On confirmation (normal mode), or immediately (auto mode / forced pick):
 
 1. Record the absolute path of the starting directory (workspace root, or the single repo in mono-repo scope) — needed to return to it in Step 10 regardless of how deep the hand-off changes the working directory.
 2. Move into the picked (or forced) repo's directory (no-op in mono-repo scope — already there).
-3. **Auto mode**: invoke `vibe:auto` (Skill tool) with the optional integer from Step 1 as its argument (omit if none). In workspace scope, Step 5's pick only determined *which repo* — `vibe:auto` then selects and drains items there using its own eligibility rules (lowest eligible number first, up to N or until drained), not necessarily the exact item Step 5 named.
+3. **Auto mode**: don't delegate to `vibe:auto` — drive the loop directly, since it already knows exactly which repo to work in from Step 5, so blind delegation to another skill's own item-selection would throw that away. Bounded by the optional integer `N` from Step 1 (absent → no limit, drain this repo's eligible backlog, same semantics as a bare `/vibe:auto` call). Each iteration:
+   1. Re-collect this repo's eligible items (`status: todo`, `depends_on` satisfied) — freshly, since the previous iteration may have changed the state.
+   2. No eligible item left → stop the loop (repo drained).
+   3. Rank them the same way `vibe:auto`'s Step 1 does (highest same-repo unblock-count via `depends_on` → defect/fix priority over feature → lowest number as final tie-break) and take the top-ranked item; its classification (fix vs. feature) is already known from that ranking.
+   4. Invoke `vibe:feature NNN --auto` or `vibe:fix NNN --auto` (Skill tool) directly on that exact item — the `--auto` flag already exists on both skills (see their own "Autonomous mode (`--auto`)" section), nothing new to build here.
+   5. Read the `AUTO-RESULT:` line: `done`/`blocked` → continue the loop if the `N` budget allows; `aborted` → stop the loop immediately (global blocker, go to Step 8 with whatever was accomplished so far).
+   6. Loop ends when: `N` is reached, the backlog is drained, or an item came back `aborted`.
 4. **Normal mode / forced pick**: classify feature vs. fix from the item's title/description (bug/error/incorrect/crash/regression → fix; new capability → feature), then invoke `vibe:feature NNN` or `vibe:fix NNN` (Skill tool) — no `--auto` here, the confirmation already happened in Step 6 and each skill's own human-facing gates apply normally.
 
-Control returns here once the invoked skill finishes (report, `AUTO-RESULT:` line, or early exit) — continue to Step 8 regardless of outcome, including `blocked`/`aborted`/a rejected or stopped normal-mode run. `vibe:feature`/`vibe:fix`/`vibe:auto` only ever commit **locally** by their own documented design; anything that landed there — including a `wip:` commit from their own "never end a turn with uncommitted files" rule — still needs to reach the remote.
+Control returns here once the invoked skill(s) finish (report, `AUTO-RESULT:` line(s), or early exit) — continue to Step 8 regardless of outcome, including `blocked`/`aborted`/a rejected or stopped normal-mode run. `vibe:feature`/`vibe:fix` only ever commit **locally** by their own documented design; anything that landed there — including a `wip:` commit from their own "never end a turn with uncommitted files" rule — still needs to reach the remote.
 
 ## Step 8 — Push and publish
 
@@ -93,8 +99,14 @@ Read the repo's `CHANGELOG.md` `## [Unreleased]` section.
 - Empty or missing → nothing to release, go to Step 9.
 - Non-empty → compute the semver bump the same way `vibe:release` itself suggests, but decide it here rather than waiting on a human: `patch` if only `### Fixed` entries, `minor` if any `### Added`, `major` if any `### Removed` or an entry flagged as breaking.
 - Invoke `vibe:release` (Skill tool) with that word (`patch`/`minor`/`major`) as `$ARGUMENTS` — **always with an explicit bump**, never blank, since a blank argument makes `vibe:release` wait for confirmation that would never come here.
-- If `vibe:release`'s own pre-release checks fail (dirty tree that isn't ours, failing tests, failing lint): it stops on its own before committing anything. Report the failure and move on — the 8a push already succeeded, only the version bump is missing; flag it as a follow-up blocker in the Step 10 report.
-- On success, `vibe:release` commits and tags **locally only** by its own design. Push both right away: `git push && git push --tags`.
+- If `vibe:release`'s own pre-release checks fail, it stops on its own before committing anything. What happens next depends on why:
+  - **Dirty tree that isn't ours, or the lint command fails**: report the failure and move on — the 8a push already succeeded, only the version bump is missing; flag it as a follow-up blocker in the Step 10 report.
+  - **The test command fails**: before giving up, check for a known, self-inflicted blocker — bounded to a single attempt:
+    1. Identify the failing test file(s) from the output already visible in this context (produced while following `vibe:release`'s own Step 2).
+    2. Search this repo's eligible backlog (`status: todo`, `depends_on` satisfied, top-level `.vibe/backlog/`, never `done/`) for an item whose Description/Notes names that exact test file — the trace left by `vibe:feature`/`vibe:fix`'s own autonomous-mode convention of filing a backlog item for a pre-existing, out-of-scope failure discovered mid-run rather than silently fixing it.
+    3. **Exactly one match**: classify it (same rule as Step 7's auto-mode ranking) and run it right now via `vibe:fix NNN --auto` (or `vibe:feature NNN --auto`), in this same repo directory. Push whatever it commits (repeat 8a). Retry `vibe:release` once, same bump level (no need to recompute it: an added `### Fixed` entry alongside an existing `### Added` one doesn't change a `minor` bump).
+    4. **Zero matches, more than one match, or the retried release still fails**: this isn't (or wasn't) the recoverable case — give up, report the failure, flag it as a follow-up blocker in the Step 10 report. Never attempt a second self-heal in the same run.
+- On success (first attempt, or after the one self-heal retry above), `vibe:release` commits and tags **locally only** by its own design. Push both right away: `git push && git push --tags`.
 
 ### 8c — Release on the forge (best-effort, GitHub only)
 
@@ -113,9 +125,9 @@ Re-run a narrow version of Step 4's scan, scoped to the repo just pushed/release
 
 Return to the directory recorded in Step 7 before reporting (important for chained `/loop N /vibe:next-task auto 1` firings).
 
-- What was implemented (from Step 7's report / `AUTO-RESULT:`).
+- What was implemented — in auto mode, every item the Step 7 loop processed (number, type, verdict, commit), not just the first; in normal/forced mode, the single item's report / `AUTO-RESULT:`.
 - Push result: branch pushed (commit range), or the exact reason it wasn't.
-- Release result: version tagged and pushed, "no release needed" (empty changelog), or why a due release was skipped.
+- Release result: version tagged and pushed, "no release needed" (empty changelog), or why a due release was skipped. If Step 8b's self-heal ran, say so explicitly: which item was forced, which test file it was matched against, and whether the retried release then succeeded or still failed.
 - Forge release: created, skipped (no `gh` / non-GitHub remote), or not applicable.
 - Downstream (workspace scope only): any newly-unblocked cross-repo item(s), or confirmation nothing else was waiting.
 - Any unresolved blocker from 8a/8b/9 needing the user's attention before the next run can make further progress — call these out plainly.
