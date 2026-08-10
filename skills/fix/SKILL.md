@@ -52,7 +52,7 @@ AUTO-RESULT: aborted — [short reason]
 
 _Entry format kept identical to `skills/feature/SKILL.md` and `skills/review/SKILL.md` — canonical shape documented in `.vibe/models.md` ("Escalation entry"); update all three together._
 
-Whenever a self-correction loop in this skill exhausts its 3 attempts and escalates to the user (Step 4, Step 4b), append an entry to `.vibe/escalations.md` (create the file if absent) **before** escalating — the standing rule above then commits it with the `wip:` commit, so the diagnosis survives the session:
+Whenever a self-correction loop in this skill exhausts its 3 attempts and escalates to the user (Step 4, Step 4b), append an entry to `.vibe/escalations.md` (create the file if absent) **before** escalating — the standing rule above then commits it with the `wip:` commit, so the diagnosis survives the session. Keep each field to one short, plain sentence:
 
 ```markdown
 ## [YYYY-MM-DD] /vibe:fix — [short title of the blocker]
@@ -154,7 +154,7 @@ Draft the technical plan (your working notes) first, then confront the brief and
 
 Present the fix plan to the user and **wait for explicit approval** before writing any code.
 
-The user is a Product Owner, not a developer: present the plan in plain, non-technical language. **Never mention file names, class/function/method/variable names, or other implementation details.**
+The user is a Product Owner, not a developer: present the plan in plain, non-technical language — short sentences, simple words, no filler. **Never mention file names, class/function/method/variable names, or other implementation details.**
 
 The plan must cover, in a few short sentences:
 - **Le problème observé** — what's broken, from a user-visible perspective
@@ -333,7 +333,7 @@ If the bug was loaded from a backlog file:
 
 ## Step 9 — Report to user
 
-Summarize concisely:
+Summarize in short, plain sentences — no filler:
 - Root cause of the bug (1 sentence)
 - What was changed to fix it (1 sentence)
 - The test name that now covers this bug

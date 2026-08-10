@@ -125,7 +125,7 @@ Re-run a narrow version of Step 4's scan, scoped to the repo just pushed/release
 
 ## Step 10 — Final report
 
-Return to the directory recorded in Step 7 before reporting (important for chained `/loop N /vibe:next-task auto 1` firings).
+Return to the directory recorded in Step 7 before reporting (important for chained `/loop N /vibe:next-task auto 1` firings). Short, plain sentences — no filler:
 
 - What was implemented — in auto mode, every item the Step 7 loop processed (number, type, verdict, commit), not just the first; in normal/forced mode, the single item's report / `AUTO-RESULT:`.
 - Push result: branch pushed (commit range), or the exact reason it wasn't.

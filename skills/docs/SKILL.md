@@ -8,9 +8,10 @@ argument-hint: "[optional: --full to regenerate docs/ files]"
 
 Generate or refresh the project's documentation: end-user-facing managed sections in `README.md` and developer-facing generated files in `docs/`. Documentation is derived from real project state (manifest, CHANGELOG, `.vibe/`, code) — never invented.
 
-Two golden rules:
+Three golden rules:
 1. **Never touch anything outside the managed markers in README.md.** Everything else belongs to the user.
 2. **Two audiences.** README managed sections are written **for the end user** — no file names, function names, or internal module names (same rule as CHANGELOG entries). `docs/` files are written **for developers** — the goal is that a new developer understands the project, so real module names, file paths, and commands are welcome, as long as they come from the actual code, never invented.
+3. **Plain writing, both audiences.** Short sentences, simple words, no filler — a fact per line beats one dense paragraph.
 
 ## Step 1 — Read the sources
 
@@ -127,6 +128,7 @@ Mark the task `completed`.
 
 ## Step 5 — Report
 
+Short, plain sentences — no filler:
 - README: which managed sections were updated / unchanged / absent, including the Documentation index
 - docs/: every aspect considered, each marked created / updated / unchanged / skipped / deleted (with reason)
 - Flag any `docs/` file that is not (yet) referenced in the Documentation index — this should not happen, but call it out if seen

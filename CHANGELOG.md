@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Task and backlog-item transitions now print a compact one-line status marker in chat (`●` starting, `✓` done, `⚠` blocked) instead of prose, across `/vibe:auto`, `/vibe:next-task`, and every skill going through `/vibe:tasks` — keeps a long run skimmable
+- Every `/vibe:*` command now writes shorter, plainer text: generated `.vibe/` content (codebase map, glossary, decisions, backlog items) and every end-of-run report use short sentences and simple words instead of dense, run-on prose
 
 ### Fixed
 

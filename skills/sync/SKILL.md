@@ -96,7 +96,7 @@ Entry format:
 # Ubiquitous Language
 
 ## [Domain term]
-[1–3 sentence definition derived from how the code actually uses the concept: what it is, its responsibility, its relations to other glossary terms. Never a stub — if no real definition can be derived from the code, the term does not belong here.]
+[1–3 short, plain sentences derived from how the code actually uses the concept: what it is, its responsibility, its relations to other glossary terms. Never a stub — if no real definition can be derived from the code, the term does not belong here.]
 **Do not confuse with:** [similar but distinct glossary term, if applicable]
 _Sources: `src/orders/checkout.ts`, `src/orders/cart.ts`_
 ```
@@ -115,6 +115,8 @@ Lifecycle — applied automatically, each change listed in the Step 9 report, ne
 ## Step 8 — Write `.vibe/index.md`
 
 **Compactness constraint:** `index.md` is imported into every session via `@.vibe/index.md` in CLAUDE.md — its token cost is paid at every session start. Keep it minimal: one line per module, a short list of observed patterns, no detailed content. Details belong in `modules/`, `models.md`, and `glossary.md`, which are read on demand.
+
+**Plain writing:** every bullet is one short, plain sentence. Split a bullet that stacks several facts with commas or em-dashes into separate bullets instead.
 
 ```markdown
 # [PROJECT_NAME] — Codebase index
@@ -166,6 +168,7 @@ Never delete the whole `.vibe/` directory: only the ♻ entries can be recovered
 
 ## Step 9 — Report
 
+Short, plain sentences — no filler:
 - Mode used: full or incremental
 - N modules updated (out of N total)
 - N data models updated

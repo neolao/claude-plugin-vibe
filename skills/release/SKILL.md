@@ -93,6 +93,7 @@ Mark the task `completed`.
 
 ## Step 6 — Report
 
+Short, plain sentences — no filler:
 - Version released: `vX.Y.Z`
 - Changes included: N Added, N Fixed, N Changed, etc.
 - Tag created: `vX.Y.Z`

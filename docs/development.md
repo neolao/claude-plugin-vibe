@@ -39,6 +39,7 @@ One file `agents/expert-<domain>.md`, frontmatter `name` + `description` (the de
 - No orphan skill/agent files after a rename or removal.
 - JSON manifests (`plugin.json`, `marketplace.json`, `settings.json`) stay syntactically valid.
 - The `.vibe/` map of this repo is dogfooding — regenerate it with `/vibe:sync` rather than editing it by hand (entry lifecycles are listed in `.vibe/README.md`).
+- Generated `.vibe/` content and every skill's end-of-run report use short, plain sentences — no filler, one fact per line (`.vibe/decisions/002-concise-writing-convention.md`).
 
 ## Releasing
 

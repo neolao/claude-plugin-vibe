@@ -54,7 +54,7 @@ AUTO-RESULT: aborted — [short reason]
 
 _Entry format kept identical to `skills/fix/SKILL.md` and `skills/review/SKILL.md` — canonical shape documented in `.vibe/models.md` ("Escalation entry"); update all three together._
 
-Whenever a self-correction loop in this skill exhausts its 3 attempts and escalates to the user (Step 4, Step 4b), append an entry to `.vibe/escalations.md` (create the file if absent) **before** escalating — the standing rule above then commits it with the `wip:` commit, so the diagnosis survives the session:
+Whenever a self-correction loop in this skill exhausts its 3 attempts and escalates to the user (Step 4, Step 4b), append an entry to `.vibe/escalations.md` (create the file if absent) **before** escalating — the standing rule above then commits it with the `wip:` commit, so the diagnosis survives the session. Keep each field to one short, plain sentence:
 
 ```markdown
 ## [YYYY-MM-DD] /vibe:feature — [short title of the blocker]
@@ -196,7 +196,7 @@ Draft the technical plan (your working notes) first, then confront the brief and
 
 Present the implementation plan to the user and **wait for explicit approval** before writing any code.
 
-The user is a Product Owner, not a developer: present the plan in plain, non-technical language. **Never mention file names, class/function/method/variable names, module names, or other implementation details.**
+The user is a Product Owner, not a developer: present the plan in plain, non-technical language — short sentences, simple words, no filler. **Never mention file names, class/function/method/variable names, module names, or other implementation details.**
 
 The plan must cover, in a few short sentences:
 - **Ce qui va être fait** — what will be built, described functionally
@@ -215,6 +215,8 @@ Once the plan is approved: if it includes a non-obvious design decision (a choic
 - **Number**: same rule as the backlog — scan `.vibe/decisions/*.md` for the highest `NNN` prefix, increment, zero-pad to 3 digits; `001` if the directory is empty or absent (create it).
 - **Slug**: kebab-case of the decision's short title (lowercase, `-` separators, no punctuation).
 - **Content**:
+
+One or two short, plain sentences per field — no padding:
 
 ```markdown
 ---
@@ -417,7 +419,7 @@ If the feature was loaded from a backlog file:
 
 ## Step 9 — Report to user
 
-Summarize concisely:
+Summarize in short, plain sentences — no filler:
 - What was implemented (1–2 sentences)
 - Test results: X tests passing, covering [nominal / edge cases / error paths]
 - Lint status

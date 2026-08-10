@@ -98,7 +98,7 @@ A run where every item fails ends on its own: blocked items are no longer eligib
 
 Set `status: idle` in `.vibe/auto-state.md` (keeping the journal), clear `current`, and commit `chore: auto run — N items (M done, K blocked)`.
 
-Then report:
+Then report, short and plain:
 
 | # | Type | Verdict | Commit |
 |---|---|---|---|

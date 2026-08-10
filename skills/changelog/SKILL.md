@@ -63,7 +63,7 @@ Create it with the full header, an `[Unreleased]` section, and all classified co
 
 ## Step 5 — Report
 
-Tell the user:
+Tell the user, in short plain sentences:
 - How many commits were processed
 - How many were kept vs discarded
 - Which categories were populated

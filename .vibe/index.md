@@ -8,25 +8,57 @@
 - [`modules/plugin-manifest.md`](modules/plugin-manifest.md) — plugin/marketplace/settings manifests
 
 ## Observed patterns
-- Every skill lives in its own `skills/<name>/SKILL.md` with `name` + `description` (+ optional `argument-hint`); `skills/tasks/SKILL.md` additionally sets `user-invocable: false` — hidden from the `/` menu, invocable only by other skills via the Skill tool
-- `/vibe:fix`, `/vibe:feature`, `/vibe:review`, `/vibe:docs`, `/vibe:release`, `/vibe:init`, and `/vibe:workspace-init` never call `TaskCreate` directly — each invokes the internal `vibe:tasks` skill once per run to create its task list; `vibe:tasks` alone owns the fallback to a scratchpad checklist when `TaskCreate` is unavailable (see `models.md`), and also owns the compact `●`/`✓` chat status-line convention printed on every task transition — `/vibe:auto` and `/vibe:next-task` reuse the same glyphs (plus `⚠`) per backlog item in their own loops, which sit outside the task-list mechanism
-- Every agent lives in its own `agents/<name>.md` with `name` + `description`, in one of two families: `review-*` (one quality dimension per agent, critiques existing code after the fact) and `expert-*` (one domain per agent, prescribes requirements before/during implementation — roster limited to domains without a `review-*` counterpart, see `decisions/001`)
-- `/vibe:feature` and `/vibe:fix` consult matching `expert-*` agents at plan time (per-task selection against agent descriptions, 3 max, in parallel, REQUIREMENTS/RISKS/TEST SCENARIOS folded into the plan) and on demand during implementation (one precise question per expert per sub-task); no per-project activation table, unlike the `review-*` family
-- Every skill that launches agents (`/vibe:feature`, `/vibe:fix`, `/vibe:review`) states inline that those invocations are part of the command the user ran — so a standing session rule of the form "no sub-agents unless the user asks" cannot be read as a reason to skip them
-- `README.md` is the single hand-written entry point; `/vibe:docs` only rewrites content between `vibe:begin:*`/`vibe:end:*` markers (end-user voice), while `docs/*.md` files are fully generated developer docs — an open-ended set driven by an aspect inventory, with Mermaid diagrams where they help (GitHub Pages site files in `docs/` are off-limits)
-- `/vibe:init` ensures `README.md` exists with its standard managed sections at the end of every run by delegating to `vibe:docs` instead of writing or checking README content itself — same delegation pattern as the `run` skill call below
-- No language runtime, package manifest, test framework, or linter in this repo — quality assurance is manual review (see `CLAUDE.md`)
-- `/vibe:feature` and `/vibe:fix` delegate their post-implementation runtime verification to Claude Code's native `run` skill instead of reimplementing "how to run this project" logic — `run` itself establishes how to launch the project when that isn't already known; after 3 failed attempts they escalate to the user directly
-- `/vibe:feature`, `/vibe:fix`, and `review-tests` share one definition of [tautological test](glossary.md) — same four patterns, checked both when a test is written and again at review time
-- `/vibe:feature` and `/vibe:fix` never end a turn with uncommitted files, even on early exit (`feat:`/`fix:`/`chore:` for complete work, `wip:` otherwise)
-- `/vibe:backlog` commits its own changes (item creation — single, batch, or from-review — and removals, which always require confirmation and never touch `done/`) — it does not leave backlog changes uncommitted for a later skill to pick up
-- Backlog references (`NNN` or `NNN-slug`, regex `^\d+(-[\w-]+)?$`) are resolved identically by `/vibe:feature` and `/vibe:fix`: item marked `in_progress` at start, moved to `done/` and closed by a `chore:` commit after the main commit
-- `/vibe:feature` and `/vibe:fix` accept an `--auto` suffix (autonomous mode): every human gate resolves itself per a gate table kept in sync between the two skills (rows differ where their gates differ), and the report ends with a machine-readable `AUTO-RESULT:` line — the only contract `/vibe:auto` relies on; a dead end sets the backlog item to `status: blocked` rather than escalating
-- `/vibe:auto` is the only skill that runs other vibe skills through sub-agents (one per item, strictly sequential — shared Git working tree), keeping its own context constant across a long run; it persists `.vibe/auto-state.md` and commits it at every item boundary, which is what makes an interrupted run resumable by re-invocation (restarts themselves are delegated to the native `/loop`)
-- Self-correction loops that exhaust their 3 attempts append a diagnosis entry to `.vibe/escalations.md` (append-only, read back at the start of `/vibe:feature`/`/vibe:fix`); `/vibe:review` records each run in `.vibe/last-review.md`, surfaced as a cadence hint by feature/fix reports and the backlog list
-- `.vibe/glossary.md` is fully code-derived and self-cleaning: every entry carries a `_Sources:_` anchor line, and each sync automatically adds, redefines, or removes (exclusion criteria or orphaned sources) terms — reported, never subject to confirmation
-- `/vibe:workspace-init` and `/vibe:next-task` extend the plugin above the single-repo level: a hub repo is recognized structurally (`.git/` + `repos.md` at its root), never by a fixed name, and cross-repo blockers stay free prose (never a `depends_on` entry, which only ever references the same repo) — `/vibe:next-task` is the only skill in the plugin that pushes/publishes on its own, deliberately unlike `/vibe:feature`/`/vibe:fix`/`/vibe:auto`
-- `/vibe:auto`'s item-selection ranks eligible items (unblock-count → defect-priority → lowest number as final tie-break) instead of picking the lowest number outright; `/vibe:next-task`'s auto mode applies the identical ranking directly in the picked repo rather than delegating to `/vibe:auto`'s own selection, which could silently pick a different item than the one already chosen — `/vibe:next-task` also self-heals one `vibe:release` retry when it's blocked by a pre-existing test failure already tracked as a backlog item
+- Every skill lives in `skills/<name>/SKILL.md` with `name` + `description`, plus an optional `argument-hint`.
+  - `skills/tasks/SKILL.md` also sets `user-invocable: false`: hidden from the `/` menu, callable only by other skills via the Skill tool.
+- `fix`, `feature`, `review`, `docs`, `release`, `init`, and `workspace-init` never call `TaskCreate` directly — each invokes `vibe:tasks` once per run to build its task list.
+  - `vibe:tasks` owns the scratchpad-checklist fallback when `TaskCreate` is unavailable (see `models.md`).
+  - `vibe:tasks` also owns the `●`/`✓` status-line convention printed on every task transition.
+  - `/vibe:auto` and `/vibe:next-task` reuse the same glyphs (plus `⚠`) in their own per-item loops, outside the task-list mechanism.
+- Every agent lives in `agents/<name>.md` with `name` + `description`, in one of two families.
+  - `review-*`: one quality dimension per agent, critiques existing code after the fact.
+  - `expert-*`: one domain per agent, prescribes requirements before/during implementation — limited to domains without a `review-*` counterpart (see `decisions/001`).
+- `/vibe:feature` and `/vibe:fix` consult matching `expert-*` agents at plan time: up to 3, picked per task, run in parallel.
+  - Their `REQUIREMENTS`/`TEST SCENARIOS` are folded into the plan; `RISKS` go into the assumptions.
+  - Also consulted on demand during implementation — one precise question per expert per sub-task.
+  - Unlike `review-*`, there is no per-project activation table for experts.
+- `/vibe:feature`, `/vibe:fix`, and `/vibe:review` state that their agent invocations are part of the command the user ran — a "no sub-agents unless asked" session rule never blocks them.
+- `README.md` is the one hand-written entry point.
+  - `/vibe:docs` only rewrites content between `vibe:begin:*`/`vibe:end:*` markers, in end-user voice.
+  - `docs/*.md` files are fully generated, developer-facing — an open-ended set driven by an aspect inventory, Mermaid diagrams where they help.
+  - GitHub Pages site files in `docs/` are off-limits to `/vibe:docs`.
+- `/vibe:init` always ensures `README.md` exists with its managed sections, by delegating to `vibe:docs` — same delegation pattern as the `run` skill call below.
+- No language runtime, package manifest, test framework, or linter in this repo — quality assurance is manual review (see `CLAUDE.md`).
+- `/vibe:feature` and `/vibe:fix` delegate runtime verification to the native `run` skill instead of reimplementing "how to run this project".
+  - `run` itself figures out how to launch the project when that isn't already known.
+  - After 3 failed attempts, they escalate to the user directly.
+- `/vibe:feature`, `/vibe:fix`, and `review-tests` share one definition of [tautological test](glossary.md) — same four patterns, checked when a test is written and again at review time.
+- `/vibe:feature` and `/vibe:fix` never end a turn with uncommitted files, even on early exit.
+  - `feat:`/`fix:`/`chore:` for complete work; `wip:` otherwise.
+- `/vibe:backlog` commits its own changes: item creation (single, batch, or from-review) and removals.
+  - Removals always require confirmation and never touch `done/`.
+  - It never leaves backlog changes uncommitted for a later skill.
+- Backlog references (`NNN` or `NNN-slug`, regex `^\d+(-[\w-]+)?$`) are resolved the same way by `/vibe:feature` and `/vibe:fix`.
+  - Item marked `in_progress` at start; moved to `done/` and closed by a `chore:` commit after the main commit.
+- `/vibe:feature` and `/vibe:fix` accept an `--auto` suffix (autonomous mode).
+  - Every human gate resolves itself, per a gate table kept in sync between the two skills.
+  - The report ends with a machine-readable `AUTO-RESULT:` line — the only contract `/vibe:auto` relies on.
+  - A dead end sets the backlog item to `status: blocked`, instead of escalating.
+- `/vibe:auto` is the only skill that runs other vibe skills through sub-agents — one per item, strictly sequential, sharing one Git working tree.
+  - This keeps its own context constant across a long run.
+  - It persists and commits `.vibe/auto-state.md` at every item boundary, so an interrupted run resumes on re-invocation.
+  - Restarts themselves are delegated to the native `/loop`.
+- Self-correction loops that exhaust their 3 attempts append a diagnosis entry to `.vibe/escalations.md` (append-only), read back at the start of `/vibe:feature`/`/vibe:fix`.
+  - `/vibe:review` records each run in `.vibe/last-review.md`, surfaced as a cadence hint by feature/fix reports and the backlog list.
+- `.vibe/glossary.md` is fully code-derived and self-cleaning: every entry carries a `_Sources:_` anchor line.
+  - Each sync adds, redefines, or removes terms automatically (exclusion criteria or orphaned sources) — reported, never confirmed.
+- `/vibe:workspace-init` and `/vibe:next-task` extend the plugin above the single-repo level.
+  - A hub repo is recognized structurally (`.git/` + `repos.md` at its root), never by a fixed name.
+  - Cross-repo blockers stay free prose — never a `depends_on` entry, which only ever references the same repo.
+  - `/vibe:next-task` is the only skill in the plugin that pushes/publishes on its own.
+- `/vibe:auto` ranks eligible items — unblock-count, then defect-priority, then lowest number as a final tie-break — instead of picking the lowest number outright.
+  - `/vibe:next-task`'s auto mode applies the same ranking directly in the picked repo, instead of delegating to `/vibe:auto`'s own selection (which could pick a different item).
+  - `/vibe:next-task` also self-heals one `vibe:release` retry when blocked by a pre-existing test failure already tracked as a backlog item.
+- Every skill's generated `.vibe/` content and end-of-run report follows a short, plain-sentence rule — see `decisions/002`.
 
 ## Other context files
 - [`models.md`](models.md) — JSON/frontmatter/entry shapes used across the plugin

@@ -289,7 +289,7 @@ Mark the task `completed`.
 
 ## Step 6 — Report
 
-Report to the user (concise, no full CLAUDE.md dump unless asked):
+Report to the user — short, plain sentences, no full CLAUDE.md dump unless asked:
    - Detected stack and project type
    - Chosen project language
    - What was installed or configured (if anything)

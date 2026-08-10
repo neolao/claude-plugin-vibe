@@ -165,7 +165,7 @@ depends_on: [003, 005]   # include only if dependencies were found in Step 5b; o
 # [Title]
 
 ## Description
-[What needs to be built and why — elaborated from $ARGUMENTS in 2–4 sentences]
+[What needs to be built and why — 1–3 short, plain sentences elaborated from $ARGUMENTS]
 
 ## Acceptance Criteria
 - [ ] [Criterion 1]
@@ -188,7 +188,7 @@ This step applies every time one or more backlog files were created. It does not
 
 ## Step 7 — Report
 
-Display:
+Display, short and plain:
 - File created: `.vibe/backlog/NNN-slug.md`
 - Title: [title]
 - Acceptance criteria: N generated
@@ -197,7 +197,7 @@ Display:
 
 ## Step 7b — Batch report
 
-Display a summary table of all items created:
+Display, short and plain, a summary table of all items created:
 
 | # | File | Title | Criteria |
 |---|---|---|---|

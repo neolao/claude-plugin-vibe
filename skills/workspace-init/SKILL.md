@@ -153,7 +153,7 @@ Mark `Refresh workspace CLAUDE.md` `completed`.
 
 In the hub repo: if `repos.md`, `.vibe/`, `CLAUDE.md`, or `README.md` actually changed, stage and commit them in a single commit — `chore: bootstrap hub repo` on first-time init (Step 2 created it), `chore: refresh workspace registry` on a later run. No changes → nothing to commit, say so plainly. Never push automatically here (that's `/vibe:next-task`'s job, not this skill's).
 
-Report:
+Report, short and plain:
 - Hub repo location (created / already existed).
 - Repos added / updated / flagged as missing in `repos.md`.
 - Files refreshed (hub `CLAUDE.md`, README, `.vibe/`, workspace-root `CLAUDE.md`).
