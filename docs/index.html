@@ -385,11 +385,12 @@
       <div class="benefits">
         <div class="benefit reveal"><span class="num">01</span><h3>TDD-first, always</h3><p>Features and fixes start with a failing test, written in your stead — and every test is checked against a shared definition of a <em>tautological test</em>, so green means something.</p></div>
         <div class="benefit reveal"><span class="num">02</span><h3>Proven, not just green</h3><p>After implementation the change is exercised for real — nominal path plus an edge case — instead of trusting the suite. If the app won't even launch, it records a working launch recipe and retries.</p></div>
-        <div class="benefit reveal"><span class="num">03</span><h3>Sixteen-angle review</h3><p>One command fans out specialized agents — security, complexity, naming, robustness, tests, and more — in parallel, each auditing a single dimension, then fixes what they find.</p></div>
+        <div class="benefit reveal"><span class="num">03</span><h3>Seventeen-angle review</h3><p>One command fans out specialized agents — security, complexity, naming, robustness, tests, and more — in parallel, each auditing a single dimension, then fixes what they find.</p></div>
         <div class="benefit reveal"><span class="num">04</span><h3>A backlog that commits itself</h3><p>Queue ideas as numbered items, singly or in bulk; bundled requests are split into independent items automatically. Implement any of them later just by number.</p></div>
         <div class="benefit reveal"><span class="num">05</span><h3>Feedback loops that close</h3><p>Pre-existing test failures are offered for tracking, a reminder fires when several changes ship unreviewed, and every dead end is logged with its diagnosis so no session rediscovers it.</p></div>
         <div class="benefit reveal"><span class="num">06</span><h3>Nothing silently lost</h3><p>Work is committed before every turn ends — even interruptions — and a one-command release finalizes the changelog, refreshes docs, bumps the version, and tags.</p></div>
         <div class="benefit wide reveal"><span class="num">07</span><h3>A backlog that empties itself</h3><p>One command works the queue with no approval step and no questions: items are picked, implemented and shipped one after another, each in isolation so a long run stays affordable. Progress is committed at every item boundary — so a closed session, a crash, or a usage limit hit mid-item is picked back up exactly where it stopped, and an item that turns out to be a dead end is set aside with its reason instead of stalling the rest.</p></div>
+        <div class="benefit reveal"><span class="num">08</span><h3>Multi-repo workspaces</h3><p>For projects split across several Git repos: one command sets up a hub tracking every sibling repo's status and role, another picks the next eligible task across all of them, implements it, then pushes and publishes the release on its own.</p></div>
       </div>
     </div>
   </section>
@@ -457,6 +458,17 @@
           </div>
         </div>
 
+        <div class="demo reveal">
+          <div class="demo-copy">
+            <h3><span class="cmd-name">/vibe:next-task</span> — across every repo at once</h3>
+            <p>Run from a workspace root: candidates come from every active sibling repo, cross-repo blockers are resolved from plain prose, and the highest-priority pick is implemented, <b>pushed, and released</b> on its own — the only command in the workflow that publishes automatically.</p>
+          </div>
+          <div class="term" data-demo="next-task">
+            <div class="term-bar" aria-hidden="true"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude — /vibe:next-task</span></div>
+            <div class="term-body" role="img" aria-label="Terminal demo of /vibe:next-task: candidates are collected across three sibling repos, the highest-priority item is picked, implemented, pushed, and released — unblocking a downstream item in another repo."></div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -464,7 +476,7 @@
   <section id="commands">
     <div class="wrap">
       <p class="sec-label reveal">the toolbox</p>
-      <h2 class="reveal">Ten commands, one workflow</h2>
+      <h2 class="reveal">Twelve commands, one workflow</h2>
       <div class="cmd-table reveal">
         <table>
           <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
@@ -479,6 +491,8 @@
             <tr><td><code>/vibe:changelog</code></td><td>Update CHANGELOG.md from git history</td></tr>
             <tr><td><code>/vibe:docs</code></td><td>Generate or refresh README managed sections and docs/</td></tr>
             <tr><td><code>/vibe:release</code></td><td>Bump version, finalize the changelog, commit and tag a release</td></tr>
+            <tr><td><code>/vibe:workspace-init</code></td><td>Bootstrap or refresh a multi-repo workspace's hub repo</td></tr>
+            <tr><td><code>/vibe:next-task</code></td><td>Pick the next eligible task across a workspace (or the current repo), implement it, then push and release</td></tr>
           </tbody>
         </table>
       </div>
@@ -488,7 +502,7 @@
   <section id="review-agents">
     <div class="wrap">
       <p class="sec-label reveal">the reviewers</p>
-      <h2 class="reveal">Sixteen dimensions, audited in parallel</h2>
+      <h2 class="reveal">Seventeen dimensions, audited in parallel</h2>
       <p class="sec-intro reveal">Each agent focuses on exactly one quality dimension. <code>/vibe:init</code> decides which ones apply to your project.</p>
       <div class="agents reveal">
         <span class="agent"><span class="h">▲</span>antipatterns</span>
@@ -496,6 +510,7 @@
         <span class="agent"><span class="h">▲</span>complexity</span>
         <span class="agent"><span class="h">▲</span>ddd</span>
         <span class="agent"><span class="h">▲</span>dependencies</span>
+        <span class="agent"><span class="h">▲</span>hexagonal</span>
         <span class="agent"><span class="h">▲</span>hygiene</span>
         <span class="agent"><span class="h">▲</span>naming</span>
         <span class="agent"><span class="h">▲</span>overengineering</span>
@@ -507,6 +522,23 @@
         <span class="agent"><span class="h">▲</span>solid</span>
         <span class="agent"><span class="h">▲</span>tests</span>
         <span class="agent"><span class="h">▲</span>web-security</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="experts">
+    <div class="wrap">
+      <p class="sec-label reveal">the advisors</p>
+      <h2 class="reveal">Seven experts, consulted before the code exists</h2>
+      <p class="sec-intro reveal">While <code>/vibe:feature</code> and <code>/vibe:fix</code> plan, up to 3 matching experts weigh in — requirements a Product Owner wouldn't think to state, folded straight into the plan.</p>
+      <div class="agents reveal">
+        <span class="agent"><span class="h">◆</span>ui-ux</span>
+        <span class="agent"><span class="h">◆</span>frontend-design</span>
+        <span class="agent"><span class="h">◆</span>api-rest</span>
+        <span class="agent"><span class="h">◆</span>cli-dx</span>
+        <span class="agent"><span class="h">◆</span>data</span>
+        <span class="agent"><span class="h">◆</span>linux</span>
+        <span class="agent"><span class="h">◆</span>ops</span>
       </div>
     </div>
   </section>
@@ -648,6 +680,19 @@
       { t:"out", d:400, html:'<span class="t-dim">●</span> git tag <span class="t-bold">v1.3.0</span>' },
       { t:"gap" },
       { t:"out", d:500, html:'<span class="t-ok">✔ v1.3.0</span> <span class="t-dim">ready —</span> git push --follow-tags <span class="t-dim">when you are</span>' }
+    ],
+    "next-task": [
+      { t:"cmd", text:"/vibe:next-task" },
+      { t:"out", d:500, html:'<span class="t-dim">●</span> <span class="t-bold">3 active repos</span> <span class="t-dim">— scanning eligible items</span>' },
+      { t:"out", d:900, html:'  <span class="t-dim">api</span> #012 rate-limit-headers <span class="t-dim">— unblocks 2 items downstream</span>' },
+      { t:"out", d:700, html:'  <span class="t-dim">sdk</span> #004 retry-backoff' },
+      { t:"out", d:700, html:'  <span class="t-dim">web</span> #031 dark-mode-toggle' },
+      { t:"out", d:800, html:'<span class="t-bold">picked</span> <span class="t-dim">api#012 — highest unblock count, confirmed</span>' },
+      { t:"run", d:500, html:'  <span class="t-dim">api#012</span> rate-limit-headers <span class="t-dim">— fix</span>', after:2400, done:'  <span class="t-ok">✓</span> <span class="t-dim">api#012</span> rate-limit-headers <span class="t-dim">— shipped</span> <span class="t-warn">9f1c2ab</span>' },
+      { t:"out", d:500, html:'<span class="t-dim">●</span> git push <span class="t-ok">ok</span>' },
+      { t:"out", d:600, html:'<span class="t-dim">●</span> CHANGELOG.md non-empty <span class="t-dim">→</span> <span class="t-bold">/vibe:release patch</span>' },
+      { t:"gap" },
+      { t:"out", d:500, html:'<span class="t-ok">✔ api v0.9.1</span> <span class="t-dim">tagged, pushed — unblocks</span> <span class="t-warn">sdk#004</span>' }
     ]
   };
 
