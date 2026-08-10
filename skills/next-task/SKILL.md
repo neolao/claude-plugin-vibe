@@ -76,13 +76,15 @@ On confirmation (normal mode), or immediately (auto mode / forced pick):
    4. Invoke `vibe:feature NNN --auto` or `vibe:fix NNN --auto` (Skill tool) directly on that exact item — the `--auto` flag already exists on both skills (see their own "Autonomous mode (`--auto`)" section), nothing new to build here.
    5. Read the `AUTO-RESULT:` line: `done`/`blocked` → continue the loop if the `N` budget allows; `aborted` → stop the loop immediately (global blocker, go to Step 8 with whatever was accomplished so far).
    6. Loop ends when: `N` is reached, the backlog is drained, or an item came back `aborted`.
+
+   Same glyph convention `vibe:tasks` uses for task transitions, applied per item: print `● NNN slug — feature|fix` before invoking it, then `✓ NNN slug — shipped <hash>` or `⚠ NNN slug — blocked (<reason>)`/`aborted` once the `AUTO-RESULT:` line lands — one line per item, no restating.
 4. **Normal mode / forced pick**: classify feature vs. fix from the item's title/description (bug/error/incorrect/crash/regression → fix; new capability → feature), then invoke `vibe:feature NNN` or `vibe:fix NNN` (Skill tool) — no `--auto` here, the confirmation already happened in Step 6 and each skill's own human-facing gates apply normally.
 
 Control returns here once the invoked skill(s) finish (report, `AUTO-RESULT:` line(s), or early exit) — continue to Step 8 regardless of outcome, including `blocked`/`aborted`/a rejected or stopped normal-mode run. `vibe:feature`/`vibe:fix` only ever commit **locally** by their own documented design; anything that landed there — including a `wip:` commit from their own "never end a turn with uncommitted files" rule — still needs to reach the remote.
 
 ## Step 8 — Push and publish
 
-Still inside the picked repo's directory.
+Still inside the picked repo's directory. Same one-line-per-transition convention as Step 7: `✓ pushed` / `⚠ push failed — <reason>` for 8a, `✓ vX.Y.Z tagged, pushed` / `⚠ release skipped — <reason>` for 8b.
 
 ### 8a — Push commits
 

@@ -83,6 +83,8 @@ One commit per item, written at the boundary:
 
 This is what makes resuming possible: a crash at any point leaves a committed pointer to the item that was in flight.
 
+Alongside each state write, print one compact status line in chat — same glyph convention `vibe:tasks` uses for task transitions, applied here per item instead of per task: `● NNN slug — feature|fix` when starting, `✓ NNN slug — shipped <hash>` or `⚠ NNN slug — blocked (<reason>)` once the verdict lands. One line per item, no restating; keeps a long run skimmable instead of a paragraph each.
+
 ## Step 5 — Stop conditions
 
 The run ends when:

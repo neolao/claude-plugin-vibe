@@ -40,6 +40,8 @@ flowchart LR
 
 `tasks` owns the only fallback logic in the plugin for this failure mode, so every caller degrades the same way instead of each reinventing its own message. The scratchpad checklist preserves the declared order but does not enforce `blockedBy` — unlike a real `TaskCreate` chain, nothing stops a step from being checked out of order; the constraint holds only because the calling skill always executes its own steps sequentially.
 
+`tasks` also owns the compact chat status-line convention for every transition it governs: `● <subject>` when a task starts, `✓ <subject>` when it completes (plus a concrete detail — a hash, a count — never restated prose). `/vibe:auto` and `/vibe:next-task` reuse the same three glyphs (adding `⚠` for blocked/aborted) one level down, per backlog item, since their item loops sit outside the task-list mechanism entirely.
+
 ## Backlog item lifecycle
 
 Items live in `.vibe/backlog/NNN-slug.md` (shape in `.vibe/models.md`), created and committed on the spot by `/vibe:backlog`:

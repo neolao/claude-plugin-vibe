@@ -20,5 +20,6 @@ Create every task from `$ARGUMENTS` in order using `TaskCreate`, chaining depend
 From here on, whenever the invoking skill's instructions say to mark a task `in_progress` or `completed`:
 - If the dedicated task system was used above: call `TaskUpdate`.
 - If the fallback was used: edit the matching line in `task-list.md` (check the box, or note it as started).
+- Either way, print one compact status line in chat for the transition — `● <subject>` on `in_progress`, `✓ <subject>` on `completed` (append a short concrete detail if one exists: a commit hash, a count — nothing restated). Prose belongs in the final report, not in these lines.
 
 Do not re-invoke this skill for individual status updates — this instruction governs them for the remainder of the session.

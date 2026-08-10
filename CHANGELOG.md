@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Task and backlog-item transitions now print a compact one-line status marker in chat (`●` starting, `✓` done, `⚠` blocked) instead of prose, across `/vibe:auto`, `/vibe:next-task`, and every skill going through `/vibe:tasks` — keeps a long run skimmable
+
+### Fixed
+
+- The showcase website's commands table, review-agent list, and dimension counts were out of date (missing `/vibe:workspace-init`/`/vibe:next-task`, the `hexagonal` review agent, a stale "Sixteen dimensions" count); it now also covers the multi-repo workspace capability and the 7 expert agents, previously undocumented there
+
 ## [1.12.1] - 2026-08-10
 
 ### Fixed
