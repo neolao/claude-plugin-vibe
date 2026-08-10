@@ -34,7 +34,7 @@ Only fall back to a full scan of cwd's direct subdirectories (marker `.git/` + `
 
 ## Step 3 — Create task list
 
-Invoke the `vibe:tasks` skill (Skill tool) to create the tasks below. **Keep subject names short (≤ 30 chars)**. `vibe:tasks` creates them via `TaskCreate`, or falls back to a scratchpad checklist if unavailable — either way, its instructions then govern every later "mark the task completed" below.
+Invoke the `vibe:tasks` skill (Skill tool) to create the tasks below. **Keep subject names short (≤ 30 chars)** — they appear in the status line. `vibe:tasks` creates the tasks via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable — either way, its instructions then govern how every later "mark the task completed" instruction in this skill is carried out.
 
 Pass as `$ARGUMENTS`:
 

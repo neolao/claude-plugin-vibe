@@ -28,6 +28,54 @@ If `$ARGUMENTS` is non-empty:
   - **Batch mode**: the argument contains multiple distinct items — i.e., a newline-separated list, a bulleted list (`-` or `*` prefixes), or a numbered list (`1.`, `2.`, …). Each line/entry represents a separate backlog item to create. Go to **Step 2b — Batch creation**.
   - **Single mode**: the argument is a plain prose description (possibly multi-sentence but not a list). Go to **Step 2d — Scope check**.
 
+## Step 2 — List backlog items
+
+1. Check if `.vibe/backlog/` exists and contains at least one `*.md` file at the top level (not in `done/`).
+   - If not: report "The backlog is empty — no active items in `.vibe/backlog/`." and stop.
+2. Collect all `*.md` files directly in `.vibe/backlog/` (exclude the `done/` subfolder), sorted alphabetically.
+3. For each file:
+   - Read the YAML frontmatter and extract the `status` value and optional `depends_on` list.
+   - Read the first `# ` heading as the title.
+   - Compute blocked status: if `depends_on` is non-empty, for each dependency number find the file `NNN-*.md` in `.vibe/backlog/` (top level or `done/`) and read its `status`. Collect the numbers whose status is NOT `done` — these are the current blockers.
+4. Display a table with a "Bloqué par" column:
+   - If no unmet dependencies: show `—`
+   - If there are blockers: show the blocker numbers (e.g. `⚠ 002, 003`)
+
+| # | Title | Status | Bloqué par |
+|---|---|---|---|
+| 002 | Export as CSV | `todo` | — |
+| 003 | Dark mode | `in_progress` | ⚠ 002 |
+| 004 | Light theme | `todo` | — |
+
+If `.vibe/backlog/done/` contains files, append a note: "N item(s) done — see `.vibe/backlog/done/`."
+
+For each `blocked` item, append one line under the table with its number and the reason from its `## Blocked` section, plus: "Relancer `/vibe:feature NNN` (ou `/vibe:fix NNN`) remet l'item en jeu."
+
+5. Review cadence status, as a final line:
+   - If `.vibe/last-review.md` exists: read its `date` and `commit` values, count the `feat:`/`fix:` commits made since that hash, and display "Dernier review : YYYY-MM-DD (N changements depuis)."
+   - Otherwise: display "Aucun review enregistré — lancer `/vibe:review` établira la base."
+
+Stop here — do not create anything.
+
+## Step 2b — Batch creation
+
+Parse `$ARGUMENTS` into an ordered list of item descriptions. Rules:
+- Strip leading list markers (`-`, `*`, `1.`, `2.`, …) from each entry.
+- Discard blank lines.
+- Each non-empty entry is treated as an independent item description (equivalent to calling the skill once per item in single mode).
+
+Before creating any file, display a preview table of all items that will be created:
+
+| # (preview) | Title (preview) |
+|---|---|
+| 001 | First derived title |
+| 002 | Second derived title |
+| … | … |
+
+Then create each item in order by applying **Steps 3 → 6** for each entry, using the description of that entry as the argument. The number assigned at Step 3 must be re-computed after each file is written (so each new file gets the correct next number even if files already existed). Do not commit per item — commit once for the whole batch (see **Step 6b — Commit**).
+
+After all items are created, apply **Step 6b — Commit** (batch variant) to commit all of them together, then go to **Step 7b — Batch report**.
+
 ## Step 2c — From-review creation
 
 Look in the current conversation context for the most recent `/vibe:review` report. It contains sections like "Applied fixes", "Remaining findings" (High / Medium / Low), and "Test status after fixes".
@@ -73,54 +121,6 @@ This is different from one feature with several facets that all serve the same g
    - In each dependent item found in point 4, remove `NNN` from its `depends_on` list (drop the line entirely if the list becomes empty).
 7. Commit the removal and any dependency cleanups together: `chore: remove backlog item NNN - [Title]`
 8. Report: the file removed, the dependent items cleaned up (if any), and the commit hash and message. Stop here.
-
-## Step 2b — Batch creation
-
-Parse `$ARGUMENTS` into an ordered list of item descriptions. Rules:
-- Strip leading list markers (`-`, `*`, `1.`, `2.`, …) from each entry.
-- Discard blank lines.
-- Each non-empty entry is treated as an independent item description (equivalent to calling the skill once per item in single mode).
-
-Before creating any file, display a preview table of all items that will be created:
-
-| # (preview) | Title (preview) |
-|---|---|
-| 001 | First derived title |
-| 002 | Second derived title |
-| … | … |
-
-Then create each item in order by applying **Steps 3 → 6** for each entry, using the description of that entry as the argument. The number assigned at Step 3 must be re-computed after each file is written (so each new file gets the correct next number even if files already existed). Do not commit per item — commit once for the whole batch (see **Step 6b — Commit**).
-
-After all items are created, apply **Step 6b — Commit** (batch variant) to commit all of them together, then go to **Step 7b — Batch report**.
-
-## Step 2 — List backlog items
-
-1. Check if `.vibe/backlog/` exists and contains at least one `*.md` file at the top level (not in `done/`).
-   - If not: report "The backlog is empty — no active items in `.vibe/backlog/`." and stop.
-2. Collect all `*.md` files directly in `.vibe/backlog/` (exclude the `done/` subfolder), sorted alphabetically.
-3. For each file:
-   - Read the YAML frontmatter and extract the `status` value and optional `depends_on` list.
-   - Read the first `# ` heading as the title.
-   - Compute blocked status: if `depends_on` is non-empty, for each dependency number find the file `NNN-*.md` in `.vibe/backlog/` (top level or `done/`) and read its `status`. Collect the numbers whose status is NOT `done` — these are the current blockers.
-4. Display a table with a "Bloqué par" column:
-   - If no unmet dependencies: show `—`
-   - If there are blockers: show the blocker numbers (e.g. `⚠ 002, 003`)
-
-| # | Title | Status | Bloqué par |
-|---|---|---|---|
-| 002 | Export as CSV | `todo` | — |
-| 003 | Dark mode | `in_progress` | ⚠ 002 |
-| 004 | Light theme | `todo` | — |
-
-If `.vibe/backlog/done/` contains files, append a note: "N item(s) done — see `.vibe/backlog/done/`."
-
-For each `blocked` item, append one line under the table with its number and the reason from its `## Blocked` section, plus: "Relancer `/vibe:feature NNN` (ou `/vibe:fix NNN`) remet l'item en jeu."
-
-5. Review cadence status, as a final line:
-   - If `.vibe/last-review.md` exists: read its `date` and `commit` values, count the `feat:`/`fix:` commits made since that hash, and display "Dernier review : YYYY-MM-DD (N changements depuis)."
-   - Otherwise: display "Aucun review enregistré — lancer `/vibe:review` établira la base."
-
-Stop here — do not create anything.
 
 ## Step 3 — Compute the next number
 

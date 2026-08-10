@@ -74,11 +74,7 @@ _Kept identical to `skills/fix/SKILL.md`'s Backlog resolution — update both to
 
 Before treating `$ARGUMENTS` as a free-form description, check whether it is a reference to a backlog item.
 
-A backlog reference matches one of these patterns (the **entire** `$ARGUMENTS` must match — not just a prefix):
-- A pure number: `3`, `003`, `42`
-- A number followed by an optional slug: `003-oauth`, `3-oauth-integration`
-
-Detection rule: `$ARGUMENTS` matches `^\d+(-[\w-]+)?$`.
+A backlog reference is a number, optionally followed by a slug (e.g. `3`, `003`, `003-oauth`) — the **entire** `$ARGUMENTS` must match, not just a prefix. Detection rule: `$ARGUMENTS` matches `^\d+(-[\w-]+)?$`.
 
 **If `$ARGUMENTS` is a backlog reference:**
 

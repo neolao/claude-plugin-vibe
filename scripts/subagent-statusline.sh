@@ -4,7 +4,10 @@ set -eu
 # Input: {..., "columns": N, "tasks": [{id,name,type,status,description,label,startTime,tokenCount,tokenSamples,cwd}, ...]}
 # Output: one JSON line per row to override: {"id": "...", "content": "..."}
 
-input=$(cat)
+if ! input=$(cat); then
+  echo "subagent-statusline: failed to read hook input from stdin" >&2
+  exit 0
+fi
 
 if ! output=$(printf '%s' "$input" | jq -c '
   (.columns // 60) as $columns |

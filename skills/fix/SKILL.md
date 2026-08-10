@@ -72,11 +72,7 @@ _Kept identical to `skills/feature/SKILL.md`'s Backlog resolution — update bot
 
 Before treating `$ARGUMENTS` as a free-form description, check whether it is a reference to a backlog item (e.g. a bug filed via `/vibe:backlog`, often from a `/vibe:review` finding).
 
-A backlog reference matches one of these patterns (the **entire** `$ARGUMENTS` must match — not just a prefix):
-- A pure number: `3`, `003`, `42`
-- A number followed by an optional slug: `003-login-crash`, `3-login-crash`
-
-Detection rule: `$ARGUMENTS` matches `^\d+(-[\w-]+)?$`.
+A backlog reference is a number, optionally followed by a slug (e.g. `3`, `003`, `003-login-crash`) — the **entire** `$ARGUMENTS` must match, not just a prefix. Detection rule: `$ARGUMENTS` matches `^\d+(-[\w-]+)?$`.
 
 **If `$ARGUMENTS` is a backlog reference:**
 
@@ -154,7 +150,7 @@ Draft the technical plan (your working notes) first, then confront the brief and
 
 Present the fix plan to the user and **wait for explicit approval** before writing any code.
 
-The user is a Product Owner, not a developer: present the plan in plain, non-technical language — short sentences, simple words, no filler. **Never mention file names, class/function/method/variable names, or other implementation details.**
+The user is a Product Owner, not a developer: present the plan in plain, non-technical language — short sentences, simple words, no filler. **Never mention file names, class/function/method/variable names, module names, or other implementation details.**
 
 The plan must cover, in a few short sentences:
 - **Le problème observé** — what's broken, from a user-visible perspective
