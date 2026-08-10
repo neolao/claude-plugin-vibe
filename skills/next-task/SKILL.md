@@ -6,7 +6,7 @@ argument-hint: "NNN [in <repo>] (force a specific item) | auto [N] (autonomous, 
 
 # /vibe:next-task — Cross-Repo (and Mono-Repo) Task Runner
 
-Picks the next eligible piece of work, hands it off to `/vibe:feature`, `/vibe:fix`, or `/vibe:auto` to implement, then **pushes and releases** — the one place in this plugin where a skill pushes and publishes on its own. `/vibe:feature`/`/vibe:fix`/`/vibe:auto` deliberately never push; this skill exists specifically to close that gap.
+Picks the next eligible piece of work, hands it off to `/vibe:feature`/`/vibe:fix` (directly, or repeatedly with `--auto` in auto mode) to implement, then **pushes and releases** — the one place in this plugin where a skill pushes and publishes on its own. `/vibe:feature`/`/vibe:fix`/`/vibe:auto` deliberately never push; this skill exists specifically to close that gap.
 
 Two scopes, chosen automatically (Step 2), never as an option to pick:
 - **Workspace scope** — a hub repo (see `/vibe:workspace-init`) is detected: candidates come from every `active` repo in `repos.md`, cross-repo blockers and priorities are resolved, downstream unblocks are checked after publishing.
@@ -17,7 +17,7 @@ Requires either scope to do anything useful — if neither is detected, it stops
 ## Step 1 — Parse `$ARGUMENTS`
 
 - **Forced pick** — `NNN` alone (mono-repo scope), or `NNN in <repo>` (workspace scope): read that item directly. Found → skip straight to **Step 7 — Hand off**. Not found → report the miss and stop.
-- **Auto mode** — starts with the literal word `auto`, optionally followed by an integer (`auto`, `auto 3`): run the normal picking (Steps 2–5) but skip confirmation (Step 6), and in Step 7 hand off to `vibe:auto [N]` instead of `vibe:feature`/`vibe:fix`. Meant to be driven by `/loop`, e.g. `/loop 1h /vibe:next-task auto 1`.
+- **Auto mode** — starts with the literal word `auto`, optionally followed by an integer (`auto`, `auto 3`): run the normal picking (Steps 2–5) but skip confirmation (Step 6), and in Step 7 drive the feature/fix loop directly in the picked repo, bounded by that integer if given. Meant to be driven by `/loop`, e.g. `/loop 1h /vibe:next-task auto 1`.
 - **Normal mode** — `$ARGUMENTS` empty: pick automatically (Steps 2–5), confirm (Step 6) before handing off (Step 7).
 
 ## Step 2 — Determine scope

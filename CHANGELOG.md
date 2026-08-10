@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.1] - 2026-08-10
+
 ### Fixed
 
 - `/vibe:auto` no longer auto-picks the lowest-numbered eligible item — it now ranks candidates by how many other same-repo items depend on them, then by defect priority (fix over feature), with the lowest number only as a final tie-break, so the run addresses the most pertinent item first
@@ -202,6 +204,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Installation instructions and an MIT license
 
 [Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.12.0...HEAD
+[1.12.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.9.1...v1.10.0

@@ -61,11 +61,13 @@ stateDiagram-v2
 
 In `--auto` mode, each human gate has a fixed automatic resolution (table kept identical in both skills): ambiguities are decided and recorded as assumptions, the plan is self-approved, a duplicate or an unmet dependency sets the item to `blocked`, and a broken build aborts the whole run.
 
+Picking the next item is a ranking, not a raw lowest-number scan: among eligible items (`todo`, `depends_on` satisfied, not yet processed this run), the item other same-repo `todo` items depend on the most wins first; a tie goes to a fix over a feature (same defect-vocabulary classification `/vibe:auto` records in the journal); the lowest number is only the final tie-break. The winning item's classification is already known from that ranking, so Step 2 (feature vs. fix) doesn't reclassify it.
+
 ```mermaid
 flowchart LR
     start(["/vibe:auto [limit]"]) --> resume{".vibe/auto-state.md<br/>status: running ?"}
     resume -- yes --> recover["wip: commit dirty tree<br/>re-run current item (attempt ≤ 2)"] --> pick
-    resume -- no --> pick["Pick lowest eligible item<br/>(todo, deps done)"]
+    resume -- no --> pick["Rank eligible items:<br/>unblock-count → fix-over-feature → lowest number"]
     pick --> state["Write + commit state<br/>(item boundary)"] --> agent["Sub-agent → /vibe:feature|fix NNN --auto"]
     agent --> verdict{"AUTO-RESULT"}
     verdict -- done --> pick
@@ -120,8 +122,10 @@ flowchart TD
     D --> F["Pick lowest eligible item"]
     E --> G["Present pick + confirm<br/>(skipped in auto mode)"]
     F --> G
-    G --> H["Hand off: /vibe:feature|fix NNN,<br/>or /vibe:auto [N] in auto mode"]
-    H --> I["git push"]
+    G --> H1["Normal/forced: /vibe:feature|fix NNN"]
+    G --> H2["Auto mode: drive the loop directly<br/>in the picked repo (own ranking, same<br/>as /vibe:auto) — /vibe:feature|fix NNN --auto<br/>per item, until N/drained/aborted"]
+    H1 --> I["git push"]
+    H2 --> I
     I --> J{"CHANGELOG.md<br/>[Unreleased] non-empty?"}
     J -- yes --> K["/vibe:release patch|minor|major<br/>(bump inferred, never left blank)<br/>then push commit + tags"]
     J -- no --> L["Skip release"]
@@ -129,6 +133,10 @@ flowchart TD
     L --> N["Report: implemented, pushed,<br/>released, downstream unblocked"]
     M --> N
 ```
+
+**Auto mode drives the loop itself instead of delegating to `/vibe:auto`**: Step 5 already picked the exact repo, so handing off to `/vibe:auto`'s own selection would risk it picking a different item there. Each iteration re-collects the repo's eligible items, ranks them the same way `/vibe:auto` does (unblock-count → fix-over-feature → lowest number), and invokes `/vibe:feature NNN --auto` or `/vibe:fix NNN --auto` directly; the loop stops when `N` is reached, the backlog is drained, or an item comes back `aborted`.
+
+If Step 8 (release) is blocked by a *pre-existing* test failure rather than a dirty tree or lint, `next-task` attempts one self-heal: it looks for an eligible backlog item that names the exact failing test file (the trace `/vibe:feature`/`/vibe:fix` leave when they defer an out-of-scope failure instead of silently fixing it). Exactly one match gets run via `/vibe:fix|feature NNN --auto` and the release is retried once; zero or multiple matches, or a retry that still fails, is reported as a follow-up blocker instead of retried further.
 
 `/vibe:workspace-init` (`skills/workspace-init/SKILL.md`) sets up what `next-task` relies on for workspace scope: it writes/refreshes the hub repo's `repos.md` registry (never guessing a new sibling's status/role — asked when a `.vibe/backlog/` isn't there to infer `active` from) and the workspace-root `CLAUDE.md`, then commits inside the hub repo only — it never pushes, unlike `next-task`.
 
