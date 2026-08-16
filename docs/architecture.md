@@ -13,7 +13,7 @@ claude-plugin-vibe/
 │   └── marketplace.json   # marketplace listing pointing at this repo
 ├── skills/<name>/SKILL.md # one directory per skill (12 /vibe:* slash commands + 1 internal)
 ├── agents/review-*.md     # one file per review dimension (17 agents, after-the-fact critics)
-├── agents/expert-*.md     # one file per domain expert (7 agents, before/during prescriptive consultants)
+├── agents/expert-*.md     # one file per domain expert (8 agents, before/during prescriptive consultants)
 ├── scripts/subagent-statusline.sh  # renders the agent-panel status line
 ├── settings.json          # wires the subagentStatusLine hook to the script
 └── docs/                  # this developer documentation + the GitHub Pages site
@@ -25,7 +25,7 @@ claude-plugin-vibe/
 flowchart LR
     user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>12 slash commands + tasks (internal)"]
     skills -- "/vibe:review fans out" --> agents["agents/review-*.md<br/>17 review agents"]
-    skills -- "/vibe:feature, /vibe:fix consult" --> experts["agents/expert-*.md<br/>7 domain experts"]
+    skills -- "/vibe:feature, /vibe:fix consult" --> experts["agents/expert-*.md<br/>8 domain experts"]
     skills -- "generate & read" --> vibe[".vibe/ context map<br/>(in the target project)"]
     manifests[".claude-plugin/*.json<br/>settings.json"] -- "register commands & hook" --> skills
     manifests -- "subagentStatusLine hook" --> statusline["scripts/subagent-statusline.sh"]
@@ -53,7 +53,7 @@ Most agents are read-only; two are not: `review-tests` executes the project's re
 
 ## Expert agents (`agents/expert-*.md`)
 
-Where review agents critique code that already exists, `agents/expert-<domain>.md` agents prescribe requirements *before or during* implementation — consulted by `/vibe:feature` and `/vibe:fix` while planning (up to 3, selected per-task by matching the brief against agent descriptions) and on demand for one precise question per sub-task while coding. The roster (`ui-ux`, `frontend-design`, `api-rest`, `cli-dx`, `data`, `linux`, `ops`) is deliberately limited to domains with no `review-*` counterpart, to avoid two near-duplicate definitions of the same expertise — recorded in `.vibe/decisions/001-expert-personas-scope.md`. Unlike review agents, there is no per-project activation table: selection happens per task, not per project.
+Where review agents critique code that already exists, `agents/expert-<domain>.md` agents prescribe requirements *before or during* implementation — consulted by `/vibe:feature` and `/vibe:fix` while planning (up to 3, selected per-task by matching the brief against agent descriptions) and on demand for one precise question per sub-task while coding. The roster (`ui-ux`, `frontend-design`, `api-rest`, `cli-dx`, `data`, `linux`, `ops`) is deliberately limited to domains with no `review-*` counterpart, to avoid two near-duplicate definitions of the same expertise — recorded in `.vibe/decisions/001-expert-personas-scope.md`. One narrow exception exists: `expert-realtime-rendering` is paired with `review-performance` (widened to also cover frame budget/allocation/draw-call batching) because ex-ante frame-budget and allocation-discipline choices are hard to retrofit once rendering code is written — recorded in `.vibe/decisions/003-realtime-rendering-expert-exception.md`. Unlike review agents, there is no per-project activation table: selection happens per task, not per project.
 
 ## Status line (`scripts/` + `settings.json`)
 

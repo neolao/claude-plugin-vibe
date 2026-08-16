@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New expert agent `expert-realtime-rendering`, consulted while planning features/fixes for real-time rendering or game-loop projects — covers frame budget, per-frame allocation discipline, and draw-call batching
+- The performance review agent (`review-performance`) now also covers real-time rendering: frame-budget overruns, per-frame allocation churn, and unbatched draw calls, activated for real-time rendering/game-loop projects in addition to API/server projects
+
 ## [1.13.0] - 2026-08-10
 
 ### Added

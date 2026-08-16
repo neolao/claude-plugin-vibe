@@ -31,7 +31,7 @@ Same approach: one file `agents/review-<dimension>.md` with frontmatter `name` +
 
 ## Adding or changing an expert agent
 
-One file `agents/expert-<domain>.md`, frontmatter `name` + `description` (the description states the trigger — "Consult when the task…" — since it drives per-task selection). Body: the shared "Modes" section (kept byte-identical across all `expert-*` files — plan consultation returns `REQUIREMENTS`/`RISKS`/`TEST SCENARIOS`, implementation consultation answers one question) plus a short domain checklist. Before adding a new domain, check it doesn't already have a `review-*` counterpart — the roster is deliberately scoped to avoid that overlap (`.vibe/decisions/001-expert-personas-scope.md`). Keep each file terse: it is loaded into context on every consultation.
+One file `agents/expert-<domain>.md`, frontmatter `name` + `description` (the description states the trigger — "Consult when the task…" — since it drives per-task selection). Body: the shared "Modes" section (kept byte-identical across all `expert-*` files — plan consultation returns `REQUIREMENTS`/`RISKS`/`TEST SCENARIOS`, implementation consultation answers one question) plus a short domain checklist. Before adding a new domain, check it doesn't already have a `review-*` counterpart — the roster is deliberately scoped to avoid that overlap (`.vibe/decisions/001-expert-personas-scope.md`). A domain with a review counterpart still gets an expert only as a documented, narrow exception (see `.vibe/decisions/003-realtime-rendering-expert-exception.md` for the precedent) — never silently. Keep each file terse: it is loaded into context on every consultation.
 
 ## Conventions that must hold
 

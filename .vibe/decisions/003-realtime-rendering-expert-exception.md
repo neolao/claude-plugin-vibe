@@ -1,0 +1,9 @@
+---
+date: 2026-08-16
+status: accepted
+---
+# Add `expert-realtime-rendering` despite `review-performance` already existing
+**Context:** A consuming project (a real-time 2D game engine) needs ex-ante guidance on frame budget, per-frame allocation discipline, and draw-call batching — decisions made at design time, before code exists. Decision `001` normally excludes performance from the expert roster because it already has a `review-*` counterpart (`review-performance`), specifically to avoid two near-duplicate expertise grids for the same scope.
+**Decision:** Widen `review-performance`'s scope to also cover real-time/frame-budget defects (frame budget overruns, per-frame allocation/GC pressure, unbatched draw calls) and activate it for real-time rendering/game-loop projects, not only API/server ones — one reviewer, no new review-side agent. Add `expert-realtime-rendering` as a single, narrow exception to decision `001`: ex-ante frame-budget/allocation/batching choices are hard to retrofit once rendering code is written, the same class of reasoning decision `001` itself flagged as groundsfor revisiting the roster if usage proved the need.
+**Reason:** Widening the existing reviewer avoids creating a second, near-duplicate review agent alongside it — the failure mode decision `001` was written to prevent. Adding one expert on top (rather than an expert *and* a new reviewer) keeps the exception minimal: one new file to maintain, not two forming a self-contained mirror domain.
+**Rejected alternatives:** (1) A brand-new `review-realtime-rendering` agent alongside the new expert — rejected: recreates the exact "two near-duplicate grids for one domain" problem decision `001` avoids, this time self-contained rather than shadowing an existing reviewer. (2) No expert, `review-performance` widened only — rejected: leaves no way to prescribe frame-budget/allocation requirements before the code is written, which was the actual gap motivating this change.
