@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.14.1] - 2026-08-18
+
 ### Fixed
 
 - `/vibe:next-task` could stop and relay a nested skill's own report (from `vibe:feature`, `vibe:fix`, or `vibe:release`) as if it were its final answer, skipping its own remaining steps — observed live: an implementation shipped locally but the push/release step never ran until asked why the site wasn't updated. Now explicit that only its last step talks to the user, and every nested report is intermediate data to carry forward instead
@@ -227,7 +229,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.14.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.14.1...HEAD
+[1.14.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.14.0...v1.14.1
 [1.14.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.13.0...v1.14.0
 [1.13.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.12.0...v1.12.1
