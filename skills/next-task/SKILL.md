@@ -14,6 +14,8 @@ Two scopes, chosen automatically (Step 2), never as an option to pick:
 
 Requires either scope to do anything useful — if neither is detected, it stops (Step 2).
 
+**Only Step 10 talks to the user.** Every nested invocation in Steps 7–9 (`vibe:feature`, `vibe:fix`, `vibe:release`, and whatever those pull in — `vibe:changelog`, `vibe:docs`, `vibe:sync`) ends with its own report, and `vibe:feature`/`vibe:fix` end with an `AUTO-RESULT:` line on top of that. Both read like a finished, user-facing answer — they are not, here: they are this skill's intermediate data, produced mid-run and consumed by the *next* step. Getting one back is never a stopping point and never something to relay as-is: capture what it says and continue immediately, in the same turn, to whichever step comes next (Step 8 after Step 7, Step 8b/8c after 8a, Step 9 after 8, Step 10 after 9) — all the way to Step 10, the only step that produces this skill's actual final report.
+
 ## Step 1 — Parse `$ARGUMENTS`
 
 - **Forced pick** — `NNN` alone (mono-repo scope), or `NNN in <repo>` (workspace scope): read that item directly. Found → skip straight to **Step 7 — Hand off**. Not found → report the miss and stop.
@@ -70,7 +72,7 @@ On confirmation (normal mode), or immediately (auto mode / forced pick):
 1. Record the absolute path of the starting directory (workspace root, or the single repo in mono-repo scope) — needed to return to it in Step 10 regardless of how deep the hand-off changes the working directory.
 2. Move into the picked (or forced) repo's directory (no-op in mono-repo scope — already there).
 3. **Auto mode**: run the auto-mode loop below.
-4. **Normal mode / forced pick**: classify feature vs. fix from the item's title/description (bug/error/incorrect/crash/regression → fix; new capability → feature), then invoke `vibe:feature NNN` or `vibe:fix NNN` (Skill tool) — no `--auto` here, the confirmation already happened in Step 6 and each skill's own human-facing gates apply normally.
+4. **Normal mode / forced pick**: classify feature vs. fix from the item's title/description (bug/error/incorrect/crash/regression → fix; new capability → feature), then invoke `vibe:feature NNN` or `vibe:fix NNN` (Skill tool) — no `--auto` here, the confirmation already happened in Step 6 and each skill's own human-facing gates apply normally. Whatever the invoked skill reports when it finishes (a completed implementation, a rejected plan, an early exit) — that is not this skill's final answer either; carry it forward and continue straight to Step 8.
 
 ### Auto-mode loop
 
@@ -86,7 +88,7 @@ Each iteration:
 
 Status line: same glyph convention as `vibe:auto`'s own loop (see its Step 4/6) — `● NNN slug — feature|fix` before invoking an item, then `✓ NNN slug — shipped <hash>` or `⚠ NNN slug — blocked (<reason>)`/`aborted` once the `AUTO-RESULT:` line lands. One line per item, no restating.
 
-Control returns here once the invoked skill(s) finish (report, `AUTO-RESULT:` line(s), or early exit) — continue to Step 8 regardless of outcome, including `blocked`/`aborted`/a rejected or stopped normal-mode run. `vibe:feature`/`vibe:fix` only ever commit **locally** by their own documented design; anything that landed there — including a `wip:` commit from their own "never end a turn with uncommitted files" rule — still needs to reach the remote.
+Control returns here once the invoked skill(s) finish (report, `AUTO-RESULT:` line(s), or early exit) — **do not stop and relay that report as if it were this skill's own answer; the turn is not over.** Continue to Step 8 regardless of outcome, including `blocked`/`aborted`/a rejected or stopped normal-mode run. `vibe:feature`/`vibe:fix` only ever commit **locally** by their own documented design; anything that landed there — including a `wip:` commit from their own "never end a turn with uncommitted files" rule — still needs to reach the remote.
 
 ## Step 8 — Push and publish
 
