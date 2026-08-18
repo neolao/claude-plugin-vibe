@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `/vibe:next-task` could stop and relay a nested skill's own report (from `vibe:feature`, `vibe:fix`, or `vibe:release`) as if it were its final answer, skipping its own remaining steps — observed live: an implementation shipped locally but the push/release step never ran until asked why the site wasn't updated. Now explicit that only its last step talks to the user, and every nested report is intermediate data to carry forward instead
+
 ## [1.14.0] - 2026-08-16
 
 ### Added
