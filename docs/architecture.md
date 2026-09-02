@@ -11,7 +11,7 @@ claude-plugin-vibe/
 ├── .claude-plugin/
 │   ├── plugin.json        # plugin identity: name "vibe", version, keywords
 │   └── marketplace.json   # marketplace listing pointing at this repo
-├── skills/<name>/SKILL.md # one directory per skill (12 /vibe:* slash commands + 1 internal)
+├── skills/<name>/SKILL.md # one directory per skill (13 /vibe:* slash commands + 1 internal)
 ├── agents/review-*.md     # one file per review dimension (17 agents, after-the-fact critics)
 ├── agents/expert-*.md     # one file per domain expert (8 agents, before/during prescriptive consultants)
 ├── scripts/subagent-statusline.sh  # renders the agent-panel status line
@@ -23,7 +23,7 @@ claude-plugin-vibe/
 
 ```mermaid
 flowchart LR
-    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>12 slash commands + tasks (internal)"]
+    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>13 slash commands + tasks (internal)"]
     skills -- "/vibe:review fans out" --> agents["agents/review-*.md<br/>17 review agents"]
     skills -- "/vibe:feature, /vibe:fix consult" --> experts["agents/expert-*.md<br/>8 domain experts"]
     skills -- "generate & read" --> vibe[".vibe/ context map<br/>(in the target project)"]
@@ -34,9 +34,13 @@ flowchart LR
 
 ## Skills (`skills/`)
 
-Each `/vibe:<name>` command is a self-contained instruction set in `skills/<name>/SKILL.md`, with frontmatter `name`, `description`, and optional `argument-hint`. Twelve skills are user-invocable slash commands covering the full workflow: `init`, `backlog`, `feature`, `fix`, `auto`, `review`, `sync`, `changelog`, `docs`, `release`, `workspace-init`, `next-task`. A thirteenth, `tasks`, sets `user-invocable: false` — hidden from the `/` menu, callable only by the others through the Skill tool.
+Each `/vibe:<name>` command is a self-contained instruction set in `skills/<name>/SKILL.md`, with frontmatter `name`, `description`, and optional `argument-hint`. Thirteen skills are user-invocable slash commands covering the full workflow: `init`, `backlog`, `clarify`, `feature`, `fix`, `auto`, `review`, `sync`, `changelog`, `docs`, `release`, `workspace-init`, `next-task`. A fourteenth, `tasks`, sets `user-invocable: false` — hidden from the `/` menu, callable only by the others through the Skill tool.
 
-Skills invoke each other through the Skill tool rather than duplicating logic: `feature` and `fix` call `sync` (and `docs`/`changelog` steps) before committing; `init` calls `sync` to bootstrap `.vibe/`; `release` refreshes docs and changelog. `init`, `feature`, `fix`, `review`, `docs`, `release`, and `workspace-init` all delegate task-list creation to `tasks`, which owns the only fallback logic (a scratchpad checklist) for when `TaskCreate` is unavailable in the environment. `auto` is the only skill that drives other skills through sub-agents — one per backlog item, strictly sequential since they share the Git working tree — so its own context stays constant over a long unattended run. Runtime verification is delegated to Claude Code's native `run` skill. `next-task` is the only skill in the plugin that pushes and publishes on its own — every other skill, including `auto`, stops at a local commit by design. The dynamic side of these flows is documented in `docs/workflows.md`.
+Skills invoke each other through the Skill tool rather than duplicating logic: `feature` and `fix` call `sync` (and `docs`/`changelog` steps) before committing; `init` calls `sync` to bootstrap `.vibe/`; `release` refreshes docs and changelog. `backlog`, `init`, and `workspace-init` also invoke `clarify` conditionally — only when what they have to work with (a one-line item description, an empty project's stated idea, a new workspace's purpose) is too thin to act on safely — and fold its settled synthesis back into their own flow instead of guessing. `init`, `feature`, `fix`, `review`, `docs`, `release`, and `workspace-init` all delegate task-list creation to `tasks`, which owns the only fallback logic (a scratchpad checklist) for when `TaskCreate` is unavailable in the environment. `auto` is the only skill that drives other skills through sub-agents — one per backlog item, strictly sequential since they share the Git working tree — so its own context stays constant over a long unattended run. Runtime verification is delegated to Claude Code's native `run` skill. `next-task` is the only skill in the plugin that pushes and publishes on its own — every other skill, including `auto`, stops at a local commit by design. The dynamic side of these flows is documented in `docs/workflows.md`.
+
+## Interviewing for missing detail (`clarify`)
+
+`clarify` (`skills/clarify/SKILL.md`) maps whatever it's given — a plan, an idea, a decision — as a design tree of dependent questions, and works it round by round: each round asks every currently-answerable question at once, with a recommended answer, then waits; an answer can unblock questions that depended on it, reshaping the tree for the next round. Any question answerable by looking rather than asking is dispatched to a sub-agent instead of put to the user. It ends with a `CLARIFY-RESULT: settled|partial|abandoned` line plus a `### Synthesis`/`### Decisions made` payload — read identically whether a human typed `/vibe:clarify` directly or another skill invoked it and needs to keep going with the answer. Its own dialogue adapts to whichever language the conversation is in, unlike the rest of the plugin's user-facing strings, which are fixed English (see `docs/development.md`).
 
 ## Multi-repo workspaces (`workspace-init`, `next-task`)
 

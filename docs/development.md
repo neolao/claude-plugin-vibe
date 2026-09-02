@@ -36,6 +36,7 @@ One file `agents/expert-<domain>.md`, frontmatter `name` + `description` (the de
 ## Conventions that must hold
 
 - No secrets or credentials in any file.
+- `skills/*/SKILL.md` and `agents/*.md` content — instructions to Claude, user-facing dialogue, report templates — is always written in English, no exceptions: the plugin runs on projects and conversations in any language, so nothing in its own source should be pinned to one. `skills/clarify/SKILL.md` is the one deliberate case where the *live dialogue* still adapts to the conversation's language at runtime — its own instructions authoring it are English like everything else, only the behavior they describe is dynamic.
 - No orphan skill/agent files after a rename or removal.
 - JSON manifests (`plugin.json`, `marketplace.json`, `settings.json`) stay syntactically valid.
 - The `.vibe/` map of this repo is dogfooding — regenerate it with `/vibe:sync` rather than editing it by hand (entry lifecycles are listed in `.vibe/README.md`).

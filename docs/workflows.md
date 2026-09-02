@@ -42,9 +42,28 @@ flowchart LR
 
 `tasks` also owns the compact chat status-line convention for every transition it governs: `● <subject>` when a task starts, `✓ <subject>` when it completes (plus a concrete detail — a hash, a count — never restated prose). `/vibe:auto` and `/vibe:next-task` reuse the same three glyphs (adding `⚠` for blocked/aborted) one level down, per backlog item, since their item loops sit outside the task-list mechanism entirely.
 
+## Clarify: settling under-specified input
+
+`/vibe:clarify` (`skills/clarify/SKILL.md`) interviews the user round by round over a plan, idea, or decision, mapped as a design tree of dependent questions:
+
+```mermaid
+flowchart LR
+    A["Subject: $ARGUMENTS,<br/>or inferred from context"] --> B["Sketch the design tree<br/>(working notes only)"]
+    B --> C["Frontier = questions whose<br/>prerequisites are settled"]
+    C --> D{"Answerable by looking<br/>instead of asking?"}
+    D -- yes --> E["Dispatch sub-agent<br/>(doesn't block the round)"]
+    D -- no --> F["Ask the round<br/>(numbered, with recommended answers)"]
+    E --> F
+    F --> G["User answers"] --> H{"Frontier empty?"}
+    H -- no --> C
+    H -- yes --> I["User confirms shared<br/>understanding"] --> J["CLARIFY-RESULT: settled<br/>+ Synthesis / Decisions made"]
+```
+
+It runs standalone, or is invoked by `backlog`, `init`, or `workspace-init` when their own input is too thin to act on safely (see those lifecycles below) — either way the `CLARIFY-RESULT:` line and its payload are read the same way, whether by the human who typed the command or by the calling skill. Stopping early (user declines to continue) yields `partial` with whatever was actually settled instead of inventing the rest; no answer at all yields `abandoned` and the caller falls back to its own original input.
+
 ## Backlog item lifecycle
 
-Items live in `.vibe/backlog/NNN-slug.md` (shape in `.vibe/models.md`), created and committed on the spot by `/vibe:backlog`:
+Items live in `.vibe/backlog/NNN-slug.md` (shape in `.vibe/models.md`), created and committed on the spot by `/vibe:backlog`. A single-item description that's too vague to derive falsifiable acceptance criteria from (a bare slogan, no actor/action/outcome) triggers `/vibe:clarify` first — its synthesis replaces the original description for the rest of the run instead of Step 5 inventing criteria from thin air:
 
 ```mermaid
 stateDiagram-v2
@@ -140,6 +159,6 @@ flowchart TD
 
 If Step 8 (release) is blocked by a *pre-existing* test failure rather than a dirty tree or lint, `next-task` attempts one self-heal: it looks for an eligible backlog item that names the exact failing test file (the trace `/vibe:feature`/`/vibe:fix` leave when they defer an out-of-scope failure instead of silently fixing it). Exactly one match gets run via `/vibe:fix|feature NNN --auto` and the release is retried once; zero or multiple matches, or a retry that still fails, is reported as a follow-up blocker instead of retried further.
 
-`/vibe:workspace-init` (`skills/workspace-init/SKILL.md`) sets up what `next-task` relies on for workspace scope: it writes/refreshes the hub repo's `repos.md` registry (never guessing a new sibling's status/role — asked when a `.vibe/backlog/` isn't there to infer `active` from) and the workspace-root `CLAUDE.md`, then commits inside the hub repo only — it never pushes, unlike `next-task`.
+`/vibe:workspace-init` (`skills/workspace-init/SKILL.md`) sets up what `next-task` relies on for workspace scope: it writes/refreshes the hub repo's `repos.md` registry (never guessing a new sibling's status/role — asked when a `.vibe/backlog/` isn't there to infer `active` from) and the workspace-root `CLAUDE.md`, then commits inside the hub repo only — it never pushes, unlike `next-task`. The very first bootstrap (no hub repo found yet) also triggers `/vibe:clarify` to interview why these repos are being grouped together — a refresh of an already-existing hub never re-triggers it — and its synthesis, if any, becomes a short "why this workspace exists" paragraph in the hub repo's `CLAUDE.md`.
 
 A cross-repo blocker distinguishes two different waits, both read from prose rather than any structured field: waiting on another repo's backlog item reaching `status: done`, versus waiting on that repo actually publishing a tagged release — the latter is only confirmed once `next-task`'s own push/release step lands a matching Git tag on the remote, checked again after every run (Step 9) to report any repo this just unblocked.

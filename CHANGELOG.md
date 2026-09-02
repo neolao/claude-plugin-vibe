@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.15.0] - 2026-09-02
+
 ### Added
 
 - New skill `/vibe:clarify` — interviews the user round by round, adapting to the conversation's own language, to settle an under-specified plan, idea, or decision; wired into `/vibe:backlog`, `/vibe:init`, and `/vibe:workspace-init` (first bootstrap only) to trigger automatically when an input is too thin to derive safe acceptance criteria, a project description, or a workspace's vision
@@ -237,7 +239,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.14.1...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v1.15.0...HEAD
+[1.15.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.14.1...v1.15.0
 [1.14.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.14.0...v1.14.1
 [1.14.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.13.0...v1.14.0
 [1.13.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.12.1...v1.13.0
