@@ -32,6 +32,8 @@ Only fall back to a full scan of cwd's direct subdirectories (marker `.git/` + `
   - If the directory doesn't exist: `mkdir` then `git init` (and `git remote add origin <url>` if a remote was given).
   - If the directory already exists without `.git/` (e.g. pre-created by hand): `git init` in place.
 
+  This is a first-time bootstrap — creating a workspace implies a reason these repos are being grouped together, not just plumbing. Invoke the `vibe:clarify` skill (Skill tool, `skill: "vibe:clarify"`, `args: "the purpose of this new multi-repo workspace — why these repos belong together and what it's meant to achieve"`). Read its `CLARIFY-RESULT:` line: `settled`/`partial` → keep the `### Synthesis` text as this workspace's vision, carried into Step 6 below; `abandoned` → carry no vision text, Step 6 falls back to its generic wording.
+
 ## Step 3 — Create task list
 
 Invoke the `vibe:tasks` skill (Skill tool) to create the tasks below. **Keep subject names short (≤ 30 chars)** — they appear in the status line. `vibe:tasks` creates the tasks via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable — either way, its instructions then govern how every later "mark the task completed" instruction in this skill is carried out.
@@ -101,6 +103,8 @@ Written directly by this skill — do **not** delegate to `vibe:init`: its stack
 ## Role
 
 This repo holds no application code. It is the source of truth for cross-repo planning across the workspace: [repos.md](repos.md) is the registry of every sibling repo (status, role, remote); `.vibe/backlog/` and `.vibe/decisions/` hold Product Owner decisions and ADRs that span more than one repo.
+
+[If Step 2 captured a workspace vision from `vibe:clarify`: one short paragraph, in the project's language (see `## Project language` convention), stating why these repos are grouped together and what the workspace is meant to achieve. Omit this paragraph entirely on a refresh run — no vision was captured because Step 2's interview branch never ran.]
 
 **Items here are never implementable work.** They are never picked up by `/vibe:feature`, `/vibe:fix`, or `/vibe:auto` — those operate inside a single code repo. Run `/vibe:next-task` from the workspace root to pick and ship actual work in the right repo.
 

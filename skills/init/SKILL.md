@@ -42,12 +42,14 @@ If Step 1 found **no manifest files at all** (truly empty project — no `packag
 
 Use the `AskUserQuestion` tool to collect the following before continuing:
 
-1. **Project idea** — "Quel est le but de ce projet ? Décris brièvement ce que tu veux construire." (open text)
+1. **Project idea** — "What is this project for? Briefly describe what you want to build." (open text)
 2. **Tech stack** — offer 4 options based on common choices, or let the user type their own:
    - Node.js / TypeScript
    - Python
    - Rust
    - Go
+
+If the **Project idea** answer is under-specified — same signs as `skills/backlog/SKILL.md`'s Step 2f (kept identical, update both together): a vague noun phrase or slogan with no concrete actor, action, or observable outcome (e.g. "an app to manage stuff") — invoke the `vibe:clarify` skill (Skill tool, `skill: "vibe:clarify"`, `args: <the project idea answer>`) before continuing. Read its `CLARIFY-RESULT:` line: `settled`/`partial` → replace the project idea answer with its `### Synthesis` text; `abandoned` → keep the original answer as given.
 
 Save the answers and treat them as the project description for Step 4. Use the chosen stack to bootstrap a minimal project structure in Step 3 (create the manifest file for that stack so tooling can be installed).
 
@@ -58,8 +60,8 @@ If Step 1 found at least one manifest, skip this step entirely.
 Ask which language this project's generated content should use — documentation, backlog items, code comments, and any other content the vibe skills write on the project's behalf. This step always runs, whether or not Step 1b was triggered.
 
 Use the `AskUserQuestion` tool:
-- **Question**: "Dans quelle langue le contenu généré pour ce projet (documentation, items de backlog, commentaires, etc.) doit-il être écrit ?"
-- **Options**: if the existing `CLAUDE.md` (if any) already has a `## Project language` section, put its current value first, labeled "(actuel)", as the recommended choice; otherwise offer "Français" and "English" as the first two options. The user can always type a different language via "Other".
+- **Question**: "What language should generated content for this project (documentation, backlog items, comments, etc.) be written in?"
+- **Options**: if the existing `CLAUDE.md` (if any) already has a `## Project language` section, put its current value first, labeled "(current)", as the recommended choice; otherwise offer "English" and "French" as the first two options. The user can always type a different language via "Other".
 
 Save the answer — it is written into the `## Project language` section of `CLAUDE.md` in Step 4.
 

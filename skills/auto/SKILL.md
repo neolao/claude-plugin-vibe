@@ -107,7 +107,7 @@ Then report, short and plain:
 
 - Blocked items: number, title, and one-line reason each
 - Why the run stopped (backlog drained / limit reached / aborted, with the reason)
-- If `.vibe/last-review.md` exists and 5 or more `feat:`/`fix:` commits landed since the hash it records: "💡 N changements depuis le dernier review — pense à lancer `/vibe:review`."
+- If `.vibe/last-review.md` exists and 5 or more `feat:`/`fix:` commits landed since the hash it records: "💡 N changes since the last review — consider running `/vibe:review`."
 - If eligible items remain: remind the user that `/loop 45m /vibe:auto` continues unattended (or `/loop 30m /vibe:auto 1` to space items apart deliberately, see below)
 
 ## Unattended operation and usage limits

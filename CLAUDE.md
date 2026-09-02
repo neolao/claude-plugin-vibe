@@ -84,6 +84,7 @@ Pas de suite de tests automatisée dans ce dépôt (choix délibéré, voir « P
 ## Constraints
 
 - Ne jamais committer de secrets ou identifiants
+- Contenu de `skills/*/SKILL.md` et `agents/*.md` (instructions à Claude, dialogue utilisateur, gabarits de rapport) toujours écrit en anglais, sans exception — le plugin tourne sur des projets/conversations dans n'importe quelle langue, aucun texte figé dans une langue particulière n'y a sa place
 - Chaque skill (`skills/<nom>/SKILL.md`) et chaque agent (`agents/<nom>.md`) doit avoir un frontmatter complet et cohérent avec les fichiers existants
 - Ne pas laisser de fichier skill/agent orphelin ou de contenu obsolète après un renommage/suppression
 - Garder le README comme index à jour des skills et de `docs/` (voir `/vibe:docs`)

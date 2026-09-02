@@ -95,6 +95,7 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 |---|---|
 | `/vibe:init` | Initialize or regenerate the project's `CLAUDE.md` and `README.md` for vibe coding |
 | `/vibe:backlog` | List or add feature backlog items (`.vibe/backlog/`) |
+| `/vibe:clarify` | Interview the user round by round until a plan, idea, or decision is fully settled |
 | `/vibe:feature` | Implement a new feature using TDD, then update the changelog |
 | `/vibe:fix` | Fix a bug using TDD (reproduce first), then update the changelog |
 | `/vibe:auto` | Work the backlog autonomously — no human gates, resumes after any interruption |

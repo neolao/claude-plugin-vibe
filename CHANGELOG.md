@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New skill `/vibe:clarify` — interviews the user round by round, adapting to the conversation's own language, to settle an under-specified plan, idea, or decision; wired into `/vibe:backlog`, `/vibe:init`, and `/vibe:workspace-init` (first bootstrap only) to trigger automatically when an input is too thin to derive safe acceptance criteria, a project description, or a workspace's vision
+
+### Changed
+
+- All skill definitions now use English exclusively for interactive prompts and report templates — `fix`, `feature`, `backlog`, `init`, and `auto` previously hardcoded French strings for some user-facing dialogue, inconsistent with a plugin meant to run on any project in any language
+
 ## [1.14.1] - 2026-08-18
 
 ### Fixed

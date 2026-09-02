@@ -88,7 +88,7 @@ A backlog reference is a number, optionally followed by a slug (e.g. `3`, `003`,
    - Extract the optional `depends_on` list from the frontmatter.
 4. **Dependency check:** if `depends_on` is non-empty, for each dependency number find the file `NNN-*.md` in `.vibe/backlog/` (top level or `done/`) and read its `status`.
    - If ALL dependencies have `status: done`: continue normally.
-   - If ANY dependency is NOT done: display a warning listing each blocking item (number, title, status). Then ask the user: "Certaines dépendances ne sont pas encore terminées. Voulez-vous continuer quand même ?" — do not proceed until the user explicitly confirms.
+   - If ANY dependency is NOT done: display a warning listing each blocking item (number, title, status). Then ask the user: "Some dependencies are not finished yet. Do you want to continue anyway?" — do not proceed until the user explicitly confirms.
 5. Update the frontmatter in the file: replace `status: todo` (or `status: blocked` — running the skill on a blocked item puts it back in play; its `## Blocked` section stays as history) with `status: in_progress`.
 6. Store the resolved backlog file path (e.g. `.vibe/backlog/003-oauth.md`) — it will be needed at Step 8.
 
@@ -129,7 +129,7 @@ Check each of the following sources:
 
 **If a likely duplicate is found in any source:** stop and report it to the user:
 - Quote the matching item (its title, status, and source file or changelog version).
-- Ask: "Cette fonctionnalité semble déjà exister (`<match>`). S'agit-il vraiment d'une nouvelle feature distincte ?"
+- Ask: "This feature seems to already exist (`<match>`). Is this really a new, distinct feature?"
 - Do not proceed until the user explicitly confirms it is a distinct, new feature.
 
 **If no duplicate is found:** note "No duplicate detected" and continue.
@@ -154,7 +154,7 @@ This is different from one feature with several technical sub-tasks that all ser
 
 **If an oversized scope is detected:**
 1. Derive a short candidate title for each distinct capability found.
-2. Present them to the user: "Cette demande semble couvrir plusieurs fonctionnalités distinctes : [list of candidate titles]. Veux-tu que je découpe en plusieurs tâches séparées plutôt que de tout implémenter d'un coup ?"
+2. Present them to the user: "This request seems to cover several distinct features: [list of candidate titles]. Do you want me to split it into separate tasks instead of implementing everything at once?"
 3. **If the user confirms the split:** do not implement anything now. Invoke the `vibe:backlog` skill (Skill tool, `skill: "vibe:backlog"`) with the candidate titles as a batch argument to create the separate backlog items, then report the created items and stop — the user can run `/vibe:feature NNN` on each one individually.
 4. **If the user declines:** proceed normally, treating the full scope as a single feature.
 
@@ -195,12 +195,12 @@ Present the implementation plan to the user and **wait for explicit approval** b
 The user is a Product Owner, not a developer: present the plan in plain, non-technical language — short sentences, simple words, no filler. **Never mention file names, class/function/method/variable names, module names, or other implementation details.**
 
 The plan must cover, in a few short sentences:
-- **Ce qui va être fait** — what will be built, described functionally
-- **Ce que ça touche** (if relevant) — which existing behavior or area of the app is affected, in plain terms, without naming files or modules
-- **Ce qui va être testé** — the scenarios that will be verified, phrased as user actions and expected results (the normal case, a couple of edge cases, and what happens when something goes wrong)
-- **Comment on va vérifier que ça marche vraiment** — a plain description of how the feature will be exercised for real once built (e.g. "on va lancer l'appli et essayer d'exporter un rapport")
-- **Hypothèses** — any assumption made because the request was ambiguous, in plain language; mention if pre-existing test failures were found (Step 1b) without technical detail
-- **Regards experts appliqués** — only if experts were consulted: the domains, in plain words (e.g. « ergonomie », « API », « données ») — never the agent names or their raw output
+- **What will be done** — what will be built, described functionally
+- **What it affects** (if relevant) — which existing behavior or area of the app is affected, in plain terms, without naming files or modules
+- **What will be tested** — the scenarios that will be verified, phrased as user actions and expected results (the normal case, a couple of edge cases, and what happens when something goes wrong)
+- **How we'll verify it actually works** — a plain description of how the feature will be exercised for real once built (e.g. "we'll launch the app and try exporting a report")
+- **Assumptions** — any assumption made because the request was ambiguous, in plain language; mention if pre-existing test failures were found (Step 1b) without technical detail
+- **Expert input applied** — only if experts were consulted: the domains, in plain words (e.g. "UX", "API", "data") — never the agent names or their raw output
 
 Keep the technical plan (exact modules/files touched, new files to create, technical test strategy, runtime verification command and arguments) as your own working notes — it guides the implementation but is not part of what you show the user.
 
@@ -428,8 +428,8 @@ Summarize in short, plain sentences — no filler:
 If Step 1b recorded pre-existing test failures:
 1. Check the active backlog items (`.vibe/backlog/*.md`) for one that already covers these failures — compare titles and descriptions against the failing test names.
 2. If a matching item exists: mention it in the report ("already tracked by backlog item NNN").
-3. Otherwise: end the report by asking the user — "N tests étaient déjà en échec avant ce travail — veux-tu que je les enregistre au backlog ?". If the user confirms, invoke the `vibe:backlog` skill (Skill tool, `skill: "vibe:backlog"`) with a one-line description listing the failing tests.
+3. Otherwise: end the report by asking the user — "N tests were already failing before this work — do you want me to log them to the backlog?". If the user confirms, invoke the `vibe:backlog` skill (Skill tool, `skill: "vibe:backlog"`) with a one-line description listing the failing tests.
 
 ### Review cadence hint
 
-If `.vibe/last-review.md` exists: count the `feat:`/`fix:` commits made since the `commit` hash it records (e.g. `git log <hash>..HEAD --oneline`, keeping only `feat:`/`fix:` messages). If the count is **5 or more**, append one line to the report: "💡 N changements depuis le dernier review — pense à lancer `/vibe:review`." If the marker does not exist or the count is below 5: say nothing.
+If `.vibe/last-review.md` exists: count the `feat:`/`fix:` commits made since the `commit` hash it records (e.g. `git log <hash>..HEAD --oneline`, keeping only `feat:`/`fix:` messages). If the count is **5 or more**, append one line to the report: "💡 N changes since the last review — consider running `/vibe:review`." If the marker does not exist or the count is below 5: say nothing.

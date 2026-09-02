@@ -37,11 +37,11 @@ If `$ARGUMENTS` is non-empty:
    - Read the YAML frontmatter and extract the `status` value and optional `depends_on` list.
    - Read the first `# ` heading as the title.
    - Compute blocked status: if `depends_on` is non-empty, for each dependency number find the file `NNN-*.md` in `.vibe/backlog/` (top level or `done/`) and read its `status`. Collect the numbers whose status is NOT `done` — these are the current blockers.
-4. Display a table with a "Bloqué par" column:
+4. Display a table with a "Blocked by" column:
    - If no unmet dependencies: show `—`
    - If there are blockers: show the blocker numbers (e.g. `⚠ 002, 003`)
 
-| # | Title | Status | Bloqué par |
+| # | Title | Status | Blocked by |
 |---|---|---|---|
 | 002 | Export as CSV | `todo` | — |
 | 003 | Dark mode | `in_progress` | ⚠ 002 |
@@ -53,7 +53,7 @@ For each `blocked` item, append one line under the table with its number and the
 
 5. Review cadence status, as a final line:
    - If `.vibe/last-review.md` exists: read its `date` and `commit` values, count the `feat:`/`fix:` commits made since that hash, and display "Dernier review : YYYY-MM-DD (N changements depuis)."
-   - Otherwise: display "Aucun review enregistré — lancer `/vibe:review` établira la base."
+   - Otherwise: display "No review recorded yet — running `/vibe:review` will establish the baseline."
 
 Stop here — do not create anything.
 
@@ -101,11 +101,31 @@ This is different from one feature with several facets that all serve the same g
 
 **If an oversized scope is detected:**
 1. Derive a short candidate title for each distinct capability found.
-2. Present them to the user: "Cette description semble couvrir plusieurs fonctionnalités distinctes : [list of candidate titles]. Veux-tu que je crée un item séparé pour chacune ?"
+2. Present them to the user: "This description seems to cover several distinct features: [list of candidate titles]. Do you want me to create a separate item for each?"
 3. **If the user confirms the split:** treat the candidate titles exactly like a batch argument — go to **Step 2b — Batch creation** using them as the list of item descriptions.
-4. **If the user declines:** continue with `$ARGUMENTS` as a single item — go to **Step 3 — Compute next number**.
+4. **If the user declines:** continue with `$ARGUMENTS` as a single item — go to **Step 2f — Clarity check**.
 
-**If no oversized scope is detected:** continue normally — go to **Step 3 — Compute next number**.
+**If no oversized scope is detected:** continue normally — go to **Step 2f — Clarity check**.
+
+## Step 2f — Clarity check (single mode only)
+
+Runs right after Step 2d, only when Step 2d did **not** end in a batch split (no oversized scope, or the user declined splitting) — batch and from-review items never reach this step, they were already itemized in Step 2b/2c.
+
+Assess whether the single-mode description left in `$ARGUMENTS` gives Step 5 enough to derive falsifiable acceptance criteria, or is still too thin to do anything but invent them.
+
+Signs of an under-specified description:
+- A single vague noun phrase or slogan with no concrete actor, action, or observable outcome (e.g. "a notification", "improve performance", "a reporting system")
+- Nothing in it a criterion could point to — no expected user action, system response, or measurable condition
+
+This is different from a short but complete description (e.g. "let users export the current report as a CSV file" is short and perfectly sufficient — one clear actor, action, outcome).
+
+**If under-specified:** tell the user in one line — "This description is too thin to produce solid acceptance criteria — I'll ask a few questions first." — then invoke the `vibe:clarify` skill (Skill tool, `skill: "vibe:clarify"`, `args: $ARGUMENTS`). Read its `CLARIFY-RESULT:` line:
+- `settled` or `partial`: replace `$ARGUMENTS`, for the remainder of this run, with the `### Synthesis` text it returned — every later step that reads `$ARGUMENTS` (Steps 3–6) now reads this synthesis instead of the original text.
+- `abandoned`: keep `$ARGUMENTS` unchanged and continue — never block item creation on a clarification the user chose not to complete.
+
+Then go to **Step 3 — Compute next number**.
+
+**If sufficiently specified:** continue normally — go to **Step 3 — Compute next number**.
 
 ## Step 2e — Remove an item
 

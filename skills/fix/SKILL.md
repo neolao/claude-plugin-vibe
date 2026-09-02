@@ -86,7 +86,7 @@ A backlog reference is a number, optionally followed by a slug (e.g. `3`, `003`,
    - Extract the optional `depends_on` list from the frontmatter.
 4. **Dependency check:** if `depends_on` is non-empty, for each dependency number find the file `NNN-*.md` in `.vibe/backlog/` (top level or `done/`) and read its `status`.
    - If ALL dependencies have `status: done`: continue normally.
-   - If ANY dependency is NOT done: display a warning listing each blocking item (number, title, status). Then ask the user: "Certaines dépendances ne sont pas encore terminées. Voulez-vous continuer quand même ?" — do not proceed until the user explicitly confirms.
+   - If ANY dependency is NOT done: display a warning listing each blocking item (number, title, status). Then ask the user: "Some dependencies are not finished yet. Do you want to continue anyway?" — do not proceed until the user explicitly confirms.
 5. Update the frontmatter in the file: replace `status: todo` (or `status: blocked` — running the skill on a blocked item puts it back in play; its `## Blocked` section stays as history) with `status: in_progress`.
 6. Store the resolved backlog file path (e.g. `.vibe/backlog/003-login-crash.md`) — it will be needed at Step 8.
 
@@ -153,12 +153,12 @@ Present the fix plan to the user and **wait for explicit approval** before writi
 The user is a Product Owner, not a developer: present the plan in plain, non-technical language — short sentences, simple words, no filler. **Never mention file names, class/function/method/variable names, module names, or other implementation details.**
 
 The plan must cover, in a few short sentences:
-- **Le problème observé** — what's broken, from a user-visible perspective
-- **La cause probable** — why it happens, in plain language (e.g. "l'appli ne vérifie pas qu'un champ est rempli avant de continuer" rather than "missing null check")
-- **Ce qui va changer** — what will be fixed, described functionally
-- **Comment on va vérifier que c'est corrigé** — the scenario that will be tested, phrased as a user action and the expected result, plus a plain description of how the fix will be exercised for real at runtime (e.g. "on va relancer l'appli et rejouer le scénario qui plantait")
-- **Hypothèses** — any assumption made because the report was ambiguous, in plain language; mention if pre-existing test failures were found (Step 1b) without technical detail
-- **Regards experts appliqués** — only if experts were consulted: the domains, in plain words (e.g. « ergonomie », « API », « données ») — never the agent names or their raw output
+- **The observed problem** — what's broken, from a user-visible perspective
+- **The likely cause** — why it happens, in plain language (e.g. "the app doesn't check a field is filled in before continuing" rather than "missing null check")
+- **What will change** — what will be fixed, described functionally
+- **How we'll verify it's fixed** — the scenario that will be tested, phrased as a user action and the expected result, plus a plain description of how the fix will be exercised for real at runtime (e.g. "we'll restart the app and replay the scenario that used to crash")
+- **Assumptions** — any assumption made because the report was ambiguous, in plain language; mention if pre-existing test failures were found (Step 1b) without technical detail
+- **Expert input applied** — only if experts were consulted: the domains, in plain words (e.g. "UX", "API", "data") — never the agent names or their raw output
 
 Keep the technical analysis (exact root cause in code terms, files/modules to touch, technical test strategy) in your own working notes — it guides the fix but is not part of what you show the user.
 
@@ -344,8 +344,8 @@ Summarize in short, plain sentences — no filler:
 If Step 1b recorded pre-existing test failures (beyond the one that IS the reported bug):
 1. Check the active backlog items (`.vibe/backlog/*.md`) for one that already covers these failures — compare titles and descriptions against the failing test names.
 2. If a matching item exists: mention it in the report ("already tracked by backlog item NNN").
-3. Otherwise: end the report by asking the user — "N tests étaient déjà en échec avant ce travail — veux-tu que je les enregistre au backlog ?". If the user confirms, invoke the `vibe:backlog` skill (Skill tool, `skill: "vibe:backlog"`) with a one-line description listing the failing tests.
+3. Otherwise: end the report by asking the user — "N tests were already failing before this work — do you want me to log them to the backlog?". If the user confirms, invoke the `vibe:backlog` skill (Skill tool, `skill: "vibe:backlog"`) with a one-line description listing the failing tests.
 
 ### Review cadence hint
 
-If `.vibe/last-review.md` exists: count the `feat:`/`fix:` commits made since the `commit` hash it records (e.g. `git log <hash>..HEAD --oneline`, keeping only `feat:`/`fix:` messages). If the count is **5 or more**, append one line to the report: "💡 N changements depuis le dernier review — pense à lancer `/vibe:review`." If the marker does not exist or the count is below 5: say nothing.
+If `.vibe/last-review.md` exists: count the `feat:`/`fix:` commits made since the `commit` hash it records (e.g. `git log <hash>..HEAD --oneline`, keeping only `feat:`/`fix:` messages). If the count is **5 or more**, append one line to the report: "💡 N changes since the last review — consider running `/vibe:review`." If the marker does not exist or the count is below 5: say nothing.
