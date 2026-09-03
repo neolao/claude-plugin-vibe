@@ -1,5 +1,5 @@
 ---
-status: todo
+status: done
 ---
 # Convert Nested Skill Logic To Decision Tables
 

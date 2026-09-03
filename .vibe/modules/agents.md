@@ -1,34 +1,31 @@
 # Module: agents
 
-**Role:** Two families of specialized sub-agents, one file per agent. `review-*` agents each audit one quality dimension *after the fact*, orchestrated in parallel by `/vibe:review`; `expert-*` agents are prescriptive consultants invoked *before or during* implementation by `/vibe:feature`/`/vibe:fix` (plan consultation with a fixed REQUIREMENTS/RISKS/TEST SCENARIOS output, or single-question implementation consultation). Review agents are read-only with respect to source (no edits) except `review-tests`, which executes the project's real test suite (including isolated e2e/integration runs) to ground findings in pass/fail evidence, and `review-pentest`, which launches a local instance of the app and probes it dynamically to prove exploitability (authorized local scope only). Expert agents never write code and never review diffs; their roster is deliberately limited to domains without a `review-*` counterpart (ADR [`001`](../decisions/001-expert-personas-scope.md)) — `expert-realtime-rendering` is a documented, narrow exception paired with `review-performance` (ADR [`003`](../decisions/003-realtime-rendering-expert-exception.md)).
+**Role:** Two families of sub-agents, one file per agent. `review-*` agents each audit one quality dimension after the fact, in parallel under `/vibe:review`, which injects the shared finding contract (format, `high`/`medium`/`low` scale, read-only rule) into each prompt — an agent file holds only its scope, checklist, and categories. `expert-*` agents prescribe requirements before or during implementation for `/vibe:feature`/`/vibe:fix`, which pass the consultation format (`REQUIREMENTS`/`RISKS`/`TEST SCENARIOS`, or one question) in the prompt. Experts cover domains without a `review-*` counterpart (ADR [`001`](../decisions/001-expert-personas-scope.md)), except `expert-realtime-rendering`, paired with `review-performance` (ADR [`003`](../decisions/003-realtime-rendering-expert-exception.md)).
 **Files:** `agents/*.md`
-**Exports (`review-*`):**
-- `review-antipatterns` — named anti-patterns: god objects, primitive obsession, stringly-typed code, temporal coupling, wheel reinvention
-- `review-architecture` — architectural drift, module boundaries, layering, violations of ADRs in `.vibe/decisions/` (legacy `.vibe/decisions.md` as fallback)
-- `review-complexity` — cyclomatic complexity, function length, nesting
-- `review-ddd` — Domain-Driven Design alignment (domain-heavy projects only)
-- `review-dependencies` — dependency health, vulnerabilities, abandoned packages
-- `review-hexagonal` — hexagonal architecture (ports & adapters) compliance: port ownership, leaky port contracts, adapter purity, wiring (hexagonal projects only)
-- `review-hygiene` — dead code, unused exports, stale TODOs, duplication
-- `review-naming` — naming quality across the codebase
-- `review-overengineering` — design-level YAGNI: speculative abstractions, unused configurability, premature optimization
-- `review-pentest` — dynamic penetration test: proves auth bypass, IDOR, injection, business-logic abuse against a locally-run instance (runnable networked apps only)
-- `review-performance` — N+1 queries, quadratic patterns, blocking I/O, and (real-time projects) frame-budget overruns, per-frame allocation churn, unbatched draw calls
-- `review-robustness` — swallowed errors, unawaited promises, missing timeouts
-- `review-security` — secrets, injections, dangerous primitives, crypto misuse
-- `review-simplicity` — expression-level convolution: redundant conditions, pointless indirection, reducible logic
-- `review-solid` — SOLID principles in OO/modular code
-- `review-tests` — test coverage, relevance, and quality; executes the real test suite
-- `review-web-security` — web attack surface: path traversal, XSS, SSRF, security headers, cookies, application-level DoS (HTTP-exposing projects only)
+**Exports (`review-*`, frontmatter `tools: Read, Grep, Glob` unless noted):**
+- `review-antipatterns` — named anti-patterns: god objects, primitive obsession, stringly-typed code, mutable global state, temporal coupling, wheel reinvention
+- `review-architecture` — drift against `.vibe/`: module scope, cycles, layer direction (sole owner), responsibility spread, violated ADRs, orphans; ports & adapters when the project explicitly adopted hexagonal architecture
+- `review-ddd` — ubiquitous language, domain isolation, aggregates, value objects, repositories (opt-in)
+- `review-dependencies` (+ `Bash`) — runs the stack's audit tool; abandoned packages, version hygiene, unused or misplaced dependencies
+- `review-hygiene` — dead code, leftovers, stale markers, duplication
+- `review-naming` — misleading or intent-hiding names, with `CURRENT:` and a proposed name
+- `review-overengineering` — speculative abstractions, patterns without need, unused configurability, premature optimization, disproportionate structure
+- `review-performance` — N+1, complexity on real data, blocking hot paths, unbounded growth, real-time loop defects; every finding carries a `SCALE:` line
+- `review-robustness` — swallowed errors, async, timeouts and limits, resources, lost error context
+- `review-security` — secrets, injection, dangerous primitives, access control, crypto, trust boundaries (any project type)
+- `review-simplicity` — redundant logic, indirection, non-idiomatic detours, unused generality, complexity hotspots (cyclomatic, length, nesting)
+- `review-solid` — S/O/L/I/D at class and module level; layer direction left to `review-architecture`
+- `review-tests` (+ `Bash`) — runs the real suite and isolated e2e/integration; tautological tests (never rated low), coupling, coverage, quality, pyramid
+- `review-web-security` (+ `Bash`) — HTTP attack surface statically, plus an opt-in dynamic verification mode against a locally-run instance (`TARGET:`/`PROOF:` findings, authorized local scope only)
 
 **Exports (`expert-*`):**
-- `expert-ui-ux` — user flows, interface states (empty/loading/error), feedback, accessibility
-- `expert-frontend-design` — typography, spacing, color, responsive layout, visual consistency
-- `expert-api-rest` — resource modeling, HTTP semantics, status codes, pagination, error format, compatibility
-- `expert-cli-dx` — flag conventions, help output, exit codes, stdout/stderr discipline, machine-readable output
-- `expert-data` — schema design, migrations, integrity constraints, indexing, transactions
-- `expert-linux` — shell scripting, POSIX portability, permissions, signals, filesystem conventions, services
-- `expert-ops` — configuration, observability, deployment compatibility, CI/CD, containers, resilience
-- `expert-realtime-rendering` — frame budget, per-frame allocation discipline, draw-call batching, render/update loop structure
+- `expert-ui-ux` — flows, states, feedback, accessibility, consistency
+- `expert-frontend-design` — design tokens reuse, hierarchy, semantic colors, responsive, interactive states
+- `expert-api-rest` — resources, HTTP semantics, status codes, pagination, compatibility
+- `expert-cli-dx` — flags, stdout/stderr, exit codes, actionable errors, destructive-operation guards
+- `expert-data` — column types, database-enforced invariants, migrations, indexes, transactions
+- `expert-linux` — safe Bash, temp files and atomic writes, privileges, signals, services, GNU/BSD differences
+- `expert-ops` — configuration, observability, rolling deploys, pipeline and images, timeouts and retries
+- `expert-realtime-rendering` — frame budget, per-frame allocation, draw-call batching, non-blocking loop, simulation vs render rate
 
-**Depends on:** [`modules/skills.md`](skills.md) (`review-*` invoked by `/vibe:review`, activation rules recorded per-project in that project's own `CLAUDE.md`; `expert-*` invoked by `/vibe:feature`/`/vibe:fix`, selected per-task by matching the brief against agent descriptions — 3 max per run, none if no clear match)
+**Depends on:** [`modules/skills.md`](skills.md) (`review-*` invoked by `/vibe:review`, activation recorded per project in that project's `CLAUDE.md`; `expert-*` selected per task by `/vibe:feature`/`/vibe:fix` from their descriptions — 3 max, none without a clear match)

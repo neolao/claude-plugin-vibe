@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The plugin's own prompts were cut by half (about 38k to 18k words) with the behaviour differences listed below and nothing else changed: shared rules now live in one place — the feature/fix workflow in `skills/feature/workflow.md`, the review finding contract injected by `/vibe:review` into every agent, the expert consultation format carried by the invoking skill — instead of being copied at every point of use with "keep in sync" notes
+- Review agents declare their tools in frontmatter, so being read-only is enforced structurally rather than by a repeated instruction; every agent now reports the same `high`/`medium`/`low` severity scale
+- `review-architecture` now also covers ports & adapters for projects that explicitly follow a hexagonal architecture; `review-web-security` gains an opt-in dynamic verification mode against a locally-run instance; `review-simplicity` also reports complexity hotspots (cyclomatic complexity, function length, nesting)
+- `/vibe:auto` accepts `--push`: once the run is over, it pushes, releases if the changelog warrants it, and creates a GitHub release when possible. `/vibe:next-task` delegates its auto mode to `/vibe:auto --push` instead of reimplementing the loop, and both share the new internal `vibe:publish` skill
+- `/vibe:changelog` only fills `[Unreleased]` from git history; `/vibe:release` cuts the version section itself
+- `/vibe:feature` checks for duplicates against active backlog titles and unreleased changelog entries only, instead of scanning every done item, every past version, and every module description
+- `/vibe:backlog` lists items in English only; two French strings had survived the previous translation pass
+
+### Removed
+
+- The `review-hexagonal`, `review-pentest`, and `review-complexity` agents, absorbed into `review-architecture`, `review-web-security`, and `review-simplicity` respectively (14 review agents instead of 17)
+- `/vibe:changelog` no longer accepts a version argument
+
 ## [1.15.0] - 2026-09-02
 
 ### Added

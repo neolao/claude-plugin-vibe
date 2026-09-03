@@ -1,5 +1,5 @@
 ---
-status: todo
+status: done
 ---
 # Standardize Review Agent Severity Vocabulary
 

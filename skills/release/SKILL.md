@@ -1,100 +1,41 @@
 ---
 name: release
 description: Create a versioned release — bump version, finalize CHANGELOG.md, commit and tag
-argument-hint: <version, e.g. 1.2.0> | major | minor | patch
+argument-hint: "[version, e.g. 1.2.0 | major | minor | patch] (empty = suggest from the changelog and confirm)"
 ---
 
 # /vibe:release — Release Workflow
 
-Create a versioned release following Semantic Versioning.
+Create a versioned release following Semantic Versioning. Everything is local: this skill never pushes — `vibe:publish` (via `/vibe:auto --push` or `/vibe:next-task`) or the user does.
 
-## Step 1 — Determine version
+## Step 1 — Determine the version
 
-**If `$ARGUMENTS` is a version number** (e.g. `1.2.0`): use it directly.
+- A version number (`1.2.0`) → use it.
+- `major` / `minor` / `patch` → bump the latest tag (`git tag --sort=-version:refname | head -1`).
+- No argument → read `## [Unreleased]` in `CHANGELOG.md` and suggest `patch` if only Fixed entries, `minor` if any Added, `major` if any Removed or breaking change; **wait for confirmation**.
 
-**If `$ARGUMENTS` is `major`, `minor`, or `patch`:**
-- Run `git tag --sort=-version:refname | head -1` to find the latest tag
-- Bump accordingly (semver rules)
-
-**If no argument:**
-- Read `CHANGELOG.md` [Unreleased] section
-- Suggest: `patch` if only Fixed entries; `minor` if any Added; `major` if any Removed or breaking changes
-- Present the suggestion and **wait for confirmation** before proceeding
-
-## Step 1b — Create task list
-
-Invoke the `vibe:tasks` skill (Skill tool) to create the full task list below. **Keep subject names short (≤ 30 chars)** — they appear in the status line. `vibe:tasks` creates the tasks via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable — either way, its instructions then govern how every later "Mark the task ... completed" instruction in this skill is carried out.
-
-Pass these as `$ARGUMENTS`:
-
-```
-Run pre-release checks    ← no dependency
-Finalize CHANGELOG.md     ← blockedBy "Run pre-release checks"
-Refresh docs              ← blockedBy "Finalize CHANGELOG.md"
-Bump version              ← blockedBy "Refresh docs"
-Commit and tag            ← blockedBy "Bump version"
-```
+Then invoke the `vibe:tasks` skill with: `Run pre-release checks` → `Finalize CHANGELOG.md` → `Refresh docs` → `Bump version` → `Commit and tag`, each blocked by the previous one.
 
 ## Step 2 — Pre-release checks
 
-Mark the `Run pre-release checks` task `in_progress`.
-
-1. Run the test command (from manifest) — all tests must pass
-2. Run the lint command (from manifest) — must exit 0
-3. Check for uncommitted changes — if any exist, stop and warn the user
-
-Mark the task `completed`.
+Run the test command (all tests pass) and the lint command (exit 0); stop on an uncommitted change and warn the user.
 
 ## Step 3 — Finalize CHANGELOG.md
 
-Mark the `Finalize CHANGELOG.md` task `in_progress`.
+Invoke the `vibe:changelog` skill (no argument) so every commit since the last tag is reflected under `[Unreleased]`. Then cut the release: rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD`, insert a fresh empty `## [Unreleased]` above it, and add or update the compare links at the bottom (`git remote get-url origin` for the base URL).
 
-**Invoke the `vibe:changelog` skill** using the Skill tool (`skill: "vibe:changelog"`, `args: "[version]"`) — to move [Unreleased] entries into the new version section with today's date.
+## Step 4 — Refresh docs
 
-Mark the task `completed`.
+If `README.md` has `vibe:` managed section markers or `docs/` exists: invoke the `vibe:docs` skill with `--full`, so the release ships with documentation that reflects the new version. Otherwise skip.
 
-## Step 3b — Refresh docs
+## Step 5 — Bump the version
 
-Mark the `Refresh docs` task `in_progress`.
+Set the version field of every project manifest to `X.Y.Z` (`package.json`, `Cargo.toml`, `pyproject.toml`, `pom.xml`, `build.gradle`, `composer.json`, gemspec, …), using each file's own syntax.
 
-**Invoke the `vibe:docs` skill** using the Skill tool (`skill: "vibe:docs"`, `args: "--full"`) — full regeneration so the release ships with up-to-date documentation (notably the README features section now including the new version's entries).
+## Step 6 — Commit and tag
 
-If `README.md` has no `vibe:` managed section markers and no `docs/` directory exists: skip — this project does not use managed documentation.
+Stage `CHANGELOG.md`, the manifests, and `README.md`/`docs/` if Step 4 changed them; commit `chore: release vX.Y.Z`; `git tag vX.Y.Z`.
 
-Mark the task `completed`.
+## Step 7 — Report
 
-## Step 4 — Bump version in manifest
-
-Mark the `Bump version` task `in_progress`.
-
-Update the version field in the project manifest:
-
-| File | Field |
-|---|---|
-| `package.json` | `"version": "X.Y.Z"` |
-| `Cargo.toml` | `version = "X.Y.Z"` |
-| `pyproject.toml` | `version = "X.Y.Z"` |
-| `pom.xml` | `<version>X.Y.Z</version>` |
-| `build.gradle` | `version = 'X.Y.Z'` |
-| `composer.json` | `"version": "X.Y.Z"` |
-| `Gemfile` / `*.gemspec` | `s.version = 'X.Y.Z'` |
-
-Mark the task `completed`.
-
-## Step 5 — Commit and tag
-
-Mark the `Commit and tag` task `in_progress`.
-
-1. Stage: `CHANGELOG.md` + manifest file(s) + `README.md` and `docs/` if Step 3b modified them
-2. Commit: `chore: release vX.Y.Z`
-3. Tag: `git tag vX.Y.Z`
-
-Mark the task `completed`.
-
-## Step 6 — Report
-
-Short, plain sentences — no filler:
-- Version released: `vX.Y.Z`
-- Changes included: N Added, N Fixed, N Changed, etc.
-- Tag created: `vX.Y.Z`
-- **Do NOT push unless the user explicitly asks**
+Short, plain sentences: version released, changes included (N Added, N Fixed, …), tag created, and that nothing was pushed.

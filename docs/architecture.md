@@ -11,8 +11,8 @@ claude-plugin-vibe/
 ├── .claude-plugin/
 │   ├── plugin.json        # plugin identity: name "vibe", version, keywords
 │   └── marketplace.json   # marketplace listing pointing at this repo
-├── skills/<name>/SKILL.md # one directory per skill (13 /vibe:* slash commands + 1 internal)
-├── agents/review-*.md     # one file per review dimension (17 agents, after-the-fact critics)
+├── skills/<name>/SKILL.md # one directory per skill (13 /vibe:* slash commands + 2 internal)
+├── agents/review-*.md     # one file per review dimension (14 agents, after-the-fact critics)
 ├── agents/expert-*.md     # one file per domain expert (8 agents, before/during prescriptive consultants)
 ├── scripts/subagent-statusline.sh  # renders the agent-panel status line
 ├── settings.json          # wires the subagentStatusLine hook to the script
@@ -23,8 +23,8 @@ claude-plugin-vibe/
 
 ```mermaid
 flowchart LR
-    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>13 slash commands + tasks (internal)"]
-    skills -- "/vibe:review fans out" --> agents["agents/review-*.md<br/>17 review agents"]
+    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>13 slash commands + tasks, publish (internal)"]
+    skills -- "/vibe:review fans out" --> agents["agents/review-*.md<br/>14 review agents"]
     skills -- "/vibe:feature, /vibe:fix consult" --> experts["agents/expert-*.md<br/>8 domain experts"]
     skills -- "generate & read" --> vibe[".vibe/ context map<br/>(in the target project)"]
     manifests[".claude-plugin/*.json<br/>settings.json"] -- "register commands & hook" --> skills
@@ -47,13 +47,13 @@ Skills invoke each other through the Skill tool rather than duplicating logic: `
 Two skills extend the plugin above the single-repo level, for a project split across several sibling Git repo checkouts under one parent folder (a **workspace root**, never itself a Git repo):
 
 - `workspace-init` bootstraps or refreshes a **hub repo** — a Git repo with no application code, recognized structurally (any directory with `.git/` and a `repos.md` at its root) rather than by a fixed name — holding the `repos.md` registry of sibling repos and a workspace-scoped `.vibe/backlog/`+`.vibe/decisions/`. It also writes a local, never-committed `CLAUDE.md` at the workspace root pointing at the hub repo, read back by both skills on later runs instead of re-scanning.
-- `next-task` reads that registry to pick the next eligible backlog item across every `active` sibling repo, hands it to `feature`/`fix`/`auto` in the right repo, then pushes and — if the changelog warrants it — releases. Cross-repo blockers are never structured data (`depends_on` only ever references the same repo, by design): they live in free prose read by this skill, the same way any other skill's `## Notes` is interpreted rather than parsed as a schema. With no workspace detected but a `.vibe/backlog/` in the current directory, it falls back to picking within that one repo — still pushing/releasing afterward, which is what distinguishes it from `auto` even at that scope.
+- `next-task` reads that registry to pick the next eligible backlog item across every `active` sibling repo, hands it to `feature`/`fix` (or `auto --push` in auto mode) in the right repo, then pushes and — if the changelog warrants it — releases through the internal `publish` skill. Cross-repo blockers are never structured data (`depends_on` only ever references the same repo, by design): they live in free prose read by this skill, the same way any other skill's `## Notes` is interpreted rather than parsed as a schema. With no workspace detected but a `.vibe/backlog/` in the current directory, it falls back to picking within that one repo — still pushing/releasing afterward, which is what distinguishes it from `auto` even at that scope.
 
 ## Review agents (`agents/`)
 
-Each `agents/review-<dimension>.md` audits exactly one quality dimension (frontmatter: `name`, `description`). `/vibe:review` reads the activation table in the target project's `CLAUDE.md`, re-checks each activation condition against the project's current state, then runs the active agents in parallel. Overlapping checks are explicitly delegated: each check belongs to one owning agent, so the same issue is never reported from two angles.
+Each `agents/review-<dimension>.md` audits exactly one quality dimension (frontmatter: `name`, `description`, `tools`). The finding format, severity scale, and read-only rule are not repeated per agent: `/vibe:review` injects that shared contract into every agent prompt. It reads the activation table in the target project's `CLAUDE.md`, re-checks each activation condition against the project's current state, then runs the active agents in parallel. Overlapping checks are explicitly delegated: each check belongs to one owning agent, so the same issue is never reported from two angles.
 
-Most agents are read-only; two are not: `review-tests` executes the project's real test suite, and `review-pentest` probes a locally-launched instance of the target application.
+Agents are read-only by their `tools` frontmatter; three also get Bash: `review-tests` executes the project's real test suite, `review-dependencies` runs the stack's audit tool, and `review-web-security` probes a locally-launched instance when its opt-in dynamic mode is enabled. `review-architecture` also covers ports & adapters for projects that explicitly adopted them.
 
 ## Expert agents (`agents/expert-*.md`)
 
@@ -61,7 +61,7 @@ Where review agents critique code that already exists, `agents/expert-<domain>.m
 
 ## Status line (`scripts/` + `settings.json`)
 
-`settings.json` declares a `subagentStatusLine` hook pointing at `scripts/subagent-statusline.sh`. The script reads a JSON payload (`{columns, tasks: [...]}`) on stdin, and emits one `{id, content}` JSON line per agent row via `jq` — status icon (looked up from the task's status through a small alias table), bold name, description, token count, truncated to the terminal width. Both failure modes — a stdin read that fails, or malformed JSON that `jq` can't parse — log a diagnostic to stderr and exit cleanly instead of aborting silently. It is most visible during `/vibe:review`, which can run up to 17 agents side by side.
+`settings.json` declares a `subagentStatusLine` hook pointing at `scripts/subagent-statusline.sh`. The script reads a JSON payload (`{columns, tasks: [...]}`) on stdin, and emits one `{id, content}` JSON line per agent row via `jq` — status icon (looked up from the task's status through a small alias table), bold name, description, token count, truncated to the terminal width. Both failure modes — a stdin read that fails, or malformed JSON that `jq` can't parse — log a diagnostic to stderr and exit cleanly instead of aborting silently. It is most visible during `/vibe:review`, which can run up to 14 agents side by side.
 
 ## Generated state in target projects
 

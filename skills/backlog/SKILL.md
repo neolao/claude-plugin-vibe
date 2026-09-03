@@ -1,231 +1,89 @@
 ---
 name: backlog
-description: Manage the feature backlog — list tasks, add one or several items, or remove an item
-argument-hint: "[feature description to add] | remove NNN | (empty to list all)"
+description: Manage the feature backlog — list tasks, add one or several items (including from the last review), or remove an item
+argument-hint: "[feature description to add] | <multi-line list> | from review | remove NNN | (empty to list all)"
 ---
 
 # /vibe:backlog — Feature Backlog Manager
 
-Manage the feature backlog stored in `.vibe/backlog/`. Each item is a Markdown file named `NNN-slug.md` with a YAML frontmatter `status` field (`todo`, `in_progress`, `blocked`, or `done`). `blocked` is set by an autonomous run (`/vibe:auto`, or `--auto`) that hit a dead end on the item; the reason is recorded in a `## Blocked` section at the end of the file.
+Manage `.vibe/backlog/`: one Markdown file per item, `NNN-slug.md`, with a `status` frontmatter (`todo`, `in_progress`, `blocked`, `done`). `blocked` is set by an autonomous `--auto` run that hit a dead end; the reason is in a `## Blocked` section at the end of the file. Done items live in `done/`.
 
-- **No argument** → list all backlog items with their current status
-- **Single-line argument** → create one new backlog item from the description
-- **Multi-item argument** → create multiple backlog items (one per detected item)
-- **Remove argument** → delete an active backlog item, after confirmation
+Every user-facing message is written in the conversation's language. If this skill creates files and stops before its report, commit them as `wip: [short description]` first.
 
-## Standing rule — never end a turn with uncommitted files
+## Step 1 — Mode
 
-If this skill creates one or more backlog files and stops before reaching its own reporting step (Step 7 or Step 7b) — e.g. an error interrupts batch creation partway through — commit the files that were successfully created before yielding control, flagged as `wip: [short description]` in your final message.
+| `$ARGUMENTS` | Mode |
+|---|---|
+| empty | **List** (Step 2) |
+| intent to delete or cancel + a reference matching `^\d+(-[\w-]+)?$` ("remove 3", "delete 003-oauth", "supprime 12") | **Remove** (Step 3) |
+| intent to create items from the last review ("from review", "from the review findings", "depuis le review") | **From review** (Step 4) |
+| several entries — newline-, bullet-, or number-separated list | **Batch** (Step 5) |
+| plain prose | **Single** (Step 6) |
 
-## Step 1 — Detect mode
+## Step 2 — List
 
-If `$ARGUMENTS` is empty or blank: go to **Step 2 — List**.
+No top-level `*.md` in `.vibe/backlog/` → "The backlog is empty — no active items in `.vibe/backlog/`." and stop.
 
-If `$ARGUMENTS` is non-empty:
-- Inspect the structure of `$ARGUMENTS`:
-  - **Remove mode**: the argument expresses the intent to delete or cancel an existing item — e.g. "remove 3", "delete 003-oauth", "supprime 12", "annule l'item 7", or any close variant containing a backlog reference (the reference part matches `^\d+(-[\w-]+)?$`). Go to **Step 2e — Remove an item**.
-  - **From-review mode**: the argument expresses the intent to create tasks from a previous review — e.g. "from review", "from last review", "depuis le review", "from vibe:review", "from the review findings", or any close variant. Go to **Step 2c — From-review creation**.
-  - **Batch mode**: the argument contains multiple distinct items — i.e., a newline-separated list, a bulleted list (`-` or `*` prefixes), or a numbered list (`1.`, `2.`, …). Each line/entry represents a separate backlog item to create. Go to **Step 2b — Batch creation**.
-  - **Single mode**: the argument is a plain prose description (possibly multi-sentence but not a list). Go to **Step 2d — Scope check**.
-
-## Step 2 — List backlog items
-
-1. Check if `.vibe/backlog/` exists and contains at least one `*.md` file at the top level (not in `done/`).
-   - If not: report "The backlog is empty — no active items in `.vibe/backlog/`." and stop.
-2. Collect all `*.md` files directly in `.vibe/backlog/` (exclude the `done/` subfolder), sorted alphabetically.
-3. For each file:
-   - Read the YAML frontmatter and extract the `status` value and optional `depends_on` list.
-   - Read the first `# ` heading as the title.
-   - Compute blocked status: if `depends_on` is non-empty, for each dependency number find the file `NNN-*.md` in `.vibe/backlog/` (top level or `done/`) and read its `status`. Collect the numbers whose status is NOT `done` — these are the current blockers.
-4. Display a table with a "Blocked by" column:
-   - If no unmet dependencies: show `—`
-   - If there are blockers: show the blocker numbers (e.g. `⚠ 002, 003`)
+Otherwise, for each top-level file (sorted): `status`, title (first `# ` heading), and unmet dependencies — every `depends_on` number whose item (top level or `done/`) is not `done`. Display:
 
 | # | Title | Status | Blocked by |
 |---|---|---|---|
 | 002 | Export as CSV | `todo` | — |
-| 003 | Dark mode | `in_progress` | ⚠ 002 |
-| 004 | Light theme | `todo` | — |
+| 003 | Dark mode | `todo` | ⚠ 002 |
 
-If `.vibe/backlog/done/` contains files, append a note: "N item(s) done — see `.vibe/backlog/done/`."
+Then: "N item(s) done — see `.vibe/backlog/done/`." if `done/` has files; for each `blocked` item, its number and `## Blocked` reason, plus that running `/vibe:feature NNN` (or `/vibe:fix NNN`) puts it back in play; and the review cadence — if `.vibe/last-review.md` exists, its date and the number of `feat:`/`fix:` commits since its hash, otherwise "No review recorded yet — running `/vibe:review` will establish the baseline." Stop.
 
-For each `blocked` item, append one line under the table with its number and the reason from its `## Blocked` section, plus: "Relancer `/vibe:feature NNN` (ou `/vibe:fix NNN`) remet l'item en jeu."
+## Step 3 — Remove
 
-5. Review cadence status, as a final line:
-   - If `.vibe/last-review.md` exists: read its `date` and `commit` values, count the `feat:`/`fix:` commits made since that hash, and display "Dernier review : YYYY-MM-DD (N changements depuis)."
-   - Otherwise: display "No review recorded yet — running `/vibe:review` will establish the baseline."
+Zero-pad the number; look for `NNN-*.md` at the top level only. Found in `done/` instead → "Item `NNN` is already done — done items are kept as history and cannot be removed."; not found → "No backlog item `NNN` found in `.vibe/backlog/`. Run `/vibe:backlog` to list existing items." Read its title and status, find the active items whose `depends_on` lists `NNN`, and ask for confirmation showing number, title, status (warn if `in_progress`), and the dependents. On confirmation: `git rm` the file, drop `NNN` from each dependent's `depends_on` (removing the line if empty), commit `chore: remove backlog item NNN - [Title]`, and report the file, the cleaned dependents, and the commit. Stop.
 
-Stop here — do not create anything.
+## Step 4 — From review
 
-## Step 2b — Batch creation
+Find the most recent `/vibe:review` report in the conversation. None → "No review output found in the current conversation. Run `/vibe:review` first, or provide a list of items directly." Otherwise take every finding under "Remaining findings" (all severities; "Applied fixes" are resolved), write each as a one-line description with its location, and continue as a batch (Step 5).
 
-Parse `$ARGUMENTS` into an ordered list of item descriptions. Rules:
-- Strip leading list markers (`-`, `*`, `1.`, `2.`, …) from each entry.
-- Discard blank lines.
-- Each non-empty entry is treated as an independent item description (equivalent to calling the skill once per item in single mode).
+## Step 5 — Batch
 
-Before creating any file, display a preview table of all items that will be created:
+Split `$ARGUMENTS` into one description per entry (list markers stripped, blank lines dropped). Show a preview table (`#`, `Title`) of what will be created, then create each item with Steps 7–9, recomputing the next number after each file. One commit for the whole run (Step 10), then the report (Step 11).
 
-| # (preview) | Title (preview) |
-|---|---|
-| 001 | First derived title |
-| 002 | Second derived title |
-| … | … |
+## Step 6 — Single: scope and clarity
 
-Then create each item in order by applying **Steps 3 → 6** for each entry, using the description of that entry as the argument. The number assigned at Step 3 must be re-computed after each file is written (so each new file gets the correct next number even if files already existed). Do not commit per item — commit once for the whole batch (see **Step 6b — Commit**).
+- **Oversized scope** — the description bundles several independently shippable capabilities ("add CSV export, a dark mode, and email notifications"), as opposed to one capability with several facets ("export as CSV or PDF"): ask "This description seems to cover several distinct features: [candidate titles]. Do you want me to create a separate item for each?" — yes → treat the titles as a batch (Step 5); no → continue as one item.
+- **Under-specified** — a vague noun phrase or slogan with no concrete actor, action, or observable outcome ("a notification", "improve performance"), as opposed to short but complete ("let users export the current report as a CSV file"): say "This description is too thin to produce solid acceptance criteria — I'll ask a few questions first.", invoke the `vibe:clarify` skill with `$ARGUMENTS`, and on `settled`/`partial` use its `### Synthesis` as the description for the rest of the run; on `abandoned` keep the original — never block creation on a clarification the user declined.
 
-After all items are created, apply **Step 6b — Commit** (batch variant) to commit all of them together, then go to **Step 7b — Batch report**.
+Then Steps 7–11.
 
-## Step 2c — From-review creation
+## Step 7 — Next number
 
-Look in the current conversation context for the most recent `/vibe:review` report. It contains sections like "Applied fixes", "Remaining findings" (High / Medium / Low), and "Test status after fixes".
+Highest `NNN` prefix across `.vibe/backlog/` **and** `done/`, plus one, zero-padded to 3 digits; `001` when there is none.
 
-Extract findings to convert into backlog items:
-- **Always include**: all findings listed under "Remaining findings" (High, Medium, and Low) — these are issues the review did not auto-fix.
-- **Skip**: findings listed under "Applied fixes" — they are already resolved.
-- If no `/vibe:review` output is found in the conversation: stop and report "No review output found in the current conversation. Run `/vibe:review` first, or provide a list of items directly."
+## Step 8 — Title, slug, criteria, dependencies
 
-For each extracted finding, compose a short item description (one line) that captures the issue and its location (file, function) if mentioned.
+Title: 3–7 words, title case, taken or summarized from the description. Slug: kebab-case of the title. 2–4 acceptance criteria, each specific, observable, and falsifiable, from the user's or system's perspective ("User can…", "System returns…") — never "works correctly". Dependencies: another item named by number ("after 003") or by a matching title goes into `depends_on` as zero-padded numbers; when uncertain, omit the field.
 
-Then treat this list exactly like a batch argument: go to **Step 2b — Batch creation** with this list.
-
-## Step 2d — Scope check (single mode only)
-
-Before computing the next number, assess whether the single-mode description in `$ARGUMENTS` actually bundles **multiple independent, separately shippable features** rather than describing one coherent item.
-
-Signs of an oversized scope:
-- Several distinct capabilities joined by "and"/"et"/commas, each independently valuable and testable on its own (e.g. "add CSV export, a dark mode, and email notifications")
-- The description would need acceptance criteria (Step 5) spanning unrelated areas of the app with no shared purpose
-
-This is different from one feature with several facets that all serve the same goal (e.g. "let users export reports as CSV or PDF" — one coherent capability, two formats).
-
-**If an oversized scope is detected:**
-1. Derive a short candidate title for each distinct capability found.
-2. Present them to the user: "This description seems to cover several distinct features: [list of candidate titles]. Do you want me to create a separate item for each?"
-3. **If the user confirms the split:** treat the candidate titles exactly like a batch argument — go to **Step 2b — Batch creation** using them as the list of item descriptions.
-4. **If the user declines:** continue with `$ARGUMENTS` as a single item — go to **Step 2f — Clarity check**.
-
-**If no oversized scope is detected:** continue normally — go to **Step 2f — Clarity check**.
-
-## Step 2f — Clarity check (single mode only)
-
-Runs right after Step 2d, only when Step 2d did **not** end in a batch split (no oversized scope, or the user declined splitting) — batch and from-review items never reach this step, they were already itemized in Step 2b/2c.
-
-Assess whether the single-mode description left in `$ARGUMENTS` gives Step 5 enough to derive falsifiable acceptance criteria, or is still too thin to do anything but invent them.
-
-Signs of an under-specified description:
-- A single vague noun phrase or slogan with no concrete actor, action, or observable outcome (e.g. "a notification", "improve performance", "a reporting system")
-- Nothing in it a criterion could point to — no expected user action, system response, or measurable condition
-
-This is different from a short but complete description (e.g. "let users export the current report as a CSV file" is short and perfectly sufficient — one clear actor, action, outcome).
-
-**If under-specified:** tell the user in one line — "This description is too thin to produce solid acceptance criteria — I'll ask a few questions first." — then invoke the `vibe:clarify` skill (Skill tool, `skill: "vibe:clarify"`, `args: $ARGUMENTS`). Read its `CLARIFY-RESULT:` line:
-- `settled` or `partial`: replace `$ARGUMENTS`, for the remainder of this run, with the `### Synthesis` text it returned — every later step that reads `$ARGUMENTS` (Steps 3–6) now reads this synthesis instead of the original text.
-- `abandoned`: keep `$ARGUMENTS` unchanged and continue — never block item creation on a clarification the user chose not to complete.
-
-Then go to **Step 3 — Compute next number**.
-
-**If sufficiently specified:** continue normally — go to **Step 3 — Compute next number**.
-
-## Step 2e — Remove an item
-
-1. Extract the numeric part of the reference and normalize it to 3 digits with zero-padding (e.g. `3` → `003`).
-2. Search `.vibe/backlog/` (top level only — **not** `done/`: a completed item is history, it is never removed) for a file named `NNN-*.md`.
-   - If no match at the top level but one exists in `done/`: report "Item `NNN` is already done (`.vibe/backlog/done/…`) — done items are kept as history and cannot be removed." and stop.
-   - If no match anywhere: report "No backlog item `NNN` found in `.vibe/backlog/`. Run `/vibe:backlog` to list existing items." and stop.
-3. Read the file: extract the title (first `# ` heading) and the `status` from the frontmatter.
-4. Scan the other active items (`.vibe/backlog/*.md`) for a `depends_on` list containing `NNN` — these dependencies will become orphaned.
-5. Ask the user for confirmation before deleting anything, showing: the item number, title, and status (warn explicitly if `status: in_progress`), plus the list of items that depend on it, if any. Do not proceed without explicit confirmation; if the user declines, stop without modifying anything.
-6. On confirmation:
-   - `git rm .vibe/backlog/NNN-slug.md`
-   - In each dependent item found in point 4, remove `NNN` from its `depends_on` list (drop the line entirely if the list becomes empty).
-7. Commit the removal and any dependency cleanups together: `chore: remove backlog item NNN - [Title]`
-8. Report: the file removed, the dependent items cleaned up (if any), and the commit hash and message. Stop here.
-
-## Step 3 — Compute the next number
-
-1. If `.vibe/backlog/` does not exist or contains no `.md` files (**including in `done/`**): the next number is `001`.
-2. Otherwise: list all filenames matching `NNN-*.md` in **both** `.vibe/backlog/` and `.vibe/backlog/done/`, extract the leading numeric prefix from each, find the highest value, increment by 1, and zero-pad to 3 digits. Scanning `done/` is mandatory — otherwise, once every active item is completed and moved, numbering would restart at `001` and collide with done items.
-   - Example: if the highest existing file is `done/007-dark-mode.md`, the next number is `008`.
-
-## Step 4 — Derive title and slug
-
-From `$ARGUMENTS`:
-
-1. **Title**: extract or infer a concise, descriptive title (3–7 words, title case). If `$ARGUMENTS` is already short and unambiguous, use it directly; otherwise summarize it.
-2. **Slug**: convert the title to kebab-case — lowercase, words separated by `-`, remove punctuation and special characters.
-   - Example: "User Authentication via OAuth2" → `user-authentication-via-oauth2`
-3. **Filename**: `NNN-slug.md` (e.g. `008-user-authentication-via-oauth2.md`).
-
-## Step 5 — Generate acceptance criteria
-
-From `$ARGUMENTS`, derive 2–4 acceptance criteria:
-- Each criterion must be specific, observable, and independently testable.
-- Write from the user's or system's perspective: "User can…", "System returns…", "Page displays…".
-- Avoid vague criteria such as "works correctly" or "is fast" — make them falsifiable.
-
-## Step 5b — Detect dependencies
-
-Check whether `$ARGUMENTS` explicitly or implicitly references another existing backlog item as a prerequisite:
-- If `$ARGUMENTS` mentions an item by number (e.g. "after 003", "depends on item 5") or by a title matching an existing backlog file: include those item numbers in `depends_on`.
-- List all `.vibe/backlog/*.md` files and check if any is clearly a prerequisite based on the description.
-- If uncertain: do not add any dependency (leave `depends_on` absent).
-
-If dependencies are found: store them as 3-digit zero-padded numbers (e.g. `[003, 005]`).
-
-## Step 6 — Write the backlog file
-
-Create `.vibe/backlog/NNN-slug.md` with this exact structure:
+## Step 9 — Write the file
 
 ```markdown
 ---
 status: todo
-depends_on: [003, 005]   # include only if dependencies were found in Step 5b; omit this line entirely if none
+depends_on: [003, 005]   # only when dependencies were found; omit the line otherwise
 ---
 # [Title]
 
 ## Description
-[What needs to be built and why — 1–3 short, plain sentences elaborated from $ARGUMENTS]
+[What needs to be built and why — 1–3 short, plain sentences]
 
 ## Acceptance Criteria
 - [ ] [Criterion 1]
 - [ ] [Criterion 2]
-- [ ] [Criterion 3 — if applicable]
-- [ ] [Criterion 4 — if applicable]
 
 ## Notes
-[Relevant constraints, technical context, or open questions inferred from $ARGUMENTS. Write "None." if nothing to add.]
+[Constraints, technical context, open questions — or "None."]
 ```
 
-## Step 6b — Commit
+## Step 10 — Commit
 
-Stage and commit the newly created backlog file(s) (exclude `.env` and secrets):
+Single item: `chore: add backlog item NNN - [Title]`. Batch or from-review: one commit `chore: add N backlog items`, titles listed in the body.
 
-- **Single item**: `chore: add backlog item NNN - [Title]`
-- **Batch / from-review**: one commit covering every file created in this run — `chore: add N backlog items`, with the titles listed one per line in the commit body
+## Step 11 — Report
 
-This step applies every time one or more backlog files were created. It does not apply to Step 2 (listing), which never writes files.
-
-## Step 7 — Report
-
-Display, short and plain:
-- File created: `.vibe/backlog/NNN-slug.md`
-- Title: [title]
-- Acceptance criteria: N generated
-- Commit: [short hash and message from Step 6b]
-- Next steps: run `/vibe:feature NNN` (or `/vibe:fix NNN` if the item is a bug) to implement it
-
-## Step 7b — Batch report
-
-Display, short and plain, a summary table of all items created:
-
-| # | File | Title | Criteria |
-|---|---|---|---|
-| 001 | `.vibe/backlog/001-slug.md` | First Title | 3 |
-| 002 | `.vibe/backlog/002-slug.md` | Second Title | 2 |
-| … | … | … | … |
-
-Then display:
-- Total items created: N
-- Commit: [short hash and message from Step 6b]
-- Next steps: run `/vibe:feature NNN` (or `/vibe:fix NNN` for a bug) on any item to start implementing it, or `/vibe:backlog` to review the full backlog.
+Short and plain. Single: file, title, number of criteria, commit, and the next step (`/vibe:feature NNN`, or `/vibe:fix NNN` for a bug). Batch: a table `# | File | Title | Criteria`, the total, the commit, and the same next step.

@@ -14,3 +14,5 @@ Several skills (`feature`, `fix`, `backlog`, `auto`, `next-task`) each reimpleme
 
 ## Notes
 Raised by `/vibe:review` (review-antipatterns + review-hygiene, Medium). Architectural change — plan it as a dedicated feature rather than a quick edit.
+
+2026-09-03: `feature` and `fix` now share one definition in `skills/feature/workflow.md`; `auto`, `next-task`, and `backlog` still each read/write `status` themselves. Remaining scope: those three.

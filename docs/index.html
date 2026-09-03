@@ -385,7 +385,7 @@
       <div class="benefits">
         <div class="benefit reveal"><span class="num">01</span><h3>TDD-first, always</h3><p>Features and fixes start with a failing test, written in your stead — and every test is checked against a shared definition of a <em>tautological test</em>, so green means something.</p></div>
         <div class="benefit reveal"><span class="num">02</span><h3>Proven, not just green</h3><p>After implementation the change is exercised for real — nominal path plus an edge case — instead of trusting the suite. If the app won't even launch, it records a working launch recipe and retries.</p></div>
-        <div class="benefit reveal"><span class="num">03</span><h3>Seventeen-angle review</h3><p>One command fans out specialized agents — security, complexity, naming, robustness, tests, and more — in parallel, each auditing a single dimension, then fixes what they find.</p></div>
+        <div class="benefit reveal"><span class="num">03</span><h3>Fourteen-angle review</h3><p>One command fans out specialized agents — security, simplicity, naming, robustness, tests, and more — in parallel, each auditing a single dimension, then fixes what they find.</p></div>
         <div class="benefit reveal"><span class="num">04</span><h3>A backlog that commits itself</h3><p>Queue ideas as numbered items, singly or in bulk; bundled requests are split into independent items automatically. Implement any of them later just by number.</p></div>
         <div class="benefit reveal"><span class="num">05</span><h3>Feedback loops that close</h3><p>Pre-existing test failures are offered for tracking, a reminder fires when several changes ship unreviewed, and every dead end is logged with its diagnosis so no session rediscovers it.</p></div>
         <div class="benefit reveal"><span class="num">06</span><h3>Nothing silently lost</h3><p>Work is committed before every turn ends — even interruptions — and a one-command release finalizes the changelog, refreshes docs, bumps the version, and tags.</p></div>
@@ -502,19 +502,16 @@
   <section id="review-agents">
     <div class="wrap">
       <p class="sec-label reveal">the reviewers</p>
-      <h2 class="reveal">Seventeen dimensions, audited in parallel</h2>
+      <h2 class="reveal">Fourteen dimensions, audited in parallel</h2>
       <p class="sec-intro reveal">Each agent focuses on exactly one quality dimension. <code>/vibe:init</code> decides which ones apply to your project.</p>
       <div class="agents reveal">
         <span class="agent"><span class="h">▲</span>antipatterns</span>
         <span class="agent"><span class="h">▲</span>architecture</span>
-        <span class="agent"><span class="h">▲</span>complexity</span>
         <span class="agent"><span class="h">▲</span>ddd</span>
         <span class="agent"><span class="h">▲</span>dependencies</span>
-        <span class="agent"><span class="h">▲</span>hexagonal</span>
         <span class="agent"><span class="h">▲</span>hygiene</span>
         <span class="agent"><span class="h">▲</span>naming</span>
         <span class="agent"><span class="h">▲</span>overengineering</span>
-        <span class="agent"><span class="h">▲</span>pentest</span>
         <span class="agent"><span class="h">▲</span>performance</span>
         <span class="agent"><span class="h">▲</span>robustness</span>
         <span class="agent"><span class="h">▲</span>security</span>
@@ -633,7 +630,7 @@
       { t:"out", d:500, html:'<span class="t-dim">●</span> fanning out <span class="t-bold">10 review agents</span> in parallel…' },
       { t:"run", d:300, html:'  <span class="t-bold">security</span>    <span class="t-dim">scanning for secrets & injections</span>', after:2300, done:'  <span class="t-ok">✓</span> <span class="t-bold">security</span>    <span class="t-ok">clean</span>' },
       { t:"run", d:150, html:'  <span class="t-bold">naming</span>      <span class="t-dim">auditing identifiers</span>', after:2900, done:'  <span class="t-ok">✓</span> <span class="t-bold">naming</span>      <span class="t-dim">1 finding</span>' },
-      { t:"run", d:150, html:'  <span class="t-bold">complexity</span>  <span class="t-dim">measuring nesting & length</span>', after:3400, done:'  <span class="t-ok">✓</span> <span class="t-bold">complexity</span>  <span class="t-dim">1 finding</span>' },
+      { t:"run", d:150, html:'  <span class="t-bold">simplicity</span>  <span class="t-dim">measuring nesting & length</span>', after:3400, done:'  <span class="t-ok">✓</span> <span class="t-bold">simplicity</span>  <span class="t-dim">1 finding</span>' },
       { t:"run", d:150, html:'  <span class="t-bold">robustness</span>  <span class="t-dim">tracing error paths</span>', after:2600, done:'  <span class="t-ok">✓</span> <span class="t-bold">robustness</span>  <span class="t-ok">clean</span>' },
       { t:"run", d:150, html:'  <span class="t-bold">tests</span>       <span class="t-dim">running the real suite…</span>', after:4200, done:'  <span class="t-ok">✓</span> <span class="t-bold">tests</span>       <span class="t-warn">1 tautological test flagged</span>' },
       { t:"out", d:4600, html:'<span class="t-dim">●</span> applying fixes…' },

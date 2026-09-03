@@ -1,47 +1,28 @@
 # Module: skills
 
-**Role:** Slash-command definitions (`/vibe:*`) that drive the vibe-coding workflow — each is a self-contained instruction set read by Claude Code when the command is invoked.
-**Files:** `skills/*/SKILL.md` (one directory per skill)
+**Role:** Slash-command definitions (`/vibe:*`) that drive the vibe-coding workflow — each is an instruction set read by Claude Code when the command is invoked. Shared steps live in one file per concern, read at invocation, never copied.
+**Files:** `skills/*/SKILL.md` (one directory per skill), `skills/feature/workflow.md` (shared by `feature` and `fix`)
 **Exports:**
 - `/vibe:init` (`skills/init/SKILL.md`) — sets up `CLAUDE.md` for vibe coding.
-  - Asks once for the project's documentation language.
-  - Also creates `README.md` with its managed sections, via `vibe:docs`.
-- `/vibe:backlog` (`skills/backlog/SKILL.md`) — lists, adds, or removes backlog items.
-  - `remove NNN` needs confirmation; done items can't be removed.
-  - Commits each creation or removal itself.
-- `/vibe:feature` (`skills/feature/SKILL.md`) — implements a feature with TDD.
-  - Accepts a free-form description or a backlog reference `NNN`.
-  - Verifies the result for real via the `run` skill.
-  - Updates the CHANGELOG.
-- `/vibe:fix` (`skills/fix/SKILL.md`) — fixes a bug with TDD, reproducing it first.
-  - Accepts a free-form description or a backlog reference `NNN`.
-  - Verifies the fix for real via the `run` skill.
-  - Updates the CHANGELOG.
+  - Asks once for the project's language; creates `README.md` via `vibe:docs`.
+- `/vibe:backlog` (`skills/backlog/SKILL.md`) — lists, adds (single, batch, from review), or removes backlog items.
+  - `remove NNN` needs confirmation; done items can't be removed. Commits its own changes.
+- `/vibe:clarify` (`skills/clarify/SKILL.md`) — round-by-round interview ending with a `CLARIFY-RESULT:` line parsed by `backlog`, `init`, `workspace-init`.
+- `/vibe:feature` (`skills/feature/SKILL.md`) — implements a feature with TDD; free-form brief or backlog `NNN`.
+- `/vibe:fix` (`skills/fix/SKILL.md`) — fixes a bug with TDD, reproducing it first; free-form report or backlog `NNN`.
+  - Both read `skills/feature/workflow.md`: commit rule, `--auto` gates and verdict, escalation log, backlog resolution, baseline, expert consultation, plan, task list, red/green/runtime/refactor, CHANGELOG, docs, sync, commit, report.
 - `/vibe:auto` (`skills/auto/SKILL.md`) — drains the backlog with no human gates.
-  - Picks the next item by unblock count, then fix-over-feature, then lowest number.
-  - Runs each item through `vibe:feature`/`vibe:fix` in a sub-agent.
-  - Saves and commits its state after every item, so an interruption can resume.
-  - Prints one `●`/`✓`/`⚠` status line per item.
-- `/vibe:review` (`skills/review/SKILL.md`) — runs multi-agent code quality review.
-  - Re-checks the active agent list in `CLAUDE.md` on every run; respects opt-outs.
-  - Records each run in `.vibe/last-review.md`.
-- `/vibe:sync` (`skills/sync/SKILL.md`) — generates and updates the `.vibe/` codebase map.
-  - The glossary it maintains is fully derived from code and self-cleaning.
-- `/vibe:changelog` (`skills/changelog/SKILL.md`) — updates `CHANGELOG.md` from git history.
-- `/vibe:docs` (`skills/docs/SKILL.md`) — refreshes README managed sections and `docs/`.
-  - README sections are written for end users; `docs/` files for developers.
-  - `docs/` is an open-ended set of files, chosen per project, with diagrams where useful.
-- `/vibe:release` (`skills/release/SKILL.md`) — bumps the version, finalizes the CHANGELOG, commits and tags.
-- `/vibe:workspace-init` (`skills/workspace-init/SKILL.md`) — sets up or refreshes a hub repo.
-  - A hub repo is any directory with `.git/` and `repos.md` at its root — no fixed name.
-  - Tracks every sibling repo in `repos.md`, plus a local, never-committed workspace-root `CLAUDE.md`.
-  - Commits inside the hub repo only; never pushes.
-- `/vibe:next-task` (`skills/next-task/SKILL.md`) — picks and ships the next eligible backlog item.
-  - Scans every `active` repo in a workspace, or just the current repo if there is no workspace.
-  - Hands the item to `vibe:feature`/`vibe:fix`, directly or repeatedly in auto mode.
-  - Pushes, and releases if the changelog warrants it — the only skill in the plugin that publishes on its own.
-- `vibe:tasks` (`skills/tasks/SKILL.md`) — internal, not shown in the `/` menu.
-  - Creates the task list for the invoking skill, via `TaskCreate` or a scratchpad checklist fallback.
-  - Owns the `●`/`✓` status-line convention used on every task transition.
+  - Ranks by unblock count, then fix over feature, then lowest number; one sub-agent per item, sequential.
+  - Commits `.vibe/auto-state.md` at every boundary; `--push` invokes `vibe:publish` at the end.
+- `/vibe:review` (`skills/review/SKILL.md`) — runs the active review agents in parallel and applies fixes.
+  - Owns the finding contract injected into every agent prompt; re-checks the `CLAUDE.md` agent table each run; records `.vibe/last-review.md`.
+- `/vibe:sync` (`skills/sync/SKILL.md`) — generates and updates the `.vibe/` codebase map; code-derived, self-cleaning glossary.
+- `/vibe:changelog` (`skills/changelog/SKILL.md`) — fills `[Unreleased]` from git history; never cuts a version.
+- `/vibe:docs` (`skills/docs/SKILL.md`) — refreshes README managed sections (end users) and `docs/` Markdown files (developers); never touches non-Markdown files in `docs/`.
+- `/vibe:release` (`skills/release/SKILL.md`) — checks, runs `changelog`, cuts the version section, refreshes docs, bumps the version, commits and tags. Never pushes.
+- `/vibe:workspace-init` (`skills/workspace-init/SKILL.md`) — sets up or refreshes a hub repo (`.git/` + `repos.md`) and the local workspace-root `CLAUDE.md`. Never pushes.
+- `/vibe:next-task` (`skills/next-task/SKILL.md`) — picks the next eligible item across a workspace (or the current repo), hands it to `feature`/`fix` or to `auto --push`, publishes, checks downstream unblocks.
+- `vibe:tasks` (`skills/tasks/SKILL.md`) — internal: creates the caller's task list via `TaskCreate` or a scratchpad checklist; owns the `●`/`✓` status-line convention.
+- `vibe:publish` (`skills/publish/SKILL.md`) — internal: pushes, releases when `[Unreleased]` is non-empty (bump inferred), pushes tags, creates a GitHub release when possible; one self-heal retry on a tracked pre-existing test failure. The only skill that pushes.
 
 **Depends on:** [`modules/plugin-manifest.md`](plugin-manifest.md) (skills are registered/shipped as part of the plugin)

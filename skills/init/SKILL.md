@@ -4,148 +4,45 @@ description: Initialize or regenerate the project CLAUDE.md and README.md for vi
 argument-hint: "[optional: project description]"
 ---
 
-# /vibe:init — Vibe Coding CLAUDE.md Generator
+# /vibe:init — Vibe Coding Project Setup
 
-You are about to initialize or fully regenerate this project's `CLAUDE.md` to support **vibe coding**: the user acts as Product Owner only and never manually tests code. All quality assurance must be automated.
+Initialize or fully regenerate this project's `CLAUDE.md` (and ensure `README.md`) for **vibe coding**: the user is Product Owner only and never tests manually, so all quality assurance is automated.
 
-## Step 1 — Project reconnaissance
+## Step 1 — Reconnaissance
 
-Scan for manifest files — a project may use more than one stack:
+Scan for manifests — a project may use several stacks:
 
 | Stack | Manifest | Test framework | Style tooling |
 |---|---|---|---|
-| Node.js / TS | `package.json` | jest/vitest/mocha/tap/ava; `*.test.*`/`*.spec.*` | `@biomejs/biome`; or eslint + prettier |
-| Python | `pyproject.toml`/`setup.py`/`requirements.txt` | pytest/unittest; `test_*.py` | `[tool.ruff]`/`ruff.toml`; or `[tool.black]` |
-| Rust | `Cargo.toml` | built-in `cargo test` | built-in `rustfmt` |
-| Go | `go.mod` | built-in `go test` | built-in `gofmt`/`goimports` |
+| Node.js / TS | `package.json` | jest/vitest/mocha/tap/ava | biome, or eslint + prettier |
+| Python | `pyproject.toml`/`setup.py`/`requirements.txt` | pytest/unittest | ruff, or black |
+| Rust | `Cargo.toml` | `cargo test` (built in) | `rustfmt` (built in) |
+| Go | `go.mod` | `go test` (built in) | `gofmt` (built in) |
 | Java / Kotlin | `pom.xml`/`build.gradle` | junit/testng | checkstyle/spotless |
 | PHP | `composer.json` | phpunit | php-cs-fixer/phpcs |
 | Ruby | `Gemfile` | rspec/minitest | rubocop |
-| .NET / C# | `*.csproj`/`*.sln` | xunit/nunit/mstest | built-in `dotnet format` |
+| .NET / C# | `*.csproj`/`*.sln` | xunit/nunit/mstest | `dotnet format` (built in) |
 | any | `Makefile` | check targets | check targets |
 
-For each detected stack, read the manifest to extract:
-- Project name and description
-- Existing scripts for: test, lint, format, build, dev/run
-- Declared dependencies
+From each manifest: name, description, scripts (test, lint, format, build, dev/run), dependencies. Also: the directory structure (to infer the architecture), the existing `CLAUDE.md` (sections marked `<!-- keep -->` are preserved), `.env.example`, CI config, and `$ARGUMENTS` as additional description.
 
-Also collect:
-- Top-level directory structure (infer architecture)
-- Existing `CLAUDE.md` — preserve sections marked `<!-- keep -->`
-- `.env.example` or `.env`
-- CI config files (`.github/workflows/`, etc.)
-- `$ARGUMENTS` if provided — treat as additional project description
+**Empty project** (no manifest at all): use `AskUserQuestion` for the project idea (open text) and the stack (Node.js/TS, Python, Rust, Go, or the user's own). If the idea is a vague noun phrase or slogan with no concrete actor, action, or outcome ("an app to manage stuff"), invoke the `vibe:clarify` skill with it; `settled`/`partial` → use its `### Synthesis` as the description, `abandoned` → keep the answer as given. The chosen stack is scaffolded in Step 3.
 
-## Step 1b — Handle empty project
+**Project language** (always asked): "What language should generated content for this project (documentation, backlog items, comments, etc.) be written in?" — the current `## Project language` value first if one exists, otherwise English and French first; "Other" for anything else.
 
-If Step 1 found **no manifest files at all** (truly empty project — no `package.json`, no `pyproject.toml`, no `Cargo.toml`, etc.):
+## Step 2 — Gaps and review agents
 
-Use the `AskUserQuestion` tool to collect the following before continuing:
+Missing test framework or style tooling → installed in Step 3. Review agents for the `CLAUDE.md` table: always `review-tests`, `review-naming`, `review-security`, `review-dependencies`, `review-robustness`, `review-hygiene`, `review-antipatterns`, `review-simplicity`, `review-overengineering`, and `review-architecture` (`.vibe/` will exist after Step 5); `review-solid` if the project has classes, interfaces, or a modular architecture; `review-performance` if it is an API, server, full-stack app, or has a real-time render loop; `review-web-security` if it exposes HTTP endpoints — mark it `✅ (dynamic)` only if the user wants a locally-run instance probed as well; `review-ddd` if an explicit domain layer exists (`domain/`, `entities/`, `aggregates/`, or equivalent vocabulary).
 
-1. **Project idea** — "What is this project for? Briefly describe what you want to build." (open text)
-2. **Tech stack** — offer 4 options based on common choices, or let the user type their own:
-   - Node.js / TypeScript
-   - Python
-   - Rust
-   - Go
-
-If the **Project idea** answer is under-specified — same signs as `skills/backlog/SKILL.md`'s Step 2f (kept identical, update both together): a vague noun phrase or slogan with no concrete actor, action, or observable outcome (e.g. "an app to manage stuff") — invoke the `vibe:clarify` skill (Skill tool, `skill: "vibe:clarify"`, `args: <the project idea answer>`) before continuing. Read its `CLARIFY-RESULT:` line: `settled`/`partial` → replace the project idea answer with its `### Synthesis` text; `abandoned` → keep the original answer as given.
-
-Save the answers and treat them as the project description for Step 4. Use the chosen stack to bootstrap a minimal project structure in Step 3 (create the manifest file for that stack so tooling can be installed).
-
-If Step 1 found at least one manifest, skip this step entirely.
-
-## Step 1c — Project language
-
-Ask which language this project's generated content should use — documentation, backlog items, code comments, and any other content the vibe skills write on the project's behalf. This step always runs, whether or not Step 1b was triggered.
-
-Use the `AskUserQuestion` tool:
-- **Question**: "What language should generated content for this project (documentation, backlog items, comments, etc.) be written in?"
-- **Options**: if the existing `CLAUDE.md` (if any) already has a `## Project language` section, put its current value first, labeled "(current)", as the recommended choice; otherwise offer "English" and "French" as the first two options. The user can always type a different language via "Other".
-
-Save the answer — it is written into the `## Project language` section of `CLAUDE.md` in Step 4.
-
-## Step 1d — Create task list
-
-Based on what was found in Steps 1 and 1b, invoke the `vibe:tasks` skill (Skill tool) to create the tasks below. **Keep subject names short (≤ 30 chars)** — they appear in the status line. `vibe:tasks` creates the tasks via `TaskCreate`, or falls back to a scratchpad checklist if that tool is unavailable — either way, its instructions then govern how every later "Mark the task ... completed" instruction in this skill is carried out.
-
-If the project is empty (Step 1b was triggered) **or** missing tooling was detected, pass this as `$ARGUMENTS`:
-
-```
-Bootstrap / install tooling      ← no dependency
-Write CLAUDE.md                  ← blockedBy "Bootstrap / install tooling"
-Run lint, tests, and vibe:sync   ← blockedBy "Write CLAUDE.md"
-Create/update README             ← blockedBy "Run lint, tests, and vibe:sync"
-```
-
-If no missing tooling and project already has a manifest, pass this instead:
-
-```
-Write CLAUDE.md                  ← no dependency
-Run lint, tests, and vibe:sync   ← blockedBy "Write CLAUDE.md"
-Create/update README             ← blockedBy "Run lint, tests, and vibe:sync"
-```
-
-## Step 2 — Identify gaps
-
-From the table above, flag any missing test framework or style tooling → install in Step 3.
-
-Determine review agents to activate in CLAUDE.md:
-
-- `vibe:review-tests`, `vibe:review-naming`, `vibe:review-complexity`, `vibe:review-security`, `vibe:review-dependencies`, `vibe:review-robustness`, `vibe:review-hygiene`, `vibe:review-antipatterns`, `vibe:review-simplicity`, `vibe:review-overengineering`: always active
-- `vibe:review-solid`: activate if the project uses classes, interfaces, or a modular architecture; skip for scripts or functional code
-- `vibe:review-ddd`: activate if an explicit domain layer exists (`domain/`, `entities/`, `aggregates/`, `value-objects/`, or equivalent DDD vocabulary); skip otherwise
-- `vibe:review-architecture`: active if `.vibe/` exists (it will after Step 5 runs `/vibe:sync` — mark it active)
-- `vibe:review-performance`: activate if the project type is API, server, or full-stack; skip for CLIs, libraries, and scripts
-- `vibe:review-web-security` (deep web audit): activate if the project exposes HTTP endpoints (web app, API, SSR frontend); skip otherwise
-- `vibe:review-pentest` (dynamic penetration test): activate if the project exposes a runnable networked application (web app, API, server) that can be launched and probed in a safe local environment; skip for libraries, static sites, and CLIs with no network surface
-- `vibe:review-hexagonal`: activate if the project explicitly follows a hexagonal (ports & adapters) architecture — declared in an ADR or `CLAUDE.md`, or evident from a `ports/`/`adapters/` (or `driving/`/`driven/`) structure; skip otherwise — never impose hexagonal on a project that has not chosen it
+Then invoke the `vibe:tasks` skill with: `Bootstrap / install tooling` (only when the project is empty or tooling is missing) → `Write CLAUDE.md` → `Run lint, tests, and vibe:sync` → `Create/update README`.
 
 ## Step 3 — Bootstrap / install tooling
 
-Mark the `Bootstrap / install tooling` task `in_progress` (skip if the task was not created).
-
-**Empty project case (Step 1b was triggered):** create the minimal project scaffold for the chosen stack before installing tooling:
-
-| Stack | Scaffold command |
-|---|---|
-| Node.js / TS | `npm init -y`, add `"type": "module"` to `package.json`, create `src/index.ts` |
-| Python | `uv init` or create `pyproject.toml` + `src/<name>/__init__.py` |
-| Rust | `cargo init` |
-| Go | `go mod init <module-name>` + `main.go` |
-
-Then install the canonical tooling for that stack (test framework + style tool), as described below.
-
-**Existing project case:** only install what is missing. Prefer the canonical, modern tool for each stack:
-
-| Stack | Test framework (if missing) | Style tooling (if missing) |
-|---|---|---|
-| Node.js / TS | Vitest — `npm i -D vitest`, add `"test": "vitest run"` to scripts | Biome — `npm i -D @biomejs/biome`, `npx biome init`, add `"lint": "biome check --write ."` |
-| Python | Pytest — `pip install pytest` or add to `[project.optional-dependencies]` | Ruff — `pip install ruff`, add `[tool.ruff]` to pyproject.toml, `"lint": "ruff check --fix ."` |
-| Rust | n/a (built-in) | n/a (`rustfmt` built-in — add `rustfmt.toml` if needed) |
-| Go | n/a (built-in) | n/a (`gofmt` built-in) |
-| Java | JUnit 5 via Maven/Gradle dependency | Spotless plugin |
-| Ruby | RSpec — `bundle add rspec`, `rspec --init` | RuboCop — `bundle add rubocop`, `rubocop --auto-gen-config` |
-| .NET | xUnit — `dotnet add package xunit` | n/a (`dotnet format` built-in) |
-| PHP | PHPUnit — `composer require --dev phpunit/phpunit` | PHP-CS-Fixer — `composer require --dev friendsofphp/php-cs-fixer` |
-
-After any install:
-1. Create a minimal passing placeholder test to confirm the framework works
-2. Run the lint command once to auto-fix any existing style issues
-3. Confirm both commands exit with code 0 before continuing
-
-Mark the task `completed`.
+Empty project: create the stack's minimal scaffold (manifest + one source file) with its standard init command. Then install what is missing, preferring the canonical modern tool for the stack (Vitest + Biome, Pytest + Ruff, JUnit 5 + Spotless, RSpec + RuboCop, xUnit, PHPUnit + PHP-CS-Fixer; nothing for Rust and Go), add the `test` and `lint` scripts to the manifest, create a minimal passing placeholder test, run lint once to auto-fix, and confirm both commands exit 0.
 
 ## Step 4 — Write CLAUDE.md
 
-Mark the `Write CLAUDE.md` task `in_progress`.
-
-Create or fully overwrite `CLAUDE.md` at the project root.
-Populate every placeholder with values inferred from the actual project — no generic examples left behind.
-
-Mark the task `completed`.
-
----
+Create or fully overwrite `CLAUDE.md` from the template below, every placeholder filled from the real project, then mark the task completed.
 
 ```markdown
 # CLAUDE.md — [PROJECT_NAME]
@@ -155,87 +52,41 @@ Mark the task `completed`.
 
 ## Project overview
 
-[1–3 sentences inferred from manifest description + $ARGUMENTS + user's answer from Step 1b (if empty project) + directory structure]
+[1–3 sentences from the manifest description, $ARGUMENTS, the Step 1 answers, and the directory structure]
 
-**Stack:** [actual detected stack, e.g. Python 3.12 / FastAPI / Pytest / Ruff]
+**Stack:** [e.g. Python 3.12 / FastAPI / Pytest / Ruff]
 **Type:** [CLI / REST API / frontend / library / full-stack / other]
 
 ## Project language
 
-[Language chosen in Step 1c] — all documentation, backlog items, code comments, and other generated content for this project must be written in [language chosen in Step 1c].
+[Language] — all documentation, backlog items, code comments, and other generated content for this project are written in [language].
 
 ## Architecture
 
-[Brief description of top-level directories, inferred from actual structure]
-
-```
-[project-root]/
-├── [dir]/   # [role]
-├── [dir]/   # [role]
-└── ...
-```
+[Top-level directories and their roles, as a short annotated tree]
 
 <!-- The import below loads the compact codebase map into every session. It is maintained by /vibe:sync; details (modules/, models.md, glossary.md) stay on-demand. -->
 @.vibe/index.md
 
 ## Development workflow (Vibe Coding)
 
-The user is the **Product Owner only**. They describe requirements and evaluate outcomes — they do NOT write or manually test code.
+The user is the **Product Owner only**: they describe requirements and evaluate outcomes, they never write or manually test code. Features and fixes go through `/vibe:feature` and `/vibe:fix` — tests first (red), minimum implementation (green), real runtime check, refactor, lint. A bug is reproduced by a failing test before it is fixed.
 
 ### Definition of Done
 
-A task is complete ONLY when ALL of the following are true:
+- [ ] Tests cover the nominal path, at least 2 edge cases, and the error path, and all pass (`[test command]`)
+- [ ] Lint exits 0 (`[lint command]`)
+- [ ] The change was exercised for real at runtime, not only through tests
+- [ ] No debug artifacts, dead code, or unused imports
+- [ ] No hardcoded secrets — environment variables only
 
-- [ ] Implementation code is written
-- [ ] Tests covering the nominal path exist and pass
-- [ ] Tests covering edge cases and error paths exist and pass
-- [ ] Lint exits with code 0 — style enforced by tooling (see manifest for command)
-- [ ] All tests pass — run test command from manifest
-- [ ] No debug artifacts left in code (console.log, print, dbg!, etc.)
-
-**Never present a result to the user if tests are failing.**
-
-### TDD workflow
-
-For every feature or fix:
-
-1. **Write tests first** — describe expected behavior through tests before writing implementation
-2. **Confirm tests fail** — run the test command and verify new tests fail (red)
-3. **Write implementation** — minimum code to make tests pass
-4. **Confirm tests pass** — run the test command and verify all tests pass (green)
-5. **Refactor if needed** — clean up while keeping tests green
-6. **Run lint** — run the lint command and fix any issues
-7. **Present result** — summarize what was done, what was tested, and the test output
-
-### Bug fix workflow
-
-1. **Reproduce in a test first** — write a failing test that captures the bug
-2. Fix the bug
-3. Confirm the test passes
-4. Present result with the test name that now covers the bug
-
-### Self-correction loop
-
-If tests or lint fail:
-- Do NOT ask the user for help
-- Diagnose the failure, fix it, re-run
-- Repeat until green (max 3 self-correction attempts)
-- Only escalate to the user if the failure reveals an ambiguous requirement
+**Never present a result while tests are failing.** On a failure: diagnose, fix, re-run, up to 3 times; escalate only for an ambiguous requirement.
 
 ## Testing conventions
 
-- Test location: `[actual path inferred from project, e.g. tests/, __tests__/, src/**/*.test.ts]`
-- Test runner: `[actual framework]`
-- One test file per source module
-- Test names must describe behavior: `"returns empty list when input is empty"` not `"works"`
-- Always cover: happy path + at least 2 edge cases + error/invalid input
-
-## Constraints
-
-- Never leave dead code or unused imports
-- Never hardcode secrets — use environment variables
-- Never skip tests to meet a deadline — fix the code instead
-- Style is enforced by tooling, not by convention — always run the lint command before presenting results
+- Test location: `[actual path, e.g. tests/, __tests__/, src/**/*.test.ts]`
+- Test runner: `[framework]`
+- One test file per source module; test names describe behaviour ("returns empty list when input is empty")
 
 ## Review agents
 
@@ -243,58 +94,21 @@ Agents active for `/vibe:review` on this project:
 
 | Agent | Active | Reason |
 |---|---|---|
-| `vibe:review-tests` | ✅ | always active |
-| `vibe:review-naming` | ✅ | always active |
-| `vibe:review-complexity` | ✅ | always active |
-| `vibe:review-security` | ✅ | always active |
-| `vibe:review-dependencies` | ✅ | always active |
-| `vibe:review-robustness` | ✅ | always active |
-| `vibe:review-hygiene` | ✅ | always active |
-| `vibe:review-antipatterns` | ✅ | always active |
-| `vibe:review-simplicity` | ✅ | always active |
-| `vibe:review-overengineering` | ✅ | always active |
-| `vibe:review-solid` | [✅ / ❌] | [active if OO or modular architecture detected / inactive: functional or scripting style] |
-| `vibe:review-ddd` | [✅ / ❌] | [active if domain layer detected / inactive: no explicit domain model] |
-| `vibe:review-architecture` | [✅ / ❌] | [active if `.vibe/` exists / inactive: run `/vibe:sync` first] |
-| `vibe:review-performance` | [✅ / ❌] | [active if API/server/full-stack / inactive: CLI, library, or script] |
-| `vibe:review-web-security` | [✅ / ❌] | [active if the project exposes HTTP endpoints / inactive: no HTTP surface] |
-| `vibe:review-pentest` | [✅ / ❌] | [active if a runnable networked app can be probed locally / inactive: no runnable network surface] |
-| `vibe:review-hexagonal` | [✅ / ❌] | [active if the project declares a hexagonal (ports & adapters) architecture / inactive: no such commitment] |
+| `vibe:review-tests`, `vibe:review-naming`, `vibe:review-security`, `vibe:review-dependencies`, `vibe:review-robustness`, `vibe:review-hygiene`, `vibe:review-antipatterns`, `vibe:review-simplicity`, `vibe:review-overengineering`, `vibe:review-architecture` | ✅ | always active |
+| `vibe:review-solid` | [✅ / ❌] | [OO or modular architecture / functional or scripting style] |
+| `vibe:review-performance` | [✅ / ❌] | [API, server, full-stack, or real-time loop / CLI, library, or script] |
+| `vibe:review-web-security` | [✅ / ✅ (dynamic) / ❌] | [HTTP endpoints exposed / no HTTP surface] |
+| `vibe:review-ddd` | [✅ / ❌] | [explicit domain layer / no explicit domain model] |
 ```
 
----
+## Step 5 — Lint, tests, sync
 
-## Step 5 — Final confirmation
+Run the lint command (auto-fix across the codebase), run the test command (all pass), then invoke the `vibe:sync` skill — `CLAUDE.md` imports `@.vibe/index.md`, so `.vibe/` must exist when this skill completes.
 
-Mark the `Run lint, tests, and vibe:sync` task `in_progress`.
+## Step 6 — README
 
-1. Run the lint command (from manifest) — auto-fix style across the codebase
-2. Run the test command (from manifest) — confirm all tests pass
-3. **Invoke the `vibe:sync` skill** using the Skill tool (`skill: "vibe:sync"`) — this generates the `.vibe/` directory with module map, data models, and glossary. Do NOT skip this step; the `.vibe/` folder must exist when `/vibe:init` completes — the CLAUDE.md written in Step 4 imports `@.vibe/index.md`, so verify that `.vibe/index.md` now exists.
+Invoke the `vibe:docs` skill: it creates a README with managed sections when there is none, asks which sections to add to a hand-written one, and refreshes existing managed sections in place. Never write README content here.
 
-Mark the task `completed`.
+## Step 7 — Report
 
-## Step 5b — Create or complete README.md
-
-Mark the `Create/update README` task `in_progress`.
-
-`/vibe:init` sets up the project's vibe-coding conventions — that includes README.md, which the rest of the workflow (`/vibe:feature`, `/vibe:docs`, `/vibe:release`) relies on having managed sections to keep current. Do not leave this to chance:
-
-**Invoke the `vibe:docs` skill** using the Skill tool (`skill: "vibe:docs"`). It already handles every case correctly on its own:
-- No `README.md` at all → it creates one with a minimal skeleton (title, one-paragraph description) plus the four managed sections (features, install, usage, docs index).
-- A `README.md` exists but has no managed sections → it lists the sections that could be added and asks the user which ones to add.
-- A `README.md` exists with managed sections already → it refreshes their content in place, nothing outside the markers is touched.
-
-Do not reimplement this logic here — always delegate to `vibe:docs` rather than writing or checking README content directly.
-
-Mark the task `completed`.
-
-## Step 6 — Report
-
-Report to the user — short, plain sentences, no full CLAUDE.md dump unless asked:
-   - Detected stack and project type
-   - Chosen project language
-   - What was installed or configured (if anything)
-   - Lint status + test status
-   - One sentence describing what CLAUDE.md now enforces
-   - README status: created / sections added / already up to date
+Short, plain sentences: detected stack and type; project language; what was installed or configured; lint and test status; one sentence on what `CLAUDE.md` now enforces; README status (created / sections added / up to date). No `CLAUDE.md` dump unless asked.

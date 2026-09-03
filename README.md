@@ -7,25 +7,22 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 ## Features
 
 <!-- vibe:begin:features -->
-- Automated, TDD-first workflow: tests are written first, in the human's stead, and checked against tests that can't actually fail (tautological tests)
-- Work is always committed before ending a turn, even if interrupted — nothing is silently lost across a session reset
-- Every feature or fix is proven to work after implementation: exercised for real, nominal path plus an edge case or error path, instead of just trusting green tests. It works out how to launch the app on its own, even on an unusual setup, before giving up
-- A backlog to queue feature ideas before implementation. Items are committed automatically as they're added, singly or in bulk. A request that bundles several independent capabilities is split into separate items automatically. Items can be removed on demand (after confirmation), and picked up directly by number when implementing a feature or a fix
-- A relentless round-by-round interview settles a plan, idea, or decision that's too thin to act on safely — used on demand, or triggered automatically when a backlog item, a new project's description, or a new multi-repo workspace doesn't give enough to go on. Each round asks its questions together with a recommended answer, looks up any fact itself instead of asking, and adapts to whatever language the conversation is in
-- An autonomous mode that works the backlog on its own: eligible items are picked one after another and shipped with no question or approval step, each handled in isolation so a long run stays affordable. Progress is committed at every item boundary, so an interruption — a closed session, a crash, a usage limit mid-item — resumes exactly where it stopped. An item that turns out to be a dead end is set aside with its reason instead of stalling the rest. It notifies as soon as an item's result is ready during an unattended run, and can also process just one item at a time — useful for pacing, cost control, or CI capacity
-- Specialized domain experts — UI/UX, visual design, REST API, CLI, data & persistence, Linux/system, operations, real-time rendering — are consulted automatically while planning a feature or a fix, each contributing the requirements a Product Owner wouldn't think to state (empty/loading/error states, HTTP status codes, safe migrations, frame budget…) before a single line of code is written
-- Multi-agent code review covering anti-patterns, architecture, complexity, DDD, dependencies, hexagonal architecture (for projects that chose it), hygiene, naming, overengineering, performance (including real-time rendering: frame budget, allocation churn, draw-call batching), robustness, security, simplicity, SOLID principles, tests (real execution of the suite, plus flagging of tests that can't actually fail), web security, and dynamic penetration testing against a locally-run instance of the app. Every check belongs to exactly one agent, so nothing is reported twice — with a color-coded status line while it runs
-- Feedback loops that close themselves: pre-existing test failures are offered for backlog tracking instead of being forgotten, a reminder appears once several changes have shipped without a review, and the active review agents are re-checked against the project's current shape at every run (deliberate opt-outs are never overridden). Every dead end (three failed self-correction attempts) is logged with its diagnosis, so the next session doesn't rediscover it from scratch
-- Every workflow tracks its progress and announces it clearly, even where the dedicated task system isn't available — a compact one-line marker per step instead of a wall of prose, so a long run stays skimmable
-- An internal codebase context map kept in sync automatically, so Claude ramps up fast on any session
-- Set up once, per project: the language for docs, backlog items, and comments is remembered and reused as the default from then on
-- A self-maintaining project glossary: definitions come from how the code actually uses each concept, with their sources. Terms that disappear from the code, or never belonged to the business vocabulary, are removed automatically at each sync — no manual editing or confirmation needed
-- Changelog maintenance from git history, following Keep a Changelog
-- README and developer documentation kept current automatically — as many documents as the project needs, with diagrams where they help, and an index linking every file. A missing README gets created; an existing one gets any missing standard section added
-- A one-command versioned release: changelog finalized, docs refreshed, version bumped, commit and tag created
-- Support for projects split across several Git repositories under one parent folder: one command sets up a hub repo tracking every sibling repo's status and role, another picks the next eligible task across all of them (or within a single repo if that's all there is), implements it, then pushes and publishes the release on its own — the one place in the whole workflow that does so automatically
-- Generated context files and every command's report use short, plain sentences instead of dense prose — easier to read at a glance
-- A public website with looping animated terminal demos of the workflow, mobile-friendly, served straight from the repository with no build step
+- TDD first: tests are written before the code, in the human's stead, and checked against tests that cannot fail (tautological tests)
+- Every feature or fix is exercised for real after implementation — nominal path plus an edge case — instead of trusting green tests
+- Work is always committed before a turn ends, even on interruption
+- A backlog of numbered items, committed as they are added, singly or in bulk; a request bundling several capabilities is split into separate items; any item is implemented by number
+- A round-by-round interview settles a plan, idea, or decision that is too thin to act on — on demand, or automatically when a backlog item, a new project, or a new workspace lacks substance
+- An autonomous mode that works the backlog with no question or approval step, one item at a time in isolation, resuming exactly where it stopped after any interruption; dead ends are set aside with their reason; `--push` also publishes the result
+- Eight domain experts (UI/UX, visual design, REST API, CLI, data, Linux, operations, real-time rendering) consulted while planning, contributing the requirements a Product Owner would not think to state
+- A fourteen-agent code review — anti-patterns, architecture (including ports & adapters where adopted), DDD, dependencies, hygiene, naming, overengineering, performance, robustness, security, simplicity, SOLID, tests (with real execution of the suite), and web security (with an opt-in dynamic probe of a locally-run instance) — one owner per check, fixes applied automatically
+- Feedback loops that close themselves: pre-existing test failures offered for tracking, a review reminder after several unreviewed changes, active review agents re-checked against the project's shape at every run, every dead end logged with its diagnosis
+- Progress shown as one compact status line per step, even where the dedicated task system is unavailable
+- An internal codebase context map and a self-maintaining, code-derived glossary kept in sync automatically
+- A per-project language for docs, backlog items, and comments, asked once
+- Changelog maintenance from git history (Keep a Changelog), README and developer docs kept current, and a one-command versioned release
+- Multi-repo workspaces: one command sets up a hub repo tracking every sibling, another picks the next eligible task across them, implements it, then pushes and releases — the only place in the workflow that publishes
+- Generated files and reports use short, plain sentences
+- A public website with animated terminal demos, served straight from the repository
 <!-- vibe:end:features -->
 
 ## Requirements
@@ -61,7 +58,7 @@ To uninstall:
 ## Usage
 
 <!-- vibe:begin:usage -->
-Each command is invoked as a Claude Code slash command, with natural-language arguments where relevant:
+Each command is a Claude Code slash command, with natural-language arguments where relevant:
 
 ```
 /vibe:init
@@ -73,12 +70,11 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 /vibe:fix "Login form submits twice when pressing Enter"
 /vibe:fix 003
 /vibe:auto
-/vibe:auto 3
+/vibe:auto 3 --push
 /vibe:review
 /vibe:review src/auth/
 /vibe:sync
 /vibe:changelog
-/vibe:changelog 1.2.0
 /vibe:docs
 /vibe:docs --full
 /vibe:release patch
@@ -88,7 +84,13 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 /vibe:next-task auto 1
 ```
 
-`/vibe:clarify` interviews you round by round about whatever plan, idea, or decision you give it — or infers the subject from the conversation if run with no argument — and stops once every open question is settled; `/vibe:backlog`, `/vibe:init`, and `/vibe:workspace-init` also trigger it automatically when what they have to work with is too thin to act on safely. `/vibe:backlog` with no argument lists pending items instead of adding one. `remove NNN` deletes an active item after confirmation. `/vibe:feature` and `/vibe:fix` accept either a natural-language description or a backlog item number — the item is then marked done automatically once shipped. `/vibe:auto` works the backlog on its own, with no approval step: with no argument it keeps going until no item is eligible; with a number it stops after that many items. Running it again after any interruption resumes exactly where it stopped — pair it with `/loop 45m /vibe:auto` to keep going unattended, or `/loop 30m /vibe:auto 1` to space items apart on purpose (one item per tick) for human review, cost pacing, or CI capacity. `/vibe:review` with no path reviews the full codebase. `/vibe:changelog` and `/vibe:release` accept an explicit version (or `major`/`minor`/`patch` for `/vibe:release`) — omit it to keep entries under `[Unreleased]`, or let `/vibe:release` infer the bump from them. `/vibe:workspace-init`, run from the parent folder holding several sibling repo checkouts, sets up (or refreshes) a dedicated repo tracking all of them. `/vibe:next-task` then picks the next eligible task across every active repo it lists, implements it, and pushes/releases automatically — run alone it just picks and confirms; `auto [N]` skips confirmation and is meant for `/loop`.
+- `/vibe:clarify` interviews you round by round about the subject you give it (or the one under discussion) and stops once every open question is settled. `/vibe:backlog`, `/vibe:init`, and `/vibe:workspace-init` trigger it automatically when their input is too thin.
+- `/vibe:backlog` with no argument lists pending items. `remove NNN` deletes an active item after confirmation.
+- `/vibe:feature` and `/vibe:fix` take a description or a backlog number; the item is closed automatically once shipped.
+- `/vibe:auto` works the backlog with no approval step: with no argument until nothing is eligible, with a number for that many items. Run it again after an interruption to resume. `--push` publishes at the end. Pair it with `/loop 45m /vibe:auto` to keep going unattended, or `/loop 30m /vibe:auto 1` to space items apart.
+- `/vibe:review` with no path reviews the full codebase.
+- `/vibe:changelog` brings `[Unreleased]` up to date from git history. `/vibe:release` takes a version or `major`/`minor`/`patch`, or suggests the bump from the changelog when run without an argument.
+- `/vibe:workspace-init`, run from the parent folder of several sibling repos, sets up or refreshes a hub repo tracking them. `/vibe:next-task` then picks the next eligible task across every active repo (or in the current repo alone), implements it, and pushes and releases. Alone it picks and confirms; `auto [N]` skips confirmation and suits `/loop`.
 <!-- vibe:end:usage -->
 
 ## Skills (commands)
@@ -96,44 +98,46 @@ Each command is invoked as a Claude Code slash command, with natural-language ar
 | Command | Purpose |
 |---|---|
 | `/vibe:init` | Initialize or regenerate the project's `CLAUDE.md` and `README.md` for vibe coding |
-| `/vibe:backlog` | List or add feature backlog items (`.vibe/backlog/`) |
+| `/vibe:backlog` | List, add, or remove feature backlog items (`.vibe/backlog/`) |
 | `/vibe:clarify` | Interview the user round by round until a plan, idea, or decision is fully settled |
 | `/vibe:feature` | Implement a new feature using TDD, then update the changelog |
 | `/vibe:fix` | Fix a bug using TDD (reproduce first), then update the changelog |
-| `/vibe:auto` | Work the backlog autonomously — no human gates, resumes after any interruption |
+| `/vibe:auto` | Work the backlog autonomously — no human gates, resumes after any interruption, `--push` publishes |
 | `/vibe:review` | Run a multi-agent code quality review and auto-apply fixes |
 | `/vibe:sync` | Generate/update `.vibe/` — the codebase context map |
-| `/vibe:changelog` | Update `CHANGELOG.md` from git history |
+| `/vibe:changelog` | Update `[Unreleased]` in `CHANGELOG.md` from git history |
 | `/vibe:docs` | Generate/refresh README managed sections and developer docs in `docs/` (diagrams included) |
 | `/vibe:release` | Bump version, finalize the changelog, commit and tag a release |
 | `/vibe:workspace-init` | Bootstrap/refresh a multi-repo workspace's hub repo and local workspace-root `CLAUDE.md` |
 | `/vibe:next-task` | Pick the next eligible task across a workspace (or the current repo), implement it, then push and release |
 
+Two internal skills are hidden from the `/` menu: `vibe:tasks` (task-list creation with a scratchpad fallback) and `vibe:publish` (push and release, used by `/vibe:auto --push` and `/vibe:next-task`).
+
 ## Review agents
 
-`/vibe:review` orchestrates these specialized agents in parallel:
+`/vibe:review` orchestrates these specialized agents in parallel, each owning one dimension:
 
-- `review-antipatterns`, `review-architecture`, `review-complexity`, `review-ddd`, `review-dependencies`, `review-hexagonal`, `review-hygiene`, `review-naming`, `review-overengineering`, `review-pentest`, `review-performance`, `review-robustness`, `review-security`, `review-simplicity`, `review-solid`, `review-tests`, `review-web-security`
+- `review-antipatterns`, `review-architecture` (also ports & adapters, for projects that adopted them), `review-ddd`, `review-dependencies`, `review-hygiene`, `review-naming`, `review-overengineering`, `review-performance`, `review-robustness`, `review-security`, `review-simplicity`, `review-solid`, `review-tests`, `review-web-security` (with an opt-in dynamic verification mode against a locally-run instance)
 
-Each focuses on one dimension only (see `/vibe:init`'s "Review agents" table for activation rules per project).
+Activation per project is recorded in the `CLAUDE.md` table written by `/vibe:init`.
 
 ## Expert agents
 
-`/vibe:feature` and `/vibe:fix` automatically consult up to 3 of these prescriptive experts while planning, based on what the task touches — each can also answer one precise question during implementation:
+`/vibe:feature` and `/vibe:fix` consult up to 3 of these prescriptive experts while planning, based on what the task touches — each can also answer one precise question during implementation:
 
 - `expert-ui-ux`, `expert-frontend-design`, `expert-api-rest`, `expert-cli-dx`, `expert-data`, `expert-linux`, `expert-ops`, `expert-realtime-rendering`
 
-Experts prescribe requirements *before* the code exists; the review agents above critique the code *after* — the two families deliberately cover disjoint domains, with one documented exception: `expert-realtime-rendering` is paired with `review-performance` (widened to also cover frame budget, allocation, and draw-call batching), because those choices are hard to retrofit once rendering code is written.
+Experts prescribe requirements *before* the code exists; the review agents critique *after*. The two families cover disjoint domains, with one documented exception: `expert-realtime-rendering` is paired with `review-performance`, because rendering choices are hard to retrofit once the code is written.
 
 ## Subagent status line
 
-The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-statusline.sh`), applied automatically once the plugin is enabled. It replaces the default `name · description · token count` row in the agent panel with a compact, color-coded line (status icon, bold name, description, token count) — most visible during `/vibe:review`, which runs up to 17 review agents in parallel.
+The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-statusline.sh`), applied automatically once the plugin is enabled. It replaces the default `name · description · token count` row in the agent panel with a compact, color-coded line — most visible during `/vibe:review`, which runs up to 14 agents in parallel.
 
 ## Typical flow
 
 1. `/vibe:init` once, to set up `CLAUDE.md` and `.vibe/`
 2. `/vibe:backlog "some feature idea"` to queue work
-3. `/vibe:feature 001` (or `/vibe:fix "bug description"`) to implement, TDD-first — the matching domain experts (UI/UX, API, data…) weigh in on the plan automatically; or `/vibe:auto` to let the whole backlog be worked through without supervision
+3. `/vibe:feature 001` (or `/vibe:fix "bug description"`) to implement, TDD-first, with the matching experts weighing in on the plan; or `/vibe:auto` to work the whole backlog without supervision
 4. `/vibe:review` periodically to catch quality issues
 5. `/vibe:release patch|minor|major` to ship a version
 

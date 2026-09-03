@@ -31,7 +31,7 @@ Le site vitrine <https://neolao.github.io/claude-plugin-vibe/> est servi par Git
 
 À savoir pour la faire évoluer :
 - Les démos de terminal sont des animations scriptées dans l'objet JS `DEMOS` en bas de `index.html` (types de lignes : `cmd` tapée au clavier, `out` affichée, `run` avec spinner résolu via `after`+`done`, `gap`). Ajouter une démo = un bloc `.term` avec `data-demo="<clé>"` + une entrée dans `DEMOS`.
-- Le contenu marketing (bénéfices, tableau des commandes, agents, typical flow) est dérivé du README : le resynchroniser à la main quand les skills changent — `/vibe:docs` a interdiction de toucher aux fichiers du site (`index.html`, `.nojekyll`, assets non-Markdown), voir `skills/docs/SKILL.md`.
+- Le contenu marketing (bénéfices, tableau des commandes, agents, typical flow) est dérivé du README : le resynchroniser à la main quand les skills changent — `/vibe:docs` ne touche jamais aux fichiers non-Markdown de `docs/` (`index.html`, `.nojekyll`, assets), par conception.
 - `docs/.nojekyll` doit rester présent (GitHub Pages sert alors le HTML tel quel).
 - Ne pas réintroduire les pièges mobiles corrigés : `overflow-x: clip` sur `html`+`body`, halo du hero plafonné à `min(900px, 130vw)`, tableau des commandes en cartes empilées sous 640 px.
 - Vérification sans navigateur : `node --check` sur le script inline extrait, contrôle d'équilibre des balises (parseur HTML Python), `python3 -m http.server` dans `docs/`.
@@ -84,8 +84,9 @@ Pas de suite de tests automatisée dans ce dépôt (choix délibéré, voir « P
 ## Constraints
 
 - Ne jamais committer de secrets ou identifiants
-- Contenu de `skills/*/SKILL.md` et `agents/*.md` (instructions à Claude, dialogue utilisateur, gabarits de rapport) toujours écrit en anglais, sans exception — le plugin tourne sur des projets/conversations dans n'importe quelle langue, aucun texte figé dans une langue particulière n'y a sa place
-- Chaque skill (`skills/<nom>/SKILL.md`) et chaque agent (`agents/<nom>.md`) doit avoir un frontmatter complet et cohérent avec les fichiers existants
+- Contenu de `skills/*/SKILL.md` (et fichiers voisins comme `skills/feature/workflow.md`) et `agents/*.md` (instructions à Claude, dialogue utilisateur, gabarits de rapport) toujours écrit en anglais, sans exception — le plugin tourne sur des projets/conversations dans n'importe quelle langue, aucun texte figé dans une langue particulière n'y a sa place
+- Chaque skill (`skills/<nom>/SKILL.md`) et chaque agent (`agents/<nom>.md`) doit avoir un frontmatter complet et cohérent avec les fichiers existants (`tools:` en lecture seule sur les agents review, sauf ceux qui exécutent quelque chose)
+- Pas de texte destiné au mainteneur (« kept identical », « update both together ») dans un prompt runtime : ce qui est partagé vit dans un seul fichier lu à l'invocation (`skills/feature/workflow.md`, contrat des agents dans `skills/review/SKILL.md`), voir ADR 004
 - Ne pas laisser de fichier skill/agent orphelin ou de contenu obsolète après un renommage/suppression
 - Garder le README comme index à jour des skills et de `docs/` (voir `/vibe:docs`)
 - Ne pas ajouter de stack applicative (Node, Python, etc.) à ce dépôt sans demande explicite — ce n'est pas ce type de projet
@@ -97,19 +98,16 @@ Agents actifs pour `/vibe:review` sur ce projet :
 | Agent | Actif | Raison |
 |---|---|---|
 | `vibe:review-naming` | ✅ | conventions de nommage des skills/agents et fichiers |
-| `vibe:review-complexity` | ✅ | s'applique au script `scripts/subagent-statusline.sh` |
 | `vibe:review-security` | ✅ | secrets, injections dans le script et les manifestes JSON |
 | `vibe:review-robustness` | ✅ | gestion d'erreurs du script shell |
 | `vibe:review-hygiene` | ✅ | fichiers skill/agent obsolètes, contenu dupliqué entre définitions |
 | `vibe:review-antipatterns` | ✅ | anti-patterns dans le script shell et les définitions de skills |
-| `vibe:review-simplicity` | ✅ | s'applique au script shell et aux définitions Markdown |
+| `vibe:review-simplicity` | ✅ | s'applique au script shell et aux définitions Markdown (couvre aussi la complexité du script) |
 | `vibe:review-overengineering` | ✅ | machinerie injustifiée dans le script et la structure du plugin |
 | `vibe:review-tests` | ❌ | pas de suite de tests dans ce dépôt, par choix délibéré — rien à exécuter |
 | `vibe:review-dependencies` | ❌ | aucun manifeste de dépendances dans ce dépôt |
 | `vibe:review-solid` | ❌ | pas de code orienté objet/modulaire |
 | `vibe:review-ddd` | ❌ | pas de couche domaine explicite |
-| `vibe:review-architecture` | ✅ | `.vibe/` existe (généré par `/vibe:sync`) |
+| `vibe:review-architecture` | ✅ | `.vibe/` existe (généré par `/vibe:sync`) — pas d'architecture hexagonale à vérifier |
 | `vibe:review-performance` | ❌ | pas d'API/serveur |
-| `vibe:review-web-security` | ❌ | pas de surface HTTP exposée |
-| `vibe:review-pentest` | ❌ | pas d'application exécutable exposée sur le réseau à sonder |
-| `vibe:review-hexagonal` | ❌ | pas d'architecture hexagonale — définitions Markdown sans code applicatif |
+| `vibe:review-web-security` | ❌ | pas de surface HTTP exposée (ni statique, ni mode dynamique) |

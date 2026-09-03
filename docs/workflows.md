@@ -26,7 +26,7 @@ Expert consultation is selection-based, not mandatory: an expert is invoked only
 
 ## Task tracking
 
-`init`, `feature`, `fix`, `review`, `docs`, `release`, and `workspace-init` never call `TaskCreate` directly — each invokes the internal `skills/tasks/SKILL.md` once per run, right after its plan is approved, passing the task list (subjects + `blockedBy` chains) as `$ARGUMENTS`:
+`init`, `feature`, `fix`, `review`, `docs`, `release`, and `workspace-init` never call `TaskCreate` directly — each invokes the internal `skills/tasks/SKILL.md` once per run, passing the task list (subjects + `blockedBy` chains) as `$ARGUMENTS`; `feature` and `fix` share this and every other common step through `skills/feature/workflow.md`, read at invocation:
 
 ```mermaid
 flowchart LR
@@ -80,7 +80,7 @@ stateDiagram-v2
 
 `/vibe:auto` drains the backlog with no human gate. Each item is handled by a dedicated sub-agent — strictly one at a time, since they share the Git working tree — which runs `/vibe:feature` or `/vibe:fix` with the `--auto` suffix; only a one-line `AUTO-RESULT:` verdict flows back, keeping the runner's context constant over a long run.
 
-In `--auto` mode, each human gate has a fixed automatic resolution (table kept identical in both skills): ambiguities are decided and recorded as assumptions, the plan is self-approved, a duplicate or an unmet dependency sets the item to `blocked`, and a broken build aborts the whole run.
+In `--auto` mode, each human gate has a fixed automatic resolution (one table in `skills/feature/workflow.md`, shared by both skills): ambiguities are decided and recorded as assumptions, the plan is self-approved, a duplicate or an unmet dependency sets the item to `blocked`, and a broken build aborts the whole run.
 
 Picking the next item is a ranking, not a raw lowest-number scan: among eligible items (`todo`, `depends_on` satisfied, not yet processed this run), the item other same-repo `todo` items depend on the most wins first; a tie goes to a fix over a feature (same defect-vocabulary classification `/vibe:auto` records in the journal); the lowest number is only the final tie-break. The winning item's classification is already known from that ranking, so Step 2 (feature vs. fix) doesn't reclassify it.
 
@@ -97,7 +97,7 @@ flowchart LR
     pick -- "none eligible / limit reached" --> stop
 ```
 
-Because the state file is committed at every item boundary, any interruption — crash, closed session, usage limit reached mid-item — is recovered by simply invoking `/vibe:auto` again. The skill never schedules itself: unattended restarts are delegated to the native `/loop` command (`/loop 45m /vibe:auto`).
+Because the state file is committed at every item boundary, any interruption — crash, closed session, usage limit reached mid-item — is recovered by simply invoking `/vibe:auto` again. The skill never schedules itself: unattended restarts are delegated to the native `/loop` command (`/loop 45m /vibe:auto`). With `--push`, the run ends by invoking the internal `publish` skill (push, release if the changelog warrants it, tag push, GitHub release when possible) — the same skill `/vibe:next-task` uses.
 
 Right after launching each item's sub-agent, the skill calls `ScheduleWakeup` (delay: 1200–1800s, rescheduled further out if it fires early) instead of waiting passively — the sub-agent's completion notification would otherwise sit unread in context until the user happens to send the next message. When the verdict is picked up on one of these scheduled wakeups (as opposed to a direct user turn), it is surfaced with `PushNotification` so a long unattended run doesn't silently update context with no one there to read it.
 
@@ -124,11 +124,11 @@ Escalation entries are read back at the start of every `feature`/`fix` run, so a
 
 ## Glossary lifecycle
 
-`.vibe/glossary.md` is fully code-derived and self-cleaning (`skills/sync/SKILL.md`, Step 7). Every entry carries a `_Sources:_` line; at each sync — invoked automatically at the end of every feature/fix — terms are added, redefined when their backing usage changed, or removed (exclusion criteria or orphaned sources) with a reported reason, never a confirmation prompt.
+`.vibe/glossary.md` is fully code-derived and self-cleaning (`skills/sync/SKILL.md`, Step 4). Every entry carries a `_Sources:_` line; at each sync — invoked automatically at the end of every feature/fix — terms are added, redefined when their backing usage changed, or removed (exclusion criteria or orphaned sources) with a reported reason, never a confirmation prompt.
 
 ## Release
 
-`/vibe:release [major|minor|patch|X.Y.Z]` finalizes `CHANGELOG.md` (moving `[Unreleased]` under the new version), refreshes docs, bumps `version` in `.claude-plugin/plugin.json`, then commits and tags.
+`/vibe:release [major|minor|patch|X.Y.Z]` runs `/vibe:changelog` (which only fills `[Unreleased]` from git history), cuts the version section itself, refreshes docs, bumps `version` in `.claude-plugin/plugin.json`, then commits and tags.
 
 ## Multi-repo workspace: pick, implement, publish
 
