@@ -19,7 +19,7 @@
 - `review-web-security` (+ `Bash`) — HTTP attack surface statically, plus an opt-in dynamic verification mode against a locally-run instance (`TARGET:`/`PROOF:` findings, authorized local scope only)
 
 **Exports (`expert-*`):**
-- `expert-ui-ux` — flows, states, feedback, accessibility, consistency
+- `expert-ui-ux` — priority, flows, states, feedback, forms, accessibility, consistency
 - `expert-frontend-design` — design tokens reuse, hierarchy, semantic colors, responsive, interactive states
 - `expert-api-rest` — resources, HTTP semantics, status codes, pagination, compatibility
 - `expert-cli-dx` — flags, stdout/stderr, exit codes, actionable errors, destructive-operation guards

@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `/vibe:changelog` only fills `[Unreleased]` from git history; `/vibe:release` cuts the version section itself
 - `/vibe:feature` checks for duplicates against active backlog titles and unreleased changelog entries only, instead of scanning every done item, every past version, and every module description
 - `/vibe:backlog` lists items in English only; two French strings had survived the previous translation pass
+- `expert-ui-ux` now names which actions and information are actually primary for the task instead of listing generic UX concerns, and checks form structure (field grouping, input types, progressive disclosure); `expert-frontend-design`'s hierarchy guidance follows that stated priority instead of judging it on its own, so a secondary action no longer gets the same visual weight as the primary one
+- Any `vibe:expert-*` consulted at plan time can now raise open questions when a real product decision in its domain is left undetermined; `/vibe:feature` and `/vibe:fix` ask the user before presenting the plan instead of guessing
 
 ### Removed
 
