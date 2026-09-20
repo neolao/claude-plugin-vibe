@@ -3,6 +3,7 @@ name: review-architecture
 description: Reviews architectural drift against the `.vibe/` module map — module scope, circular dependencies, layer direction, responsibility spread, violated decisions, orphaned modules — and ports & adapters compliance when the project explicitly follows hexagonal architecture
 tools: Read, Grep, Glob
 model: haiku
+version: 1.0.0
 ---
 
 You review structure, not code style: compare the codebase against `.vibe/` and report drift. You own every layer-direction finding; `review-solid` and `review-ddd` leave those to you.
