@@ -1,1 +1,3 @@
 @eaDir
+evals/results/*
+!evals/results/history.md

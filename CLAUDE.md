@@ -81,6 +81,14 @@ En l'absence de tests/lint automatisés, l'auto-correction se limite à :
 
 Pas de suite de tests automatisée dans ce dépôt (choix délibéré, voir « Particularité de ce dépôt » ci-dessus). La confiance vient de la relecture humaine du contenu Markdown/JSON produit, pas de tests exécutables.
 
+## Agent model evals <!-- keep -->
+
+Chaque agent de `agents/*.md` porte un champ `model:` dans son frontmatter. C'est un choix de coût/qualité par agent, distinct de la relecture manuelle ci-dessus, et il se valide avec `claude plugin eval` — pas avec la suite de tests (qui n'existe pas et ne doit pas exister ici).
+
+- Les cas vivent dans `evals/<nom-du-cas>/` (`case.yaml` avec `context.add_dirs` pour exposer les `fixtures/`, `prompt.md` pour le prompt, `graders/*.md` pour les critères) — un cas par scénario à vérifier pour un agent. Tout ce qui définit un cas est committé normalement.
+- `evals/results/` est régénéré à chaque run et gitignored (`report.html`, `aggregate-result.json`, coûts liés à l'instant du run) — sauf `evals/results/history.md`, qui reste tracké : après un run jugé significatif (changement de `model:` sur un agent, de son prompt, ou nouveau cas), y ajouter une ligne (date, cas, modèle, score, pass rate, note courte) avant de committer.
+- Lancer un eval coûte de vrais tokens (appels réels au(x) agent(s) + juge LLM sur plusieurs runs) — c'est un geste manuel du Product Owner ou de Claude sur demande explicite, jamais déclenché automatiquement par un skill ou un hook.
+
 ## Constraints
 
 - Ne jamais committer de secrets ou identifiants
