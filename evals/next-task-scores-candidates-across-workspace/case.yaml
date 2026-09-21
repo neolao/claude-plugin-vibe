@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: next-task-scores-candidates-across-workspace
+description: >
+  The workspace half of vibe:next-task, which the forced-pick mono-repo case
+  bypasses by design: hub detection (Step 2), cross-repo candidate collection
+  (Step 3), the done-vs-published distinction on a prose blocker (Step 4), and
+  scoring by unblock count (Step 5). The run is stopped at Step 6's
+  confirmation, so no implementation cycle is paid for. Needs
+  --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]

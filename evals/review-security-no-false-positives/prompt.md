@@ -1,6 +1,6 @@
 ---
 name: review-security-no-false-positives
-description: review-security must not flag safe.py's parameterized query, env-sourced key, bcrypt hash, or list-form subprocess call
+description: review-security must not flag safe.py's parameterized query, env-sourced key, bcrypt hash, list-form subprocess call, safe YAML load, customer-scoped invoice export, or server-computed charge total
 tags: [review-security, precision]
 runs: 3
 max_turns: 10

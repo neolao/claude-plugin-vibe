@@ -1,6 +1,6 @@
 ---
 name: review-security-finds-vulnerabilities
-description: review-security must find a hardcoded secret, a SQL/shell injection, and a weak hash in fixtures/app.py
+description: review-security must find a hardcoded secret, the SQL injection, the shell injection, the unsafe YAML load, the missing authorization check, the unvalidated charge amount, and the weak hash in fixtures/app.py
 tags: [review-security, recall]
 runs: 3
 max_turns: 10

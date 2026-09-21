@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: auto-resumes-run-and-ranks-by-unblock-count
+description: >
+  The two branches auto-ships-one-item-and-journals-state cannot reach with a
+  one-item backlog: Step 0's resume table (current: 002 already under done/,
+  plus an orphaned in_progress item to reset) and Step 1's ranking, where the
+  item others wait on must beat both a lower-numbered defect and a
+  lower-numbered feature. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]

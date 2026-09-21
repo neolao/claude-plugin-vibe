@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: backlog-reports-review-cadence-and-blocked-reason
+description: >
+  Second list-mode case for vibe:backlog, on the two branches the first one
+  cannot reach: a recorded .vibe/last-review.md (date + count of feat:/fix:
+  commits since its hash, chore: commits excluded) and a blocked item's own
+  reason plus the hint that re-running the skill puts it back in play. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]

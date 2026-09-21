@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: sync-reports-already-up-to-date
+description: >
+  Precision twin of sync-incremental-scopes-to-changed-files. Nothing has
+  changed since the date in .vibe/index.md and the working tree is clean, so
+  Step 1's "already up to date" branch must fire: report and stop, touching no
+  file at all — not even index.md's own date. Needs --allow-tools
+  Bash,Write,Edit to make the untouched-files assertion meaningful.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]

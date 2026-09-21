@@ -11,6 +11,15 @@ CLI's own totals (agent + judge, summed over the case's runs). Tokens require
 extra work the CLI doesn't do on its own — see below — so older rows logged
 before this practice started show `n/a`.
 
+**A changed case retires its own history.** Editing a fixture, adding,
+splitting, or removing a grader, or changing weights changes *what* the score
+measures — a later run is then neither better nor worse than an earlier one,
+it measures something else. Mark every existing row for that case with ⚠️ in
+the Case cell and open its Notes with
+`**Obsolete (YYYY-MM-DD):** <what changed in the case>`. Never delete the row
+and never touch its figures: it stays as the record of what that version of
+the case measured. Comparison restarts from the first run after the change.
+
 **How to get the token figures:** re-run the case with `--keep-temp` (no
 extra API cost — it only skips deleting the sandbox). For each kept dir,
 `chmod 700 <dir> <dir>/sealed`, then read the last `type: result` line of
@@ -21,8 +30,8 @@ out = `outputTokens`). Sum across models, then across the case's runs, and
 
 | Date | Agent | Agent version | Case | Model | Score | Pass rate | Cost (N runs) | Tokens in/out (N runs) | Notes |
 |---|---|---|---|---|---|---|---|---|---|
-| 2026-09-20 | review-security | 1.0.0 | review-security-finds-vulnerabilities | haiku | 1.00 | 3/3 | $0.29 | n/a (pre-tracking) | Finds the hardcoded secret, both injections, and the weak hash; follows the FILE/CATEGORY/SEVERITY contract |
-| 2026-09-20 | review-security | 1.0.0 | review-security-no-false-positives | haiku | 1.00 | 3/3 | $0.29 | n/a (pre-tracking) | No false positive on env-sourced key, parameterized query, list-form subprocess, bcrypt, or `.env.example` |
+| 2026-09-20 | review-security | 1.0.0 | ⚠️ review-security-finds-vulnerabilities | haiku | 1.00 | 3/3 | $0.29 | n/a (pre-tracking) | **Obsolete (2026-09-21):** the case changed — the case now covers all six of the agent's categories. The fixture gained an unsafe `yaml.load`, an invoice export that ignores its `requesting_user`, and a card charged for a partner-supplied amount; `finds-injection` was split into `finds-sql-injection` + `finds-shell-injection`; `finds-dangerous-primitive`, `finds-access-control` and `finds-trust-boundary` were added (5 graders/weight 6 → 9 graders/weight 9). Not comparable with later runs. What it measured then: finds the hardcoded secret, both injections, and the weak hash; follows the FILE/CATEGORY/SEVERITY contract |
+| 2026-09-20 | review-security | 1.0.0 | ⚠️ review-security-no-false-positives | haiku | 1.00 | 3/3 | $0.29 | n/a (pre-tracking) | **Obsolete (2026-09-21):** the case changed — the fixture gained a `yaml.safe_load`, a customer-scoped invoice export and a server-computed charge total, with `accepts-safe-yaml-load`, `accepts-scoped-invoice-export` and `accepts-server-computed-total` as their graders (5 graders/weight 5 → 8 graders/weight 8). Not comparable with later runs. What it measured then: no false positive on env-sourced key, parameterized query, list-form subprocess, bcrypt, or `.env.example` |
 | 2026-09-20 | review-solid | 1.0.0 | review-solid-finds-violations | haiku | 0.95 | 2/3 | $0.33 | 163,573 / 10,765 | Reliably finds S, O, L, D; misses the ISP finding (8-field `User`, 2 fields read) on 1 of 3 runs |
 | 2026-09-20 | review-solid | 1.0.0 | review-solid-no-false-positives | haiku | 0.78 | 2/3 | $0.27 | 179,351 / 8,202 | On 1 of 3 runs, invents an `I`/ISP finding on `UserContact.format_greeting`, claiming it uses only 2 of the dataclass's fields when those are its only 2 fields |
 | 2026-09-20 | review-naming | 1.0.0 | review-naming-finds-violations | haiku | 0.92 | 1/3 | $0.34 | 175,441 / 11,158 | Reliably finds Function, Test, Variable; misses the `Type` finding (vague `Manager` suffix) on 1 of 3 runs and the `Module` finding (mixed camelCase/snake_case file names) on a different run |

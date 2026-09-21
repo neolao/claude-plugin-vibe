@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: feature-blocks-on-unmet-dependency-in-auto-mode
+description: >
+  The cheap half of the --auto gate table: an item whose depends_on is not
+  done must end the run at backlog resolution with
+  AUTO-RESULT: blocked — depends on 001 (not done), the item flipped to
+  status: blocked with a ## Blocked section, and a commit — no plan, no test,
+  no source change. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]
