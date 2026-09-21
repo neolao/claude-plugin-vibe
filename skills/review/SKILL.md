@@ -31,7 +31,7 @@ Invoke the `vibe:tasks` skill with one `Run <agent>` task per active agent (all 
 
 ## Step 2 — Scope
 
-`$ARGUMENTS` is the path to review; with no argument, the full codebase. Do not enumerate files yourself — each agent scans on its own. Exclusions passed to every agent: `node_modules/`, `vendor/`, `.venv/`, `dist/`, `build/`, `out/`, `target/`, generated files, `*.config.*`, `*.json` without logic, migration files.
+`$ARGUMENTS` is the path to review; with no argument, the full codebase. Do not enumerate files yourself — each agent scans on its own. Exclusions passed to every agent: `node_modules/`, `vendor/`, `.venv/`, `dist/`, `build/`, `out/`, `target/`, generated files, `*.config.*`, `*.json` without logic (dependency manifests and lockfiles always stay in scope), migration files.
 
 ## Step 3 — Run the active agents in parallel
 
