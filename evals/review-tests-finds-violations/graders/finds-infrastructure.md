@@ -2,16 +2,17 @@
 type: llm
 focus: last_message
 criteria: |
-  PASS if the response's `SUITE EXECUTED`/`E2E/INTEGRATION EXECUTED` header
-  or its findings note that `TestUserServiceInfrastructure` in
-  fixtures/test_user_service.py could not run/complete because it depends
-  on a real Postgres database (`psycopg2.connect(...)`) that is not
-  available in this environment, reported as a finding rather than silently
-  skipped, in the `Infrastructure` category (or clearly equivalent).
-  FAIL if the response never mentions that this test/module could not run
-  for lack of a database, or silently drops it without comment.
+  PASS if the response reports that `TestUserServiceInfrastructure` in
+  fixtures/test_user_service.py cannot run in this environment because it
+  needs a real Postgres database (`psycopg2.connect(...)` — the driver, the
+  server, or both are unavailable), and treats that inability as a finding
+  in the `Infrastructure` category (or a clearly equivalent name) rather
+  than passing over it in silence. It counts whether the agent learned this
+  from the suite run or from reading the code.
+  FAIL if the response never mentions that this test class could not run for
+  lack of a database, or drops it without comment.
 weight: 2
 ---
 
-Reports the psycopg2/Postgres-dependent test as unable to run in this
-environment, an `Infrastructure` finding, rather than silently ignoring it.
+Reports the un-runnable Postgres-dependent test class as an `Infrastructure`
+finding instead of silently skipping it.

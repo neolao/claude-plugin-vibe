@@ -1,13 +1,11 @@
-class OrderWorkflow:
-    """Validates, prices, charges, ships, and emails receipts for an order —
-    every step of the order lifecycle lives on this one class."""
+"""Order lifecycle, driven by the checkout endpoint."""
 
+
+class OrderWorkflow:
     def __init__(self):
         self.state = {}
 
     def init(self, order):
-        # must be called before run() — nothing in the API enforces the
-        # order, calling run() first raises a KeyError deep inside _price()
         self.state["order"] = order
 
     def run(self):
@@ -26,8 +24,6 @@ class OrderWorkflow:
         order["total"] = sum(i["price"] for i in order["items"])
 
     def _charge(self, order, retry, notify):
-        # call sites like `self._charge(order, True, False)` above give no
-        # clue which flag is which without opening this method
         if retry:
             pass
         if notify:
@@ -37,5 +33,5 @@ class OrderWorkflow:
         pass
 
     def _email_receipt(self, order):
-        receipt_currency = "USD"  # duplicated literal, see date_utils.py
+        receipt_currency = "USD"
         return receipt_currency

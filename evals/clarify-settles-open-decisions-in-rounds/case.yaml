@@ -8,3 +8,4 @@ description: >
   Needs --allow-tools AskUserQuestion to run.
 context:
   scaffold_script: fixture.sh
+  add_dirs: [.]

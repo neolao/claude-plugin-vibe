@@ -2,8 +2,7 @@ from core.pricing import calculate_total
 
 
 class OrderService:
-    """Places an order: prices it and hands the total to whatever gateway
-    was injected — core never picks or builds its own adapter."""
+    """Places an order: prices it and persists it through its gateway."""
 
     def __init__(self, gateway):
         self._gateway = gateway

@@ -1,5 +1,5 @@
 def is_active(order):
-    if order["status"] == "cancelled":
+    if order.get("archived"):
         return False
     return order["status"] in ("new", "processing", "shipped")
 

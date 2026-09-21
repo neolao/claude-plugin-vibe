@@ -1,11 +1,10 @@
 ---
-type: regex
-target: last_message
-pattern: "v1\\.0\\.1"
+type: file_exists
+path: ".eval-remote/origin.git/refs/tags/v1.0.1"
+exists: true
 weight: 2
 ---
 
-The prompt instructs Claude to run `git ls-remote --tags origin` after
-`vibe:publish` finishes and report the output. The local bare "origin"
-repo must have actually received the new `v1.0.1` tag (bumped from the
-existing `v1.0.0`) — not just a local commit and tag that stayed unpushed.
+The `v1.0.1` tag must exist in the stand-in remote, not merely be named in
+the report: `git push --tags` is the step under test, and a run that cuts
+the release locally without pushing it looks identical in prose.

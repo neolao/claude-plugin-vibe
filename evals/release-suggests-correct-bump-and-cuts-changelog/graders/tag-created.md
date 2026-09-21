@@ -1,10 +1,10 @@
 ---
-type: regex
-target: last_message
-pattern: 'v1\.2\.4'
-match: contains
-weight: 1
+type: file_exists
+path: ".git/refs/tags/v1.2.4"
+exists: true
+weight: 2
 ---
 
-The final report (which echoes the `git tag` output, per the prompt's
-instructions) includes the newly created `v1.2.4` tag.
+`/vibe:release` cuts the version and tags it locally (pushing is
+`vibe:publish`'s job, checked by `no-push.md`). The tag must exist as a real
+git ref, not just be mentioned in the report.

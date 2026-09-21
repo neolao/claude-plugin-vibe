@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: changelog-leaves-accurate-unreleased-alone
+description: >
+  Precision twin of changelog-categorizes-and-dedupes. Every user-facing commit
+  since the last tag is already recorded under [Unreleased], and the only other
+  commits are noise the skill must discard. The correct outcome is that
+  CHANGELOG.md is left byte-for-byte unchanged and the skill says so, instead of
+  restating entries or inventing new ones. Needs --allow-tools Bash,Write,Edit
+  to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]

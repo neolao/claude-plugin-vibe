@@ -1,8 +1,9 @@
 class Order:
-    """An order placed by a user."""
+    """An order placed by a customer."""
 
-    def __init__(self, order_id, items):
+    def __init__(self, order_id, customer_id, items):
         self.order_id = order_id
+        self.customer_id = customer_id
         self.items = items  # list of {"sku": str, "qty": int}
         self.status = "open"
 

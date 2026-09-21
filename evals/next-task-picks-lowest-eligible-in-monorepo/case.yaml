@@ -11,3 +11,4 @@ description: >
   off-by-one bug. Needs --allow-tools Bash,Write,Edit to run.
 context:
   scaffold_script: fixture.sh
+  add_dirs: [.]

@@ -1,5 +1,8 @@
 schema_version: "1.1"
 name: review-dependencies-finds-violations
+description: >
+  review-dependencies runs the stack's audit tool before reporting, and treats a
+  missing audit tool as a finding of its own. Needs --allow-tools Bash to run.
 context:
   scaffold_script: fixture.sh
   add_dirs: [fixtures]

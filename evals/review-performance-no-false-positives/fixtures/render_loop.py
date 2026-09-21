@@ -10,5 +10,6 @@ def update_frame(entities, renderer, batches_by_texture):
         _transform_buffer.append(entity.transform)
         batches_by_texture[entity.texture].append(entity.mesh)
 
+    renderer.upload_transforms(_transform_buffer)
     for texture, meshes in batches_by_texture.items():
         renderer.draw_batch(texture, meshes)

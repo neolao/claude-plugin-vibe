@@ -1,5 +1,9 @@
 schema_version: "1.1"
 name: auto-ships-one-item-and-journals-state
+description: >
+  vibe:auto ships one backlog item through a sub-agent and journals
+  .vibe/auto-state.md at the item boundary so a run resumes. Needs
+  --allow-tools Bash,Write,Edit to run.
 context:
   scaffold_script: fixture.sh
   add_dirs: [.]

@@ -6,11 +6,6 @@ from pricing import PricingService
 
 class TestPricingService(unittest.TestCase):
     def test_total_with_tax_applies_provided_rate(self):
-        # The mock isolates a real external collaborator (a tax rate
-        # lookup), but the assertion verifies PricingService's own
-        # combination math, not just the mock's configured value — a wrong
-        # total_with_tax() implementation would fail this regardless of
-        # what the mock returns.
         tax_provider = Mock()
         tax_provider.rate_for.return_value = 0.2
         service = PricingService(tax_provider)

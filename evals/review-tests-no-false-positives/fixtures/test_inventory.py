@@ -5,8 +5,6 @@ from inventory import InventoryService
 
 class TestInventoryService(unittest.TestCase):
     def setUp(self):
-        # Realistic fixture: representative starting stock for two distinct
-        # skus, not a bare mock — exercises the real dict-backed storage.
         self.service = InventoryService(stock={"sku-1": 10, "sku-2": 0})
 
     def test_reserve_deducts_from_stock(self):
@@ -24,8 +22,6 @@ class TestInventoryService(unittest.TestCase):
 
 class TestInventoryServiceIsolation(unittest.TestCase):
     def setUp(self):
-        # Fresh instance per test — no shared mutable state across tests,
-        # so results never depend on execution order.
         self.service = InventoryService(stock={"sku-1": 5})
 
     def test_independent_reservation(self):

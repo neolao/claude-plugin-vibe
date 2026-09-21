@@ -1,5 +1,8 @@
 schema_version: "1.1"
 name: review-dependencies-no-false-positives
+description: >
+  Precision twin of review-dependencies-finds-violations, on a manifest that is
+  already healthy. Needs --allow-tools Bash to run (the agent runs the audit tool).
 context:
   scaffold_script: fixture.sh
   add_dirs: [fixtures]

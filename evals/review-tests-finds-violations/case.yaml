@@ -1,5 +1,9 @@
 schema_version: "1.1"
 name: review-tests-finds-violations
+description: >
+  review-tests is the only review agent that executes the suite: its report must
+  open with SUITE EXECUTED / E2E EXECUTED lines and its findings are grounded in
+  that run. Needs --allow-tools Bash to run.
 context:
   scaffold_script: fixture.sh
-  add_dirs: [fixtures]
+  add_dirs: [fixtures, .]

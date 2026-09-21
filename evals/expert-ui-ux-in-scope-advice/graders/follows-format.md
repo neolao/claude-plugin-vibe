@@ -1,8 +1,8 @@
 ---
 type: regex
 target: last_message
-pattern: "REQUIREMENTS:.*RISKS:.*TEST SCENARIOS:"
-flags: is
+pattern: "REQUIREMENTS:[\\s\\S]*RISKS:[\\s\\S]*TEST SCENARIOS:"
+flags: i
 weight: 1
 ---
 

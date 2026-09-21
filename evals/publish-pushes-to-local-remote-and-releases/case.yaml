@@ -1,5 +1,9 @@
 schema_version: "1.1"
 name: publish-pushes-to-local-remote-and-releases
+description: >
+  vibe:publish pushes commits and tags to a bare repo created inside the run
+  workspace, never a network host, then cuts a release. Needs
+  --allow-tools Bash,Write,Edit to run.
 context:
   scaffold_script: fixture.sh
   add_dirs: [.]

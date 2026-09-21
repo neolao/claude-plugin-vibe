@@ -1,5 +1,4 @@
-"""Composition root: the only place in the codebase that constructs a
-concrete adapter and wires it into core."""
+"""Application entry point."""
 
 from adapters.postgres_gateway import PostgresGateway
 from core.order_service import OrderService

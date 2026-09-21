@@ -13,9 +13,7 @@ async def notify_partner(partner_client, order_id, payload):
 
 async def complete_order(partner_client, order_id, payload):
     """Notifying the partner is intentionally fire-and-forget: the order is
-    already committed and the partner webhook is not on the critical path.
-    `notify_partner` catches and logs its own failures, so nothing is
-    silently lost."""
+    already committed and the partner webhook is not on the critical path."""
     task = asyncio.create_task(notify_partner(partner_client, order_id, payload))
     task.add_done_callback(lambda t: t.exception())
     return {"order_id": order_id, "status": "completed"}

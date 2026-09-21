@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: review-flips-stale-activation-row
+description: >
+  /vibe:review Step 1 re-checks every row of CLAUDE.md's activation table
+  against the project as it is now. A row whose reason states a project fact
+  that stopped being true must flip and have its reason rewritten; a row whose
+  reason records a deliberate user choice must never be overridden. The table
+  here activates two agents only, so the case stays cheap. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]

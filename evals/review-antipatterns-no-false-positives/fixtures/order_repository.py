@@ -20,18 +20,16 @@ class Money:
         return Money(self.cents + other.cents, self.currency)
 
 
-MAX_RETRIES = 3  # read-only tuning constant, never reassigned anywhere
+MAX_RETRIES = 3
 
 
 class OrderRepository:
-    """Persists and retrieves Order aggregates — its one job."""
+    """Persists and retrieves Order aggregates."""
 
     def __init__(self, connection):
         self._connection = connection
 
     def save(self, order):
-        # reads the order's own fields to build the row it persists — this
-        # is exactly what a repository is for, not feature envy
         row = {
             "id": order.id,
             "total_cents": order.total.cents,
@@ -43,5 +41,4 @@ class OrderRepository:
         return self._connection.fetch(order_id)
 
     def parse_placed_at(self, value):
-        # uses the standard library instead of hand-rolling a parser
         return datetime.fromisoformat(value)

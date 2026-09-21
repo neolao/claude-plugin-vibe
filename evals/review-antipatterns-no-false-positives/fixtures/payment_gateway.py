@@ -2,8 +2,7 @@ from logging_setup import log_charge
 
 
 class PaymentGateway:
-    """Charges a card through the processor. Retries and notifications are
-    explicit keyword arguments — a call site reads its own intent."""
+    """Charges a card through the payment processor."""
 
     def charge(self, order, *, retry: bool, notify: bool):
         log_charge(order)
@@ -20,5 +19,4 @@ class PaymentGateway:
 
 
 def process_order(gateway, order):
-    # keyword arguments make each flag's meaning obvious at the call site
     gateway.charge(order, retry=True, notify=False)
