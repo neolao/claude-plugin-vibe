@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: next-task-picks-lowest-eligible-in-monorepo
+description: >
+  Forced-pick (NNN argument) invocation of vibe:next-task in a one-item
+  mono-repo backlog with no workspace hub. Scoped down to Step 1 (parsing)
+  and Step 7 (defect classification, hand-off, publish) — Steps 2-5 (scope
+  detection, candidate scoring) are bypassed by design, since actually
+  exercising them would require running a full vibe:feature/vibe:fix cycle
+  regardless. This is still the most expensive case in this eval batch: it
+  runs a real (small) vibe:fix cycle end to end against a trivial one-line
+  off-by-one bug. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh

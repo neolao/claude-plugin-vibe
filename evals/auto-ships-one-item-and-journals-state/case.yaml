@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: auto-ships-one-item-and-journals-state
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]

@@ -1,0 +1,16 @@
+[project]
+name = "acme-widgets"
+version = "0.1.0"
+description = "Small internal helpers for pricing calculations and report formatting."
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.2", "ruff>=0.6"]
+
+[tool.poe.tasks]
+test = "pytest"
+lint = "ruff check src tests"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

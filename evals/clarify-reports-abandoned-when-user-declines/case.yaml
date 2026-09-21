@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: clarify-reports-abandoned-when-user-declines
+description: >
+  clarify's Step 4 says a user who stops early gets an honest report of
+  what was settled (nothing, here) rather than a fabricated plan. This
+  case checks that declining Round 1 outright yields
+  CLARIFY-RESULT: abandoned with no invented Synthesis/Decisions sections.
+  Needs --allow-tools AskUserQuestion to run.

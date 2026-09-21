@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: clarify-settles-open-decisions-in-rounds
+description: >
+  clarify interviews a deliberately underspecified subject to a settled
+  end state within 1-2 rounds, finding the one answerable fact itself
+  (via a dispatched sub-agent reading .vibe/glossary.md) instead of asking
+  the user, and folds the user's decisive answers into a real synthesis.
+  Needs --allow-tools AskUserQuestion to run.
+context:
+  scaffold_script: fixture.sh

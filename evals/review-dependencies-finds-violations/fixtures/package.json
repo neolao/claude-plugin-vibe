@@ -1,0 +1,15 @@
+{
+  "name": "sample-service",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "request": "^2.88.2",
+    "lodash": "4.17.4",
+    "left-pad": "*",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "express": "^4.18.2",
+    "jest": "^29.7.0"
+  }
+}

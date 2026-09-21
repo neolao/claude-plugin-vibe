@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: review-simplicity-no-false-positives
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

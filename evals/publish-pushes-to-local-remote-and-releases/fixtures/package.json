@@ -1,0 +1,9 @@
+{
+  "name": "tiny-pub-lib",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node greet.test.js",
+    "lint": "node -e \"process.exit(0)\""
+  }
+}

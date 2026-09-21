@@ -1,0 +1,8 @@
+{
+  "name": "reportkit",
+  "version": "1.0.0",
+  "description": "Generate and export tabular reports.",
+  "scripts": {
+    "start": "node src/index.js"
+  }
+}
