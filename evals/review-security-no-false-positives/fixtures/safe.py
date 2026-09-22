@@ -42,7 +42,10 @@ def charge_for_order(customer, order_file):
     """Charges `customer`'s card for an order file uploaded by the partner's till."""
     with open(order_file) as handle:
         order = json.load(handle)
-    total_cents = sum(
-        CATALOGUE[line["sku"]] * line["quantity"] for line in order["lines"]
-    )
+    total_cents = 0
+    for line in order["lines"]:
+        quantity = line["quantity"]
+        if not isinstance(quantity, int) or not (0 < quantity <= MAX_LINE_QUANTITY):
+            raise ValueError(f"quantity out of range: {quantity!r}")
+        total_cents += CATALOGUE[line["sku"]] * quantity
     return payment_gateway.charge(customer.card_token, total_cents)
