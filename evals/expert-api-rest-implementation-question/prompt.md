@@ -23,4 +23,4 @@ Invoke the `vibe:expert-api-rest` sub-agent (Agent tool, `subagent_type: "vibe:e
 Give me one concrete justified recommendation plus the rejected alternative, in a few sentences.
 ```
 
-Report the sub-agent's reply back verbatim.
+Report the sub-agent's reply back verbatim, and add no commentary of your own: the reply itself is what is being evaluated.
