@@ -1,5 +1,5 @@
 class OrderRepository:
-    """Collection-like abstraction over orders, returning domain objects."""
+    """Stores orders by id."""
 
     def __init__(self, orders_by_id):
         self._orders_by_id = orders_by_id

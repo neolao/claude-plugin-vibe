@@ -1,5 +1,14 @@
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class LineItem:
+    sku: str
+    qty: int
+
+
 class Order:
-    """An aggregate root: enforces its own invariants and encapsulates its items."""
+    """An order placed by a customer."""
 
     MAX_LINE_ITEMS = 50
 
@@ -12,7 +21,7 @@ class Order:
     def add_item(self, sku, qty):
         if len(self._items) >= self.MAX_LINE_ITEMS:
             raise ValueError("too many line items")
-        self._items.append({"sku": sku, "qty": qty})
+        self._items.append(LineItem(sku, qty))
 
     def close(self):
         if not self._items:
@@ -26,3 +35,9 @@ class Order:
     @property
     def status(self):
         return self._status
+
+    def __eq__(self, other):
+        return isinstance(other, Order) and other.order_id == self.order_id
+
+    def __hash__(self):
+        return hash(self.order_id)

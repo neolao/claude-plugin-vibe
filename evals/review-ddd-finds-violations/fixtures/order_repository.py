@@ -10,7 +10,7 @@ def _fake_db():
 
 
 class OrderRepository:
-    """Reads and writes orders directly against the orders table."""
+    """Loads and stores orders."""
 
     def __init__(self):
         self._db = _fake_db()

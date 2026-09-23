@@ -3,10 +3,12 @@ type: llm
 focus: last_message
 criteria: |
   `Money` in fixtures/money.py is a `@dataclass(frozen=True)` compared by
-  value, and `add` returns a new instance after checking currency.
+  value; `add` and `times` return new instances, and `add`/`exceeds` check
+  the currency. `OrderApprovalService` computes the order total and the
+  threshold comparison through `Money`, not on raw numbers.
 
   PASS if no `high` or `medium` severity Value object finding claims it is
-  mutable or compared by identity.
+  mutable, compared by identity, or bypassed by raw-number arithmetic.
   FAIL if it is flagged at high or medium severity.
 weight: 1
 ---
