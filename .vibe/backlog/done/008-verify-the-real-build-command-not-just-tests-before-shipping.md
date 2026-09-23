@@ -1,5 +1,5 @@
 ---
-status: todo
+status: done
 ---
 # Verify The Real Build Command, Not Just Tests, Before Shipping
 
