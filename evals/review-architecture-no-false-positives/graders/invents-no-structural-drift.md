@@ -2,8 +2,9 @@
 type: llm
 focus: last_message
 criteria: |
-  Only `adapters` imports from `core`, matching the module map's declared
-  direction, so there is no cycle; every file appears in a
+  `adapters` and the composition root `main.py` import from `core`, and
+  `main.py` also imports `adapters` — exactly the directions the module map
+  declares, and `core` imports neither, so there is no cycle; every file appears in a
   `.vibe/modules/*.md` `Files:` list; `calculate_total` is called from one
   place only; `adapters/config.py` is imported by the gateway.
 
