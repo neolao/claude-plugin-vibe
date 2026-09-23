@@ -97,7 +97,7 @@ flowchart LR
     pick -- "none eligible / limit reached" --> stop
 ```
 
-Because the state file is committed at every item boundary, any interruption — crash, closed session, usage limit reached mid-item — is recovered by simply invoking `/vibe:auto` again. The skill never schedules itself: unattended restarts are delegated to the native `/loop` command (`/loop 45m /vibe:auto`). With `--push`, the run ends by invoking the internal `publish` skill (push, release if the changelog warrants it, tag push, GitHub release when possible) — the same skill `/vibe:next-task` uses.
+Because the state file is committed at every item boundary, any interruption — crash, closed session, usage limit reached mid-item — is recovered by simply invoking `/vibe:auto` again. The skill never schedules itself: unattended restarts are delegated to the native `/loop` command (`/loop 45m /vibe:auto`). With `--push`, the run ends by invoking the internal `publish` skill (push, release if the changelog warrants it, tag push, poll the pushed commit's CI/deploy run when observable and surface a failure as a blocker, GitHub release when possible) — the same skill `/vibe:next-task` uses.
 
 Right after launching each item's sub-agent, the skill calls `ScheduleWakeup` (delay: 1200–1800s, rescheduled further out if it fires early) instead of waiting passively — the sub-agent's completion notification would otherwise sit unread in context until the user happens to send the next message. When the verdict is picked up on one of these scheduled wakeups (as opposed to a direct user turn), it is surfaced with `PushNotification` so a long unattended run doesn't silently update context with no one there to read it.
 
@@ -105,7 +105,7 @@ Right after launching each item's sub-agent, the skill calls `ScheduleWakeup` (d
 
 ## Self-correction and escalation
 
-Every corrective loop in `feature`/`fix` (failing test, lint, `run`) is bounded to three attempts:
+Every corrective loop in `feature`/`fix` (failing test, lint, the project's build command, `run`) is bounded to three attempts:
 
 ```mermaid
 flowchart LR
@@ -128,7 +128,7 @@ Escalation entries are read back at the start of every `feature`/`fix` run, so a
 
 ## Release
 
-`/vibe:release [major|minor|patch|X.Y.Z]` runs `/vibe:changelog` (which only fills `[Unreleased]` from git history), cuts the version section itself, refreshes docs, bumps `version` in `.claude-plugin/plugin.json`, then commits and tags.
+`/vibe:release [major|minor|patch|X.Y.Z]` runs its pre-release checks (test, lint, and the project's build command if it has one — a release is never cut on top of a build that doesn't compile), runs `/vibe:changelog` (which only fills `[Unreleased]` from git history), cuts the version section itself, refreshes docs, bumps `version` in `.claude-plugin/plugin.json`, then commits and tags.
 
 ## Multi-repo workspace: pick, implement, publish
 
@@ -150,14 +150,17 @@ flowchart TD
     I --> J{"CHANGELOG.md<br/>[Unreleased] non-empty?"}
     J -- yes --> K["/vibe:release patch|minor|major<br/>(bump inferred, never left blank)<br/>then push commit + tags"]
     J -- no --> L["Skip release"]
-    K --> M["gh release create (best-effort,<br/>github.com remotes only)"]
-    L --> N["Report: implemented, pushed,<br/>released, downstream unblocked"]
-    M --> N
+    K --> CI["Poll the pushed commit's CI/deploy run<br/>(best-effort, github.com only, 10min bound)"]
+    L --> CI
+    CI --> M["gh release create (best-effort,<br/>github.com remotes only)"]
+    M --> N["Report: implemented, pushed, released,<br/>CI result, downstream unblocked<br/>(a CI failure leads the report)"]
 ```
 
 **Auto mode drives the loop itself instead of delegating to `/vibe:auto`**: Step 5 already picked the exact repo, so handing off to `/vibe:auto`'s own selection would risk it picking a different item there. Each iteration re-collects the repo's eligible items, ranks them the same way `/vibe:auto` does (unblock-count → fix-over-feature → lowest number), and invokes `/vibe:feature NNN --auto` or `/vibe:fix NNN --auto` directly; the loop stops when `N` is reached, the backlog is drained, or an item comes back `aborted`.
 
 If Step 8 (release) is blocked by a *pre-existing* test failure rather than a dirty tree or lint, `next-task` attempts one self-heal: it looks for an eligible backlog item that names the exact failing test file (the trace `/vibe:feature`/`/vibe:fix` leave when they defer an out-of-scope failure instead of silently fixing it). Exactly one match gets run via `/vibe:fix|feature NNN --auto` and the release is retried once; zero or multiple matches, or a retry that still fails, is reported as a follow-up blocker instead of retried further.
+
+A push succeeding is not the finish line: the CI node above checks the actual GitHub Actions run(s) the push triggered, when the repo has one to observe (`gh` authenticated, a `github.com` remote, a workflow file) — otherwise it is skipped silently, same posture as the `gh release create` step. A run that concludes failed or cancelled becomes a first-class blocker (workflow name, run URL, extracted reason); both `/vibe:auto --push` and `/vibe:next-task` lead their whole report with it and drop the usual "`/loop` continues unattended" suggestion, so an unattended run doesn't ship more items on top of a broken deploy before a human looks.
 
 `/vibe:workspace-init` (`skills/workspace-init/SKILL.md`) sets up what `next-task` relies on for workspace scope: it writes/refreshes the hub repo's `repos.md` registry (never guessing a new sibling's status/role — asked when a `.vibe/backlog/` isn't there to infer `active` from) and the workspace-root `CLAUDE.md`, then commits inside the hub repo only — it never pushes, unlike `next-task`. The very first bootstrap (no hub repo found yet) also triggers `/vibe:clarify` to interview why these repos are being grouped together — a refresh of an already-existing hub never re-triggers it — and its synthesis, if any, becomes a short "why this workspace exists" paragraph in the hub repo's `CLAUDE.md`.
 

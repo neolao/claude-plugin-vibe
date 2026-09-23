@@ -9,6 +9,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 <!-- vibe:begin:features -->
 - TDD first: tests are written before the code, in the human's stead, and checked against tests that cannot fail (tautological tests)
 - Every feature or fix is exercised for real after implementation — nominal path plus an edge case — instead of trusting green tests
+- The project's real build is checked again right before shipping and right before cutting a release, not just once at the start, so a build that stops compiling never slips through
 - Work is always committed before a turn ends, even on interruption
 - A backlog of numbered items, committed as they are added, singly or in bulk; a request bundling several capabilities is split into separate items; any item is implemented by number
 - A round-by-round interview settles a plan, idea, or decision that is too thin to act on — on demand, or automatically when a backlog item, a new project, or a new workspace lacks substance
@@ -21,6 +22,7 @@ A Claude Code plugin for **vibe coding**: the human stays Product Owner only —
 - A per-project language for docs, backlog items, and comments, asked once
 - Changelog maintenance from git history (Keep a Changelog), README and developer docs kept current, and a one-command versioned release
 - Multi-repo workspaces: one command sets up a hub repo tracking every sibling, another picks the next eligible task across them, implements it, then pushes and releases — the only place in the workflow that publishes
+- Publishing checks the actual deployment result, not just that the push succeeded, and flags a broken deploy clearly instead of quietly moving on to the next piece of work
 - Generated files and reports use short, plain sentences
 - A public website with animated terminal demos, served straight from the repository
 <!-- vibe:end:features -->

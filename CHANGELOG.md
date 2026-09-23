@@ -7,10 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-09-23
+
+### Changed
+
+- Review and expert agents now default to a lower-cost model, with `review-security` kept on a stronger model for more reliable results (fewer false positives on real vulnerability checks).
+
 ### Fixed
 
 - Features, fixes, and releases no longer ship silently on top of a broken build: the project's real build command is checked again right before shipping and right before cutting a release, not just once at the very start of the work.
 - Publishing now checks whether the deploy pipeline triggered by the push actually succeeds, and surfaces a failure clearly instead of silently moving on to the next piece of work.
+- `/vibe:review`'s dependency check (`review-dependencies`) was never actually scanning dependency manifests like `package.json` — an overly broad exclusion rule for config files had accidentally excluded them too.
 
 ## [2.0.0] - 2026-09-06
 
@@ -263,7 +270,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/neolao/claude-plugin-vibe/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.15.0...v2.0.0
 [1.15.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.14.1...v1.15.0
 [1.14.1]: https://github.com/neolao/claude-plugin-vibe/compare/v1.14.0...v1.14.1
