@@ -16,4 +16,4 @@ We're adding a new pricing page. It shows a comparison table with three tiers si
 Reply with three bulleted lists, ≤5 entries each, task-specific only (no generic checklists): REQUIREMENTS: (non-negotiable), RISKS: (domain pitfalls here), TEST SCENARIOS: (user action → expected result). Add a fourth list, OPEN QUESTIONS: (≤3), only when a real product decision in your domain is genuinely undetermined by the brief — not a technical detail you can decide yourself; phrase each for a non-technical Product Owner.
 ```
 
-Once the sub-agent returns, report its findings back verbatim.
+Report the sub-agent's reply back verbatim, and add no commentary of your own: the reply itself is what is being evaluated.
