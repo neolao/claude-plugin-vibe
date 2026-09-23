@@ -1,9 +1,19 @@
+import contextlib
+import os
+
+
 def export_orders(orders, path):
-    """Called from the admin export endpoint; writes a CSV to disk. The
-    `with` block guarantees the file is closed even if a write raises."""
-    with open(path, "w") as f:
-        for order in orders:
-            f.write(f"{order['id']},{order['total']}\n")
+    """Called from the admin export endpoint; writes a CSV to disk."""
+    tmp_path = f"{path}.tmp"
+    try:
+        with open(tmp_path, "w") as f:
+            for order in orders:
+                f.write(f"{order['id']},{order['total']}\n")
+        os.replace(tmp_path, path)
+    except Exception:
+        with contextlib.suppress(OSError):
+            os.remove(tmp_path)
+        raise
 
 
 def load_export_template(path):
