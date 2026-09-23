@@ -4,7 +4,7 @@ import json
 def has_conflicting_reservation(new_reservation, reservations_by_slot):
     """Called from the POST /reservations request handler for every new
     booking. `reservations_by_slot` is a dict keyed by (warehouse, slot),
-    maintained incrementally by the caller, so this is an O(1) lookup."""
+    maintained incrementally by the caller."""
     key = (new_reservation["warehouse"], new_reservation["slot"])
     return key in reservations_by_slot
 
