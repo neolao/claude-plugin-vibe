@@ -1,7 +1,9 @@
 """Public HTTP surface of the media-portal service."""
 
+import hmac
 import os
 import re
+import secrets
 import urllib.request
 from functools import wraps
 from urllib.parse import urlparse
@@ -14,12 +16,22 @@ app = Flask(__name__)
 
 UPLOAD_DIR = os.path.realpath("/var/data/uploads")
 ALLOWED_AVATAR_HOSTS = {"cdn.example.com"}
+ADMIN_TOKEN = os.environ["ADMIN_TOKEN"]
+
+
+class _RefuseRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+_avatar_opener = urllib.request.build_opener(_RefuseRedirect)
 
 
 def require_admin(view):
     @wraps(view)
     def wrapped(*args, **kwargs):
-        if request.headers.get("X-Admin-Token") != os.environ.get("ADMIN_TOKEN"):
+        supplied = request.headers.get("X-Admin-Token", "")
+        if not hmac.compare_digest(supplied, ADMIN_TOKEN):
             abort(403)
         return view(*args, **kwargs)
 
@@ -61,15 +73,15 @@ def delete_user(user_id):
 @app.route("/fetch-avatar")
 def fetch_avatar():
     url = request.args.get("url", "")
-    host = urlparse(url).hostname
-    if host not in ALLOWED_AVATAR_HOSTS:
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or parsed.hostname not in ALLOWED_AVATAR_HOSTS:
         abort(400)
-    return urllib.request.urlopen(url).read()
+    return _avatar_opener.open(url, timeout=5).read()
 
 
 @app.route("/report")
 def report():
-    rows = min(int(request.args.get("rows", 100)), 500)
+    rows = max(1, min(request.args.get("rows", 100, type=int), 500))
     return generate_report(rows=rows)
 
 
@@ -77,7 +89,7 @@ def report():
 def login():
     resp = make_response("logged in")
     resp.set_cookie(
-        "session_id", "abc123", httponly=True, secure=True, samesite="Strict"
+        "session_id", secrets.token_urlsafe(32), httponly=True, secure=True, samesite="Strict"
     )
     return resp
 

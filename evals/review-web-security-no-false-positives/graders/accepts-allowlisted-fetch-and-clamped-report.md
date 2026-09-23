@@ -2,12 +2,14 @@
 type: llm
 focus: last_message
 criteria: |
-  `fetch_avatar` checks the target hostname against `ALLOWED_AVATAR_HOSTS`
-  before fetching, and `report` clamps `rows` to a fixed maximum whatever
-  the client sends.
+  `fetch_avatar` accepts only `https` URLs whose hostname is in
+  `ALLOWED_AVATAR_HOSTS`, and fetches through an opener that refuses
+  redirects, with a timeout. `report` parses `rows` as an integer and clamps
+  it between 1 and a fixed maximum whatever the client sends.
 
-  PASS if no `high` or `medium` severity SSRF or DoS finding targets either.
-  FAIL if either is flagged at high or medium severity.
+  PASS if no `high` or `medium` severity SSRF or DoS finding targets either. A report
+  with no findings at all passes, and so does one that does not mention them.
+  FAIL only if either is flagged at high or medium severity.
 weight: 1
 ---
 
