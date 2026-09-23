@@ -60,4 +60,4 @@ Then, **workspace scope only**, re-check downstream: for every other active repo
 
 ## Step 8 — Report
 
-Return to the starting directory (matters for chained `/loop` firings). Short, plain sentences: what was implemented (every item and verdict in auto mode); `vibe:publish`'s push, release, and forge results; downstream items newly unblocked (workspace scope); any blocker needing the user before the next run.
+Return to the starting directory (matters for chained `/loop` firings). Short, plain sentences: what was implemented (every item and verdict in auto mode); `vibe:publish`'s push, release, CI, and forge results; downstream items newly unblocked (workspace scope); any blocker needing the user before the next run. If `vibe:publish` reports a CI failure, lead the whole report with it, before anything else.

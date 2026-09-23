@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Features, fixes, and releases no longer ship silently on top of a broken build: the project's real build command is checked again right before shipping and right before cutting a release, not just once at the very start of the work.
+- Publishing now checks whether the deploy pipeline triggered by the push actually succeeds, and surfaces a failure clearly instead of silently moving on to the next piece of work.
 
 ## [2.0.0] - 2026-09-06
 

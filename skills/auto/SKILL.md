@@ -61,6 +61,8 @@ Set `status: idle` (journal kept), clear `current`, commit `chore: auto run — 
 
 Report, short and plain: a table `# | Type | Verdict | Commit`; each blocked item with its one-line reason; why the run stopped; the publish result if any; if `.vibe/last-review.md` exists and 5 or more `feat:`/`fix:` commits landed since its hash, "💡 N changes since the last review — consider running `/vibe:review`."; if eligible items remain, that `/loop 45m /vibe:auto` continues unattended.
 
+If the publish result includes a CI failure, lead the whole report with it (before the item table) and drop the `/loop` continuation suggestion — a human needs to look before another run ships more items on top of a broken deploy.
+
 ## Unattended operation
 
 This skill resumes but never restarts itself: `/loop 45m /vibe:auto` supplies the restarts. A usage limit mid-item is just another interruption; a `/loop` firing that still hits the limit fails harmlessly and the next one resumes — prefer a long interval. To space items apart on purpose (human review between items, cost pacing, CI capacity), pass `1` and let `/loop`'s interval set the cadence: `/loop 30m /vibe:auto 1` — one item per firing, no internal waiting.

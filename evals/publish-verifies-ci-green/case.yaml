@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: publish-verifies-ci-green
+description: >
+  vibe:publish's new Step 3 must find the GitHub Actions workflow run for
+  the current commit, poll it to a conclusion, and report it as green with
+  no false blocker when it actually succeeded — the counterpart to
+  publish-surfaces-ci-failure. Step 1/2 are pre-satisfied (nothing to push,
+  empty changelog) so the run stays cheap and isolates Step 3. The sandbox
+  has no real `gh` or network GitHub access, so `gh` is a local stand-in
+  documented in the fixture's own CLAUDE.md (`./bin/gh`) — mocking
+  fidelity is unverified by an actual `claude plugin eval` run; validate
+  with --runs 1 first. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]

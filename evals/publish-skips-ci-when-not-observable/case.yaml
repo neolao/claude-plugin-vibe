@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: publish-skips-ci-when-not-observable
+description: >
+  vibe:publish's new Step 3 must skip silently, with no blocker and no
+  hang, when the repo has no GitHub Actions workflow file — same posture
+  as the existing best-effort forge-release step. Step 1/2 are
+  pre-satisfied (nothing to push, empty changelog) so the run stays cheap
+  and isolates Step 3. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]

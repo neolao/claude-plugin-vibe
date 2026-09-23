@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Stand-in for the real `gh` CLI inside this eval's sandbox — no real GitHub
+# account or network call is involved. Permissive: matches on the
+# subcommand only, ignores extra flags, so it answers any reasonable way an
+# agent might invoke it.
+args="$*"
+case "$args" in
+  "auth status"*)
+    echo "✓ Logged in to github.com account eval-user (keyring)"
+    exit 0
+    ;;
+  "run view"*)
+    echo '{"databaseId": 555111000, "status": "completed", "conclusion": "success", "workflowName": "Deploy", "name": "Deploy", "url": "https://github.com/example/fixture-app/actions/runs/555111000", "headSha": "__SHA__"}'
+    exit 0
+    ;;
+  "run list"*)
+    echo '[{"databaseId": 555111000, "status": "completed", "conclusion": "success", "workflowName": "Deploy", "name": "Deploy", "url": "https://github.com/example/fixture-app/actions/runs/555111000", "headSha": "__SHA__"}]'
+    exit 0
+    ;;
+  "api"*"runs"*)
+    echo '{"total_count": 1, "workflow_runs": [{"id": 555111000, "status": "completed", "conclusion": "success", "name": "Deploy", "html_url": "https://github.com/example/fixture-app/actions/runs/555111000", "head_sha": "__SHA__"}]}'
+    exit 0
+    ;;
+  "--version"*)
+    echo "gh version 2.60.0 (mock)"
+    exit 0
+    ;;
+  *)
+    exit 0
+    ;;
+esac
