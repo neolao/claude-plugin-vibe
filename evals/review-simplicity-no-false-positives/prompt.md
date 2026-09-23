@@ -1,6 +1,6 @@
 ---
 name: review-simplicity-no-false-positives
-description: review-simplicity must not flag the guard-clause boolean, the stateful merge loop, the varying notification channel, or the small well-bounded pipeline functions
+description: review-simplicity must not flag the guard clauses, the get-or-create helper, the stateful merge loop, the varying notification channel, or the small well-bounded pipeline functions
 tags: [review-simplicity, precision]
 runs: 3
 max_turns: 10

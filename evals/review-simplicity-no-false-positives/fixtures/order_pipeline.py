@@ -1,22 +1,21 @@
 def validate_order(order):
     if not order.get("items"):
-        return False
+        raise ValueError("order has no items")
     if order.get("total", 0) <= 0:
-        return False
-    return True
+        raise ValueError("order total must be positive")
 
 
-def calculate_shipping(order, region):
-    if region == "domestic":
-        return 5.0
+def calculate_shipping(subtotal, region):
     if region == "international":
         return 25.0
-    return 15.0
+    if subtotal >= 50:
+        return 0.0
+    return 5.0
 
 
 def summarize_order(order):
     subtotal = sum(item["price"] for item in order["items"])
-    shipping = calculate_shipping(order, order.get("region", "domestic"))
+    shipping = calculate_shipping(subtotal, order.get("region", "domestic"))
     tax = subtotal * 0.2
     total = subtotal + shipping + tax
     return {

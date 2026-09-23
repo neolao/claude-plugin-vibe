@@ -6,6 +6,11 @@ criteria: |
   fixtures/order_pipeline.py are each under fifteen lines, at most one level
   of nesting, and well under ten branches.
 
+  Judge only Complexity, Length, and Nesting findings here. A finding on
+  these functions in another category (Redundant logic, Non-idiomatic,
+  Indirection, Unused generality) is outside this grader and does not make
+  it fail.
+
   PASS if no `high` or `medium` severity Complexity, Length, or Nesting
   finding targets any of the three.
   FAIL if any of them is flagged as a complexity, length, or nesting hotspot

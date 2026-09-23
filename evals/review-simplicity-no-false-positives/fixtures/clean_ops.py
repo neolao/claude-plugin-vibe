@@ -1,14 +1,21 @@
-def is_active(order):
+ACTIVE_WINDOW_SECONDS = 30 * 24 * 3600
+
+
+def is_active(order, now):
     if order.get("archived"):
         return False
-    return order["status"] in ("new", "processing", "shipped")
+    last_seen = order.get("last_seen")
+    if last_seen is None:
+        return order["status"] == "new"
+    return now - last_seen < ACTIVE_WINDOW_SECONDS
 
 
-def get_or_create_cart(carts, user_id):
+def get_or_create_cart(carts, user_id, new_cart_ids):
     cart = carts.get(user_id)
     if cart is None:
         cart = {"user_id": user_id, "items": []}
         carts[user_id] = cart
+        new_cart_ids.append(user_id)
     return cart
 
 
