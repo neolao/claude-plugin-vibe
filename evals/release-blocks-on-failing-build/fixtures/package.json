@@ -1,0 +1,10 @@
+{
+  "name": "fixture-app",
+  "version": "1.2.3",
+  "description": "Fixture app for the vibe:release eval",
+  "scripts": {
+    "test": "true",
+    "lint": "true",
+    "build": "node -e \"console.error('build failed: src/index.js references an export that no longer exists in src/lib.js'); process.exit(1)\""
+  }
+}

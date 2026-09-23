@@ -108,7 +108,7 @@ If `run` cannot launch the app for missing configuration (env var, config file, 
 
 ## Refactor and lint
 
-Remove dead code, unused imports, and debug artifacts; run the lint command and fix issues; re-run the tests and the runtime smoke — a regression here is fixed before the task completes. If more sub-tasks remain, return to Red for the next one.
+Remove dead code, unused imports, and debug artifacts; run the lint command and fix issues; re-run the tests, the runtime smoke, and the build command if the Baseline check found one — a regression here is fixed before the task completes. A failing build is treated exactly like a failing test: diagnose, fix the code, re-run — up to 3 attempts, then escalation-log entry and escalate. The task cannot reach Commit on a broken build. If more sub-tasks remain, return to Red for the next one.
 
 ## CHANGELOG
 

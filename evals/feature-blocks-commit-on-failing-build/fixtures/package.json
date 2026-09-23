@@ -1,0 +1,11 @@
+{
+  "name": "roster-lib",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tiny Node.js library tracking a sports team roster's scores.",
+  "scripts": {
+    "test": "node test/roster.test.js",
+    "lint": "node -e \"process.exit(0)\"",
+    "build": "node build/check.js"
+  }
+}

@@ -18,7 +18,7 @@ Then invoke the `vibe:tasks` skill with: `Run pre-release checks` → `Finalize 
 
 ## Step 2 — Pre-release checks
 
-Run the test command (all tests pass) and the lint command (exit 0); stop on an uncommitted change and warn the user.
+Run the test command, the lint command, and the build command if the project has one. Stop and warn the user, without cutting the release, on any failure among these three or on an uncommitted change — a release is never cut on top of a build that doesn't actually compile.
 
 ## Step 3 — Finalize CHANGELOG.md
 

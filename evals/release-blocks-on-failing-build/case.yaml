@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: release-blocks-on-failing-build
+description: >
+  vibe:release's Pre-release checks must run the project's build command,
+  not just test and lint, and refuse to cut a version when it fails — no
+  tag, no CHANGELOG cut, no version bump. Needs --allow-tools Bash,Write,Edit
+  to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]

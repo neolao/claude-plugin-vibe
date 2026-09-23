@@ -1,0 +1,6 @@
+{
+  "totalScore": {
+    "params": [{ "name": "players", "type": "Player[]" }],
+    "returns": "number"
+  }
+}

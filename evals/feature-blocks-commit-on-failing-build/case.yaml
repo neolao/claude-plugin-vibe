@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: feature-blocks-commit-on-failing-build
+description: >
+  vibe:feature's Refactor and lint step must re-run the project's build
+  command (detected at baseline) after implementing, not just tests and
+  lint, and must not reach Commit while it fails. The fixture's test suite
+  cannot see the gap the build step catches (a project-specific contract
+  file, undocumented in CLAUDE.md, that a straightforward implementation of
+  the brief will not think to update) — mirrors a type checker catching
+  what a transpile-only test runner misses. Needs --allow-tools Bash,Write,Edit
+  to run. Expensive (full --auto TDD loop): validate alone with --runs 1
+  first.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [.]
