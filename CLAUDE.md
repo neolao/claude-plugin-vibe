@@ -109,6 +109,7 @@ Chaque agent de `agents/*.md` porte un champ `model:` et un champ `version:` (se
 - Ne pas laisser de fichier skill/agent orphelin ou de contenu obsolète après un renommage/suppression
 - Garder le README comme index à jour des skills et de `docs/` (voir `/vibe:docs`)
 - Ne pas ajouter de stack applicative (Node, Python, etc.) à ce dépôt sans demande explicite — ce n'est pas ce type de projet
+  - Exception : `evals/` contient tout ce dont les évaluations ont besoin et peut donc héberger des scripts (Python, Bash…) — fixtures, scaffolds, outils comme `evals/tokens.py`. Ils ne constituent pas une stack applicative du plugin.
 
 ## Review agents
 
