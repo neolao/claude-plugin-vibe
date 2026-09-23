@@ -1,3 +1,6 @@
+import urllib.request
+
+
 class DiscountStrategy:
     def apply(self, subtotal):
         raise NotImplementedError
@@ -31,15 +34,32 @@ def price_order(order):
 
 
 class HttpClientConfig:
-    def __init__(self, timeout_seconds):
+    def __init__(self, base_url, timeout_seconds):
+        self.base_url = base_url
         self.timeout_seconds = timeout_seconds
 
 
 def build_internal_client():
     # internal network calls fail fast
-    return HttpClientConfig(timeout_seconds=2)
+    return HttpClientConfig("http://inventory.internal", timeout_seconds=2)
 
 
 def build_external_client():
     # third-party payment gateway is slower and less reliable
-    return HttpClientConfig(timeout_seconds=30)
+    return HttpClientConfig("https://gateway.example.com", timeout_seconds=30)
+
+
+def fetch(config, path):
+    url = config.base_url + path
+    with urllib.request.urlopen(url, timeout=config.timeout_seconds) as response:
+        return response.read()
+
+
+def sync_inventory():
+    """Called every minute by the inventory sync job."""
+    return fetch(build_internal_client(), "/stock")
+
+
+def fetch_payment_status(payment_id):
+    """Called by the checkout flow after the customer confirms payment."""
+    return fetch(build_external_client(), f"/payments/{payment_id}")

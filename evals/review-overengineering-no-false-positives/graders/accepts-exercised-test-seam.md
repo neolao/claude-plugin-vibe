@@ -2,9 +2,10 @@
 type: llm
 focus: last_message
 criteria: |
-  `Clock` in fixtures/clock.py has one production implementation, but
-  `FrozenClock` and `test_frozen_clock_returns_fixed_time` in the same file
-  exercise the seam.
+  `Clock` in fixtures/clock.py has one production implementation
+  (`SystemClock`), but `SessionExpiry` takes any `Clock`, and
+  `test_session_expires_after_ttl` injects `FrozenClock` into it to exercise
+  the seam.
 
   PASS if no `high` or `medium` severity Speculative abstraction finding
   targets it.

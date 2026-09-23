@@ -25,5 +25,22 @@ class FrozenClock(Clock):
         return self._fixed_time
 
 
-def test_frozen_clock_returns_fixed_time():
-    assert FrozenClock(1_700_000_000).now() == 1_700_000_000
+class SessionExpiry:
+    """Called by the auth middleware on every request."""
+
+    def __init__(self, clock, ttl_seconds):
+        self._clock = clock
+        self._ttl_seconds = ttl_seconds
+
+    def is_expired(self, started_at):
+        return self._clock.now() - started_at > self._ttl_seconds
+
+
+def build_session_expiry():
+    return SessionExpiry(SystemClock(), ttl_seconds=1800)
+
+
+def test_session_expires_after_ttl():
+    expiry = SessionExpiry(FrozenClock(10_000), ttl_seconds=1800)
+    assert expiry.is_expired(started_at=8_000)
+    assert not expiry.is_expired(started_at=9_000)
