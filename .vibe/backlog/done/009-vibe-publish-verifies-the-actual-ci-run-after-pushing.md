@@ -1,5 +1,5 @@
 ---
-status: todo
+status: done
 ---
 # vibe:publish Verifies The Actual CI Run After Pushing
 
