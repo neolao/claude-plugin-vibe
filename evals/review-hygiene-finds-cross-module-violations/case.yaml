@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: review-hygiene-finds-cross-module-violations
+description: >
+  Harder recall twin of review-hygiene-finds-violations: every defect sits in a
+  six-module package and only shows when files are read together (an export no
+  module imports, two formatters for one concept, one rate repeated in three
+  files), next to a computed-but-unused local, a ticket-less FIXME and a ticketed TODO.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
