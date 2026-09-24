@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: changelog-scopes-to-latest-semver-tag
+description: >
+  Harder twin of changelog-categorizes-and-dedupes. Two tags, v1.9.0 and
+  v1.10.0, where a lexical sort picks the older one; scoped conventional
+  commits (`feat(export):`, `fix(search):`, `chore(ci):`); a fix already
+  written up under [Unreleased] in different words; a chore whose message
+  says "fix"; and the Changed and Deprecated categories. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

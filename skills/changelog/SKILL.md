@@ -6,7 +6,7 @@ argument-hint: "(no arguments)"
 
 # /vibe:changelog — CHANGELOG.md Updater
 
-Bring `## [Unreleased]` in `CHANGELOG.md` up to date with the git history, following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This skill never creates a version section — `/vibe:release` does.
+Bring `## [Unreleased]` in `CHANGELOG.md` up to date with the git history ([Keep a Changelog](https://keepachangelog.com/en/1.1.0/)). Never create a version section.
 
 ## Step 1 — Read the current state
 
@@ -23,14 +23,14 @@ Bring `## [Unreleased]` in `CHANGELOG.md` up to date with the git history, follo
 | `fix:`, `bug`, `patch`, `correct`, `repair` | Fixed |
 | `security`, `vuln`, `cve`, `auth` | Security |
 
-- Write each entry for the end user (the user-facing impact, not the commit wording).
-- **Deduplicate against existing `[Unreleased]` entries**: `/vibe:feature` and `/vibe:fix` already wrote theirs at implementation time and reuse the text in their commit message — a commit an existing entry already covers is skipped.
-- Discard noise: merge commits, version bumps, `chore:` housekeeping unless significant.
+- Write each entry as its user-facing impact, not the commit wording.
+- **Skip a commit an existing `[Unreleased]` entry already covers** (`/vibe:feature` and `/vibe:fix` write theirs at implementation time).
+- Discard noise: merges, version bumps, `chore:` housekeeping unless significant.
 
 ## Step 3 — Write
 
-Add the new entries under `## [Unreleased]`, grouped by category, leaving every versioned section untouched. Create the file with the Keep a Changelog header if it does not exist.
+Add the new entries under `## [Unreleased]`, grouped by category; leave versioned sections untouched. No file yet: create it with the Keep a Changelog header.
 
 ## Step 4 — Report
 
-Short, plain sentences: commits processed, kept vs discarded, categories populated. Do not print the file unless asked.
+Short, plain sentences: commits processed, kept vs discarded, categories populated. Don't print the file unless asked.
