@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: review-performance-finds-cross-module-violations
+description: >
+  Harder recall twin of review-performance-finds-violations: every defect sits
+  in a six-module async service and only shows when a handler is read together
+  with the helper it calls (a per-row query two modules down, a subprocess
+  behind an async handler, a linear scan fed a bulk upload, a webhook-fed
+  dict), next to a startup-time file load that must stay unflagged.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
