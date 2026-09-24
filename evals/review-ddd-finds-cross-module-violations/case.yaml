@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: review-ddd-finds-cross-module-violations
+description: >
+  Harder recall twin of review-ddd-finds-violations: every defect sits in a
+  different module of a twelve-file shop package from the code it breaks (an
+  aggregate's list written from a promotion module, a shared value object
+  edited in place from a service, raw rows read by index in a nightly job,
+  one concept renamed in the dispatch module, a domain entity calling a
+  carrier over HTTP), next to a read of the aggregate's read-only view from
+  another module that must not be flagged.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
