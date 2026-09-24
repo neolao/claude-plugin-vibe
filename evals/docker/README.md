@@ -45,6 +45,9 @@ that. Results land in `evals/results/<timestamp>-<case>/` (gitignored).
 - `--security-opt seccomp=unconfined` is needed: the Bash sandbox uses
   bubblewrap, which needs user namespaces that Docker's default seccomp
   profile blocks.
+- `--security-opt systempaths=unconfined` is needed too: without it,
+  bubblewrap cannot mount `/proc` in its sandbox (`bwrap: Can't mount proc
+  on /newroot/proc`) and every Bash call fails.
 - The repo is mounted at `/work`, not copied: edits on the host apply to the
   next run without rebuilding.
 - The container runs Linux: a fixture that assumes macOS tools (BSD `sed`,

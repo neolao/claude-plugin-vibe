@@ -21,9 +21,12 @@ docker image inspect "$image" >/dev/null 2>&1 \
 out="evals/results/$(date +%Y%m%d-%H%M%S)-${case_glob//[^A-Za-z0-9_-]/_}"
 
 # seccomp=unconfined: bubblewrap needs user namespaces, which Docker's default
-# seccomp profile blocks. The container itself is the isolation boundary.
+# seccomp profile blocks. systempaths=unconfined: without it, bubblewrap cannot
+# mount /proc in its sandbox ("Can't mount proc on /newroot/proc"). The
+# container itself is the isolation boundary.
 docker run --rm \
   --security-opt seccomp=unconfined \
+  --security-opt systempaths=unconfined \
   -e CLAUDE_CODE_OAUTH_TOKEN -e ANTHROPIC_API_KEY \
   -v "$repo:/work" \
   "$image" \
