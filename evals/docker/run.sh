@@ -34,6 +34,7 @@ docker run --rm \
       --ablation none --keep-temp --trust-plugin --no-publish \
       --output-dir "$out" "$@"
     status=$?
-    python3 evals/tokens.py "$out" --cleanup
+    # No --cleanup: kept dirs die with the container (--rm).
+    python3 evals/tokens.py "$out"
     exit $status
   ' _ "$out" "$case_glob" "$@"

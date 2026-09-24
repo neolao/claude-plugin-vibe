@@ -36,7 +36,7 @@ evals/docker/run.sh review-tests-finds-violations --runs 1 --allow-tools Bash
 ```
 
 It prints the eval table, then the `Tokens in/out` line of `tokens.py` for the
-same run, and deletes the kept temp dirs. The kept dirs live in the container's
+same run. The kept temp dirs live in the container's
 `/tmp`, so `tokens.py` must run inside the same `docker run`: `run.sh` does
 that. Results land in `evals/results/<timestamp>-<case>/` (gitignored).
 
