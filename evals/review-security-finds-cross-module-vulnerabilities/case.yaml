@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: review-security-finds-cross-module-vulnerabilities
+description: >
+  Harder recall twin of review-security-finds-vulnerabilities: every defect
+  sits in a twelve-module archiving CLI and only shows when a caller is read
+  together with the helper it calls (a partner-chosen file name reaching a
+  shell, a containment check that never normalizes, a manifest unpickled
+  from a partner archive, a share token from `random`, a permission looked
+  up under a key the table does not hold), next to list-form commands and a
+  `secrets`-based API key that must stay unflagged.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
