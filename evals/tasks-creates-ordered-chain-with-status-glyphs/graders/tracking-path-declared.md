@@ -1,6 +1,6 @@
 ---
 type: llm
-focus: last_message
+focus: trace
 criteria: |
   The skill supports exactly two tracking paths and must be explicit about
   which one it took: `TaskCreate` when the dedicated task system exists in

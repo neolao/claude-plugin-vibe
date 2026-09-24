@@ -22,7 +22,7 @@ As working notes, never shown: the subject at the root, every decision needed to
 
 The **frontier** is every open decision whose prerequisites are settled — askable now without guessing an unheard answer; a question depending on another open one waits for a later round.
 
-**Fact-finding is never the user's job.** Anything answerable by looking (codebase, backlog, `.vibe/`, configs, manifests) is found instead — dispatch a sub-agent (Agent tool, `general-purpose`) without blocking the round on it; only the questions that depend on that fact wait.
+**Fact-finding is never the user's job.** Anything answerable by looking (codebase, backlog, `.vibe/`, configs, manifests) is found instead, always by a dispatched sub-agent (Agent tool, `general-purpose`), never by reading or searching yourself, even for a single file. Don't block the round on it; only the questions that depend on that fact wait.
 
 Ask the whole remaining frontier in one round, numbered, each with your recommended answer:
 
