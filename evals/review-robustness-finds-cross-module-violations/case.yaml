@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: review-robustness-finds-cross-module-violations
+description: >
+  Harder recall twin of review-robustness-finds-violations: every defect sits
+  in a nine-module inventory sync and only shows when a caller is read
+  together with the helper it calls (an ignored failure status, an unawaited
+  coroutine, a timeout that defaults to None, a lock released outside a
+  finally, a wrapper exception that drops its cause), next to a chained
+  exception and a finally-guarded lock that must stay unflagged.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
