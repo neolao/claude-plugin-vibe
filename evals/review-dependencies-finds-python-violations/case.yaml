@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: review-dependencies-finds-python-violations
+description: >
+  Harder twin of review-dependencies-finds-violations, on a Python service
+  declared in pyproject.toml with no lockfile and no pip-audit in the
+  sandbox. The pinned PyYAML must be reported as vulnerable from the agent's
+  own knowledge, since the audit cannot run; two packages are imported under
+  a name that differs from their distribution name (beautifulsoup4 as bs4,
+  python-dateutil as dateutil) and a dev extra is used only by tests, all of
+  which must stay unflagged. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
