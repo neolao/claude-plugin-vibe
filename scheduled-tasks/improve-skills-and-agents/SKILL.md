@@ -1,5 +1,5 @@
 ---
-name: amliore-vibe
+name: improve-skills-and-agents
 description: Improve the skills and agents of the vibe plugin
 ---
 
