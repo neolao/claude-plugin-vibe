@@ -6,25 +6,13 @@ argument-hint: "[optional: project description]"
 
 # /vibe:init — Vibe Coding Project Setup
 
-Initialize or fully regenerate this project's `CLAUDE.md` (and ensure `README.md`) for **vibe coding**: the user is Product Owner only and never tests manually, so all quality assurance is automated.
+Initialize or regenerate this project's `CLAUDE.md` (and ensure `README.md`) for **vibe coding**: the user is Product Owner only, so all quality assurance is automated.
 
 ## Step 1 — Reconnaissance
 
-Scan for manifests — a project may use several stacks:
+Scan for manifests — a project may use several stacks: `package.json` (jest/vitest/mocha; biome or eslint + prettier), `pyproject.toml`/`setup.py`/`requirements.txt` (pytest/unittest; ruff or black), `Cargo.toml` and `go.mod` (built-in test and format), `pom.xml`/`build.gradle` (junit; spotless/checkstyle), `composer.json` (phpunit; php-cs-fixer), `Gemfile` (rspec; rubocop), `*.csproj`/`*.sln` (xunit/nunit; `dotnet format`), `Makefile` (check targets).
 
-| Stack | Manifest | Test framework | Style tooling |
-|---|---|---|---|
-| Node.js / TS | `package.json` | jest/vitest/mocha/tap/ava | biome, or eslint + prettier |
-| Python | `pyproject.toml`/`setup.py`/`requirements.txt` | pytest/unittest | ruff, or black |
-| Rust | `Cargo.toml` | `cargo test` (built in) | `rustfmt` (built in) |
-| Go | `go.mod` | `go test` (built in) | `gofmt` (built in) |
-| Java / Kotlin | `pom.xml`/`build.gradle` | junit/testng | checkstyle/spotless |
-| PHP | `composer.json` | phpunit | php-cs-fixer/phpcs |
-| Ruby | `Gemfile` | rspec/minitest | rubocop |
-| .NET / C# | `*.csproj`/`*.sln` | xunit/nunit/mstest | `dotnet format` (built in) |
-| any | `Makefile` | check targets | check targets |
-
-From each manifest: name, description, scripts (test, lint, format, build, dev/run), dependencies. Also: the directory structure (to infer the architecture), the existing `CLAUDE.md` (sections marked `<!-- keep -->` are preserved), `.env.example`, CI config, and `$ARGUMENTS` as additional description.
+Read from each manifest its name, description, scripts (test, lint, format, build, run) and dependencies; also the directory structure, the existing `CLAUDE.md` (sections marked `<!-- keep -->` are preserved), `.env.example`, CI config, and `$ARGUMENTS`.
 
 **Empty project** (no manifest at all): use `AskUserQuestion` for the project idea (open text) and the stack (Node.js/TS, Python, Rust, Go, or the user's own). If the idea is a vague noun phrase or slogan with no concrete actor, action, or outcome ("an app to manage stuff"), invoke the `vibe:clarify` skill with it; `settled`/`partial` → use its `### Synthesis` as the description, `abandoned` → keep the answer as given. The chosen stack is scaffolded in Step 3.
 

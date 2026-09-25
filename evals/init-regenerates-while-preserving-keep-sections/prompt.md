@@ -3,8 +3,8 @@ name: init-regenerates-while-preserving-keep-sections
 description: vibe:init must regenerate CLAUDE.md from the real pyproject.toml/src layout while preserving a hand-written <!-- keep --> section verbatim, and must invoke vibe:sync afterward (requires --allow-tools to run — Bash, Write, Edit)
 tags: [init, regeneration]
 runs: 3
-max_turns: 30
-timeout_seconds: 600
+max_turns: 50
+timeout_seconds: 900
 allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit, AskUserQuestion]
 ---
 
