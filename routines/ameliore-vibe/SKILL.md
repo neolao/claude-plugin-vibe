@@ -12,7 +12,7 @@ Suis les étapes avec TaskCreate.
 ## Pérenniser ce que tu apprends sur l'exécution d'un cas
 Quand tu découvres un problème ou une amélioration dans l'exécution d'un cas d'eval, pérennise-le pour que les exécutions suivantes n'aient pas à le redécouvrir.
 Ça couvre ce qui concerne la façon de lancer ou de faire tourner un cas, pas le comportement de la cible : une commande ou un drapeau qui manque, une variable d'environnement à fournir, une limite du sandbox, une fixture qui ne s'installe pas, un piège de lecture de la trace, une étape à faire avant ou après le run.
-- Si c'est une connaissance, écris-la dans la section « Agent model evals » du `CLAUDE.md`, ou `evals/docker/README.md` pour ce qui touche à Docker, à l'endroit où la prochaine exécution la lira. Ne la note pas seulement dans history.md, et pas dans ce prompt de routine (`routines/amliore-vibe/SKILL.md`) : ne modifie jamais la routine elle-même, c'est à l'utilisateur de la faire évoluer.
+- Si c'est une connaissance, écris-la dans la section « Agent model evals » du `CLAUDE.md`, ou `evals/docker/README.md` pour ce qui touche à Docker, à l'endroit où la prochaine exécution la lira. Ne la note pas seulement dans history.md, et pas dans ce prompt de routine (`routines/ameliore-vibe/SKILL.md`) : ne modifie jamais la routine elle-même, c'est à l'utilisateur de la faire évoluer.
 - Si c'est un défaut d'un outil d'eval du dépôt (`evals/tokens.py`, `evals/docker/run.sh`, un script de scaffold), corrige l'outil.
 Cette mise à jour est permise même si elle sort du périmètre de la cible. Commite-la à part, avant le commit de la cible, avec un message qui dit ce qui a été appris et comment tu l'as constaté.
 
