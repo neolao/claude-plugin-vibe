@@ -27,6 +27,17 @@ export CLAUDE_CODE_OAUTH_TOKEN=<token>   # or ANTHROPIC_API_KEY
 evals/docker/run.sh <case-glob> [extra eval flags]
 ```
 
+From a Claude Code session (desktop app, scheduled task), the variable does
+not reach the environment of Bash commands: the app does not pass it on, only
+`~/.zshrc` provides it. Go through an interactive shell instead:
+
+```bash
+zsh -ic 'cd ~/workspace/claude-plugin-vibe && evals/docker/run.sh <case-glob> --allow-tools <case tools>'
+```
+
+Without `zsh -ic`, `run.sh` stops on its "set CLAUDE_CODE_OAUTH_TOKEN…"
+message.
+
 `run.sh` adds the canonical flags (`--scaffold --judge-model sonnet
 --ablation none --keep-temp --trust-plugin --no-publish`). Pass the rest:
 `--runs 1` for a validation run, and the case's `--allow-tools`.
