@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: auto-blocks-stuck-item-and-honors-spent-limit
+description: >
+  Step 0's last row at its cap: the interrupted item is at attempt 2 with
+  uncommitted partial work, so the resume must commit it as wip, mark the item
+  blocked instead of re-running it, and count it against a limit that is then
+  spent — so no item starts although eligible ones remain. Needs
+  --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
