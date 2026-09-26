@@ -28,6 +28,8 @@ On resume, the limit is the original minus the items already journaled. Any othe
 
 ## Step 1 — Select the next item
 
+Check the limit first, on every pass — including right after a verdict: if it is set and the run's journal section already holds that many items (those journaled before a resume included), select nothing and go to Step 5.
+
 Eligible: a top-level `.vibe/backlog/*.md` with `status: todo`, every `depends_on` number resolving to a `done` item, and not yet processed in this run. Rank eligible items by:
 1. Number of other `todo` items in this repo whose `depends_on` lists it — work others wait on comes first.
 2. Defects before features: an item whose title or description uses defect vocabulary (bug, crash, error, regression, "doesn't work", "broken") or that came from a `/vibe:review` finding is a fix; anything else a feature.
@@ -49,7 +51,7 @@ Read `AUTO-RESULT:` — `done` (shipped and closed), `blocked` (the skill marked
 
 One commit per item: before starting NNN, record the previous verdict, set `current: NNN`, `attempt: 1`, append NNN's journal line, commit `chore: auto run — start NNN`. After the verdict, update the line and clear `current` without committing — that write ships with the next boundary or closing commit.
 
-Print one status line per item: `● NNN slug — feature|fix` when starting, `✓ NNN slug — shipped <hash>` or `⚠ NNN slug — blocked (<reason>)` when the verdict lands.
+Print one status line per item: `● NNN slug — feature|fix` when starting, `✓ NNN slug — shipped <hash>` or `⚠ NNN slug — blocked (<reason>)` when the verdict lands. With a limit set, end the verdict line with ` — K left`, K being the limit minus the items in the run's journal section; `0 left` means the next step is Step 5, never another item.
 
 ## Step 4 — Stop conditions
 
