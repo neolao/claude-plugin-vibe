@@ -60,6 +60,9 @@ that. Results land in `evals/results/<timestamp>-<case>/` (gitignored).
   bubblewrap cannot mount `/proc` in its sandbox (`bwrap: Can't mount proc
   on /newroot/proc`) and every Bash call fails.
 - The repo is mounted at `/work`, not copied: edits on the host apply to the
-  next run without rebuilding.
+  next run without rebuilding. They also reach a run already in progress: a skill
+  or agent file edited on the host while a run is going is read by that run
+  whenever it loads the file (a sub-agent's nested skill loads late). Wait for
+  every run of a target to finish before editing the target for its next try.
 - The container runs Linux: a fixture that assumes macOS tools (BSD `sed`,
   `open`) behaves differently there.
