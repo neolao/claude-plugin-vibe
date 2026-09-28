@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: review-tests-finds-hidden-e2e-regression
+description: >
+  Node.js suite whose e2e tests live in a separate `test:e2e` script that
+  CLAUDE.md does not mention: review-tests must find and run it, report its
+  failure, and trace it back to a unit-test stub that disagrees with the real
+  collaborator. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

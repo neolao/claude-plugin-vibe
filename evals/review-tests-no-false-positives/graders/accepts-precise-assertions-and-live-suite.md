@@ -8,7 +8,9 @@ criteria: |
 
   PASS if no `high` or `medium` severity Assertion precision, Dead test
   code, or Infrastructure finding is reported. A `SUITE EXECUTED` header
-  confirming the suite passed is expected and is not a finding.
+  confirming the suite passed is expected and is not a finding. Findings in
+  any other category (Under-asserting, Missing negative cases…) are judged
+  by other graders and do not count here.
   FAIL if any of the three is reported.
 weight: 1
 ---

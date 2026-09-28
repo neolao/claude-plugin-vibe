@@ -6,7 +6,8 @@ criteria: |
   clearly equivalent category name) finding on `test_get_user` in
   fixtures/test_user_service.py, for using `assertIsNotNone(result)` where
   a precise `assertEqual` against the expected user dict would actually
-  verify the returned value.
+  verify the returned value. A finding on this same test under another
+  category counts only if it names the broad `assertIsNotNone` matcher.
   FAIL if no finding flags the broad `assertIsNotNone` matcher.
 weight: 1
 ---

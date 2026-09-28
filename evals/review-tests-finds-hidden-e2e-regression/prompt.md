@@ -1,7 +1,7 @@
 ---
-name: review-tests-finds-violations
-description: review-tests must run the suite and find a Tautological, Implementation-coupled, Over-mocked, Under-asserting, Wrong level, Missing negative cases, Coverage gap, Isolation, Fixture, Assertion precision, Dead test code, and Infrastructure issue across fixtures/
-tags: [review-tests, recall]
+name: review-tests-finds-hidden-e2e-regression
+description: review-tests must discover and run the separate test:e2e script, report its failing bulk-order test, trace it to the unit test's discount stub returning a fraction where the real pricing returns a percent, and find the imprecise assertion and the untested empty-cart branch
+tags: [review-tests, recall, e2e]
 runs: 3
 max_turns: 10
 timeout_seconds: 600

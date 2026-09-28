@@ -1,7 +1,7 @@
 """Unit tests for the user service."""
 
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from user_service import UserService
 
@@ -17,6 +17,11 @@ class TestUserService(unittest.TestCase):
         self.db.get.return_value = {"id": 1, "active": True}
         result = self.service.get_user(1)
         self.assertIsNotNone(result)
+
+    def test_get_user_returns_active_flag(self):
+        with patch.object(UserService, "get_user", return_value={"id": 2, "active": False}):
+            result = self.service.get_user(2)
+        self.assertFalse(result["active"])
 
     def test_deactivate_user_marks_inactive(self):
         _shared_state["calls"] = _shared_state.get("calls", 0) + 1
