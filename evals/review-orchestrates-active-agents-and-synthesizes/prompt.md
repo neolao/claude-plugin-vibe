@@ -11,7 +11,7 @@ tags: [review, orchestration]
 runs: 1
 max_turns: 60
 timeout_seconds: 900
-allowed_tools: [Read, Glob, Grep, Skill, Agent, Bash, Write, Edit]
+allowed_tools: [Read, Glob, Grep, Skill, Agent, Bash, Write, Edit, TaskCreate, TaskUpdate]
 ---
 
 Invoke the `vibe:review` skill (Skill tool, `skill: "vibe:review"`) with no arguments, so

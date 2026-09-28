@@ -5,7 +5,7 @@ tags: [docs, precision]
 runs: 3
 max_turns: 30
 timeout_seconds: 600
-allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit]
+allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit, TaskCreate, TaskUpdate]
 ---
 
 Invoke the `vibe:docs` skill (Skill tool, `skill: "vibe:docs"`) with no arguments, on the project in this workspace.

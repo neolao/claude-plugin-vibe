@@ -5,7 +5,7 @@ tags: [workspace-init, bootstrap]
 runs: 3
 max_turns: 30
 timeout_seconds: 600
-allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit, AskUserQuestion]
+allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit, AskUserQuestion, TaskCreate, TaskUpdate]
 ---
 
 You are at the root of a workspace folder (it is not itself a git repo) that

@@ -5,7 +5,7 @@ tags: [release, changelog, versioning]
 runs: 3
 max_turns: 25
 timeout_seconds: 600
-allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit]
+allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit, TaskCreate, TaskUpdate]
 ---
 
 Invoke the `vibe:release` skill (Skill tool, `skill: "vibe:release"`) with no arguments, so it reads `CHANGELOG.md` itself and suggests the version bump.

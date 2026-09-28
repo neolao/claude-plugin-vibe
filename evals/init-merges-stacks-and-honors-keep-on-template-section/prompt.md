@@ -5,7 +5,7 @@ tags: [init, regeneration, multi-stack]
 runs: 3
 max_turns: 60
 timeout_seconds: 1200
-allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit, AskUserQuestion]
+allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit, AskUserQuestion, TaskCreate, TaskUpdate]
 ---
 
 This is an existing project at the root of your working directory: a Python

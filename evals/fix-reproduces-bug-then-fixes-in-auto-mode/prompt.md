@@ -11,7 +11,7 @@ tags: [fix, tdd, auto]
 runs: 1
 max_turns: 80
 timeout_seconds: 900
-allowed_tools: [Read, Glob, Grep, Skill, Agent, Bash, Write, Edit]
+allowed_tools: [Read, Glob, Grep, Skill, Agent, Bash, Write, Edit, TaskCreate, TaskUpdate]
 ---
 
 Invoke the `vibe:fix` skill (Skill tool, `skill: "vibe:fix"`) with exactly this argument:

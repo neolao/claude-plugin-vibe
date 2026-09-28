@@ -11,7 +11,7 @@ tags: [feature, auto, blocked, backlog]
 runs: 3
 max_turns: 30
 timeout_seconds: 600
-allowed_tools: [Read, Glob, Grep, Skill, Agent, Bash, Write, Edit]
+allowed_tools: [Read, Glob, Grep, Skill, Agent, Bash, Write, Edit, TaskCreate, TaskUpdate]
 ---
 
 Invoke the `vibe:feature` skill (Skill tool, `skill: "vibe:feature"`) with exactly this argument:
