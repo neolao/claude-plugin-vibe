@@ -11,7 +11,7 @@ Invoked once per workflow run by another `vibe:*` skill, right after that skill'
 
 ## Create the tasks
 
-Create every task from `$ARGUMENTS` in order using `TaskCreate`, chaining dependencies with `addBlockedBy` exactly as given.
+Create every task from `$ARGUMENTS` in order using `TaskCreate`, chaining dependencies with `addBlockedBy` exactly as given. If `TaskCreate` and `TaskUpdate` are listed as deferred tools, load them with `ToolSearch` first — a deferred tool is available, not missing.
 
 **If `TaskCreate` is not available in this environment:** say so explicitly (e.g. "The dedicated task system is not available in this environment — I will track progress via a checklist in my scratchpad directory instead") rather than silently failing or contradicting an earlier announcement. Write the task list from `$ARGUMENTS` as a Markdown checklist (`- [ ] <subject>`, in order) to `task-list.md` in your scratchpad directory instead.
 
