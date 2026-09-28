@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Removed
+
+- Remove the in-memory widget cache: listings now always read the storage file
+
+## [1.3.0] - 2026-09-01
+
 ### Added
 
 - Add `widgetcli list --json` to output widgets as JSON for scripting
@@ -16,3 +22,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Initial release with `add` and `list` commands
+- Cache widget listings in memory for faster repeated reads

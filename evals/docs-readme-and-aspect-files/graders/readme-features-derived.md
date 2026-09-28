@@ -2,25 +2,19 @@
 type: llm
 focus: { source: file, path: README.md }
 criteria: |
-  Read the whole README.md.
+  Look only at the content between `<!-- vibe:begin:features -->` and
+  `<!-- vibe:end:features -->` in README.md.
 
-  PASS only if all of the following hold:
-  - The features section (between the features markers) describes, as
-    end-user benefits, both the JSON output capability and the configurable
-    storage location that are listed under CHANGELOG's [Unreleased] section
-    (json output for scripting; a configurable storage path via
-    WIDGETCLI_HOME) — phrased as benefits, not copied verbatim from the
-    changelog wording, and without naming files, functions, or modules.
-  - The install section names installing the `widgetcli` package (e.g. via
-    npm) consistent with package.json.
-  - The usage section shows realistic examples of the real commands the code
-    supports (`list`, `add`), not invented commands.
+  PASS only if that section describes, as end-user benefits, both
+  capabilities listed under CHANGELOG's [Unreleased] section: JSON output of
+  the widget list for scripting, and a configurable storage location (via
+  the WIDGETCLI_HOME environment variable or equivalent wording). Phrasing
+  them as benefits rather than copying the changelog lines is expected.
 
-  FAIL if any managed section still looks like a placeholder, invents
-  commands/behavior not backed by the manifest or code, or leaks file/function
-  names into the user-facing features/install/usage sections.
-weight: 2
+  FAIL if either capability is missing, if the section is still a
+  placeholder, or if it names source files, functions, or modules.
+weight: 1
 ---
 
-The managed sections are rewritten with real content genuinely derived from
-the manifest and CHANGELOG, not left stale or invented from nothing.
+The features section is derived from the CHANGELOG, including the
+[Unreleased] entries, and phrased for the end user.

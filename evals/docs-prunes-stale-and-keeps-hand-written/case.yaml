@@ -1,5 +1,5 @@
 schema_version: "1.1"
-name: docs-readme-and-aspect-files
+name: docs-prunes-stale-and-keeps-hand-written
 context:
   scaffold_script: fixture.sh
   add_dirs: [fixtures]

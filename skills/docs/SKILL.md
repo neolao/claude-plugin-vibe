@@ -14,7 +14,7 @@ Both in short, plain sentences — a fact per line beats a dense paragraph.
 
 ## Step 1 — Read the sources
 
-`README.md` (managed sections and the hand-written content around them); the manifest(s) (name, description, install/run/test scripts); `CHANGELOG.md`; `.vibe/index.md`, `modules/`, `glossary.md`; `.env.example`; `CLAUDE.md`; the code itself (tree, entry points, main modules — `.vibe/` is not the only source); every file currently in `docs/`. `--full` in `$ARGUMENTS` forces full regeneration of `docs/`.
+`README.md`; the manifest(s); `CHANGELOG.md`; `.vibe/index.md`, `modules/`, `glossary.md`; `.env.example`; `CLAUDE.md`; the code itself (tree, entry points, main modules — `.vibe/` is not the only source); every file currently in `docs/`. `--full` in `$ARGUMENTS` forces full regeneration of `docs/`.
 
 Invoke the `vibe:tasks` skill with `Update README sections` → `Update docs/`.
 
@@ -31,7 +31,7 @@ Only the content between a marker pair is rewritten:
 | Section | Markers | Derived from |
 |---|---|---|
 | Features | `vibe:begin:features` / `vibe:end:features` | `CHANGELOG.md`, all versions + `[Unreleased]` — deduplicated, phrased as benefits, not a changelog copy |
-| Installation | `vibe:begin:install` / `vibe:end:install` | manifest — prerequisites, the install command, how to verify it, update/uninstall when the method provides them |
+| Installation | `vibe:begin:install` / `vibe:end:install` | manifest — prerequisites, the install command that puts what the manifest exposes (a bin, an executable, a library) in the user's hands, how to verify it, update/uninstall when the method provides them |
 | Usage | `vibe:begin:usage` / `vibe:end:usage` | manifest scripts and real entry points — every user-facing command with realistic examples checked against the code |
 | Documentation | `vibe:begin:docs-index` / `vibe:end:docs-index` | every Markdown file in `docs/`, filled in Step 3 once `docs/` is final |
 
@@ -58,11 +58,11 @@ Only the content between a marker pair is rewritten:
 | `docs/workflows.md` | business flows, lifecycles, state machines | multi-step processes exist |
 | `docs/testing.md` | kinds of tests, what each covers, how to run them | a test suite exists |
 | `docs/development.md` | local setup, build, project conventions | setup takes more than one obvious command |
-| `docs/<aspect>.md` | any other substantial aspect (`caching.md`, `auth-flow.md`), name kept stable across runs | it would confuse a new developer otherwise |
+| `docs/<aspect>.md` | any other substantial aspect, name kept stable across runs | it would confuse a new developer otherwise |
 
 Guardrails: never an empty or near-empty file; never a paraphrase of `.vibe/` or the README — each doc gives a reading those sources do not; a generated file whose aspect disappeared from the code is deleted and reported; a `docs/` file without the banner is hand-written — leave it alone and mention it.
 
-**Diagrams**: when one explains better than prose, embed a ` ```mermaid ` block (`graph`/`flowchart` for architecture, `sequenceDiagram` for flows, `erDiagram` for data, `stateDiagram-v2` for lifecycles) — derived from the code, ~15 nodes max, always paired with explanatory text.
+**Diagrams**: when one explains better than prose, embed a ` ```mermaid ` block derived from the code, ~15 nodes max, always paired with explanatory text.
 
 **Incremental by default**: regenerate a file only when its sources changed; `--full` regenerates every applicable file.
 
