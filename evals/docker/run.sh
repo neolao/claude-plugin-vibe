@@ -37,7 +37,20 @@ docker run --rm \
       --ablation none --keep-temp --trust-plugin --no-publish \
       --output-dir "$out" "$@"
     status=$?
-    # No --cleanup: kept dirs die with the container (--rm).
+    # No --cleanup: kept dirs die with the container (--rm). Copy each run traces
+    # into the mounted output dir first, so they can be read afterwards.
+    python3 - "$out" <<"PY"
+import json, os, shutil, sys
+out = sys.argv[1]
+agg = json.load(open(os.path.join(out, "aggregate-result.json")))
+os.makedirs(os.path.join(out, "traces"), exist_ok=True)
+for c in agg["cases"]:
+    for arm in c["arms"].values():
+        for i, r in enumerate(arm):
+            p = r.get("tracePath")
+            if p and os.path.exists(p):
+                shutil.copy(p, os.path.join(out, "traces", c["name"] + "-run" + str(i + 1) + ".jsonl"))
+PY
     python3 evals/tokens.py "$out"
     exit $status
   ' _ "$out" "$case_glob" "$@"
