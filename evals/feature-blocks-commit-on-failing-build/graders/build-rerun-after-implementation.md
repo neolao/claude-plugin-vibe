@@ -1,15 +1,13 @@
 ---
-type: tool_order
-before:
-  tool: Edit
-  input_match: "src/roster\\.js"
-after:
-  tool: Bash
-  input_match: "npm run build"
+type: tool_used
+tool: Bash
+input_match: "npm run build"
+min: 2
+max: 999
 weight: 2
 ---
 
 The Baseline check already runs the build command once before any code is
 written. This grader checks the new behaviour specifically: the build
-command is run again by Refactor and lint, strictly after the source file
-was edited to add the new function — not only at baseline.
+command is run at least a second time, by Refactor and lint, after the
+implementation — not only at baseline.

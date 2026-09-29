@@ -112,7 +112,7 @@ Remove dead code, unused imports, and debug artifacts; run the lint command and 
 
 ## CHANGELOG
 
-Add one line under `## [Unreleased]` > the skill's section, written for the end user ("Users can now export reports as CSV", not "Added exportToCsv()"). Create the file with the Keep a Changelog header, the `[Unreleased]` heading, or the section, whichever is missing.
+Add one line under `## [Unreleased]` > the skill's section, written for the end user ("Users can now export reports as CSV", not "Added exportToCsv()"); never name a function, file, or identifier in it, not even in backticks. Create the file with the Keep a Changelog header, the `[Unreleased]` heading, or the section, whichever is missing.
 
 ## Docs
 

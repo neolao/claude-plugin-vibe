@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: feature-blocks-on-duplicate-in-auto-mode
+description: >
+  The duplicate half of the --auto gate table: a brief asking for a median,
+  when [Unreleased] already lists that capability (the middle value of a
+  list) under another wording, must end the run with
+  AUTO-RESULT: blocked — possible duplicate of ..., with no source, test or
+  CHANGELOG change. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
