@@ -1,0 +1,10 @@
+{
+  "name": "shop-pricing-lib",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tiny Node.js library computing order prices.",
+  "scripts": {
+    "test": "node test/pricing.test.js",
+    "lint": "node -e \"process.exit(0)\""
+  }
+}
