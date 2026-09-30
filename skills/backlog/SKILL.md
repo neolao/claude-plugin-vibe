@@ -2,6 +2,8 @@
 name: backlog
 description: Manage the feature backlog — list tasks, add one or several items (including from the last review), or remove an item
 argument-hint: "[feature description to add] | <multi-line list> | from review | remove NNN | (empty to list all)"
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:backlog — Feature Backlog Manager

@@ -2,6 +2,8 @@
 name: release
 description: Create a versioned release — bump version, finalize CHANGELOG.md, commit and tag
 argument-hint: "[version, e.g. 1.2.0 | major | minor | patch] (empty = suggest from the changelog and confirm)"
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:release — Release Workflow

@@ -2,6 +2,8 @@
 name: auto
 description: Work the backlog autonomously — implement eligible items one after another with no human gates, resuming by itself after any interruption; --push also publishes the result
 argument-hint: "[max number of items to process] [--push] (empty = drain the backlog)"
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:auto — Autonomous Backlog Runner

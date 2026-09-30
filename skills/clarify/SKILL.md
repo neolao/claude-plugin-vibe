@@ -2,6 +2,8 @@
 name: clarify
 description: Interview the user relentlessly, round by round, over a plan, idea, or decision until every open branch is settled — finds facts itself, never guesses what only the user can decide
 argument-hint: "[optional: subject to clarify — plan, idea, or decision; empty infers it from the current conversation]"
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:clarify — Relentless Interview

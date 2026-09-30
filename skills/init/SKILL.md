@@ -2,6 +2,8 @@
 name: init
 description: Initialize or regenerate the project CLAUDE.md and README.md for vibe coding (TDD-first, no manual testing)
 argument-hint: "[optional: project description]"
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:init — Vibe Coding Project Setup

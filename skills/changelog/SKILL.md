@@ -2,6 +2,8 @@
 name: changelog
 description: Update CHANGELOG.md (Keep a Changelog format) from git history since the last tag — entries land under [Unreleased]; cutting a version is /vibe:release's job
 argument-hint: "(no arguments)"
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:changelog — CHANGELOG.md Updater

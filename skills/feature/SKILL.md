@@ -2,6 +2,8 @@
 name: feature
 description: Implement a new feature using TDD, then update CHANGELOG.md under [Unreleased] > Added
 argument-hint: <feature description in natural language>
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:feature — TDD Feature Implementation

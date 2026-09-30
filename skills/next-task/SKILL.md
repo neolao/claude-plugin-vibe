@@ -2,6 +2,8 @@
 name: next-task
 description: Pick the next eligible backlog item — across every active repo in a workspace if one is detected, otherwise in the current repo — implement it, then push and release
 argument-hint: "NNN [in <repo>] (force a specific item) | auto [N] (autonomous, for /loop) | (empty — pick with confirmation)"
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:next-task — Cross-Repo Task Runner

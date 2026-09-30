@@ -2,6 +2,8 @@
 name: sync
 description: Sync .vibe/ — generate on first run, incrementally update on subsequent runs
 argument-hint: "[optional: --full to force full regeneration]"
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:sync — Codebase Map Sync

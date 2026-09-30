@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skill and agent evolution</title>
+<style>
+  :root { --bg:#fff; --fg:#1a1a1a; --mute:#6b6b6b; --grid:#e3e3e3; --card:#f6f6f6; --warn:#a15c00; --line:#2a5db0; --cost:#c2410c; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161616; --fg:#eee; --mute:#9a9a9a; --grid:#333; --card:#202020; --warn:#e0a040; --line:#6aa0f0; --cost:#f59e6a; } }
+  body { margin:0; padding:24px 16px; background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, sans-serif; }
+  main { max-width:900px; margin:0 auto; }
+  h1 { font-size:1.4rem; margin:0 0 4px; }
+  p.lead { color:var(--mute); margin:0 0 24px; }
+  section { background:var(--card); border-radius:8px; padding:16px; margin-bottom:20px; }
+  h2 { font-size:1.05rem; margin:0 0 2px; }
+  .sub { color:var(--mute); font-size:.85rem; margin-bottom:8px; }
+  .stale { color:var(--warn); font-size:.85rem; margin:6px 0; }
+  svg { width:100%; height:auto; display:block; }
+  .axis { stroke:var(--grid); } .lbl { fill:var(--mute); font-size:11px; }
+  .ln { fill:none; stroke:var(--line); stroke-width:2; }
+  .cl { fill:none; stroke:var(--cost); stroke-width:2; stroke-dasharray:5 3; }
+  .cp { fill:var(--cost); }
+  .clbl { fill:var(--cost); font-size:11px; }
+  .key { font-size:.8rem; color:var(--mute); margin-bottom:4px; } .key b { font-weight:600; }
+  .pt { fill:var(--line); stroke:var(--bg); stroke-width:2; cursor:pointer; }
+  .pt.stale { fill:none; stroke:var(--warn); stroke-width:2; stroke-dasharray:3 2; }
+  #tip { position:fixed; pointer-events:none; background:var(--fg); color:var(--bg); padding:6px 9px; border-radius:6px; font-size:.8rem; display:none; white-space:pre; z-index:9; }
+  table { width:100%; border-collapse:collapse; font-size:.8rem; margin-top:8px; }
+  th, td { text-align:left; padding:3px 6px; border-bottom:1px solid var(--grid); }
+  tr.stale td { color:var(--warn); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Skill and agent evolution</h1>
+  <p class="lead">Each point is <em>today's</em> eval case replayed on the skill/agent <em>as it was</em> at that commit. Hollow orange point: the case changed since the measurement, so the value is outdated. Regenerate with <code>evals/history/collect.sh</code> (see <code>CLAUDE.md</code>, "Evolution history").</p>
+  <div id="root"></div>
+</main>
+<div id="tip"></div>
+<script>
+/*DATA*/
+window.TIMELINE=[{"item":"expert-api-rest","kind":"agent","case":"expert-api-rest-in-scope-advice","sha":"a00112a","date":"2026-09-03","version":"none","model":"-","caseHash":"7e331dbc60dc","runAt":"2026-09-29","score":0.9629629629629629,"passRate":0.6666666666666666,"cost":0.44547760000000003},{"item":"expert-api-rest","kind":"agent","case":"expert-api-rest-in-scope-advice","sha":"75a1d09","date":"2026-09-20","version":"none","model":"haiku","caseHash":"7e331dbc60dc","runAt":"2026-09-29","score":0.9259259259259259,"passRate":0.3333333333333333,"cost":0.3872542},{"item":"expert-api-rest","kind":"agent","case":"expert-api-rest-in-scope-advice","sha":"aa0c48f","date":"2026-09-20","version":"1.0.0","model":"haiku","caseHash":"7e331dbc60dc","runAt":"2026-09-29","score":0.9259259259259259,"passRate":0.3333333333333333,"cost":0.4002935999999999},{"item":"expert-api-rest","kind":"agent","case":"expert-api-rest-in-scope-advice","sha":"8929b95","date":"2026-09-23","version":"1.2.2","model":"sonnet","caseHash":"7e331dbc60dc","runAt":"2026-09-29","score":1,"passRate":1,"cost":0.4238919}];window.CASES={"expert-api-rest-in-scope-advice":{"hash":"7e331dbc60dc","lastCommit":"2026-09-23"}};
+/*END*/
+</script>
+<script>
+(function () {
+  var T = window.TIMELINE || [], C = window.CASES || {};
+  var root = document.getElementById('root'), tip = document.getElementById('tip');
+  if (!T.length) { root.textContent = 'No measurement yet: run collect.sh.'; return; }
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(n, a, p) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+  function pct(r) { return Math.round(r * 100) + ' %'; }
+  function stale(p) { return !C[p.case] || C[p.case].hash !== p.caseHash; }
+
+  var groups = {};
+  T.forEach(function (p) { var k = p.item + '\u0000' + p.case; (groups[k] = groups[k] || []).push(p); });
+
+  Object.keys(groups).sort().forEach(function (k) {
+    var pts = groups[k].sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : a.runAt < b.runAt ? -1 : 1; });
+    var first = pts[0];
+    var sec = document.createElement('section');
+    var nStale = pts.filter(stale).length;
+    sec.innerHTML = '<h2>' + first.item + ' <small>(' + first.kind + ')</small></h2><div class="sub">case ' + first.case + '</div>';
+    if (nStale) {
+      var w = document.createElement('div'); w.className = 'stale';
+      w.textContent = '⚠ Outdated: case ' + first.case + ' changed' + (C[first.case] && C[first.case].lastCommit ? ' (last commit ' + C[first.case].lastCommit + ')' : '') + ' since ' + nStale + ' of ' + pts.length + ' measurement(s). Rerun with --refresh.';
+      sec.appendChild(w);
+    }
+    var key = document.createElement('div'); key.className = 'key';
+    key.innerHTML = '<b style="color:var(--line)">━ Score</b> (left axis) · <b style="color:var(--cost)">┅ Cost of 3 runs</b> (right axis)';
+    sec.appendChild(key);
+    var W = 840, H = 200, L = 44, R = 50, Tp = 10, B = 28;
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H }, sec);
+    var n = pts.length;
+    function x(i) { return n === 1 ? (L + W - R) / 2 : L + i * (W - L - R) / (n - 1); }
+    function y(s) { return Tp + (1 - s) * (H - Tp - B); }
+    [0, .5, 1].forEach(function (g) {
+      el('line', { x1: L, x2: W - R, y1: y(g), y2: y(g), class: 'axis' }, svg);
+      el('text', { x: L - 6, y: y(g) + 4, 'text-anchor': 'end', class: 'lbl' }, svg).textContent = Math.round(g * 100) + ' %';
+    });
+    var cmax = Math.max.apply(null, pts.map(function (p) { return p.cost || 0; }));
+    cmax = cmax > 0 ? Math.ceil(cmax * 2) / 2 : 1;
+    function yc(v) { return Tp + (1 - v / cmax) * (H - Tp - B); }
+    [0, .5, 1].forEach(function (g) {
+      el('text', { x: W - R + 6, y: y(g) + 4, class: 'clbl' }, svg).textContent = '$' + (g * cmax).toFixed(2);
+    });
+    el('polyline', { class: 'cl', points: pts.map(function (p, i) { return x(i) + ',' + yc(p.cost || 0); }).join(' ') }, svg);
+    pts.forEach(function (p, i) { el('rect', { x: x(i) - 3, y: yc(p.cost || 0) - 3, width: 6, height: 6, class: 'cp' }, svg); });
+    el('polyline', { class: 'ln', points: pts.map(function (p, i) { return x(i) + ',' + y(p.score); }).join(' ') }, svg);
+    pts.forEach(function (p, i) {
+      var c = el('circle', { cx: x(i), cy: y(p.score), r: 6, class: 'pt' + (stale(p) ? ' stale' : '') }, svg);
+      var txt = 'v' + p.version + ' · ' + p.sha + ' · ' + p.date + '\nscore ' + pct(p.score) + ' · reliability ' + pct(p.passRate) + '\n' + p.model + ' · ' + (p.cost != null ? '$' + p.cost.toFixed(2) : '') + (stale(p) ? '\nOUTDATED (case changed)' : '');
+      c.addEventListener('mousemove', function (e) { tip.textContent = txt; tip.style.display = 'block'; tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY + 12 + 'px'; });
+      c.addEventListener('mouseleave', function () { tip.style.display = 'none'; });
+      var t = el('text', { x: x(i), y: H - 10, 'text-anchor': 'middle', class: 'lbl' }, svg);
+      t.textContent = (p.version === 'none' ? p.sha : 'v' + p.version) + ' ' + p.date.slice(5);
+    });
+    var tb = '<table><tr><th>Date</th><th>Commit</th><th>Version</th><th>Model</th><th>Score</th><th>Reliability</th><th>Cost</th></tr>';
+    pts.forEach(function (p) {
+      tb += '<tr' + (stale(p) ? ' class="stale"' : '') + '><td>' + p.date + '</td><td>' + p.sha + '</td><td>' + p.version + '</td><td>' + p.model + '</td><td>' + pct(p.score) + '</td><td>' + pct(p.passRate) + '</td><td>' + (p.cost != null ? '$' + p.cost.toFixed(2) : '') + '</td></tr>';
+    });
+    sec.insertAdjacentHTML('beforeend', tb + '</table>');
+    root.appendChild(sec);
+  });
+})();
+</script>
+</body>
+</html>

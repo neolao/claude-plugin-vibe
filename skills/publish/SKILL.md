@@ -3,6 +3,8 @@ name: publish
 description: Pushes the current repo's commits, cuts a release when the changelog warrants one, pushes the tag, and creates a forge release when possible. Invoked internally by vibe:auto (--push) and vibe:next-task — the only place in the plugin that pushes.
 argument-hint: "(no arguments — operates on the current repo)"
 user-invocable: false
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # vibe:publish — Push and Release

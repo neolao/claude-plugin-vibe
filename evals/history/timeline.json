@@ -1,0 +1,58 @@
+[
+  {
+    "item": "expert-api-rest",
+    "kind": "agent",
+    "case": "expert-api-rest-in-scope-advice",
+    "sha": "a00112a",
+    "date": "2026-09-03",
+    "version": "none",
+    "model": "-",
+    "caseHash": "7e331dbc60dc",
+    "runAt": "2026-09-29",
+    "score": 0.9629629629629629,
+    "passRate": 0.6666666666666666,
+    "cost": 0.44547760000000003
+  },
+  {
+    "item": "expert-api-rest",
+    "kind": "agent",
+    "case": "expert-api-rest-in-scope-advice",
+    "sha": "75a1d09",
+    "date": "2026-09-20",
+    "version": "none",
+    "model": "haiku",
+    "caseHash": "7e331dbc60dc",
+    "runAt": "2026-09-29",
+    "score": 0.9259259259259259,
+    "passRate": 0.3333333333333333,
+    "cost": 0.3872542
+  },
+  {
+    "item": "expert-api-rest",
+    "kind": "agent",
+    "case": "expert-api-rest-in-scope-advice",
+    "sha": "aa0c48f",
+    "date": "2026-09-20",
+    "version": "1.0.0",
+    "model": "haiku",
+    "caseHash": "7e331dbc60dc",
+    "runAt": "2026-09-29",
+    "score": 0.9259259259259259,
+    "passRate": 0.3333333333333333,
+    "cost": 0.4002935999999999
+  },
+  {
+    "item": "expert-api-rest",
+    "kind": "agent",
+    "case": "expert-api-rest-in-scope-advice",
+    "sha": "8929b95",
+    "date": "2026-09-23",
+    "version": "1.2.2",
+    "model": "sonnet",
+    "caseHash": "7e331dbc60dc",
+    "runAt": "2026-09-29",
+    "score": 1,
+    "passRate": 1,
+    "cost": 0.4238919
+  }
+]

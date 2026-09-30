@@ -2,6 +2,8 @@
 name: workspace-init
 description: Initialize or refresh a generic hub repo (repos registry, cross-repo backlog/decisions) and the local, untracked workspace-root CLAUDE.md that indexes it and its sibling repos
 argument-hint: "[hub repo dir name, e.g. roadmap] (only used on first bootstrap)"
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:workspace-init — Multi-Repo Workspace Bootstrap

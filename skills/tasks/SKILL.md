@@ -3,6 +3,8 @@ name: tasks
 description: Creates and tracks a vibe workflow's task list — uses the dedicated task system when available, falls back to a scratchpad checklist otherwise. Invoked internally by other vibe skills, never directly by users.
 argument-hint: "<one task per line: '<subject> ← blockedBy \"<other subject>\"' or '<subject> ← no dependency'>"
 user-invocable: false
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # vibe:tasks — Task List Creation & Fallback

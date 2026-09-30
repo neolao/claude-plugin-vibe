@@ -2,6 +2,8 @@
 name: review
 description: Run code quality review using specialized sub-agents defined in CLAUDE.md
 argument-hint: "[optional: path or file to review — defaults to full codebase]"
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:review — Code Quality Review Orchestrator

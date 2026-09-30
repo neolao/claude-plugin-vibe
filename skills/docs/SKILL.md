@@ -2,6 +2,8 @@
 name: docs
 description: Generate or refresh project documentation (README managed sections + docs/) from code, CHANGELOG and .vibe/
 argument-hint: "[optional: --full to regenerate docs/ files]"
+version: 1.0.0
+model: claude-sonnet-5-5
 ---
 
 # /vibe:docs — Project Documentation Maintainer
