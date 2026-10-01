@@ -2,7 +2,7 @@
 name: sync
 description: Sync .vibe/ — generate on first run, incrementally update on subsequent runs
 argument-hint: "[optional: --full to force full regeneration]"
-version: 1.0.0
+version: 1.0.1
 model: claude-sonnet-5-5
 ---
 
@@ -57,7 +57,7 @@ A glossary term is a **business concept the project owns and names** — what th
 _Sources: `src/orders/checkout.ts`, `src/orders/cart.ts`_
 ```
 
-The glossary is fully generated and self-cleaning — no confirmation, no definition left for a human to refine; every entry is traceable through its `Sources:` line. Each sync: **adds** newly detected concepts; **redefines** an entry only when the code backing it changed; **removes** entries that violate the criteria above or whose sources no longer exist with no new usage found (one-line reason each). Incremental mode re-derives only entries with a source in the changed set but still checks every `Sources:` line for existence. A legacy entry without `Sources:` keeps its text and gains the line if it is non-empty, not a stub, and consistent with the code; otherwise it is replaced.
+The glossary is fully generated and self-cleaning — no confirmation, no definition left for a human to refine; every entry is traceable through its `Sources:` line. Each sync: **adds** newly detected concepts; **redefines** an entry only when the code backing it changed; **removes** entries that violate the criteria above or whose sources no longer exist with no new usage found (one-line reason each). Incremental mode re-derives only entries with a source in the changed set, but always runs the removal check on **every** entry, changed or not: list each `Sources:` path, test that it exists on disk, and when none of an entry's sources exists, search the code for the concept — no usage found means remove the entry. A legacy entry without `Sources:` keeps its text and gains the line if it is non-empty, not a stub, and consistent with the code; otherwise it is replaced.
 
 ## Step 5 — `.vibe/index.md`
 

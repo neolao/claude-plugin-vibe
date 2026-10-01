@@ -8,4 +8,4 @@ description: >
   Bash,Write,Edit to make the untouched-files assertion meaningful.
 context:
   scaffold_script: fixture.sh
-  add_dirs: [.]
+  add_dirs: [fixtures]

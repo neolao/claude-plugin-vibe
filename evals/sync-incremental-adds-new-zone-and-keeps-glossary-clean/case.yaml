@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: sync-incremental-adds-new-zone-and-keeps-glossary-clean
+description: >
+  vibe:sync in incremental mode over an uncommitted new source directory: the
+  new zone gets its own module doc, a models entry, an index line and a
+  business-concept glossary entry, while a library/plumbing identifier is not
+  turned into a glossary term and the untouched billing module stays
+  byte-for-byte identical. Needs --allow-tools Bash,Write,Edit.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
