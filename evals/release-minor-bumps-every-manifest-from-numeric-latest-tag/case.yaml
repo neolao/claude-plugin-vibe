@@ -1,5 +1,5 @@
 schema_version: "1.1"
-name: release-suggests-correct-bump-and-cuts-changelog
+name: release-minor-bumps-every-manifest-from-numeric-latest-tag
 context:
   scaffold_script: fixture.sh
   add_dirs: [fixtures]

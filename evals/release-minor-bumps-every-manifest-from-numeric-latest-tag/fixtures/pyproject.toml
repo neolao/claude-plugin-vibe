@@ -1,0 +1,4 @@
+[project]
+name = "fixture-app-tools"
+version = "1.10.0"
+description = "Python helpers shipped with the fixture app"
