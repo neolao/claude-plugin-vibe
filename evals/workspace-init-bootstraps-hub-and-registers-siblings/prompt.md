@@ -3,7 +3,7 @@ name: workspace-init-bootstraps-hub-and-registers-siblings
 description: vibe:workspace-init must bootstrap a new hub repo from a bare workspace root holding two sibling repos, auto-classifying the one with .vibe/backlog/ as active and asking about the one without, then commit only the hub's own files (requires --allow-tools to run — Bash, Write, Edit)
 tags: [workspace-init, bootstrap]
 runs: 3
-max_turns: 30
+max_turns: 80
 timeout_seconds: 600
 allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit, AskUserQuestion, TaskCreate, TaskUpdate]
 ---
