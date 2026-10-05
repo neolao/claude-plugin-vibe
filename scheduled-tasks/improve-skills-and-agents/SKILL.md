@@ -67,3 +67,15 @@ One row per full run, including the attempts below 1.00 (another model, another 
 
 ## 6. Commit
 Bump the target's `version:` if it was modified (prompt, or model or effort for an agent), following the `CLAUDE.md` rule (patch, minor or major). `git add` only the files you touched, commit with a message prefixed `test:` like the existing eval commits, then push to main. If the push is rejected, run `git pull --rebase` once, then stop and document it.
+
+## 7. Final report
+End the run with a closing message made of a one-line verdict (target, objective reached, anything needing the user), then one markdown table with one row per full run logged in history.md during this run, in chronological order:
+
+| # | Case | Version / model / effort | What was tried | Score | Pass rate | Cost | Tokens in/out | Outcome |
+|---|---|---|---|---|---|---|---|---|
+
+- `What was tried`: a few plain words (first evaluation, trimmed prompt, effort raised, case fixed, new hardening case...).
+- `Outcome`: one of ✅ kept, ↩️ reverted, 🔧 case fixed, ⚠️ manual follow-up needed, with a few words of reason.
+- Add a last row `Total` summing the cost and the tokens of the table.
+Below the table, list in short bullets only what the user must act on or know: commits pushed (hash and subject), lessons written in `CLAUDE.md` or `evals/docker/README.md`, flakiness seen, problems noticed on other targets, and the next pending objective (target and case).
+Figures come from the rows just written: never recompute or round them differently from history.md.
