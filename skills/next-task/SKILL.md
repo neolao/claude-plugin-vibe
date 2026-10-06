@@ -2,7 +2,7 @@
 name: next-task
 description: Pick the next eligible backlog item — across every active repo in a workspace if one is detected, otherwise in the current repo — implement it, then push and release
 argument-hint: "NNN [in <repo>] (force a specific item) | auto [N] (autonomous, for /loop) | (empty — pick with confirmation)"
-version: 1.0.0
+version: 1.0.1
 model: claude-sonnet-5-5
 ---
 
@@ -37,7 +37,7 @@ For each candidate repo, the top-level `.vibe/backlog/*.md` items with `status: 
 ## Step 4 — Cross-repo blockers and priority _(workspace scope)_
 
 Cross-repo relationships live in prose (`## Notes`/`## Description`), not in `depends_on`. For each candidate:
-- A reference to another repo's unresolved item, or to a version another repo has not published, keeps it blocked. **Done vs published**: "once `api#012` is done" is satisfied by `status: done`; "once `sdk` publishes v0.3.0" only by a matching pushed Git tag (`git ls-remote --tags`).
+- A reference to another repo's unresolved item, or to a version another repo has not published, keeps it blocked. **Done vs published**: "once `api#012` is done" is satisfied by `status: done`; "once `sdk` publishes v0.3.0" only by a matching pushed Git tag. Never conclude "not released" from the backlog or from memory: run `git -C <that repo> ls-remote --tags` (and `git -C <that repo> tag` when it has no remote) and read the result.
 - A hub-repo decision naming this item as a priority or an unblocker counts for Step 5.
 - Every other candidate repo's backlog or `CLAUDE.md` waiting on this repo+number counts as an item it would unblock.
 

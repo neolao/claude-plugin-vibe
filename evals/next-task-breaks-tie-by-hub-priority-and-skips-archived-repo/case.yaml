@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: next-task-breaks-tie-by-hub-priority-and-skips-archived-repo
+description: >
+  Harder workspace-scope pick for vibe:next-task: two candidates tie on
+  unblock count (1 each) so a hub decision, not the lowest number, must break
+  the tie; an archived repo whose item would out-score both must be ignored;
+  and a version-phrased wait whose tag IS pushed to a local remote must be
+  treated as resolved. The run is stopped at Step 6's confirmation. Needs
+  --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

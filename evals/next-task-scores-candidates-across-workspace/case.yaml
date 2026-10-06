@@ -9,4 +9,4 @@ description: >
   --allow-tools Bash to run.
 context:
   scaffold_script: fixture.sh
-  add_dirs: [.]
+  add_dirs: [fixtures]
