@@ -14,7 +14,8 @@ allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit, TaskCreate, TaskUpda
 
 Invoke the `vibe:publish` skill (Skill tool, `skill: "vibe:publish"`) with
 no arguments. Work in the current directory exactly as it is — do not
-recreate or reconfigure anything in it.
+recreate or reconfigure anything in it. The repo's `CLAUDE.md` says how
+commands are run in this sandbox.
 
 Then report, in short plain sentences, exactly what `vibe:publish` found
 and reported.

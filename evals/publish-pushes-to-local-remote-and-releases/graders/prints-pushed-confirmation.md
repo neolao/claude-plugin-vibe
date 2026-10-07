@@ -1,7 +1,7 @@
 ---
 type: regex
 target: last_message
-pattern: "✓\\s*pushed"
+pattern: "✓\\s*(\\*\\*)?\\s*[Pp]ushed"
 weight: 1
 ---
 
