@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `/vibe:feature` and `/vibe:fix` now pick the smallest complete change (reuse existing code, then stdlib, then an installed dependency, then new code) and report what they deliberately left out.
+
 ### Fixed
 
 - Task tracking no longer falls back to a scratchpad checklist when the task tools exist but have not been loaded yet in the session.

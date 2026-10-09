@@ -2,7 +2,7 @@
 name: fix
 description: Fix a bug using TDD (reproduce first), then update CHANGELOG.md under [Unreleased] > Fixed
 argument-hint: <bug description in natural language>
-version: 1.0.0
+version: 1.0.1
 model: claude-sonnet-5-5
 ---
 

@@ -98,7 +98,9 @@ Create or update the test file and write the tests the skill specifies. Run them
 
 ## Green — implement
 
-Write the minimum change that makes the tests pass without breaking existing ones; run the full suite after each meaningful change. If tests fail: diagnose, fix the code (not the tests, unless a test was wrong), re-run — up to 3 attempts, then escalation-log entry and escalate with a precise diagnosis.
+Write the minimum change that makes the tests pass without breaking existing ones; run the full suite after each meaningful change.
+
+**Smallest complete change.** Before writing, list every place the change must reach: callers, tests, fixtures, config, exports. Then take the first option that fully works: already in this codebase (use it the way the surrounding code does) → standard library or platform feature → installed dependency → minimum new code. Never add a dependency for a few lines. No abstraction, option or "for later" code nobody asked for. Code you move or merge keeps its validation and error handling. A shortcut with a known limit gets a one-line comment `shortcut: <limit>, <when to upgrade>`. Minimal never means skipping tests, validation at trust boundaries, error handling or security. If tests fail: diagnose, fix the code (not the tests, unless a test was wrong), re-run — up to 3 attempts, then escalation-log entry and escalate with a precise diagnosis.
 
 ## Runtime verification — assume it is broken
 
@@ -131,5 +133,6 @@ If the brief came from a backlog item: `git mv .vibe/backlog/NNN-slug.md .vibe/b
 ## Report
 
 Short, plain sentences, no filler, covering the points the skill lists, then:
+- **Skipped:** one line naming the features, options or abstractions deliberately left out, if any.
 - **Pre-existing failures:** if the baseline recorded any (beyond the reported bug itself), check the active backlog for an item already covering them (compare against the failing test names). If found, say "already tracked by backlog item NNN"; otherwise end with "N tests were already failing before this work — do you want me to log them to the backlog?" and, on confirmation, invoke `vibe:backlog` with a one-line description listing them.
 - **Review cadence:** if `.vibe/last-review.md` exists, count `feat:`/`fix:` commits since the `commit` it records (`git log <hash>..HEAD --oneline`). At 5 or more, add "💡 N changes since the last review — consider running `/vibe:review`." Otherwise say nothing.
