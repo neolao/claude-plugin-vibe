@@ -89,6 +89,20 @@ No automated test suite in this repo (deliberate choice, see "Specifics of this 
 
 Each agent in `agents/*.md` carries a `model:` field and a `version:` field (semver, e.g. `1.0.0`) in its frontmatter. The model is a cost/quality choice per agent, distinct from the manual review above; the version identifies unambiguously *which definition* of the agent produced a given score — both are validated with `claude plugin eval`, not with the test suite (which does not exist and must not exist here).
 
+**Agent ladder (model + effort)** — the only place it is written; the `improve-skills-and-agents` scheduled task references it. Three models (full IDs for the frontmatter `model:`), each with three efforts (`effort:` is `low`, `medium` or `high`, never `xhigh` or `max`). Cheapest to most expensive, one notch = one line:
+
+1. `claude-haiku-5-5` · `low`
+2. `claude-haiku-5-5` · `medium`
+3. `claude-haiku-5-5` · `high`
+4. `claude-sonnet-5-5` · `low`
+5. `claude-sonnet-5-5` · `medium`
+6. `claude-sonnet-5-5` · `high`
+7. `claude-opus-5-5` · `low`
+8. `claude-opus-5-5` · `medium`
+9. `claude-opus-5-5` · `high`
+
+Up one notch = next line; down = previous line. The order is model then effort: it does not guarantee cost (haiku `high` can cost more than sonnet `low`), which is why a reduction is kept only if the measured cost drops. `model:` and `effort:` are always both written in the frontmatter. A new model or effort is added here, in its place, and nowhere else.
+
 - Cases live in `evals/<case-name>/` (`prompt.md` for the prompt, `graders/*.md` for the criteria) — one case per scenario to check for an agent. Everything that defines a case is committed normally.
 - A static fixture (a code file for the agent to review) needs **both**: `context.add_dirs` in `case.yaml` only declares a read permission, it copies nothing — you also need a `context.scaffold_script` (a bash script in the case folder, e.g. `fixture.sh`) that copies `fixtures/` into the run's empty workspace (`cp -r "$(dirname "${BASH_SOURCE[0]}")/fixtures" .`), run only via `--scaffold`.
 - **`add_dirs` only names the case's fixture folders**: `add_dirs: [.]` is refused by the CLI ("an add_dir may only name fixture directories inside this case") and every run fails at $0 — write `add_dirs: [fixtures]`. Several skill cases still carry `[.]`: fix it first when evaluating their target (seen on changelog on 2026-09-24, on auto on 2026-09-26, then on release on 2026-10-05, then on workspace-init on 2026-10-05, then on next-task on 2026-10-06 (both of its cases), then on publish on 2026-10-07 (all four cases); the fix is config-only and retires no history row).

@@ -17,7 +17,7 @@ This covers how a case is launched or run, not the target's behavior: a missing 
 This update is allowed even when it falls outside the target's scope. Commit it separately, before the target's commit, with a message that says what was learned and how you observed it.
 
 ## Effort (agents only)
-An agent can set `effort:` in its frontmatter: `low`, `medium`, `high`, `xhigh`, `max`. haiku does not support effort: an agent on haiku has no `effort:` field. An agent without `effort:` inherits the session's effort, which is not controlled in an eval: the first time you tune an agent's effort, write the level explicitly. When you change an agent's model, restart from `effort: high` (remove the field if it moves to haiku).
+An agent always sets both `model:` and `effort:` in its frontmatter; `effort` is `low`, `medium` or `high`. An agent without `effort:` inherits the session's effort, which is not controlled in an eval: the first time you touch an agent without `effort:`, write the level explicitly. The (model, effort) pair is one notch of the ladder in `CLAUDE.md` ("Agent ladder (model + effort)"); you only move it one notch at a time.
 
 ## 0. Starting guard
 `git status --porcelain` must be empty and `git pull --rebase` must succeed. Otherwise, stop without doing anything: someone is working in the repo, or a previous run has not finished.
@@ -33,7 +33,7 @@ Pick the target whose first pending objective has the lowest number. On a tie, p
 ## 2. Working on the target, in this order
 1. **Evaluate**: run each of its cases that has no non-obsolete row.
 2. **Fix**: as long as one of its cases is below 1.00, apply section 4.
-3. **Cut the cost**: once all its cases are at 1.00, try to reduce its consumption, by lowering its `effort:` or its `model:` one notch (agents only), and/or by trimming its prompt. Re-run all its cases. Keep the reduction only if they all stay at 1.00 **and** the cost is lower than the latest row of each case. Otherwise, revert; a row records the attempt.
+3. **Cut the cost**: once all its cases are at 1.00, try to reduce its consumption, by lowering its (model, effort) pair one notch of the `CLAUDE.md` ladder (agents only), and/or by trimming its prompt. Re-run all its cases. Keep the reduction only if they all stay at 1.00 **and** the cost is lower than the latest row of each case. Otherwise, revert; a row records the attempt.
 4. **Harden**: add **a single** new case, more elaborate but relevant, meant to try to lower the score. Follow the case rules of `CLAUDE.md` (a fixture never names the defect it contains, one grader = one verifiable claim, the injected prompt reproduces the skill's contract word for word, a case must be able to reach 1.00). Run it. If it is below 1.00, apply section 4. The run then ends, even if the target passes this new case.
 
 ## 3. Running a case
@@ -54,10 +54,10 @@ The judge is always sonnet: never change it, and never replay a case with anothe
 ## 4. Score below 1.00
 Read the trace to find who is at fault:
 - **the case** (grader aimed wrong, ambiguous fixture) → fix the case and apply the "A changed case retires its own history" rule at the top of history.md (⚠️ in the Case cell, note opened with `**Obsolete (YYYY-MM-DD):**`);
-- **the target** (behavior that contradicts its own definition) → fix its prompt. For an agent, if a prompt fix is not enough, first raise its `effort:` one notch (`low` → `medium` → `high` → `xhigh` → `max`; with no `effort:` field, start at `xhigh`), and raise its `model:` one notch (haiku → sonnet → opus) only once `max` is reached, or from haiku, which has no effort.
+- **the target** (behavior that contradicts its own definition) → fix its prompt. For an agent, if a prompt fix is not enough, raise it one notch of the `CLAUDE.md` ladder (effort, then model, in ladder order).
 Re-run after each fix. Keep a copy of each version tried (target and case) in the scratchpad, with its score.
 **Giving up**:
-- agent: when opus at `effort: max` still fails after a fix;
+- agent: when the last ladder notch (`claude-opus-5-5` · `high`) still fails after a fix;
 - skill (no `model:`): after 5 fixes without reaching 1.00.
 When you give up, restore the target and the case to the version that got the best score, and commit that best result. Its row's note starts with `**Manual follow-up needed:**`, followed by your diagnosis; the commit message says so too. The run ends there, without moving on to the next objectives.
 
