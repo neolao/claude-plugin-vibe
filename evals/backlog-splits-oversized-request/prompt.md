@@ -14,6 +14,6 @@ Invoke the `vibe:backlog` skill (Skill tool, `skill: "vibe:backlog"`) with this 
 add CSV export, add a dark mode, and add email notifications
 ```
 
-This bundles three independently shippable capabilities into one request. Per the skill's own Step 6, this should trigger a question asking whether to split it into separate items before anything is created. If it asks, answer yes and let it proceed as a batch. Do not pre-emptively split the request yourself before invoking the skill — let the skill drive that decision.
+This bundles three independently shippable capabilities into one request. Per the skill's own Step 6, this should trigger a question asking whether to split it into separate items before anything is created. If it asks, write the question out verbatim as a message of its own, before creating anything, then, without ending your turn (nobody else will reply), answer yes in a following message and let it proceed as a batch. Do not pre-emptively split the request yourself before invoking the skill — let the skill drive that decision.
 
 Once it finishes, report back: the exact question it asked (if any), the files it created, and the commit it made.

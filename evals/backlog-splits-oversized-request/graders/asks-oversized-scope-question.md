@@ -13,6 +13,13 @@ criteria: |
   FAIL if backlog files were created without ever asking, if the question was
   asked but did not name distinct candidate titles, or if the question was
   asked only after files had already been written.
+  The trace is a raw event stream: an assistant message can show up in
+  several events, and the skill's own instructions are also in it. Judge
+  order by the assistant's own text events versus its `Write` tool calls on
+  `.vibe/backlog/` files: the question must be an assistant text event that
+  comes before the first such `Write`. A final report that only quotes the
+  question afterwards does not count, and neither do the skill's
+  instructions.
 weight: 2
 ---
 
