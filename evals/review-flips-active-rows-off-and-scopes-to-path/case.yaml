@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: review-flips-active-rows-off-and-scopes-to-path
+description: >
+  /vibe:review Step 1 also flips rows the other way: a row marked active for a
+  project fact that is no longer true (a dependency manifest, a .vibe/ folder)
+  must be switched off, while a row marking an explicit opt-in stays active.
+  The run is scoped to src/ through the argument. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
