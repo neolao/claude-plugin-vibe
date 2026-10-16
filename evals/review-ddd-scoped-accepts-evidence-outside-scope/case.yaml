@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: review-ddd-scoped-accepts-evidence-outside-scope
+description: >
+  Precision mirror of review-ddd-scoped-finds-evidence-outside-scope: the
+  agent reviews fixtures/orders/ only, where the same shapes are cleared by a
+  file outside the scope (the promotion module and the use case add lines
+  through `add_line` and the shipping quote only reads the read-only view,
+  `Address` is frozen and `with_street` returns a new one, the nightly job
+  gets `Order` objects, and every package calls the customer a customer).
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: review-ddd-scoped-finds-evidence-outside-scope
+description: >
+  Scoped twin of review-ddd-finds-cross-module-violations: the agent reviews
+  fixtures/orders/ only, where the package looks right on its own and each
+  defect needs a file outside the scope to show (a promotion module appending
+  to the aggregate's private list, an address type that is a value object
+  edited in place, raw rows read by index in a nightly job, a buyer that the
+  rest of the shop calls a customer). Every finding must stay anchored on a
+  file in scope.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
