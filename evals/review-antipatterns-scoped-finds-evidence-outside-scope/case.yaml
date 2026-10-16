@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: review-antipatterns-scoped-finds-evidence-outside-scope
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
