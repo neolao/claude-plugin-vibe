@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: changelog-inserts-the-missing-unreleased-heading
+description: >
+  CHANGELOG.md exists with a released [1.0.0] section and no [Unreleased]
+  heading at all. A fix and then a feature landed since the tag. The skill
+  must insert exactly one `## [Unreleased]` above `## [1.0.0]`, put Added
+  before Fixed under it, and append nothing below the released section.
+  The sibling case changelog-fills-the-empty-unreleased-heading is the
+  precision side (the heading exists, empty, and must be reused). Needs
+  --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
