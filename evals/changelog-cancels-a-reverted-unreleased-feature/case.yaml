@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: changelog-cancels-a-reverted-unreleased-feature
+description: >
+  Since the last tag: a `feat:` that added a PDF export and wrote its own
+  Added entry under [Unreleased], a real `fix:`, then a `Revert "feat: …"`
+  commit that took the code back but left the entry in place. The feature
+  and its revert cancel out: no PDF entry may remain under [Unreleased],
+  no Removed section may appear, and the fix still lands under Fixed.
+  The sibling case changelog-records-the-revert-of-a-released-feature is
+  the precision side (the target was released, the revert is the change).
+  Needs --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: changelog-records-the-revert-of-a-released-feature
+description: >
+  Precision side of changelog-cancels-a-reverted-unreleased-feature: the
+  PDF export shipped in 1.1.0 and is reverted after the tag. Here the
+  revert is the change the user sees — a Removed entry under [Unreleased]
+  about the PDF export — while the released [1.1.0] section that
+  announced it stays untouched. Needs --allow-tools Bash Write Edit to
+  run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
