@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: changelog-classifies-by-prefix-over-keyword
+description: >
+  Three commits where the bare keywords point the wrong way: `feat: add
+  two-factor auth …` (keyword `auth` used to mean Security), `fix: remove
+  stale sessions …` (`remove` used to mean Removed), and `Monday changes`,
+  a message with no prefix and no keyword whose diff adds a `--json` flag.
+  The prefix must win, and the last one must be classified from its diff.
+  The sibling case changelog-classifies-plain-messages-by-keyword is the
+  precision side (no prefixes at all, keywords alone). Needs
+  --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
