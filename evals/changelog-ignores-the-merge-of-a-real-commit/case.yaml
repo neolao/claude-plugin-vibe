@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: changelog-ignores-the-merge-of-a-real-commit
+description: >
+  Precision side of changelog-reads-a-merge-of-throwaway-commits: the
+  same pull request, merged with the same message, but its branch holds
+  one real `feat:` commit. The commit is the change and the merge is
+  noise: exactly one PDF entry under Added, nothing from the merge
+  message. Needs --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

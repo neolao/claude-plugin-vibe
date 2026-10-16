@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: changelog-reads-a-merge-of-throwaway-commits
+description: >
+  A pull request merged with three throwaway commits (`wip`, `fixup`,
+  `typo`) whose merge message carries the only description: "Merge pull
+  request #12 from alice/pdf-export" / "Add PDF export for monthly
+  reports". The branch's commits are noise, so the merge is the change:
+  an Added entry about the PDF export, with none of the throwaway words
+  or the merge boilerplate. A real fix on main must still land. The
+  sibling case changelog-ignores-the-merge-of-a-real-commit is the
+  precision side. Needs --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
