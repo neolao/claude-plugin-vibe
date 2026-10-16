@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: review-dependencies-scoped-accepts-evidence-outside-scope
+description: >
+  Precision mirror of review-dependencies-scoped-finds-evidence-outside-scope:
+  the review is scoped to fixtures/orders/, whose only module imports the
+  standard library, while every declared dependency is used somewhere else
+  in the repository — httpx and tabulate by runtime code in
+  fixtures/payments/ and fixtures/cli/, python-dateutil (imported as
+  dateutil) by fixtures/reports/, freezegun by fixtures/tests/ from the dev
+  extra, and pytest-cov, never imported, as the plugin named in the pytest
+  options of fixtures/pyproject.toml. An agent that greps only the scope
+  calls all of them unused. No pip-audit in the sandbox: the
+  audit-could-not-run finding is expected and not graded here. Needs
+  --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

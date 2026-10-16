@@ -1,0 +1,16 @@
+schema_version: "1.1"
+name: review-dependencies-scoped-finds-evidence-outside-scope
+description: >
+  Scoped twin of review-dependencies-finds-python-violations: the review is
+  scoped to fixtures/orders/ while the manifest, the importers and the tests
+  sit outside that path. The agent must still review fixtures/pyproject.toml
+  and file each finding under the category a whole-repository read gives:
+  tabulate is imported nowhere (Unused), httpx sits in the dev extra but
+  fixtures/payments/gateway.py imports it (Misplaced), freezegun sits in the
+  runtime dependencies but only fixtures/tests/ imports it (Misplaced). An
+  agent that greps only the scope sees no import of any of them and files
+  all three as Unused. No pip-audit in the sandbox: the audit-could-not-run
+  finding is expected and not graded here. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
