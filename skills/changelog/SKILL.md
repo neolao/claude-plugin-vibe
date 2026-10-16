@@ -33,8 +33,8 @@ Bring `## [Unreleased]` in `CHANGELOG.md` up to date with the git history ([Keep
 
 ## Step 3 — Write
 
-Add the new entries under `## [Unreleased]`, grouped by category; leave versioned sections untouched. No file yet: create it with the Keep a Changelog header.
+Add the new entries under `## [Unreleased]`, grouped by category in the table's order; leave versioned sections untouched. Create whichever is missing — the file with the Keep a Changelog header, the `## [Unreleased]` heading above the first version section, the category heading — never a second `[Unreleased]`.
 
 ## Step 4 — Report
 
-Short, plain sentences: commits processed, kept vs discarded, categories populated. Don't print the file unless asked.
+Short, plain sentences: commits processed, kept vs discarded, categories populated — or that the file was left as is, when every commit was covered or noise. Don't print the file unless asked.
