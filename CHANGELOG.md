@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-10-16
+
 ### Added
 
 - Six new review dimensions in `/vibe:review`: real correctness bugs (each finding comes with the scenario that triggers it), comment usefulness and concision, the shape of function arguments and data-type fields, hand-maintained coordination (the same rule written twice with nothing to catch a divergence), documentation consistency (contradictions, broken references, vocabulary against the glossary), and an opt-in alternative-design pass that proposes a named pattern only when it measurably beats the code as written.
@@ -25,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Review agents gained the sharper exclusion rules of a per-principle review: fewer false positives on SOLID, DDD, ports & adapters, naming and simplicity.
 - Task tracking without the native task system now keeps a structured task file through a small script that enforces the same rules (one task in progress, no skipped transition) instead of a loose checklist.
 - Every agent now pins a full model id and an explicit effort level.
+- The demo website now shows the twenty review dimensions, the nine experts, the twenty commands, and three new scripted demos (challenge, verify, rewrite).
 
 - `/vibe:feature` and `/vibe:fix` now pick the smallest complete change (reuse existing code, then stdlib, then an installed dependency, then new code) and report what they deliberately left out.
 
@@ -295,7 +298,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/neolao/claude-plugin-vibe/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/neolao/claude-plugin-vibe/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.15.0...v2.0.0
 [1.15.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.14.1...v1.15.0

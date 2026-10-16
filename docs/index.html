@@ -390,7 +390,8 @@
         <div class="benefit reveal"><span class="num">05</span><h3>Feedback loops that close</h3><p>Pre-existing test failures are offered for tracking, a reminder fires when several changes ship unreviewed, and every dead end is logged with its diagnosis so no session rediscovers it.</p></div>
         <div class="benefit reveal"><span class="num">06</span><h3>Nothing silently lost</h3><p>Work is committed before every turn ends — even interruptions — and a one-command release finalizes the changelog, refreshes docs, bumps the version, and tags.</p></div>
         <div class="benefit wide reveal"><span class="num">07</span><h3>A backlog that empties itself</h3><p>One command works the queue with no approval step and no questions: items are picked, implemented and shipped one after another, each in isolation so a long run stays affordable. Progress is committed at every item boundary — so a closed session, a crash, or a usage limit hit mid-item is picked back up exactly where it stopped, and an item that turns out to be a dead end is set aside with its reason instead of stalling the rest.</p></div>
-        <div class="benefit reveal"><span class="num">08</span><h3>Multi-repo workspaces</h3><p>For projects split across several Git repos: one command sets up a hub tracking every sibling repo's status and role, another picks the next eligible task across all of them, implements it, then pushes and publishes the release on its own.</p></div>
+        <div class="benefit reveal"><span class="num">08</span><h3>Decisions put to the test</h3><p>A settled decision gets a devil's advocate before it ships; any deliverable gets a Definition-of-Done check by three control grids; an expert answers a precise design question on demand; and existing text is reworked for clarity against named rules, never shortened for its own sake.</p></div>
+        <div class="benefit reveal"><span class="num">09</span><h3>Multi-repo workspaces</h3><p>For projects split across several Git repos: one command sets up a hub tracking every sibling repo's status and role, another picks the next eligible task across all of them, implements it, then pushes and publishes the release on its own.</p></div>
       </div>
     </div>
   </section>
@@ -416,8 +417,8 @@
 
         <div class="demo reveal">
           <div class="demo-copy">
-            <h3><span class="cmd-name">/vibe:review</span> — seventeen auditors at once</h3>
-            <p>Review agents run <b>in parallel</b>, each on a single quality dimension, with a color-coded status line. The test-review agent doesn't just read your tests — it <b>runs the real suite</b> and flags tests that can't actually fail. Findings are fixed, not filed away.</p>
+            <h3><span class="cmd-name">/vibe:review</span> — twenty auditors at once</h3>
+            <p>Review agents run <b>in parallel</b>, each on a single quality dimension, with a color-coded status line. The correctness agent never reports a bug it cannot make fail — every finding comes with its scenario. The test-review agent doesn't just read your tests — it <b>runs the real suite</b> and flags tests that can't actually fail. Findings are fixed, not filed away.</p>
           </div>
           <div class="term" data-demo="review">
             <div class="term-bar" aria-hidden="true"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude — /vibe:review</span></div>
@@ -444,6 +445,39 @@
           <div class="term" data-demo="auto">
             <div class="term-bar" aria-hidden="true"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude — /vibe:auto</span></div>
             <div class="term-body" role="img" aria-label="Terminal demo of /vibe:auto: backlog items are implemented one after another without approval, one item is set aside as blocked, the session is interrupted by a usage limit and the next run resumes exactly where it stopped."></div>
+          </div>
+        </div>
+
+        <div class="demo reveal">
+          <div class="demo-copy">
+            <h3><span class="cmd-name">/vibe:challenge</span> — attack the decision first</h3>
+            <p>State a decision you have already made, with its reasons and the alternatives you rejected. One read-only advocate hunts the blind spot; <b>every</b> objection comes back, each with an opinion attached — the author of the decision does not get to filter them. One pass, no loop.</p>
+          </div>
+          <div class="term" data-demo="challenge">
+            <div class="term-bar" aria-hidden="true"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude — /vibe:challenge</span></div>
+            <div class="term-body" role="img" aria-label="Terminal demo of /vibe:challenge: a settled decision is handed to a devil's advocate, three objections come back, each with an opinion, and a blind spot is recorded."></div>
+          </div>
+        </div>
+
+        <div class="demo reveal">
+          <div class="demo-copy">
+            <h3><span class="cmd-name">/vibe:verify</span> — done means checked</h3>
+            <p>Any deliverable — a document, a plan, ad-hoc code — is checked against the <b>original request</b> by three parallel grids: scope, rigor, finish. A failed grid means a fix and a full rerun of all three, three passes at most, and the session ends with a verdict block that cannot be faked by omission.</p>
+          </div>
+          <div class="term" data-demo="verify">
+            <div class="term-bar" aria-hidden="true"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude — /vibe:verify</span></div>
+            <div class="term-body" role="img" aria-label="Terminal demo of /vibe:verify: three control grids run in parallel, one fails, the deliverable is fixed, all three rerun and pass, and the DoD block closes the session."></div>
+          </div>
+        </div>
+
+        <div class="demo reveal">
+          <div class="demo-copy">
+            <h3><span class="cmd-name">/vibe:rewrite</span> — clearer, not shorter</h3>
+            <p>An existing text is diagnosed defect by defect, each tied to a <b>named rule</b> — Williams, the given-new contract, dependency locality, ISO 24495-1 — then rewritten, and a control agent checks that no meaning, hedge or responsibility was lost. Nothing is written before you pick what to keep.</p>
+          </div>
+          <div class="term" data-demo="rewrite">
+            <div class="term-bar" aria-hidden="true"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude — /vibe:rewrite</span></div>
+            <div class="term-body" role="img" aria-label="Terminal demo of /vibe:rewrite: a document is diagnosed against named rules, rewrites are proposed in a before/after table, a control agent confirms the meaning is preserved, and the user picks what to apply."></div>
           </div>
         </div>
 
@@ -476,18 +510,25 @@
   <section id="commands">
     <div class="wrap">
       <p class="sec-label reveal">the toolbox</p>
-      <h2 class="reveal">Thirteen commands, one workflow</h2>
+      <h2 class="reveal">Twenty commands, one workflow</h2>
       <div class="cmd-table reveal">
         <table>
           <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
           <tbody>
             <tr><td><code>/vibe:init</code></td><td>Initialize or regenerate the project's CLAUDE.md for vibe coding</td></tr>
             <tr><td><code>/vibe:backlog</code></td><td>List or add feature backlog items</td></tr>
-            <tr><td><code>/vibe:clarify</code></td><td>Interview the user round by round until a plan, idea, or decision is fully settled</td></tr>
+            <tr><td><code>/vibe:clarify</code></td><td>Interview the user round by round until a plan, idea, or decision is fully settled, each decision with a priority</td></tr>
+            <tr><td><code>/vibe:challenge</code></td><td>Devil's advocate on a settled structuring decision — one adversarial pass, every objection reported</td></tr>
+            <tr><td><code>/vibe:consult</code></td><td>Ask one of the plugin's experts a precise question (architecture by default)</td></tr>
             <tr><td><code>/vibe:feature</code></td><td>Implement a new feature using TDD, then update the changelog</td></tr>
             <tr><td><code>/vibe:fix</code></td><td>Fix a bug using TDD (reproduce first), then update the changelog</td></tr>
             <tr><td><code>/vibe:auto</code></td><td>Work the backlog autonomously — no approval steps, resumes after any interruption</td></tr>
             <tr><td><code>/vibe:review</code></td><td>Run a multi-agent code quality review and auto-apply fixes</td></tr>
+            <tr><td><code>/vibe:verify</code></td><td>Definition-of-Done check of any deliverable through three parallel control grids</td></tr>
+            <tr><td><code>/vibe:rewrite</code></td><td>Rework an existing text for clarity, defect by defect, with a meaning-preservation check</td></tr>
+            <tr><td><code>/vibe:debrief</code></td><td>End-of-task retrospective turned into durable project memory</td></tr>
+            <tr><td><code>/vibe:learn</code></td><td>Turn a correction stated in general terms into a global rule</td></tr>
+            <tr><td><code>/vibe:report-issue</code></td><td>Capture a misbehaving skill or agent as a regression eval case</td></tr>
             <tr><td><code>/vibe:sync</code></td><td>Generate or update the internal codebase context map</td></tr>
             <tr><td><code>/vibe:changelog</code></td><td>Update CHANGELOG.md from git history</td></tr>
             <tr><td><code>/vibe:docs</code></td><td>Generate or refresh README managed sections and docs/</td></tr>
@@ -635,18 +676,20 @@
     ],
     review: [
       { t:"cmd", text:"/vibe:review" },
-      { t:"out", d:500, html:'<span class="t-dim">●</span> fanning out <span class="t-bold">10 review agents</span> in parallel…' },
-      { t:"run", d:300, html:'  <span class="t-bold">security</span>    <span class="t-dim">scanning for secrets & injections</span>', after:2300, done:'  <span class="t-ok">✓</span> <span class="t-bold">security</span>    <span class="t-ok">clean</span>' },
+      { t:"out", d:500, html:'<span class="t-dim">●</span> fanning out <span class="t-bold">16 review agents</span> in parallel…' },
+      { t:"run", d:300, html:'  <span class="t-bold">correctness</span> <span class="t-dim">hunting bugs that can fail</span>', after:3100, done:'  <span class="t-ok">✓</span> <span class="t-bold">correctness</span> <span class="t-err">1 bug</span> <span class="t-dim">— off-by-one, scenario attached</span>' },
+      { t:"run", d:150, html:'  <span class="t-bold">security</span>    <span class="t-dim">scanning for secrets & injections</span>', after:2300, done:'  <span class="t-ok">✓</span> <span class="t-bold">security</span>    <span class="t-ok">clean</span>' },
       { t:"run", d:150, html:'  <span class="t-bold">naming</span>      <span class="t-dim">auditing identifiers</span>', after:2900, done:'  <span class="t-ok">✓</span> <span class="t-bold">naming</span>      <span class="t-dim">1 finding</span>' },
       { t:"run", d:150, html:'  <span class="t-bold">simplicity</span>  <span class="t-dim">measuring nesting & length</span>', after:3400, done:'  <span class="t-ok">✓</span> <span class="t-bold">simplicity</span>  <span class="t-dim">1 finding</span>' },
       { t:"run", d:150, html:'  <span class="t-bold">robustness</span>  <span class="t-dim">tracing error paths</span>', after:2600, done:'  <span class="t-ok">✓</span> <span class="t-bold">robustness</span>  <span class="t-ok">clean</span>' },
       { t:"run", d:150, html:'  <span class="t-bold">tests</span>       <span class="t-dim">running the real suite…</span>', after:4200, done:'  <span class="t-ok">✓</span> <span class="t-bold">tests</span>       <span class="t-warn">1 tautological test flagged</span>' },
       { t:"out", d:4600, html:'<span class="t-dim">●</span> applying fixes…' },
-      { t:"out", d:800, html:'  <span class="t-ok">✓</span> renamed <span class="t-dim">data2</span> → <span class="t-bold">pendingInvoices</span>' },
+      { t:"out", d:800, html:'  <span class="t-ok">✓</span> last page no longer dropped <span class="t-dim">— paginate.ts, &lt; became &lt;=</span>' },
+      { t:"out", d:600, html:'  <span class="t-ok">✓</span> renamed <span class="t-dim">data2</span> → <span class="t-bold">pendingInvoices</span>' },
       { t:"out", d:600, html:'  <span class="t-ok">✓</span> split a 62-line function in parser.ts' },
       { t:"out", d:600, html:'  <span class="t-ok">✓</span> rewrote an assertion that could never fail' },
       { t:"gap" },
-      { t:"out", d:400, html:'<span class="t-ok">✔ review complete</span> <span class="t-dim">— 3 findings, 3 fixed · logged to</span> .vibe/last-review.md' }
+      { t:"out", d:400, html:'<span class="t-ok">✔ review complete</span> <span class="t-dim">— 4 findings, 4 fixed · logged to</span> .vibe/last-review.md' }
     ],
     backlog: [
       { t:"cmd", text:'/vibe:backlog "Export reports as PDF and add a weekly email digest"' },
@@ -676,6 +719,40 @@
       { t:"run", d:500, html:'  <span class="t-dim">004</span> login-crash <span class="t-dim">— fix</span>', after:2000, done:'  <span class="t-ok">✓</span> <span class="t-dim">004</span> login-crash <span class="t-dim">— shipped</span> <span class="t-warn">e5f6a7b</span>' },
       { t:"gap" },
       { t:"out", d:600, html:'<span class="t-ok">✔ run complete</span> <span class="t-dim">— 2 shipped, 1 blocked · backlog drained</span>' }
+    ],
+    challenge: [
+      { t:"cmd", text:'/vibe:challenge "PostgreSQL over SQLite for the desktop app"' },
+      { t:"out", d:600, html:'<span class="t-dim">●</span> decision stated <span class="t-dim">— reasons: team knows it, JSON columns · rejected: SQLite (concurrency)</span>' },
+      { t:"run", d:400, html:'<span class="t-dim">●</span> advocate <span class="t-dim">attacking the decision…</span>', after:2600, done:'<span class="t-dim">●</span> advocate <span class="t-warn">3 objections</span>' },
+      { t:"out", d:2900, html:'  <span class="t-bold">O1</span> single-user desktop app: the concurrency motive does not hold <span class="t-dim">—</span> <span class="t-warn">kept</span>' },
+      { t:"out", d:700, html:'  <span class="t-bold">O2</span> every install now ships a database server <span class="t-dim">—</span> <span class="t-warn">kept</span>' },
+      { t:"out", d:700, html:'  <span class="t-bold">O3</span> JSON columns exist in SQLite too <span class="t-dim">—</span> <span class="t-dim">dismissed: query planner differs, measured</span>' },
+      { t:"gap" },
+      { t:"out", d:600, html:'<span class="t-dim">⚔️ Challenge —</span> <span class="t-bold">Blind spot found:</span> <span class="t-dim">the rejected alternative was rejected for a reason that does not apply</span>' }
+    ],
+    verify: [
+      { t:"cmd", text:"/vibe:verify docs/migration-plan.md" },
+      { t:"out", d:500, html:'<span class="t-dim">●</span> request quoted verbatim <span class="t-dim">— deliverable: migration-plan.md</span>' },
+      { t:"run", d:400, html:'  <span class="t-bold">scope</span>   <span class="t-dim">100 % of the request? nothing extra?</span>', after:2400, done:'  <span class="t-ok">✓</span> <span class="t-bold">scope</span>   <span class="t-ok">[PASS]</span> <span class="t-dim">— 3 proofs cited</span>' },
+      { t:"run", d:150, html:'  <span class="t-bold">rigor</span>   <span class="t-dim">edge cases, contradictions, regressions</span>', after:2900, done:'  <span class="t-err">✗</span> <span class="t-bold">rigor</span>   <span class="t-err">[FAIL]</span> <span class="t-dim">— rollback step missing for phase 2</span>' },
+      { t:"run", d:150, html:'  <span class="t-bold">finish</span>  <span class="t-dim">concision, residue, conventions</span>', after:2100, done:'  <span class="t-ok">✓</span> <span class="t-bold">finish</span>  <span class="t-ok">[PASS]</span>' },
+      { t:"out", d:3200, html:'<span class="t-dim">●</span> fixing <span class="t-dim">— rollback added to phase 2</span>' },
+      { t:"run", d:600, html:'<span class="t-dim">●</span> pass 2 <span class="t-dim">— all three grids again</span>', after:2600, done:'<span class="t-dim">●</span> pass 2 <span class="t-dim">— all three grids again</span> <span class="t-ok">3 × [PASS]</span>' },
+      { t:"gap" },
+      { t:"out", d:500, html:'<span class="t-dim">🛡️ DoD —</span> Scope <span class="t-ok">✅</span> · Rigor <span class="t-ok">✅</span> · Finish <span class="t-ok">✅</span>' },
+      { t:"out", d:300, html:'<span class="t-ok">✅ [DoD passed]</span>' }
+    ],
+    rewrite: [
+      { t:"cmd", text:"/vibe:rewrite docs/onboarding.md" },
+      { t:"out", d:500, html:'<span class="t-dim">●</span> reader: <span class="t-bold">new teammate, day one</span> <span class="t-dim">— diagnosing</span>' },
+      { t:"out", d:900, html:'  <span class="t-warn">W2</span> <span class="t-dim">"the configuration of the token is performed by"</span> <span class="t-dim">— action hidden in a noun</span>' },
+      { t:"out", d:500, html:'  <span class="t-warn">GN1</span> <span class="t-dim">"The cache is invalidated on deploy."</span> <span class="t-dim">— which cache? no antecedent</span>' },
+      { t:"out", d:500, html:'  <span class="t-warn">ISO 5.2.2</span> <span class="t-dim">warning about data loss comes after the step it concerns</span>' },
+      { t:"out", d:700, html:'<span class="t-dim">●</span> 3 rewrites proposed <span class="t-dim">— before / after table, 1 question to the author</span>' },
+      { t:"run", d:400, html:'<span class="t-dim">●</span> control <span class="t-dim">— is anything lost?</span>', after:2200, done:'<span class="t-dim">●</span> control <span class="t-dim">— is anything lost?</span> <span class="t-ok">[PASS]</span>' },
+      { t:"gap" },
+      { t:"out", d:400, html:'<span class="t-dim">✍️ Rewrite —</span> 3 rewrite(s) proposed on onboarding.md · Check <span class="t-ok">✅</span>' },
+      { t:"out", d:300, html:'<span class="t-warn">⏸️ [Rewrite awaiting validation]</span> <span class="t-dim">— apply all / a selection / none?</span>' }
     ],
     release: [
       { t:"cmd", text:"/vibe:release minor" },
