@@ -2,7 +2,7 @@
 name: changelog
 description: Update CHANGELOG.md (Keep a Changelog format) from git history since the last tag — entries land under [Unreleased]; cutting a version is /vibe:release's job
 argument-hint: "(no arguments)"
-version: 1.0.0
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
@@ -25,7 +25,7 @@ Bring `## [Unreleased]` in `CHANGELOG.md` up to date with the git history ([Keep
 | `fix:`, `bug`, `patch`, `correct`, `repair` | Fixed |
 | `security`, `vuln`, `cve`, `auth` | Security |
 
-- Write each entry as its user-facing impact, not the commit wording.
+- Write each entry as its user-facing impact, not the commit wording: no function, file or other internal name, not even in backticks — a command, flag, endpoint or setting the user types may be named.
 - **Skip a commit an existing `[Unreleased]` entry already covers** (`/vibe:feature` and `/vibe:fix` write theirs at implementation time).
 - Discard noise: merges, version bumps, `chore:` housekeeping unless significant.
 
