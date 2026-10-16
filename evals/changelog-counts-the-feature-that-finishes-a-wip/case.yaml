@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: changelog-counts-the-feature-that-finishes-a-wip
+description: >
+  Precision side of changelog-drops-wip-and-invisible-commits: the same
+  `wip: add PDF export (plan rejected)` is followed by `feat: add PDF
+  export for monthly reports`, with nothing yet under [Unreleased].
+  Exactly one Added entry about the PDF export — the wip rule must not
+  swallow the feature that finished it, nor double it. Needs
+  --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
