@@ -23,8 +23,9 @@ Bring `## [Unreleased]` in `CHANGELOG.md` up to date with the git history ([Keep
 | `deprecate` | Deprecated |
 | `remove`, `drop`, `delete` | Removed |
 | `fix:`, `bug`, `patch`, `correct`, `repair` | Fixed |
-| `security`, `vuln`, `cve`, `auth` | Security |
+| `security`, `vuln`, `cve` | Security |
 
+- The type prefix decides when there is one (`fix: remove stale sessions` is a fix, `chore(ci): fix flaky cache` housekeeping); the bare keywords classify messages without a prefix. A message that matches nothing (`Monday changes`) is classified from its diff (`git show <sha>`).
 - Write each entry as its user-facing impact, not the commit wording: no function, file or other internal name, not even in backticks — a command, flag, endpoint or setting the user types may be named.
 - **Skip a commit an existing `[Unreleased]` entry already covers** (`/vibe:feature` and `/vibe:fix` write theirs at implementation time).
 - Discard noise: merges, version bumps, `chore:` housekeeping unless significant, `wip:` partial work (the finished change arrives in a later `feat:`/`fix:` commit with its own entry), and any commit with no user-visible effect whatever its prefix — a refactor that changes nothing observable, tests, CI, formatting, dependency bumps, a documentation typo.
