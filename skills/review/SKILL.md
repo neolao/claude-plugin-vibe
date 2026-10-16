@@ -2,7 +2,7 @@
 name: review
 description: Run code quality review using specialized sub-agents defined in CLAUDE.md
 argument-hint: "[optional: path or file to review — defaults to full codebase]"
-version: 1.0.0
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
@@ -16,12 +16,15 @@ Read the `## Review agents` table in `CLAUDE.md`. If it is absent, apply the def
 
 | Agent | Active when |
 |---|---|
-| `review-tests`, `review-naming`, `review-security`, `review-dependencies`, `review-robustness`, `review-hygiene`, `review-antipatterns`, `review-simplicity`, `review-overengineering` | always |
+| `review-tests`, `review-naming`, `review-security`, `review-dependencies`, `review-robustness`, `review-hygiene`, `review-antipatterns`, `review-simplicity`, `review-overengineering`, `review-correctness`, `review-comments`, `review-signatures`, `review-coordination` | always |
 | `review-solid` | the codebase has classes or interfaces |
 | `review-architecture` | `.vibe/` exists (covers ports & adapters when the project explicitly follows hexagonal architecture) |
 | `review-performance` | API/server/full-stack app, or a real-time render/update loop |
 | `review-web-security` | the project exposes HTTP endpoints. Its **dynamic verification** mode (probing a locally-run instance) is opt-in: only when the table marks the row `✅ (dynamic)` |
-| `review-ddd` | explicit opt-in only |
+| `review-docs` | Markdown documentation beyond the README exists (`docs/`, `.vibe/`, ADRs, `.claude/rules/`) |
+| `review-ddd`, `review-alternative-design` | explicit opt-in only |
+
+An agent absent from an existing table is a new agent: add its row using the condition above, and list it among the flipped rows.
 
 If the table exists, re-check every row against the project as it is now, using the same conditions:
 - The reason column decides. A deliberate user choice ("by deliberate choice", "explicit opt-out", `(dynamic)`) is never overridden.

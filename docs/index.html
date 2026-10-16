@@ -366,7 +366,7 @@
   <div class="wrap hero">
     <p class="kicker">a claude code plugin</p>
     <h1>You describe.<br><span class="hl">Claude ships.</span><br><span class="dim">Nothing manual.</span></h1>
-    <p class="lede">Vibe coding, made rigorous: the human stays <em>Product Owner only</em> — describing requirements and judging outcomes — while Claude writes the tests first, implements, proves the change actually runs, reviews its own work with seventeen specialized agents, and cuts the release — one item at a time, or the whole backlog unattended.</p>
+    <p class="lede">Vibe coding, made rigorous: the human stays <em>Product Owner only</em> — describing requirements and judging outcomes — while Claude writes the tests first, implements, proves the change actually runs, reviews its own work with twenty specialized agents, and cuts the release — one item at a time, or the whole backlog unattended.</p>
     <div class="install">
       <span><span class="prompt">❯</span> <code id="install-cmd">/plugin marketplace add neolao/claude-plugin-vibe</code></span>
       <button class="copy-btn" id="copy" type="button" aria-label="Copy install command">copy</button>
@@ -385,7 +385,7 @@
       <div class="benefits">
         <div class="benefit reveal"><span class="num">01</span><h3>TDD-first, always</h3><p>Features and fixes start with a failing test, written in your stead — and every test is checked against a shared definition of a <em>tautological test</em>, so green means something.</p></div>
         <div class="benefit reveal"><span class="num">02</span><h3>Proven, not just green</h3><p>After implementation the change is exercised for real — nominal path plus an edge case — instead of trusting the suite. If the app won't even launch, it records a working launch recipe and retries.</p></div>
-        <div class="benefit reveal"><span class="num">03</span><h3>Fourteen-angle review</h3><p>One command fans out specialized agents — security, simplicity, naming, robustness, tests, and more — in parallel, each auditing a single dimension, then fixes what they find.</p></div>
+        <div class="benefit reveal"><span class="num">03</span><h3>Twenty-angle review</h3><p>One command fans out specialized agents — correctness, security, simplicity, naming, robustness, tests, and more — in parallel, each auditing a single dimension, then fixes what they find.</p></div>
         <div class="benefit reveal"><span class="num">04</span><h3>A backlog that commits itself</h3><p>Queue ideas as numbered items, singly or in bulk; bundled requests are split into independent items automatically. Implement any of them later just by number.</p></div>
         <div class="benefit reveal"><span class="num">05</span><h3>Feedback loops that close</h3><p>Pre-existing test failures are offered for tracking, a reminder fires when several changes ship unreviewed, and every dead end is logged with its diagnosis so no session rediscovers it.</p></div>
         <div class="benefit reveal"><span class="num">06</span><h3>Nothing silently lost</h3><p>Work is committed before every turn ends — even interruptions — and a one-command release finalizes the changelog, refreshes docs, bumps the version, and tags.</p></div>
@@ -503,19 +503,25 @@
   <section id="review-agents">
     <div class="wrap">
       <p class="sec-label reveal">the reviewers</p>
-      <h2 class="reveal">Fourteen dimensions, audited in parallel</h2>
+      <h2 class="reveal">Twenty dimensions, audited in parallel</h2>
       <p class="sec-intro reveal">Each agent focuses on exactly one quality dimension. <code>/vibe:init</code> decides which ones apply to your project.</p>
       <div class="agents reveal">
+        <span class="agent"><span class="h">▲</span>alternative-design</span>
         <span class="agent"><span class="h">▲</span>antipatterns</span>
         <span class="agent"><span class="h">▲</span>architecture</span>
+        <span class="agent"><span class="h">▲</span>comments</span>
+        <span class="agent"><span class="h">▲</span>coordination</span>
+        <span class="agent"><span class="h">▲</span>correctness</span>
         <span class="agent"><span class="h">▲</span>ddd</span>
         <span class="agent"><span class="h">▲</span>dependencies</span>
+        <span class="agent"><span class="h">▲</span>docs</span>
         <span class="agent"><span class="h">▲</span>hygiene</span>
         <span class="agent"><span class="h">▲</span>naming</span>
         <span class="agent"><span class="h">▲</span>overengineering</span>
         <span class="agent"><span class="h">▲</span>performance</span>
         <span class="agent"><span class="h">▲</span>robustness</span>
         <span class="agent"><span class="h">▲</span>security</span>
+        <span class="agent"><span class="h">▲</span>signatures</span>
         <span class="agent"><span class="h">▲</span>simplicity</span>
         <span class="agent"><span class="h">▲</span>solid</span>
         <span class="agent"><span class="h">▲</span>tests</span>
@@ -527,9 +533,10 @@
   <section id="experts">
     <div class="wrap">
       <p class="sec-label reveal">the advisors</p>
-      <h2 class="reveal">Eight experts, consulted before the code exists</h2>
+      <h2 class="reveal">Nine experts, consulted before the code exists</h2>
       <p class="sec-intro reveal">While <code>/vibe:feature</code> and <code>/vibe:fix</code> plan, up to 3 matching experts weigh in — requirements a Product Owner wouldn't think to state, folded straight into the plan.</p>
       <div class="agents reveal">
+        <span class="agent"><span class="h">◆</span>architecture</span>
         <span class="agent"><span class="h">◆</span>ui-ux</span>
         <span class="agent"><span class="h">◆</span>frontend-design</span>
         <span class="agent"><span class="h">◆</span>api-rest</span>
@@ -551,7 +558,7 @@
         <li><b>/vibe:backlog "some feature idea"</b> <span>— queue work as it comes to mind.</span></li>
         <li><b>/vibe:feature 001</b> <span>— or <code>/vibe:fix "bug description"</code> — implement, TDD-first, proven end-to-end.</span></li>
         <li><b>/vibe:auto</b> <span>— or let the whole queue run unattended: items are shipped one after another, and any interruption resumes where it stopped.</span></li>
-        <li><b>/vibe:review</b> <span>— periodically, to catch quality issues across seventeen dimensions.</span></li>
+        <li><b>/vibe:review</b> <span>— periodically, to catch quality issues across twenty dimensions.</span></li>
         <li><b>/vibe:release patch|minor|major</b> <span>— ship a version.</span></li>
       </ol>
     </div>

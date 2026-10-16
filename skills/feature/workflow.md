@@ -23,6 +23,8 @@ There is no one to answer a question: every gate resolves itself and the run end
 | Plan approval | wait for explicit approval | plan self-approved; written into the report instead of presented |
 | 3 failed attempts | escalate | escalation-log entry + `wip:` commit + verdict `blocked — [one-line diagnosis]` |
 | Pre-existing test failures | ask "track them in the backlog?" | create the backlog item via `vibe:backlog` without asking |
+| Scope drift | ask "widen the plan to cover this, or drop it and stay in scope?" | stay in scope, record the dropped action in the report's **Skipped** line |
+| Conflict between two plan requirements | different priorities → the higher wins silently and the arbitration is reported; same priority → ask which prevails | pick the reading closest to the brief, record it as an assumption |
 
 When a gate ends the run early on a backlog item: verdict `blocked` → set `status: blocked` in its frontmatter and append a `## Blocked` section (`YYYY-MM-DD` + the one-line reason); verdict `aborted` → the item is fine, put it back to `status: todo`. Then commit (standing rule).
 
@@ -77,6 +79,7 @@ Draft the technical plan as working notes, then compare the brief and notes agai
 
 - Pick the experts whose domain clearly matches, **3 maximum**; none if none matches (often the case for a bug fix).
 - Invoke them **in parallel** (Agent tool, `subagent_type: "vibe:expert-<name>"`) with a *plan consultation* prompt: the brief, the relevant plan notes, and this request verbatim: "Reply with three bulleted lists, ≤5 entries each, task-specific only (no generic checklists): `REQUIREMENTS:` (non-negotiable), `RISKS:` (domain pitfalls here), `TEST SCENARIOS:` (user action → expected result). Add a fourth list, `OPEN QUESTIONS:` (≤3), only when a real product decision in your domain is genuinely undetermined by the brief — not a technical detail you can decide yourself; phrase each for a non-technical Product Owner."
+- `vibe:expert-architecture` is consulted when the brief involves a real design choice — a new module or boundary, an axis of variation, state that evolves over time, several plausible modelings. Its consultation asks, in place of the three lists, for a named baseline (the obvious approach), up to two named alternatives scored against it on an explicit grid, a recommendation, and the question the choice depends on, if any — which joins the `OPEN QUESTIONS`. It counts toward the 3-expert cap. The rejected options and their reason go into your working notes and, when the choice is structural, the ADR's rejected alternatives.
 - Fold `REQUIREMENTS` and `TEST SCENARIOS` into the plan, `RISKS` into the assumptions or your notes. You remain the architect: when an expert conflicts with the project's patterns or another expert, decide and note why.
 - Collect every expert's `OPEN QUESTIONS` and put them to the user in one round, plain words, before presenting the plan — never an agent name. Their answers become plan requirements, not assumptions. In `--auto` mode, resolve them through the existing "Design ambiguity" gate instead of asking.
 
@@ -85,6 +88,10 @@ Draft the technical plan as working notes, then compare the brief and notes agai
 ## Presenting the plan
 
 Present the plan and **wait for explicit approval** before writing any code. The user is a Product Owner: short sentences, plain words, and **never a file, class, function, variable, or module name**. Cover the points the skill lists, plus assumptions (including pre-existing test failures, without technical detail) and, if experts were consulted, their domains in plain words ("UX", "API", "data") — never agent names or raw output. Technical details (files, test strategy, runtime verification command) stay in your working notes. If the user asks for changes, update and present again.
+
+## Scope drift
+
+From approval on, before any action no approved plan item covers — a file not planned, a new dependency, an unrequested refactor, a change of approach — pause and check it against the approved plan, systematically, not only when a doubt arises. Resolve it through the "Scope drift" gate: widen the plan or drop the action. A detail you can decide within the approved plan is not drift: decide it and mention it. When two plan requirements conflict, the "Conflict between two plan requirements" gate applies; when the brief came from `/vibe:clarify`, the priorities of its decisions (`🔒 MUST` > `⚖️ SHOULD` > `✨ NICE`) are the arbitration reference.
 
 ## Task list
 

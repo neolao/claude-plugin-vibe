@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Six new review dimensions in `/vibe:review`: real correctness bugs (each finding comes with the scenario that triggers it), comment usefulness and concision, the shape of function arguments and data-type fields, hand-maintained coordination (the same rule written twice with nothing to catch a divergence), documentation consistency (contradictions, broken references, vocabulary against the glossary), and an opt-in alternative-design pass that proposes a named pattern only when it measurably beats the code as written.
+- A software architecture expert, consulted while planning a feature or fix that involves a real design choice; it names a baseline, scores up to two alternatives on an explicit grid, and surfaces the question the choice depends on.
+- `/vibe:consult` asks any of the plugin's experts a precise question outside of feature and fix work.
+- `/vibe:challenge` plays devil's advocate on a structuring decision already settled, before it is executed or recorded.
+- `/vibe:verify` runs a Definition-of-Done check of any deliverable through three parallel control grids (scope, rigor, finish) and closes with an explicit verdict block.
+- `/vibe:rewrite` reworks an existing text for clarity defect by defect, each defect tied to a named rule, with a meaning-preservation check before anything is written.
+- `/vibe:debrief` turns a short end-of-task retrospective into durable project memory; `/vibe:learn` turns a correction stated in general terms into a global rule valid in every repository.
+- `/vibe:report-issue` captures a misbehaving skill or agent as a regression eval case in the plugin's own repository.
+
 ### Changed
+
+- Clarification interviews now record a priority on every settled decision (must / should / nice), keep the decision tree in a file that survives context compaction, and reopen a decision when a later answer contradicts it.
+- Features and fixes now stop before an action the approved plan does not cover and ask whether to widen the plan; conflicts between plan requirements are settled by priority.
+- Review agents gained the sharper exclusion rules of a per-principle review: fewer false positives on SOLID, DDD, ports & adapters, naming and simplicity.
+- Task tracking without the native task system now keeps a structured task file through a small script that enforces the same rules (one task in progress, no skipped transition) instead of a loose checklist.
+- Every agent now pins a full model id and an explicit effort level.
 
 - `/vibe:feature` and `/vibe:fix` now pick the smallest complete change (reuse existing code, then stdlib, then an installed dependency, then new code) and report what they deliberately left out.
 

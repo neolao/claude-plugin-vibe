@@ -4,12 +4,13 @@ focus: trace
 criteria: |
   The skill supports exactly two tracking paths and must be explicit about
   which one it took: `TaskCreate` when the dedicated task system exists in
-  the environment, or — when it does not — saying so out loud and writing a
-  `task-list.md` checklist to the scratchpad directory instead.
+  the environment, or — when it does not — announcing it with the skill's
+  fixed sentence and keeping a `tasks.tsv` task file in the scratchpad
+  directory instead (through its script, or by hand when Bash is unavailable).
 
   PASS if the response states unambiguously which of the two paths was used,
   and that statement matches what actually happened in the run (tasks created
-  through the task system, or a scratchpad checklist written after announcing
+  through the task system, or a scratchpad task file written after announcing
   the fallback).
   FAIL if the response is silent about how the list was tracked, or claims
   one path while the run shows the other — in particular, claiming the task

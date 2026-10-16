@@ -11,9 +11,11 @@ claude-plugin-vibe/
 ├── .claude-plugin/
 │   ├── plugin.json        # plugin identity: name "vibe", version, keywords
 │   └── marketplace.json   # marketplace listing pointing at this repo
-├── skills/<name>/SKILL.md # one directory per skill (13 /vibe:* slash commands + 2 internal)
-├── agents/review-*.md     # one file per review dimension (14 agents, after-the-fact critics)
-├── agents/expert-*.md     # one file per domain expert (8 agents, before/during prescriptive consultants)
+├── skills/<name>/SKILL.md # one directory per skill (20 /vibe:* slash commands + 2 internal)
+├── agents/review-*.md     # one file per review dimension (20 agents, after-the-fact critics)
+├── agents/expert-*.md     # one file per domain expert (9 agents, before/during prescriptive consultants)
+├── skills/*/references/   # grids and rule sets a skill reads at invocation
+├── skills/tasks/scripts/tasks.sh   # task-file fallback of vibe:tasks (POSIX sh + awk, tested by evals/tasks-script-test.sh)
 ├── scripts/subagent-statusline.sh  # renders the agent-panel status line
 ├── settings.json          # wires the subagentStatusLine hook to the script
 └── docs/                  # this developer documentation + the GitHub Pages site
@@ -23,9 +25,9 @@ claude-plugin-vibe/
 
 ```mermaid
 flowchart LR
-    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>13 slash commands + tasks, publish (internal)"]
-    skills -- "/vibe:review fans out" --> agents["agents/review-*.md<br/>14 review agents"]
-    skills -- "/vibe:feature, /vibe:fix consult" --> experts["agents/expert-*.md<br/>8 domain experts"]
+    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>20 slash commands + tasks, publish (internal)"]
+    skills -- "/vibe:review fans out" --> agents["agents/review-*.md<br/>20 review agents"]
+    skills -- "/vibe:feature, /vibe:fix, /vibe:consult" --> experts["agents/expert-*.md<br/>9 domain experts"]
     skills -- "generate & read" --> vibe[".vibe/ context map<br/>(in the target project)"]
     manifests[".claude-plugin/*.json<br/>settings.json"] -- "register commands & hook" --> skills
     manifests -- "subagentStatusLine hook" --> statusline["scripts/subagent-statusline.sh"]
@@ -34,13 +36,17 @@ flowchart LR
 
 ## Skills (`skills/`)
 
-Each `/vibe:<name>` command is a self-contained instruction set in `skills/<name>/SKILL.md`, with frontmatter `name`, `description`, and optional `argument-hint`. Thirteen skills are user-invocable slash commands covering the full workflow: `init`, `backlog`, `clarify`, `feature`, `fix`, `auto`, `review`, `sync`, `changelog`, `docs`, `release`, `workspace-init`, `next-task`. Two more, `tasks` and `publish`, set `user-invocable: false` — hidden from the `/` menu, callable only by the others through the Skill tool.
+Each `/vibe:<name>` command is a self-contained instruction set in `skills/<name>/SKILL.md`, with frontmatter `name`, `description`, and optional `argument-hint`. Twenty skills are user-invocable slash commands covering the full workflow: `init`, `backlog`, `clarify`, `challenge`, `consult`, `feature`, `fix`, `auto`, `review`, `verify`, `rewrite`, `debrief`, `learn`, `report-issue`, `sync`, `changelog`, `docs`, `release`, `workspace-init`, `next-task`. Two more, `tasks` and `publish`, set `user-invocable: false` — hidden from the `/` menu, callable only by the others through the Skill tool.
 
 Skills invoke each other through the Skill tool rather than duplicating logic: `feature` and `fix` call `sync` (and `docs`/`changelog` steps) before committing; `init` calls `sync` to bootstrap `.vibe/`; `release` refreshes docs and changelog. `backlog`, `init`, and `workspace-init` also invoke `clarify` conditionally — only when what they have to work with (a one-line item description, an empty project's stated idea, a new workspace's purpose) is too thin to act on safely — and fold its settled synthesis back into their own flow instead of guessing. `init`, `feature`, `fix`, `review`, `docs`, `release`, and `workspace-init` all delegate task-list creation to `tasks`, which owns the only fallback logic (a scratchpad checklist) for when `TaskCreate` is unavailable in the environment. `auto` is the only skill that drives other skills through sub-agents — one per backlog item, strictly sequential since they share the Git working tree — so its own context stays constant over a long unattended run. Runtime verification is delegated to Claude Code's native `run` skill. `next-task` is the only skill in the plugin that pushes and publishes on its own — every other skill, including `auto`, stops at a local commit by design. The dynamic side of these flows is documented in `docs/workflows.md`.
 
 ## Interviewing for missing detail (`clarify`)
 
 `clarify` (`skills/clarify/SKILL.md`) maps whatever it's given — a plan, an idea, a decision — as a design tree of dependent questions, and works it round by round: each round asks every currently-answerable question at once, with a recommended answer, then waits; an answer can unblock questions that depended on it, reshaping the tree for the next round. Any question answerable by looking rather than asking is dispatched to a sub-agent instead of put to the user. It ends with a `CLARIFY-RESULT: settled|partial|abandoned` line plus a `### Synthesis`/`### Decisions made` payload — read identically whether a human typed `/vibe:clarify` directly or another skill invoked it and needs to keep going with the answer. Its own dialogue adapts to whichever language the conversation is in, unlike the rest of the plugin's user-facing strings, which are fixed English (see `docs/development.md`).
+
+## Standalone judgement skills (`challenge`, `consult`, `verify`, `rewrite`, `debrief`, `learn`, `report-issue`)
+
+Seven skills run outside the feature/fix pipeline and share one shape: a single pass, read-only sub-agents fed a grid from the skill's `references/`, nothing written before the user validates, and a fixed closing block whose presence proves the skill ran. `challenge` launches one devil's advocate against a settled decision and reports every objection with the main agent's opinion attached (filtering would reproduce the bias it exists to break). `consult` routes a precise question to one `vibe:expert-*` agent. `verify` fans out three control grids (scope, rigor, finish) over a deliverable, reruns all three after any fix, three passes at most. `rewrite` diagnoses an existing text against named rules (Williams, the given-new contract, dependency locality, ISO 24495-1, Ousterhout for code comments), rewrites defect by defect, and has one sub-agent check that no meaning was lost. `debrief` turns one to three retrospective questions into project memory; `learn` turns a correction stated in general terms into a one-line rule in `~/.claude/rules/`; `report-issue` writes a regression eval case for a misbehaving skill or agent into the plugin's own checkout.
 
 ## Multi-repo workspaces (`workspace-init`, `next-task`)
 
@@ -53,15 +59,15 @@ Two skills extend the plugin above the single-repo level, for a project split ac
 
 Each `agents/review-<dimension>.md` audits exactly one quality dimension (frontmatter: `name`, `description`, `tools`). The finding format, severity scale, and read-only rule are not repeated per agent: `/vibe:review` injects that shared contract into every agent prompt. It reads the activation table in the target project's `CLAUDE.md`, re-checks each activation condition against the project's current state, then runs the active agents in parallel. Overlapping checks are explicitly delegated: each check belongs to one owning agent, so the same issue is never reported from two angles.
 
-Agents are read-only by their `tools` frontmatter; three also get Bash: `review-tests` executes the project's real test suite, `review-dependencies` runs the stack's audit tool, and `review-web-security` probes a locally-launched instance when its opt-in dynamic mode is enabled. `review-architecture` also covers ports & adapters for projects that explicitly adopted them.
+Agents are read-only by their `tools` frontmatter; four also get Bash: `review-tests` executes the project's real test suite, `review-dependencies` runs the stack's audit tool, `review-web-security` probes a locally-launched instance when its opt-in dynamic mode is enabled, and `review-comments` prints files with a comment's lines removed to judge the code without it. `review-architecture` also covers ports & adapters for projects that explicitly adopted them. Six dimensions were added in 2.2.0: `review-correctness` (real bugs, each with its triggering scenario), `review-comments`, `review-signatures` (the shape of arguments and of fields added to shared types), `review-coordination` (the same knowledge in two places with no guard), `review-docs` (Markdown docs against each other and the file system, never against the code) and the opt-in `review-alternative-design` (a named pattern proposed only when it measurably beats the code as written).
 
 ## Expert agents (`agents/expert-*.md`)
 
-Where review agents critique code that already exists, `agents/expert-<domain>.md` agents prescribe requirements *before or during* implementation — consulted by `/vibe:feature` and `/vibe:fix` while planning (up to 3, selected per-task by matching the brief against agent descriptions) and on demand for one precise question per sub-task while coding. The roster (`ui-ux`, `frontend-design`, `api-rest`, `cli-dx`, `data`, `linux`, `ops`) is deliberately limited to domains with no `review-*` counterpart, to avoid two near-duplicate definitions of the same expertise — recorded in `.vibe/decisions/001-expert-personas-scope.md`. One narrow exception exists: `expert-realtime-rendering` is paired with `review-performance` (widened to also cover frame budget/allocation/draw-call batching) because ex-ante frame-budget and allocation-discipline choices are hard to retrofit once rendering code is written — recorded in `.vibe/decisions/003-realtime-rendering-expert-exception.md`. Unlike review agents, there is no per-project activation table: selection happens per task, not per project.
+Where review agents critique code that already exists, `agents/expert-<domain>.md` agents prescribe requirements *before or during* implementation — consulted by `/vibe:feature` and `/vibe:fix` while planning (up to 3, selected per-task by matching the brief against agent descriptions) and on demand for one precise question per sub-task while coding. The roster (`ui-ux`, `frontend-design`, `api-rest`, `cli-dx`, `data`, `linux`, `ops`) is deliberately limited to domains with no `review-*` counterpart, to avoid two near-duplicate definitions of the same expertise — recorded in `.vibe/decisions/001-expert-personas-scope.md`. Two narrow exceptions exist: `expert-realtime-rendering` is paired with `review-performance` (widened to also cover frame budget/allocation/draw-call batching) because ex-ante frame-budget and allocation-discipline choices are hard to retrofit once rendering code is written — recorded in `.vibe/decisions/003-realtime-rendering-expert-exception.md`; and `expert-architecture` is paired with `review-architecture`/`review-alternative-design` for the same reason — a design choice costs far less before the code exists than after a review — recorded in `.vibe/decisions/005-architecture-expert-exception.md`. It is consulted when a brief involves a real design choice and answers with a named baseline, up to two named alternatives scored on an explicit grid, and the question the choice depends on. Unlike review agents, there is no per-project activation table: selection happens per task, not per project. `/vibe:consult` puts a precise question to any expert outside feature/fix work.
 
 ## Status line (`scripts/` + `settings.json`)
 
-`settings.json` declares a `subagentStatusLine` hook pointing at `scripts/subagent-statusline.sh`. The script reads a JSON payload (`{columns, tasks: [...]}`) on stdin, and emits one `{id, content}` JSON line per agent row via `jq` — status icon (looked up from the task's status through a small alias table), bold name, description, token count, truncated to the terminal width. Both failure modes — a stdin read that fails, or malformed JSON that `jq` can't parse — log a diagnostic to stderr and exit cleanly instead of aborting silently. It is most visible during `/vibe:review`, which can run up to 14 agents side by side.
+`settings.json` declares a `subagentStatusLine` hook pointing at `scripts/subagent-statusline.sh`. The script reads a JSON payload (`{columns, tasks: [...]}`) on stdin, and emits one `{id, content}` JSON line per agent row via `jq` — status icon (looked up from the task's status through a small alias table), bold name, description, token count, truncated to the terminal width. Both failure modes — a stdin read that fails, or malformed JSON that `jq` can't parse — log a diagnostic to stderr and exit cleanly instead of aborting silently. It is most visible during `/vibe:review`, which can run up to 20 agents side by side.
 
 ## Generated state in target projects
 
