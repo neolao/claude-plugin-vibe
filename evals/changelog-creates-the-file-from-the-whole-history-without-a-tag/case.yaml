@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: changelog-creates-the-file-from-the-whole-history-without-a-tag
+description: >
+  Precision side of changelog-skips-released-commits-on-an-untagged-
+  history: no tag and no CHANGELOG.md at all. The skill must create the
+  file with the Keep a Changelog header and a single [Unreleased] section
+  holding every user-facing commit of the whole history, no version
+  section, no noise. Needs --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

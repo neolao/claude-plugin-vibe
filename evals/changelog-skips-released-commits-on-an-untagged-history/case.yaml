@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: changelog-skips-released-commits-on-an-untagged-history
+description: >
+  No tag anywhere. CHANGELOG.md already has a released [1.0.0] section
+  covering the CSV export and the pagination, cut by a `chore: release
+  v1.0.0` commit that was never tagged; two more commits landed after it.
+  Reading the whole history, the skill must not re-announce the released
+  changes under [Unreleased] — only the PDF export and the sort fix. The
+  sibling case changelog-creates-the-file-from-the-whole-history-without-
+  a-tag is the precision side (no file, everything is new). Needs
+  --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
