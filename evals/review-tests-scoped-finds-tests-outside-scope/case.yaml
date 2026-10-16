@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: review-tests-scoped-finds-tests-outside-scope
+description: >
+  Scoped to fixtures/src/billing/ while the suite lives in fixtures/tests/ and
+  its runner in fixtures/package.json, both above the path. Needs
+  --allow-tools Bash to run (the agent executes the suite).
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
