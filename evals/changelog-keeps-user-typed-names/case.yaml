@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: changelog-keeps-user-typed-names
+description: >
+  Precision side of changelog-writes-entries-without-internal-names: a
+  new `--json` flag on the report command and a deprecated `/v1/reports`
+  endpoint. Both are names the user types, so the entries must keep them
+  — the no-internal-names rule must not strip the one piece of
+  information the user needs. Needs --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

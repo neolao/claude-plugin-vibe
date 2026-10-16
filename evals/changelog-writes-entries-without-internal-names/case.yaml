@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: changelog-writes-entries-without-internal-names
+description: >
+  Two commits whose subjects are written for a developer — a function
+  name, a class name, a file path, a parameter name. The entries under
+  [Unreleased] must describe the user-facing effect and carry none of
+  those names, not even in backticks. The sibling case
+  changelog-keeps-user-typed-names is the precision side (a flag and an
+  endpoint the user types stay named). Needs --allow-tools Bash Write
+  Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
