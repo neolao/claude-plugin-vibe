@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: auto-restarts-after-abort-once-a-commit-landed
+description: >
+  Precision side of the `stopped` row: the last run aborted on a broken
+  build, but a commit repairing it landed after the closing commit. The hold
+  must not fire — the skill starts a new run (new journal section, the
+  aborted one kept), ships 003 through one sub-agent within the limit of 1,
+  and closes idle. Needs --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

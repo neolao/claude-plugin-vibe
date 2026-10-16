@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: auto-holds-after-abort-until-a-commit-lands
+description: >
+  Step 0's `stopped` row: the last run aborted on a broken build, HEAD is
+  still that run's closing commit and the tree is clean, so nothing was
+  fixed since. The skill must repeat the journaled reason and launch nothing
+  — no sub-agent, no new run, no commit, state left `stopped` — instead of
+  re-running the item into the same abort on every /loop firing. Needs
+  --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
