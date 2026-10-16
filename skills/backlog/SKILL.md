@@ -2,7 +2,7 @@
 name: backlog
 description: Manage the feature backlog — list tasks, add one or several items (including from the last review), or remove an item
 argument-hint: "[feature description to add] | <multi-line list> | from review | remove NNN | (empty to list all)"
-version: 1.0.0
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
@@ -26,14 +26,14 @@ Every user-facing message is written in the conversation's language. If this ski
 
 No top-level `*.md` in `.vibe/backlog/` → "The backlog is empty — no active items in `.vibe/backlog/`." and stop.
 
-Otherwise, for each top-level file (sorted): `status`, title (first `# ` heading), and unmet dependencies — every `depends_on` number whose item (top level or `done/`) is not `done`. Display:
+Otherwise, for each top-level file (sorted): `status`, title (first `# ` heading), and unmet dependencies — every `depends_on` number whose item (top level or `done/`) is not `done`; a number with no file at all is shown as `⚠ NNN (missing)`. Display:
 
 | # | Title | Status | Blocked by |
 |---|---|---|---|
 | 002 | Export as CSV | `todo` | — |
 | 003 | Dark mode | `todo` | ⚠ 002 |
 
-Then: "N item(s) done — see `.vibe/backlog/done/`." if `done/` has files; for each `blocked` item, its number and `## Blocked` reason, plus that running `/vibe:feature NNN` (or `/vibe:fix NNN`) puts it back in play; and the review cadence — if `.vibe/last-review.md` exists, its date and the number of `feat:`/`fix:` commits since its hash, otherwise "No review recorded yet — running `/vibe:review` will establish the baseline." Stop.
+Then: "N item(s) done — see `.vibe/backlog/done/`." if `done/` has files; for each `blocked` item, its number and `## Blocked` reason, plus that running `/vibe:feature NNN` (or `/vibe:fix NNN`) puts it back in play; for each `(missing)` reference, that the item stays ineligible for `/vibe:auto` until the number is removed from its `depends_on`; and the review cadence — if `.vibe/last-review.md` exists, its date and the number of `feat:`/`fix:` commits since its hash, otherwise "No review recorded yet — running `/vibe:review` will establish the baseline." Stop.
 
 ## Step 3 — Remove
 
@@ -60,7 +60,7 @@ Highest `NNN` prefix across `.vibe/backlog/` **and** `done/`, plus one, zero-pad
 
 ## Step 8 — Title, slug, criteria, dependencies
 
-Title: 3–7 words, title case, taken or summarized from the description. Slug: kebab-case of the title. 2–4 acceptance criteria, each specific, observable, and falsifiable, from the user's or system's perspective ("User can…", "System returns…") — never "works correctly". Dependencies: another item named by number ("after 003") or by a matching title goes into `depends_on` as zero-padded numbers; when uncertain, omit the field.
+Title: 3–7 words, title case, taken or summarized from the description. Slug: kebab-case of the title. 2–4 acceptance criteria, each specific, observable, and falsifiable, from the user's or system's perspective ("User can…", "System returns…") — never "works correctly". Dependencies: another item named by number ("after 003") or by a matching title goes into `depends_on` as zero-padded numbers — only if that item exists (top level or `done/`): a number with no file is left out and named in the report, since an item waiting on a dependency that does not exist is never eligible for `/vibe:auto`. When uncertain, omit the field.
 
 ## Step 9 — Write the file
 

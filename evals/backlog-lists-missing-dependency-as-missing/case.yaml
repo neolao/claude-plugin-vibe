@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: backlog-lists-missing-dependency-as-missing
+description: >
+  Third list-mode case for vibe:backlog: 002 depends on 001 (exists, todo)
+  and on 009 (no file anywhere). Step 2 must show 009 as
+  `⚠ 009 (missing)`, keep 001 as an ordinary unmet dependency, and say that
+  002 stays ineligible for /vibe:auto until 009 is removed from its
+  depends_on. backlog-lists-with-dependency-status is the precision side
+  (an unmet dependency that exists, no "missing"). List mode needs no Bash
+  when no .vibe/last-review.md exists; --allow-tools Write Edit keeps the
+  read-only graders meaningful.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

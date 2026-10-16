@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: backlog-drops-dependency-on-missing-item
+description: >
+  A single-item add naming a dependency that exists nowhere ("after 007" on
+  a backlog that stops at 002): Step 8 must create 003 without a
+  `depends_on` pointing at 007 and say so in the report, since /vibe:auto
+  and /vibe:next-task never pick an item whose dependency does not resolve.
+  The sibling case backlog-records-dependency-on-existing-item is the
+  precision side ("after 002"). Needs --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

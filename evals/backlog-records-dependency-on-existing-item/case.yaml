@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: backlog-records-dependency-on-existing-item
+description: >
+  Precision side of backlog-drops-dependency-on-missing-item: the same
+  single-item add names "after 002", and 002 exists. Step 8 must record
+  `depends_on: [002]` on the new 003, not drop or question it, and commit
+  once with the single-item message. Needs --allow-tools Bash Write Edit to
+  run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
