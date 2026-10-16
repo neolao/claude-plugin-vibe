@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: review-robustness-scoped-finds-evidence-outside-scope
+description: >
+  Scoped twin of review-robustness-finds-cross-module-violations: the agent
+  reviews fixtures/shipping/ only, and each defect there needs a file outside
+  the scope to show (a helper whose timeout defaults to None, a coroutine
+  called without await, an open file handle returned by a spool helper, a
+  failure status that a worker ignores). Every finding must stay anchored on
+  a file in scope.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

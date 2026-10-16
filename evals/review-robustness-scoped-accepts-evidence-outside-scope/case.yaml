@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: review-robustness-scoped-accepts-evidence-outside-scope
+description: >
+  Precision mirror of review-robustness-scoped-finds-evidence-outside-scope:
+  the agent reviews fixtures/shipping/ only, where the same call shapes are
+  cleared by a file outside the scope (a helper whose timeout defaults to 10
+  seconds, a synchronous publish, a failure status its only caller checks).
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
