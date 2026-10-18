@@ -8,7 +8,7 @@ model: claude-sonnet-5-5
 
 # /vibe:challenge — Devil's Advocate
 
-A decision that has never been attacked has not been tested, only assumed. Challenge a structuring decision that is already settled — an architecture, a library, a strategy, a plan — before it is executed or recorded in `.vibe/decisions/`. Pairs with `/vibe:clarify`, which settles a plan that is still open: `clarify` closes the branches, `challenge` attacks the result. Not for a reversible or minor choice: a pass only pays for itself when the choice is costly to undo.
+A decision that has never been attacked has not been tested, only assumed. Challenge a structuring decision that is already settled — an architecture, a library, a strategy, a plan — before it is executed or recorded in `.vibe/decisions/`. Pairs with `vibe:clarify`, which settles a plan that is still open: `clarify` closes the branches, `challenge` attacks the result. Not for a reversible or minor choice: a pass only pays for itself when the choice is costly to undo.
 
 Everything said to the user is written in the language the conversation is being conducted in — never a fixed one.
 

@@ -91,7 +91,7 @@ Present the plan and **wait for explicit approval** before writing any code. The
 
 ## Scope drift
 
-From approval on, before any action no approved plan item covers — a file not planned, a new dependency, an unrequested refactor, a change of approach — pause and check it against the approved plan, systematically, not only when a doubt arises. Resolve it through the "Scope drift" gate: widen the plan or drop the action. A detail you can decide within the approved plan is not drift: decide it and mention it. When two plan requirements conflict, the "Conflict between two plan requirements" gate applies; when the brief came from `/vibe:clarify`, the priorities of its decisions (`🔒 MUST` > `⚖️ SHOULD` > `✨ NICE`) are the arbitration reference.
+From approval on, before any action no approved plan item covers — a file not planned, a new dependency, an unrequested refactor, a change of approach — pause and check it against the approved plan, systematically, not only when a doubt arises. Resolve it through the "Scope drift" gate: widen the plan or drop the action. A detail you can decide within the approved plan is not drift: decide it and mention it. When two plan requirements conflict, the "Conflict between two plan requirements" gate applies; when the brief came from `vibe:clarify`, the priorities of its decisions (`🔒 MUST` > `⚖️ SHOULD` > `✨ NICE`) are the arbitration reference.
 
 ## Task list
 

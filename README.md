@@ -113,7 +113,6 @@ Each command is a Claude Code slash command, with natural-language arguments whe
 |---|---|
 | `/vibe:init` | Initialize or regenerate the project's `CLAUDE.md` and `README.md` for vibe coding |
 | `/vibe:backlog` | List, add, or remove feature backlog items (`.vibe/backlog/`) |
-| `/vibe:clarify` | Interview the user round by round until a plan, idea, or decision is fully settled, each decision with a priority |
 | `/vibe:challenge` | Devil's advocate on a settled structuring decision — one adversarial pass, every objection reported |
 | `/vibe:consult` | Ask one of the plugin's experts a precise question (architecture by default) |
 | `/vibe:feature` | Implement a new feature using TDD, then update the changelog |
@@ -132,7 +131,7 @@ Each command is a Claude Code slash command, with natural-language arguments whe
 | `/vibe:workspace-init` | Bootstrap/refresh a multi-repo workspace's hub repo and local workspace-root `CLAUDE.md` |
 | `/vibe:next-task` | Pick the next eligible task across a workspace (or the current repo), implement it, then push and release |
 
-Three internal skills are hidden from the `/` menu: `vibe:tasks` (task-list creation with a scratchpad fallback), `vibe:report` (statistics of a run, written locally under `.vibe/reports/`, never shared unless you choose to) and `vibe:publish` (push and release, used by `/vibe:auto --push` and `/vibe:next-task`).
+Four internal skills are hidden from the `/` menu: `vibe:clarify` (the round-by-round interview, run by `backlog`, `init` and `workspace-init` on thin input, and twice by `feature`/`fix` — once to frame the need, once to frame the implementation, each looking in its own sources before asking you anything), `vibe:tasks` (task-list creation with a scratchpad fallback), `vibe:report` (statistics of a run, written locally under `.vibe/reports/`, never shared unless you choose to) and `vibe:publish` (push and release, used by `/vibe:auto --push` and `/vibe:next-task`).
 
 ## Review agents
 

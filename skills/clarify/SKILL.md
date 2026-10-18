@@ -1,14 +1,15 @@
 ---
 name: clarify
-description: Interview the user relentlessly, round by round, over a plan, idea, or decision until every open branch is settled — finds facts itself, never guesses what only the user can decide
-argument-hint: "[optional: subject to clarify — plan, idea, or decision; empty infers it from the current conversation]"
-version: 1.1.0
+description: Interview the user round by round over a plan, idea, or decision until every open branch is settled — finds facts itself, never guesses what only the user can decide. Two modes for the build workflow, `need` (what to solve, for whom) then `implementation` (how), each looking in its own sources before asking. Invoked by other vibe skills, never directly by users.
+argument-hint: "[mode: need | mode: implementation] [subject to clarify — plan, idea, or decision; empty infers it from the current conversation]"
+user-invocable: false
+version: 1.2.0
 model: claude-sonnet-5-5
 ---
 
-# /vibe:clarify — Relentless Interview
+# vibe:clarify — Relentless Interview
 
-Stress-test a plan, idea, or decision by mapping it as a **design tree** — every decision branches into the decisions that hang off it — and interviewing the user round by round until the tree is settled. Runs standalone, or invoked by `vibe:backlog`, `vibe:init`, or `vibe:workspace-init` when their input is too thin to act on without inventing answers.
+Stress-test a plan, idea, or decision by mapping it as a **design tree** — every decision branches into the decisions that hang off it — and interviewing the user round by round until the tree is settled. Invoked by `vibe:backlog`, `vibe:init`, or `vibe:workspace-init` when their input is too thin to act on without inventing answers, and twice by the build workflow, once per space (see "Modes").
 
 Everything said to the user is written in the language the conversation is being conducted in — never a fixed one.
 
@@ -46,6 +47,23 @@ Ask the whole remaining frontier in one round, numbered, each with your recommen
 
 Then stop and wait for the user's answers before asking the next round or acting on anything. Each answer settles a decision, with its priority, and may unblock others; a sub-agent's finding is folded in the same way. The tree is not only additive: a free answer that contradicts a decision already settled reopens that decision and its sub-branches before the round continues. Recompute the frontier, rewrite the tree file, and repeat.
 
+## Modes `need` and `implementation`
+
+The build workflow (`vibe:feature`, `vibe:fix`) calls this skill twice, with the mode on the first line of `$ARGUMENTS`: `mode: need`, then `mode: implementation`. Without that line, the protocol above applies as is, to both spaces at once (the standalone use of `backlog`, `init` and `workspace-init`).
+
+| Mode | Space | Question | Where to look first |
+|---|---|---|---|
+| `need` | problem space | What must be solved, for whom, under which business constraints? | The brief, the backlog item and its acceptance criteria, `.vibe/` (`index.md`, `glossary.md`, `decisions/`), the project memory directory the session indicates |
+| `implementation` | solution space | Which approach, under which technical constraints? | The code, its tests, its configuration, `CLAUDE.md`, `.vibe/modules/`; then the expert consultation the caller passes (its `REQUIREMENTS` and `RISKS` are sources, not questions) |
+
+In both modes, four rules are added:
+1. **Look before asking.** The user is a Product Owner: a question reaches them only when its answer is in none of the mode's sources. Read them (through the dispatched sub-agent, as in Step 3) before the first round. A round with no question left is normal: the mode then ends at once.
+2. **Source every answer you give yourself.** A decision settled without a question cites its source in the report — `(source: path:line)`, the sentence of the brief, the memory entry. The caller has these claims checked; a decision with no source is a guess.
+3. **Say when it takes a spike.** When several decisions of the same round depend on one another and no source settles them, and the answer has to be **searched or tried** (compare libraries, check what an external system accepts, measure) rather than preferred by the user, do not ask the user to pick: end with `CLARIFY-RESULT: partial — spike: <the question to settle first>` and let the caller decide. Do not recommend a library or a format yourself in that case.
+4. **Stay in your space.** In `need`, no decision about code, files or approach; in `implementation`, no decision about what the product does. A question that belongs to the other space is noted in the report as `(other space)` and left to that mode.
+
+The `need` mode ends when its decisions are settled, without acting on them: the `implementation` mode, then the caller, execute.
+
 ## Step 4 — End
 
 When the frontier is empty, summarize the shared understanding and ask the user to confirm it before treating it as final or handing it to a caller. If the user stops early (declines to continue, says the rest does not matter), respect that and report what was settled, flagging the rest as open.
@@ -61,6 +79,7 @@ CLARIFY-RESULT: settled
 
 ### Decisions made
 - **[question title]** (🔒 MUST): [answer reached]
+- **[question title]** (⚖️ SHOULD): [answer found without asking] (source: path:line)
 ```
 
-Ended early → `CLARIFY-RESULT: partial — [what is still open]` with the content actually reached. Nothing settled at all → `CLARIFY-RESULT: abandoned`, no sections; the caller falls back to its original input.
+In a mode, the first line is `CLARIFY-RESULT: settled — mode: need` (or `implementation`). Ended early → `CLARIFY-RESULT: partial — [what is still open]` with the content actually reached. Nothing settled at all → `CLARIFY-RESULT: abandoned`, no sections; the caller falls back to its original input.

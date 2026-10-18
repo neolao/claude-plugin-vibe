@@ -14,7 +14,7 @@ Everything said to the user is written in the language the conversation is being
 
 ## Step 1 — Pick the expert
 
-If the first word of `$ARGUMENTS` names a domain (`architecture`, `ui-ux`, `frontend-design`, `api-rest`, `cli-dx`, `data`, `linux`, `ops`, `realtime-rendering`), that is the expert; the rest is the question. Otherwise match the question against the descriptions of the `vibe:expert-*` agents and pick the one whose domain clearly fits. If the question is vague ("what do you think of the architecture?"), ask for the precise point first — one question, not a `/vibe:clarify` tree — and wait.
+If the first word of `$ARGUMENTS` names a domain (`architecture`, `ui-ux`, `frontend-design`, `api-rest`, `cli-dx`, `data`, `linux`, `ops`, `realtime-rendering`), that is the expert; the rest is the question. Otherwise match the question against the descriptions of the `vibe:expert-*` agents and pick the one whose domain clearly fits. If the question is vague ("what do you think of the architecture?"), ask for the precise point first — one question, not a `vibe:clarify` tree — and wait.
 
 ## Step 2 — Build the dossier
 

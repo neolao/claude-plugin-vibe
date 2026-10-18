@@ -7,11 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `/vibe:clarify` is no longer a command: the interview runs on its own when a backlog item, a new project or a workspace is too thin, and inside every feature or fix.
+
 ### Added
 
 - Each run can now write a usage report — how many bricks were called, loop rounds, questions asked, findings and fixes — as plain statistics under `.vibe/reports/`. The report stays on your machine; sharing it with the plugin's maintainers is your choice.
 - A workflow that has to go back to an earlier step (a review finding reopens planning) now keeps a clean task list: finished steps stay as the trace of the previous round, stale steps are dropped and announced, and the new round's steps are numbered.
 - Three control agents for the build loop: one re-checks every review finding against the code, drops false positives, merges duplicates and says whether it questions what was asked or how it was done; one checks the result against the request (missing criteria, unrequested additions, breached constraints); one checks that every fact in a report is backed by its source.
+- Before building, the need and then the implementation are each framed in their own pass: the interview reads the backlog item, the project notes and the code first, and asks you only what none of them answers; every answer it found itself says where it comes from, and a question that would take research is flagged as such instead of guessed.
 - The clarity rewrite has a direct mode for text a workflow is about to show you: it returns the clearer text at once, without a before/after table or a question.
 
 ## [2.2.0] - 2026-10-16
