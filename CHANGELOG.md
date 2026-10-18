@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Each run can now write a usage report — how many bricks were called, loop rounds, questions asked, findings and fixes — as plain statistics under `.vibe/reports/`. The report stays on your machine; sharing it with the plugin's maintainers is your choice.
 - A workflow that has to go back to an earlier step (a review finding reopens planning) now keeps a clean task list: finished steps stay as the trace of the previous round, stale steps are dropped and announced, and the new round's steps are numbered.
+- Three control agents for the build loop: one re-checks every review finding against the code, drops false positives, merges duplicates and says whether it questions what was asked or how it was done; one checks the result against the request (missing criteria, unrequested additions, breached constraints); one checks that every fact in a report is backed by its source.
+- The clarity rewrite has a direct mode for text a workflow is about to show you: it returns the clearer text at once, without a before/after table or a question.
 
 ## [2.2.0] - 2026-10-16
 

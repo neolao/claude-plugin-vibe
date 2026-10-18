@@ -47,6 +47,7 @@ This plan turns [the strategy](strategy/README.md) into work packages, starting 
 - **`claim-verifier`** (new agent): input a report and the trace (commands run, files). Flags a claim with no proof or contradicted by its source.
 - **`rewrite` `direct` mode**: first line of `$ARGUMENTS`; rewrites and returns, no question.
 - **Done when:** each agent has one positive and one negative case at 1.00 (a decoy from its "what is not a finding" section); `rewrite`'s existing case stays green.
+- **Progress (2026-10-18):** written — the three agents (sonnet; classifier at `high`, the two others at `medium`), `rewrite` 1.1.0 with `mode: direct`, seven cases (`review-classifier-*` ×2, `requirements-reviewer-*` ×2, `claim-verifier-*` ×2, `rewrite-direct-mode-returns-text-without-asking`), fixtures' own tests green on the host. Not run.
 
 ### 3. Two framings
 

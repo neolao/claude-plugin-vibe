@@ -142,6 +142,8 @@ Three internal skills are hidden from the `/` menu: `vibe:tasks` (task-list crea
 
 Activation per project is recorded in the `CLAUDE.md` table written by `/vibe:init`.
 
+Three control agents serve the build loop rather than a review dimension: `review-classifier` (re-checks every finding against its source, drops false positives, merges duplicates, sets its level and whether it questions the need or the implementation), `requirements-reviewer` (the deliverable against the request: gaps, unrequested additions, breached constraints) and `claim-verifier` (every fact a report states, checked against its source — "tests pass" needs the command and its output).
+
 ## Expert agents
 
 `/vibe:feature` and `/vibe:fix` consult up to 3 of these prescriptive experts while planning, based on what the task touches — each can also answer one precise question during implementation:

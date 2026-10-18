@@ -1,8 +1,8 @@
 ---
 name: rewrite
 description: Rework an existing text for clarity by named rules — Williams, Clark & Haviland's given-new contract, Gibson's dependency locality, ISO 24495-1, Ousterhout for code comments — defect-by-defect rewrite, meaning-preservation check by a sub-agent, writes only after validation; the output is always in the source text's language. Triggers on "rephrase", "make this clearer", "this is unreadable", "too heavy", "improve the writing", "proofread this document", "simplify this paragraph". Not for writing new text, translating, spelling-only fixes, or reviewing code (that is /vibe:review).
-argument-hint: "[sentence, paragraph, file path or folder — empty uses the text under discussion]"
-version: 1.0.0
+argument-hint: "[mode: direct] [sentence, paragraph, file path or folder — empty uses the text under discussion]"
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
@@ -26,6 +26,8 @@ The target is one of five kinds, and the kind changes the protocol:
 | A document | `sentence.md` + `document.md` | yes | after validation |
 | A source file | `sentence.md` + `code-comments.md` | yes | after validation |
 | A corpus (> 3 files) | inventory first (step 2) | one per retained file | after validation |
+
+**Direct mode.** A first line `mode: direct` in `$ARGUMENTS`, before the text, means the caller is a vibe workflow handing over text it has just produced (a report, a plan for the user) and wants it back clearer, without a dialogue. The protocol is the same up to the check (steps 1 and 3 to 5, no corpus inventory, the reader framed from what the caller says without a question); steps 6 and 7 change: no before/after table, no question, no file written. Return the rewritten text itself, then the questions to the author as a list the caller may surface, then the closing block in its `direct` form. Two check passes maximum, as always; a passage still contested stays in its original wording and is named in the block. Inline text only: a file path in direct mode is refused with one line.
 
 **The output is always in the language of the source.** An English text stays English, a French text stays French, a Japanese text stays Japanese. Translating is not clarifying. Only the instructions of this skill are in English; the diagnosis, the before/after table and the questions to the author are written in the language the conversation is conducted in, and the proposed text itself in the language of the source.
 
@@ -112,7 +114,15 @@ The next three forms close the message **that follows the user's answer**.
 ---
 ```
 
-In the awaiting form and the two applied forms, add before the final `---` one line per detected shift:
+**In direct mode**, the only block, closing the single message that carries the rewritten text:
+```
+---
+✍️ Rewrite — <n> rewrite(s) applied directly · Check <✅ | ❌>
+---
+```
+With a check in `[FAIL]` after 2 passes, add `· left untouched: <passages>` on the same line.
+
+In the awaiting form, the two applied forms and the direct form, add before the final `---` one line per detected shift:
 `↪ Responsibility shift — <rule>: <actor now named, or now hidden>`
 
 This block appears only when this skill has actually run: its absence directly signals that no diagnosis took place. Other skills (`/vibe:verify`, `/vibe:debrief`) may add their own block after this one.
