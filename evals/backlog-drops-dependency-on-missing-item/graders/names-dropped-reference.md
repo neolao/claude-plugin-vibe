@@ -12,5 +12,5 @@ criteria: |
 weight: 2
 ---
 
-The dropped reference is named in the final message, per Step 8, instead of
+The dropped reference is named in the final message, per Step 7, instead of
 disappearing silently.

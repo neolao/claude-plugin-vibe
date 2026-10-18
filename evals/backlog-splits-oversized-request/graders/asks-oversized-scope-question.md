@@ -23,5 +23,5 @@ criteria: |
 weight: 2
 ---
 
-Confirms the oversized-scope confirmation question (Step 6) fired, naming
+Confirms the oversized-scope confirmation question (Step 5) fired, naming
 the three candidate titles, before any file was created.

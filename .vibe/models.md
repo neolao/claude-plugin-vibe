@@ -15,7 +15,7 @@ Defined in: `skills/*/SKILL.md`
 | Field | Type | Notes |
 |---|---|---|
 | name | string | agent slug, matches file name |
-| description | string | one-line purpose, used by `/vibe:review` to decide activation and by the status line |
+| description | string | one-line purpose, used by the review brick to decide activation and by the status line |
 | tools | string | review agents only — comma-separated allowlist, `Read, Grep, Glob` plus `Bash` for the three agents that execute something |
 Defined in: `agents/*.md`
 
@@ -76,7 +76,7 @@ Last line of `/vibe:feature`/`/vibe:fix` reports in `--auto` mode, and the only 
 `fix`, `feature`, `review`, `docs`, `release`, `init`, and `workspace-init` invoke the internal `vibe:tasks` skill once (Skill tool, task list as `$ARGUMENTS`) instead of calling `TaskCreate` directly. `vibe:tasks` owns the only fallback: if `TaskCreate` is unavailable, it says so and writes a Markdown checklist to `task-list.md` in the scratchpad; every later task transition in the calling skill goes through the mechanism it selected. Defined in: `skills/tasks/SKILL.md`
 
 ## Review finding (agent output contract)
-`FILE:` (or `MODULE:`, `PACKAGE:`, `TARGET:` per agent) + `CATEGORY:` (from the agent's `## Categories`) + `SEVERITY:` (`high` \| `medium` \| `low`) + `ISSUE:` + `SUGGESTION:`, with agent-specific extra lines (`EXPLOIT:`, `PROOF:`, `SCALE:`, `CURRENT:`, `ADVISORY:`, `FUNCTION:`/`METRIC:`). Injected verbatim by `/vibe:review` into every agent prompt; no per-agent summary line. Defined in: `skills/review/SKILL.md`
+`FILE:` (or `MODULE:`, `PACKAGE:`, `TARGET:` per agent) + `CATEGORY:` (from the agent's `## Categories`) + `SEVERITY:` (`high` \| `medium` \| `low`) + `ISSUE:` + `SUGGESTION:`, with agent-specific extra lines (`EXPLOIT:`, `PROOF:`, `SCALE:`, `CURRENT:`, `ADVISORY:`, `FUNCTION:`/`METRIC:`). Injected verbatim by the `vibe:review` brick into every agent prompt; no per-agent summary line. Defined in: `skills/review/SKILL.md`
 
 ## Publish result (`vibe:publish`)
 Returned to the caller (`/vibe:auto --push`, `/vibe:next-task`): push result (branch and range, or the Git error), release result (version tagged and pushed, none needed, or why skipped — naming a self-heal item if one ran), forge release (created / skipped / n/a), blockers. Defined in: `skills/publish/SKILL.md`

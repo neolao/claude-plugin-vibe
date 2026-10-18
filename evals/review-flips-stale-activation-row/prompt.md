@@ -1,7 +1,7 @@
 ---
 name: review-flips-stale-activation-row
 description: >
-  /vibe:review must flip the activation row whose stated project fact is no
+  vibe:review must flip the activation row whose stated project fact is no
   longer true (no HTTP surface, while Flask routes exist), leave the two rows
   recording a deliberate user choice untouched, and list the flip in its output;
   the caller commits CLAUDE.md. Needs --allow-tools Bash Edit to run.

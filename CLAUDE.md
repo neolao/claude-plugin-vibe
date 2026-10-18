@@ -152,7 +152,7 @@ Up one notch = next line; down = previous line. The order is model then effort: 
 
 ## Review agents
 
-Active agents for `/vibe:review` on this project:
+Review agents active on this project (run by the internal review of every feature and fix):
 
 | Agent | Active | Reason |
 |---|---|---|

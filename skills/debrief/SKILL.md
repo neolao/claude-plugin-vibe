@@ -1,6 +1,6 @@
 ---
 name: debrief
-description: End-of-task retrospective turned into durable memory — asks the user 1–3 short questions about the task just finished, then records each preference, correction or project fact in the project's memory directory. Trigger on "debrief", "retro", "what should I remember from this", or at the end of a substantial task (after /vibe:verify's block when it ran). Not for a one-off question, a read-only exchange, a one-line fix, or a cross-project rule (that is /vibe:learn).
+description: End-of-task retrospective turned into durable memory — asks the user 1–3 short questions about the task just finished, then records each preference, correction or project fact in the project's memory directory. Trigger on "debrief", "retro", "what should I remember from this", or at the end of a substantial task (the build workflow invokes it after its report). Not for a one-off question, a read-only exchange, a one-line fix, or a cross-project rule (that is /vibe:learn).
 argument-hint: "[no argument — runs on the task just finished in this conversation]"
 version: 1.0.0
 model: claude-sonnet-5-5
@@ -10,7 +10,7 @@ model: claude-sonnet-5-5
 
 A lesson learned during a task must not stay in the conversation: it has to outlive the terminal. This skill asks the user a few targeted questions about the task just finished and turns the answers into memories the next session will read.
 
-Run it only after a substantial task — after `/vibe:verify`'s closing block when it ran. Never for a trivial exchange (a one-off question, a read-only task, a one-line correction): a debrief costs the user attention and is worth it only when something deserves to be kept.
+Run it only after a substantial task — the build workflow invokes it after its report, outside `--auto`. Never for a trivial exchange (a one-off question, a read-only task, a one-line correction): a debrief costs the user attention and is worth it only when something deserves to be kept.
 
 Boundary with `/vibe:learn`: a cross-project preference ("always…", "never…") is a global rule and belongs to `/vibe:learn`; a fact or preference tied to this project is this skill's.
 

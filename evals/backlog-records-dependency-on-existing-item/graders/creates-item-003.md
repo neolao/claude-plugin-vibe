@@ -8,4 +8,4 @@ weight: 1
 ---
 
 Exactly one new item is created, numbered `003` (the fixture holds `001` and
-`002`, no `done/`), per Step 7.
+`002`, no `done/`), per Step 6.

@@ -5,7 +5,7 @@ dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # skill under test reviews "the full codebase" with no $ARGUMENTS, i.e. cwd.
 cp -r "$dir/fixtures/." .
 
-# /vibe:review's Step 6 commits on every run, so the workspace needs to be a
+# The brick commits nothing, but review-dependencies reads git state, so the workspace is a
 # real git repo with a clean initial commit for that commit to succeed.
 git init -q
 git config user.email "eval-fixture@example.com"

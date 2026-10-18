@@ -18,5 +18,5 @@ criteria: |
 weight: 3
 ---
 
-Step 8 leaves a dependency on a non-existent item out of the file, so
+Step 7 leaves a dependency on a non-existent item out of the file, so
 `/vibe:auto` can still pick 003.

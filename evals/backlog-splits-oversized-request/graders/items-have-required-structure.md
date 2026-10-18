@@ -16,4 +16,4 @@ weight: 2
 ---
 
 Confirms each created item has valid `status: todo` frontmatter and a
-`## Acceptance Criteria` section with 2-4 checkboxes, per Step 9's template.
+`## Acceptance Criteria` section with 2-4 checkboxes, per Step 8's template.

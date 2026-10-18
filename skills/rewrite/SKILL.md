@@ -1,12 +1,13 @@
 ---
 name: rewrite
-description: Rework an existing text for clarity by named rules — Williams, Clark & Haviland's given-new contract, Gibson's dependency locality, ISO 24495-1, Ousterhout for code comments — defect-by-defect rewrite, meaning-preservation check by a sub-agent, writes only after validation; the output is always in the source text's language. Triggers on "rephrase", "make this clearer", "this is unreadable", "too heavy", "improve the writing", "proofread this document", "simplify this paragraph". Not for writing new text, translating, spelling-only fixes, or reviewing code (the build workflow's internal review does that).
+description: Rework an existing text for clarity by named rules — Williams, Clark & Haviland's given-new contract, Gibson's dependency locality, ISO 24495-1, Ousterhout for code comments — defect-by-defect rewrite, meaning-preservation check by a sub-agent; the output is always in the source text's language. Invoked by the build workflow in `mode: direct` on the report it is about to show the user, never directly by users.
 argument-hint: "[mode: direct] [sentence, paragraph, file path or folder — empty uses the text under discussion]"
-version: 1.1.0
+user-invocable: false
+version: 1.2.0
 model: claude-sonnet-5-5
 ---
 
-# /vibe:rewrite — Rework for Clarity
+# vibe:rewrite — Rework for Clarity
 
 ## Golden rule
 A shorter sentence is not a clearer sentence. Flesch, Gunning Fog and SMOG score only the length of sentences and words — optimizing for them rewards a choppy text that forces the reader to rebuild the links that were just cut. This protocol works on what explains the cost of reading, never on what can be counted.
@@ -125,4 +126,4 @@ With a check in `[FAIL]` after 2 passes, add `· left untouched: <passages>` on 
 In the awaiting form, the two applied forms and the direct form, add before the final `---` one line per detected shift:
 `↪ Responsibility shift — <rule>: <actor now named, or now hidden>`
 
-This block appears only when this skill has actually run: its absence directly signals that no diagnosis took place. Other skills (`/vibe:verify`, `/vibe:debrief`) may add their own block after this one.
+This block appears only when this skill has actually run: its absence directly signals that no diagnosis took place. Other skills (`vibe:report`, `vibe:debrief`) may add their own block after this one.

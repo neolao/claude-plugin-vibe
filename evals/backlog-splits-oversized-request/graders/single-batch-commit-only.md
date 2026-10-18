@@ -8,4 +8,4 @@ weight: 1
 ---
 
 Exactly one `git commit` was run for the whole batch — not three separate
-commits, per Step 10's batch rule.
+commits, per Step 9's batch rule.

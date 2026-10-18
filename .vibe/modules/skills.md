@@ -19,12 +19,9 @@
   - Commits `.vibe/auto-state.md` at every boundary; `--push` invokes `vibe:publish` at the end.
 - `vibe:review` (`skills/review/SKILL.md`) — internal brick: runs the active review agents in parallel on a scope (`internal <changed files>`) and returns their raw findings under `## REVIEW agents` / `## REVIEW flipped rows` / `## REVIEW findings`; no merge, no fix, no commit.
   - Owns the finding contract injected into every agent prompt; re-checks the `CLAUDE.md` agent table each run and lists the flipped rows (the caller commits).
-- `/vibe:verify` (`skills/verify/SKILL.md`) — Definition-of-Done check: three parallel read-only grids (`references/grids/{scope,rigor,finish}.md`) over a deliverable, all three rerun after any fix, 3 passes max; closes with `🛡️ DoD — …`.
-- `/vibe:rewrite` (`skills/rewrite/SKILL.md`) — reworks an existing text for clarity by named rules (`references/{sentence,document,code-comments}.md`), one control sub-agent (`references/control.md`) checks nothing was lost, writes only after validation; output always in the source's language; closes with `✍️ Rewrite — …`.
 - `/vibe:debrief` (`skills/debrief/SKILL.md`) — 1–3 retrospective questions, lessons written to the project memory directory; closes with `📝 Debrief — …`.
-- `/vibe:rewrite` (`skills/rewrite/SKILL.md`) — clarity rework by named rules with a meaning-preservation sub-agent; `mode: direct` (first line of the arguments) returns the rewritten text with no table, no question and no file written, for a workflow handing over text it just produced; closes with `✍️ Rewrite — …`.
+- `vibe:rewrite` (`skills/rewrite/SKILL.md`) — internal: clarity rework by named rules with a meaning-preservation sub-agent; `mode: direct` (first line of the arguments) returns the rewritten text with no table, no question and no file written, for a workflow handing over text it just produced; closes with `✍️ Rewrite — …`.
 - `/vibe:learn` (`skills/learn/SKILL.md`) — a correction stated in general terms becomes one line in `~/.claude/rules/vibe-{preferences,workflow,technical}.md`, after confirmation; closes with a `🗒 […]` line.
-- `/vibe:report-issue` (`skills/report-issue/SKILL.md`) — writes a regression eval case for a misbehaving skill/agent into the plugin checkout (`evals/<target>-<slug>/`), after confirmation; never runs it, never commits; closes with `🚩 […]`.
 - `/vibe:sync` (`skills/sync/SKILL.md`) — generates and updates the `.vibe/` codebase map; code-derived, self-cleaning glossary.
 - `/vibe:changelog` (`skills/changelog/SKILL.md`) — fills `[Unreleased]` from git history; never cuts a version.
 - `/vibe:docs` (`skills/docs/SKILL.md`) — refreshes README managed sections (end users) and `docs/` Markdown files (developers); never touches non-Markdown files in `docs/`.

@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- `/vibe:verify`: its request check, rigor check and claim check now run inside every feature and fix, on the change and on the report, before you see either.
+- `/vibe:report-issue`: eval cases are written by the plugin's maintainers, from the usage reports you choose to share.
+- The "from review" mode of `/vibe:backlog`, which read the former review report.
+
 ### Changed
+
+- `/vibe:rewrite` is no longer a command: the clarity rewrite runs on the report of every feature and fix.
 
 - Every feature and fix now reviews its own change before shipping: the review agents and a request check run on the change, a classifier re-checks each finding against the code, and the work goes back to the drawing board — to what was asked, or to how it was done — until only minor points remain. You see the result, never the findings.
 - The report of a feature or fix is checked before you read it: every claim (tests pass, the change works) is verified against the commands actually run, then the text is made readable.

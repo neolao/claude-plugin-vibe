@@ -40,4 +40,4 @@
 - `expert-ops` — configuration, observability, rolling deploys, pipeline and images, timeouts and retries
 - `expert-realtime-rendering` — frame budget, per-frame allocation, draw-call batching, non-blocking loop, simulation vs render rate
 
-**Depends on:** [`modules/skills.md`](skills.md) (`review-*` invoked by `/vibe:review`, activation recorded per project in that project's `CLAUDE.md`; `expert-*` selected per task by `/vibe:feature`/`/vibe:fix` from their descriptions — 3 max, none without a clear match — or asked one question by `/vibe:consult`)
+**Depends on:** [`modules/skills.md`](skills.md) (`review-*` invoked by the `vibe:review` brick inside `feature`/`fix`, activation recorded per project in that project's `CLAUDE.md`; `expert-*` selected per task by `/vibe:feature`/`/vibe:fix` from their descriptions — 3 max, none without a clear match — or asked one question by `/vibe:consult`)

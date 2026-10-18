@@ -72,6 +72,7 @@ This plan turns [the strategy](strategy/README.md) into work packages, starting 
 - `review` and `rewrite` hidden. `challenge`, `consult`, `learn` unchanged.
 - `/vibe:docs` refreshes the README; the website table and the `DEMOS` object are resynced by hand (`docs/index.html`).
 - **Done when:** `grep` finds no orphan reference; `README` and site agree; `jq` passes on the manifests.
+- **Progress (2026-10-18):** done on paper — `verify` and `report-issue` removed (skills, README rows, docs, `.vibe/`), `rewrite` 1.2.0 hidden, `backlog` 1.2.0 without its "from review" mode (steps renumbered, graders followed), README managed sections rewritten by hand to what `/vibe:docs` would derive, website resynced (command table 15 rows, review demo folded into the feature demo, verify/rewrite demos removed, `node --check` and tag balance green), 27 grader notes and the generated `.vibe/` files reworded. Only history, ADRs and backlog items keep `/vibe:review` as provenance. Not run.
 
 ### 6. Routine
 

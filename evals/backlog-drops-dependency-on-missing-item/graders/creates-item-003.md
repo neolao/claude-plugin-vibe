@@ -8,5 +8,5 @@ weight: 1
 ---
 
 Exactly one new item is created, numbered `003` (the fixture holds `001` and
-`002`, no `done/`), per Step 7 — the unknown reference does not block the
+`002`, no `done/`), per Step 6 — the unknown reference does not block the
 creation itself.

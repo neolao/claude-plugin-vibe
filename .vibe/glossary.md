@@ -26,7 +26,7 @@ A queued unit of future work stored as `.vibe/backlog/NNN-slug.md` (`status`: to
 _Sources: `skills/backlog/SKILL.md`, `skills/feature/workflow.md`_
 
 ## Review agent
-A specialized sub-agent auditing exactly one quality dimension during `/vibe:review`; the set active for a project is recorded in its `CLAUDE.md` and re-checked against the project's real state at every run — deliberate opt-outs are never overridden, and every check belongs to exactly one agent so the same issue is never reported twice.
+A specialized sub-agent auditing exactly one quality dimension during the internal review of a feature or fix; the set active for a project is recorded in its `CLAUDE.md` and re-checked against the project's real state at every run — deliberate opt-outs are never overridden, and every check belongs to exactly one agent so the same issue is never reported twice.
 _Sources: `skills/review/SKILL.md`, `agents/`_
 
 ## Self-correction loop
