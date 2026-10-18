@@ -1,0 +1,84 @@
+# Implementation plan
+
+This plan turns [the strategy](strategy/README.md) into work packages, starting from what exists. The strategy says what and why; this plan says with what, and in which order.
+
+## Starting decisions
+
+- **One orchestrator, for building.** `/vibe:feature` and `/vibe:fix` stay as the two entries; `skills/feature/workflow.md` stays the single file both read. The orchestrator is this workflow, reshaped.
+- **Review and verification become steps of the build loop**, never a report the PO reads. `/vibe:review` and `/vibe:verify` leave the `/` menu.
+- **Every brick ships with its eval cases**, like today. A changed brick bumps its `version:` and gets a new row in `evals/results/history.md`.
+- **Usage reports stay on the user's machine.** The routine reads only what the user shares, and otherwise works from synthetic cases.
+- **Order: bricks first, then the loop, then the surface.** A brick can be evaluated alone before the workflow depends on it.
+- **Eval runs are the maintainer's call.** A package writes its cases; running them (`claude plugin eval`, `evals/docker/run.sh`) costs real tokens and is never launched without an explicit request. A "done when" that cites a score is checked by the maintainer, not by the session that wrote the package.
+
+## What exists, and what it becomes
+
+| Strategy element | Existing | Becomes |
+|---|---|---|
+| Sequence held by tasks | `tasks` 2.0.0 (native or `tasks.tsv`) | Kept. Add: bulk abandon of stale tasks when the loop goes back to a framing, round prefix, counters for the usage report. |
+| Frame the need / the implementation | `clarify` 1.1.0: one design tree, standalone or called by `backlog`, `init`, `workspace-init` | Two modes of the same skill, `need` and `implementation`, each with its own sources (request and `.vibe/` first; code first) and the rule "the PO is asked only when neither holds the answer". Hidden from the menu. |
+| Expert consultation | `expert-*` agents called from `workflow.md` at plan time | Kept. Called by the `implementation` framing. |
+| Write the code | The main session codes itself (`Red`, `Green`, `Refactor` in `workflow.md`) | Kept in the main session for now: the task list stays in front of it. Delegating to an implementer agent is a later package, once the loop is measured. |
+| Internal review | `review` 1.1.0: picks agents from CLAUDE.md, dedups, fixes high and medium, reports low | Hidden brick. Returns raw findings to the loop; it no longer decides severity or fixes. |
+| Classify findings | Step 4 of `review` (merge, normalize severity) | New agent `review-classifier`: re-checks each finding against its source, drops false positives, merges, sets level (high / medium / low) and space (problem / solution). |
+| Conformity to the request | `verify` 1.0.0, scope grid | New agent `requirements-reviewer`, from the scope grid. The rigor and finish grids are covered by `review-correctness`, the claim check and the clarity pass. `verify` is removed. |
+| Claims carry their proof | Nothing beyond the classifier | New agent `claim-verifier`: checks the final report's claims (tests run, feature exercised) against the trace. |
+| Clarity of the text the PO reads | `rewrite` 1.0.0, writes after validation | Hidden brick with a `direct` mode that rewrites the report without asking. |
+| Project memory | `debrief` 1.0.0, end-of-task retrospective | Kept, called at the end of the orchestrator. The `need` framing reads the memory before asking the PO. |
+| Opt-in judgement | `challenge`, `consult`, `learn` | Kept as commands, unchanged. |
+| Report a misbehavior | `report-issue` 1.0.0 | Removed. Replaced by the routine. |
+| Continuous improvement | `scheduled-tasks/improve-skills-and-agents/SKILL.md` | Kept. Add: write a red case from a shared usage report or a logged escalation, then fix the brick to green. |
+| Usage report | Nothing (`.vibe/escalations.md` is the closest) | New hidden skill `report`: a `.vibe/reports/<date>-<entry>.md` with statistics only, never project detail. Shared only by the user. |
+| Everything else | `backlog`, `auto`, `next-task`, `publish`, `init`, `sync`, `docs`, `changelog`, `release`, `workspace-init` | Kept. `auto` and `next-task` inherit the new loop through `workflow.md`. |
+
+## Work packages
+
+### 1. Base: tasks and usage report
+
+- **`tasks`**: bulk abandon of `pending` tasks made stale by a return to a framing (`deleted`, one by one, never a `completed` one), new round tasks prefixed `Round <n> — `. Tested in `evals/tasks-script-test.sh`.
+- **`report`** (hidden skill, `user-invocable: false`): `init`, one call per event (brick called, round, question asked to the PO, findings per level and space, returns to a framing, fixes), `write` at the end. A POSIX `sh` + `awk` script, like `tasks.sh`, refuses an unknown counter so reports stay comparable. Output in `.vibe/reports/`, gitignored by `vibe:init`.
+- **Done when:** the task script handles bulk abandon; a sample report passes a format check; both skills have a case at 1.00.
+
+### 2. Transverse bricks
+
+- **`review-classifier`** (new agent): input the raw findings and the files; output each kept finding with its level and space, the dropped ones with the reason, the doubts it cannot settle alone as questions with a recommended option. Fixture: findings with a false positive, a duplicate pair, a problem-space finding.
+- **`requirements-reviewer`** (new agent): from `skills/verify/references/grids/scope.md`. Input the request verbatim, the plan and the diff.
+- **`claim-verifier`** (new agent): input a report and the trace (commands run, files). Flags a claim with no proof or contradicted by its source.
+- **`rewrite` `direct` mode**: first line of `$ARGUMENTS`; rewrites and returns, no question.
+- **Done when:** each agent has one positive and one negative case at 1.00 (a decoy from its "what is not a finding" section); `rewrite`'s existing case stays green.
+
+### 3. Two framings
+
+- `clarify` gets two modes in `$ARGUMENTS`: `need` (sources: the request, the backlog item, `.vibe/`, the project memory; questions about what, for whom, under which business constraints) and `implementation` (sources: the code; questions about approach and technical constraints; experts consulted here, moved from `workflow.md`). The standalone mode stays for `backlog`, `init` and `workspace-init`.
+- Each mode may conclude "too many unknowns" and say so instead of asking round after round.
+- `user-invocable: false`; the three callers keep working.
+- **Done when:** a `need` case where the answer is in `.vibe/` and the PO is not asked; an `implementation` case where the answer is in the code and the PO is not asked; the existing standalone cases stay green.
+
+### 4. The build loop
+
+- `workflow.md` is reshaped: `need` framing → `implementation` framing → plan approval → task list → Red / Green / Runtime / Refactor per sub-task → **internal review** (`review` brick, then `review-classifier`) → route: problem-space finding back to `need`, solution-space finding back to `implementation`, only low left → `requirements-reviewer` + `claim-verifier` on the report → `rewrite direct` → CHANGELOG, docs, sync, commit → `report write` → `debrief`.
+- The loop has no fixed cap; each return is a new task round. `--auto` resolves the classifier's doubts by its gate table.
+- `review` becomes a hidden brick: no fixes, no `.vibe/last-review.md`, no cadence hint; the orchestrator owns the commit.
+- `feature` and `fix` SKILL.md only list their specifics, as today.
+- **Done when:** the `feature-*` and `fix-*` cases are green with a trace showing one review round and the classifier call; a new case with a planted problem-space defect shows a return to `need`; `auto` and `next-task` cases stay green.
+
+### 5. Surface
+
+- Remove `verify` and `report-issue` (skills, their eval cases, their mentions in README, `docs/`, `.vibe/`, website demos).
+- `review` and `rewrite` hidden. `challenge`, `consult`, `learn` unchanged.
+- `/vibe:docs` refreshes the README; the website table and the `DEMOS` object are resynced by hand (`docs/index.html`).
+- **Done when:** `grep` finds no orphan reference; `README` and site agree; `jq` passes on the manifests.
+
+### 6. Routine
+
+- `scheduled-tasks/improve-skills-and-agents/SKILL.md` gains a step: read shared usage reports and `.vibe/escalations.md` entries given to it, write one red eval case per distinct misbehavior, then fix the brick to green before its usual cost pass.
+- The eval corpus is mostly synthetic: each package above adds the cases that cover its brick's failure modes, since no real usage stream is expected.
+- **Done when:** the routine runs once end to end on a planted escalation and produces a red-then-green case.
+
+### 7. Later: delegate the code
+
+- A `task-implementer` agent writes one sub-task out of the orchestrator's context, as the strategy suggests for long tasks. Only once packages 1–6 are measured: it changes what the review brick sees and what the report counts.
+
+## Order
+
+1 → 2 → 3 → 4 → 5 → 6, then 7. Packages 2 and 3 are independent of each other once 1 is done.
