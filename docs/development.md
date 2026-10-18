@@ -2,7 +2,7 @@
 
 # Development
 
-How to work on the plugin itself. There is nothing to install or build: the deliverables are Markdown instruction files, one shell script, and three JSON manifests, all consumed directly by Claude Code.
+How to work on the plugin itself. There is nothing to install or build: the deliverables are Markdown instruction files, three POSIX shell scripts, and three JSON manifests, all consumed directly by Claude Code.
 
 ## No tests, no linter — by design
 
@@ -35,7 +35,7 @@ Same approach: one file `agents/review-<dimension>.md` with frontmatter `name` +
 
 ## Adding or changing an expert agent
 
-One file `agents/expert-<domain>.md`, frontmatter `name` + `description` (the description states the trigger — "Consult when the task…" — since it drives per-task selection). Body: one scope sentence (including the out-of-scope routing to a sibling expert) plus a short domain checklist of non-obvious requirements. The consultation formats (plan consultation returns `REQUIREMENTS`/`RISKS`/`TEST SCENARIOS` plus an optional `OPEN QUESTIONS` list, implementation consultation answers one question) are stated once in `skills/feature/workflow.md`, which the invoking skills pass in the prompt. Before adding a new domain, check it doesn't already have a `review-*` counterpart — the roster is deliberately scoped to avoid that overlap (`.vibe/decisions/001-expert-personas-scope.md`). A domain with a review counterpart still gets an expert only as a documented, narrow exception (see `.vibe/decisions/003-realtime-rendering-expert-exception.md` and `005-architecture-expert-exception.md` for the precedents) — never silently. Keep each file terse: it is loaded into context on every consultation.
+One file `agents/expert-<domain>.md`, frontmatter `name` + `description` + `model` + `effort` + `version` (the description states the trigger — "Consult when the task…" — since it drives per-task selection). Body: one scope sentence (including the out-of-scope routing to a sibling expert) plus a short domain checklist of non-obvious requirements. The consultation formats (plan consultation returns `REQUIREMENTS`/`RISKS`/`TEST SCENARIOS` plus an optional `OPEN QUESTIONS` list, implementation consultation answers one question) are stated once in `skills/feature/workflow.md`, which the invoking skills pass in the prompt. Before adding a new domain, check it doesn't already have a `review-*` counterpart — the roster is deliberately scoped to avoid that overlap (`.vibe/decisions/001-expert-personas-scope.md`). A domain with a review counterpart still gets an expert only as a documented, narrow exception (see `.vibe/decisions/003-realtime-rendering-expert-exception.md` and `005-architecture-expert-exception.md` for the precedents) — never silently. Keep each file terse: it is loaded into context on every consultation.
 
 ## Conventions that must hold
 

@@ -2,7 +2,7 @@
 
 **Goal:** let the human stay Product Owner only — state the need, judge the result — while Claude builds, checks and delivers, with nothing tested by hand.
 
-The implementation plan is in [`../plan.md`](../plan.md). Nothing in the skills or agents has changed yet.
+The implementation plan is in [`../plan.md`](../plan.md). Packages 1–7 are written; none of their eval cases has been run yet (see the plan's Progress notes).
 
 ## Contents
 

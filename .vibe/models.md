@@ -8,7 +8,7 @@ No application data models exist in this repo (no database, no request/response 
 | name | string | skill slug, matches directory name, invoked as `/vibe:<name>` |
 | description | string | one-line purpose, shown in skill listings |
 | argument-hint | string | optional — shown as placeholder for `$ARGUMENTS` |
-| user-invocable | boolean | optional, default `true` — `false` hides the skill from the `/` menu while leaving it invocable by other skills via the Skill tool; used by `skills/tasks/SKILL.md` and `skills/publish/SKILL.md` |
+| user-invocable | boolean | optional, default `true` — `false` hides the skill from the `/` menu while leaving it invocable by other skills via the Skill tool; used by `clarify`, `review`, `rewrite`, `report`, `tasks` and `publish` |
 Defined in: `skills/*/SKILL.md`
 
 ## Agent frontmatter (`agents/*.md`)
@@ -16,7 +16,10 @@ Defined in: `skills/*/SKILL.md`
 |---|---|---|
 | name | string | agent slug, matches file name |
 | description | string | one-line purpose, used by the review brick to decide activation and by the status line |
-| tools | string | review agents only — comma-separated allowlist, `Read, Grep, Glob` plus `Bash` for the three agents that execute something |
+| tools | string | review, control and implementer agents — comma-separated allowlist, `Read, Grep, Glob` plus `Bash` for the agents that execute something (`review-tests`, `review-dependencies`, `review-web-security`, `review-comments`, `claim-verifier`), plus `Write, Edit` for `task-implementer` |
+| model | string | every agent — a full model id from the ladder in `CLAUDE.md` |
+| effort | string | every agent — `low`, `medium` or `high` |
+| version | string | every agent and skill — semver, bumped on any behaviour change |
 Defined in: `agents/*.md`
 
 ## `plugin.json`
@@ -54,7 +57,7 @@ Title = first `# ` heading of the body. A `blocked` item carries a trailing `## 
 Body: `# Short title` + **Context** / **Decision** / **Reason** / **Rejected alternatives**. Append-only. Defined in: `skills/feature/SKILL.md`
 
 ## Escalation entry (`.vibe/escalations.md`)
-Append-only `## [YYYY-MM-DD] /vibe:<skill> — short title` sections with **Context** / **Attempts** / **Diagnosis** / **Status** (`open`, later flippable to `resolved (YYYY-MM-DD)`). Defined in: `skills/feature/workflow.md`, `skills/review/SKILL.md`
+Append-only `## [YYYY-MM-DD] /vibe:<skill> — short title` sections with **Context** / **Attempts** / **Diagnosis** / **Status** (`open`, later flippable to `resolved (YYYY-MM-DD)`). Defined in: `skills/feature/workflow.md`
 
 ## Auto run state (`.vibe/auto-state.md`)
 | Field | Type | Notes |
@@ -73,7 +76,7 @@ Last line of `/vibe:feature`/`/vibe:fix` reports in `--auto` mode, and the only 
 `## Term` heading + 1–3 sentence code-derived definition + optional `**Do not confuse with:**` + `_Sources:_` line listing the files where the concept lives (drives orphan detection and incremental re-derivation). Defined in: `skills/sync/SKILL.md`
 
 ## Task list creation (`skills/tasks/SKILL.md`)
-`fix`, `feature`, `review`, `docs`, `release`, `init`, and `workspace-init` invoke the internal `vibe:tasks` skill once (Skill tool, task list as `$ARGUMENTS`) instead of calling `TaskCreate` directly. `vibe:tasks` owns the only fallback: if `TaskCreate` is unavailable, it says so and writes a Markdown checklist to `task-list.md` in the scratchpad; every later task transition in the calling skill goes through the mechanism it selected. Defined in: `skills/tasks/SKILL.md`
+`fix`, `feature`, `docs`, `release`, `init`, and `workspace-init` invoke the internal `vibe:tasks` skill once (Skill tool, task list as `$ARGUMENTS`) instead of calling `TaskCreate` directly. `vibe:tasks` owns the only fallback: if `TaskCreate` is unavailable, it says so and keeps `tasks.tsv` in the scratchpad through `skills/tasks/scripts/tasks.sh` (spec: `skills/tasks/references/model.md`).
 
 ## Review finding (agent output contract)
 `FILE:` (or `MODULE:`, `PACKAGE:`, `TARGET:` per agent) + `CATEGORY:` (from the agent's `## Categories`) + `SEVERITY:` (`high` \| `medium` \| `low`) + `ISSUE:` + `SUGGESTION:`, with agent-specific extra lines (`EXPLOIT:`, `PROOF:`, `SCALE:`, `CURRENT:`, `ADVISORY:`, `FUNCTION:`/`METRIC:`). Injected verbatim by the `vibe:review` brick into every agent prompt; no per-agent summary line. Defined in: `skills/review/SKILL.md`
@@ -92,3 +95,18 @@ Plus a free-text `## Naming convention` section. Written/refreshed by `/vibe:wor
 
 ## Workspace-root `CLAUDE.md` pointer
 A local, never-committed `CLAUDE.md` written by `/vibe:workspace-init` at the workspace root (the parent folder holding sibling repo checkouts — never itself a Git repo). Its `## Hub repo` line names the hub repo's directory; both `workspace-init` (on later runs) and `next-task` read this pointer instead of re-scanning siblings, falling back to a scan only when the pointer is missing or its target no longer carries the hub repo marker. Defined in: `skills/workspace-init/SKILL.md`, `skills/next-task/SKILL.md`
+
+## Inter-brick contracts (build loop)
+
+Each is parsed by heading; the defining file is the source.
+
+| Contract | Producer → consumer | Shape | Defined in |
+|---|---|---|---|
+| `CLARIFY-RESULT` | `clarify` → `backlog`, `init`, `workspace-init`, `workflow.md` | `settled[ — mode: need\|implementation]` / `partial — spike: <q>` / `partial — <open>` / `abandoned`, then `### Synthesis`, `### Decisions made` (priority, optional `(source: …)`) | `skills/clarify/SKILL.md` |
+| `## REVIEW agents` / `## REVIEW flipped rows` / `## REVIEW findings` | `review` brick → `workflow.md` | raw findings in the FILE/CATEGORY/SEVERITY/ISSUE/SUGGESTION format, each preceded by `AGENT:` | `skills/review/SKILL.md` |
+| `## REQUIREMENTS findings` | `requirements-reviewer` → `workflow.md` | `(gap)`, `(addition)`, `(constraint)`, `(ambiguity)` bullets, or `none` | `agents/requirements-reviewer.md` |
+| `## CLASSIFIED findings` / `## DISCARDED` / `## DOUBTS` | `review-classifier` → `workflow.md` | `(level · space)` bullets with **Consequence** and **Raised by**; dropped/merged with reason; doubts with recommended option | `agents/review-classifier.md` |
+| `## CLAIMS findings` | `claim-verifier` → `workflow.md` | `(unproven)`, `(contradicted)`, `(conclusion)` bullets, or `none` | `agents/claim-verifier.md` |
+| `## IMPLEMENTATION report` | `task-implementer` → `workflow.md` | **Sub-task**, **Files changed**, **Commands run** (red run before green), **Findings handled**, **Doubts** | `agents/task-implementer.md` |
+| `✍️ Rewrite — … applied directly` | `rewrite` (direct) → `workflow.md` | the rewritten text, questions to the author, the closing block | `skills/rewrite/SKILL.md` |
+| counters file `<scratchpad>/report.tsv` and `.vibe/reports/<timestamp>-<entry>.md` | `report` script | TSV `key\tvalue`; report = YAML frontmatter of the allowed counters plus `bricks:` | `skills/report/scripts/report.sh` |

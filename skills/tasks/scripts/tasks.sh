@@ -206,7 +206,7 @@ END {
       if (st[x] != "pending") continue
       st[x] = "deleted"
       for (j = 1; j <= count; j++) by[ids[j]] = drop(by[ids[j]], x)
-      msg = (msg == "") ? "ok #" x " deleted" : msg "\nok #" x " deleted"
+      msg = (msg == "") ? "ok #" x " deleted · " su[x] : msg "\nok #" x " deleted · " su[x]
     }
     if (msg == "") msg = "(nothing to abandon)"
   }

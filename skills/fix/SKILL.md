@@ -2,7 +2,7 @@
 name: fix
 description: Fix a bug using TDD (reproduce first), then update CHANGELOG.md under [Unreleased] > Fixed
 argument-hint: <bug description in natural language>
-version: 2.1.0
+version: 2.2.0
 model: claude-sonnet-5-5
 ---
 
@@ -10,7 +10,7 @@ model: claude-sonnet-5-5
 
 Fix the bug described in `$ARGUMENTS`: the user is the Product Owner only and never tests code manually.
 
-**First read the shared implementation workflow** at `${CLAUDE_PLUGIN_ROOT}/skills/feature/workflow.md` (`workflow.md` in the `feature` skill's directory): standing commit rule, `--auto` mode and its verdict line, escalation log, usage report, backlog resolution, baseline check, need framing, expert consultation, implementation framing, plan presentation, task list, red/green (delegated to `vibe:task-implementer`)/runtime/refactor loop, internal review and its routing, CHANGELOG, docs, sync, commit, final checks, report, debrief. This file only defines what is specific to a bug fix. Prefix: `fix:`; entry: `fix`.
+**First read the shared implementation workflow** at `${CLAUDE_PLUGIN_ROOT}/skills/feature/workflow.md` (`workflow.md` in the `feature` skill's directory) — every shared step lives there and only there. This file defines what is specific to a bug fix. Prefix: `fix:`; entry: `fix`.
 
 ## Step 1 — Understand the bug
 
@@ -22,7 +22,7 @@ Then run the baseline check — a pre-existing failure that *is* the reported bu
 
 Expert consultation will often select no expert — that is expected; the implementation framing then mostly confirms the root cause and the test. Present the plan covering: the observed problem (user-visible), the likely cause in plain language ("the app doesn't check a field is filled in before continuing", not "missing null check"), what will change, how it will be verified (the scenario as a user action and expected result, plus how the fix is exercised for real at runtime), and the assumptions.
 
-Task list: one group labelled `[Fix]` (`Red → green`, `Runtime smoke`, `Refactor + lint`), then the closing tasks.
+Task list: one group labelled `[Fix]`, then the closing tasks.
 
 ## Steps 3–5 — Red, green, runtime, refactor
 

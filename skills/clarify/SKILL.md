@@ -3,7 +3,7 @@ name: clarify
 description: Interview the user round by round over a plan, idea, or decision until every open branch is settled — finds facts itself, never guesses what only the user can decide. Two modes for the build workflow, `need` (what to solve, for whom) then `implementation` (how), each looking in its own sources before asking. Invoked by other vibe skills, never directly by users.
 argument-hint: "[mode: need | mode: implementation] [subject to clarify — plan, idea, or decision; empty infers it from the current conversation]"
 user-invocable: false
-version: 1.2.0
+version: 1.3.0
 model: claude-sonnet-5-5
 ---
 
@@ -23,7 +23,7 @@ As working notes, never shown: the subject at the root, every decision needed to
 
 **Priorities.** Every settled decision carries one: `🔒 MUST` (non-negotiable) | `⚖️ SHOULD` (strong default, sacrificed only to a MUST) | `✨ NICE` (best effort, first sacrificed). The icons are shape-coded (lock, scales, sparkle), never a red/yellow/green scheme, so colour-blind users can tell them apart. Infer it from the user's wording ("absolutely", "mandatory" → MUST; "should", "preferably" → SHOULD; "if possible", "bonus" → NICE), or ask it explicitly in the same round when the wording does not settle it — never default it. A decision you introduced yourself (where code lives, a mechanism, a risk) has no priority in the user's words: its priority is a question of the first round even when the decision itself waits on another answer (one question may group several proposed priorities), and it stays marked "proposed, to confirm" until the user confirms it.
 
-**Persistence.** The tree lives in `clarify-tree.md` in your scratchpad directory, not only in the conversation: a `/compact` prunes earlier turns, and a tree held only in memory loses its settled decisions. Write it with the Write or Edit tool when it is first laid out, rewrite it after every change of a decision's status, and at the end. Before resuming (new turn, interruption), reread it first rather than trusting what remains of the conversation.
+**Persistence.** The tree lives in your scratchpad directory, not only in the conversation — `clarify-tree.md` standalone, `clarify-tree-need.md` or `clarify-tree-implementation.md` in a mode, so one framing never reads the other's tree. A call that opens a new subject (a first round, or a new round whose prompt carries the previous decisions) starts the file afresh; only a resume inside the same call rereads it: a `/compact` prunes earlier turns, and a tree held only in memory loses its settled decisions. Write it with the Write or Edit tool when it is first laid out, rewrite it after every change of a decision's status, and at the end. Before resuming (new turn, interruption), reread it first rather than trusting what remains of the conversation.
 
 ## Step 3 — Rounds
 
@@ -82,4 +82,6 @@ CLARIFY-RESULT: settled
 - **[question title]** (⚖️ SHOULD): [answer found without asking] (source: path:line)
 ```
 
-In a mode, the first line is `CLARIFY-RESULT: settled — mode: need` (or `implementation`). Ended early → `CLARIFY-RESULT: partial — [what is still open]` with the content actually reached. Nothing settled at all → `CLARIFY-RESULT: abandoned`, no sections; the caller falls back to its original input.
+Ended early → `CLARIFY-RESULT: partial — [what is still open]` with the content actually reached; a spike → `CLARIFY-RESULT: partial — spike: <question>` (see the modes). Nothing settled at all → `CLARIFY-RESULT: abandoned`, no sections.
+
+**For every caller**, unless it says otherwise: `settled` and `partial` → the `### Synthesis` replaces the caller's input, the open points of a `partial` are the caller's to handle; `abandoned` → the caller keeps its original input. In a mode, the first line carries the mode (`CLARIFY-RESULT: settled — mode: need`), and a new round's prompt carries the previous round's synthesis and decisions: the result then holds the **full merged set**, previous decisions kept unless the new input contradicts them.

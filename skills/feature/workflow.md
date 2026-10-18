@@ -12,27 +12,29 @@ If the skill stops before its Commit step — plan rejected, clarifying question
 
 If `$ARGUMENTS` ends with ` --auto`: strip it, run in autonomous mode, and use the remaining text as `$ARGUMENTS`. `/vibe:auto` sets this flag on every item; a user can set it by hand.
 
-There is no one to answer a question: every gate resolves itself and the run ends with a machine-readable verdict. Framing, TDD, expert consultation, runtime verification, the review loop, CHANGELOG, docs, sync, commits, and backlog closing are unchanged; the debrief is skipped.
+There is no one to answer a question: every gate resolves itself and the run ends with a machine-readable verdict. Framing, TDD, expert consultation, runtime verification, the review loop, CHANGELOG, docs, sync, commits, the usage report and backlog closing are unchanged; the debrief is skipped.
 
 | Gate | Normal behavior | Autonomous resolution |
 |---|---|---|
 | Terminology ambiguous | ask | pick the closest glossary sense, record it as an assumption |
 | Duplicate found _(feature)_ | confirmation | verdict `blocked — possible duplicate of NNN` |
-| Framing round (`vibe:clarify` asks) | the user answers | take each question's recommended answer (`➡️`), record it as an assumption; write an ADR if the choice is structural |
+| Framing round (`vibe:clarify` asks, a classifier doubt, an implementer doubt) | the user answers | take each question's recommended answer (`➡️`), record it as an assumption; write an ADR if the choice is structural |
 | Framing ends with `partial — spike: <question>` | ask "proceed on an assumption, or stop here?" | verdict `blocked — spike needed: <question>` |
+| Framing ends with `partial — <open points>` or `abandoned` | ask "continue with what is settled, or stop here?" | continue: the open points become assumptions; `abandoned` in round 1 keeps the brief as the request, in a later round keeps the previous round's decisions |
+| Design challenge _(feature)_: the brief contradicts an established pattern | challenge the approach | follow the established pattern, record it as an assumption |
+| An expert's answer during implementation would reopen the approved plan | escalate to the user | keep the approved plan, record the expert's point in the report's **Skipped** line |
 | Oversized scope _(feature)_ | propose a split | no split — a product decision: implement as one item, flag it in the report |
 | Unmet dependencies | "continue anyway?" | verdict `blocked — depends on NNN (not done)` |
 | Broken build | report and stop | verdict `aborted — broken build` |
 | Plan approval | wait for explicit approval | plan self-approved; written into the report instead of presented |
-| Classifier doubt (`DOUBTS`) | ask the question, plain words | take the recommended option, record it as an assumption |
-| 3 failed attempts | escalate | escalation-log entry + `wip:` commit + verdict `blocked — [one-line diagnosis]` |
+| 3 failed attempts (any self-correction loop below) | escalation-log entry, then stop and report | escalation-log entry + `wip:` commit + verdict `blocked — [one-line diagnosis]` |
 | Pre-existing test failures | ask "track them in the backlog?" | create the backlog item via `vibe:backlog` without asking |
 | Scope drift | ask "widen the plan to cover this, or drop it and stay in scope?" | stay in scope, record the dropped action in the report's **Skipped** line |
 | Conflict between two plan requirements | different priorities → the higher wins silently and the arbitration is reported; same priority → ask which prevails | pick the reading closest to the brief, record it as an assumption |
 
 When a gate ends the run early on a backlog item: verdict `blocked` → set `status: blocked` in its frontmatter and append a `## Blocked` section (`YYYY-MM-DD` + the one-line reason); verdict `aborted` → the item is fine, put it back to `status: todo`. Then commit (standing rule).
 
-The final report ends with exactly one of these lines, nothing after it:
+The final report ends with exactly one of these lines, nothing after it — the usage report's two closing lines come **before** it:
 
 ```
 AUTO-RESULT: done
@@ -58,7 +60,7 @@ The only permitted later mutation: `Status:` → `resolved (YYYY-MM-DD)` when la
 
 ## Usage report
 
-Before the first step, invoke the `vibe:report` skill with `init <entry> <full model id of the session> <yes|no>` (`yes` when the brief is a backlog reference). From then on, count each event through its script the moment it happens — a brick called (`brick <name>`, every `vibe:*` skill or agent launched below), a question put to the user (`incr questions`), the counters named in the steps below. The report is written at the end (`write`). Without Bash, skip it and say so in one line: the work does not depend on it.
+Before the first step, invoke the `vibe:report` skill with `init <entry> <full model id of the session> <yes|no>` (`yes` when the brief is a backlog reference). From then on, count each event through its script the moment it happens — a brick called (`brick <name>`, every `vibe:*` skill or agent launched below), a question put to the user (`incr questions`), the counters named in the steps below. `write` closes every run, whatever its end: the Report step, an escalation, a `blocked`/`aborted` verdict, a rejected plan, a stop on a spike. `init` is called once Backlog resolution has succeeded. Without Bash, or on a refused call, skip the report and say so in one line: the work does not depend on it.
 
 ## Backlog resolution
 
@@ -79,11 +81,11 @@ Otherwise `$ARGUMENTS` is the free-form brief.
 
 ## Baseline check
 
-Before planning: run the test suite and record pass/fail counts — failures are **pre-existing**, listed in the plan's assumptions, not fixed now (unless one of them is the reported bug). If there is a build step, run it: a failing build is a blocker, report it and stop. If there is a run/dev command, start it for a few seconds to check it does not crash on startup.
+Before planning: record the baseline commit (`git rev-parse HEAD`) in your working notes — the review scope is measured from it; then run the test suite and record pass/fail counts — failures are **pre-existing**, listed in the plan's assumptions, not fixed now (unless one of them is the reported bug). If there is a build step, run it: a failing build is a blocker, report it and stop. If there is a run/dev command, start it for a few seconds to check it does not crash on startup.
 
 ## Frame the need
 
-Invoke the `vibe:clarify` skill with `mode: need` on its first line, then the brief (and the backlog item's path when there is one). It reads the brief, the backlog item, `.vibe/` and the project memory before asking anything; the user answers only what no source settles. Its `### Synthesis` replaces the brief for the rest of the run; its `### Decisions made`, with their priorities and sources, are the request the deliverable will be checked against. `partial — spike: <question>` → the matching gate.
+Invoke the `vibe:clarify` skill with `mode: need` on its first line, then the brief (and the backlog item's path when there is one). It reads the brief, the backlog item, `.vibe/` and the project memory before asking anything; the user answers only what no source settles. Its `### Synthesis` replaces the brief for the rest of the run; its `### Decisions made`, with their priorities and sources, are **the request** the deliverable will be checked against. Its result line routes: `settled` → go on; `partial — spike: <question>`, `partial — <open points>`, `abandoned` → the matching gate.
 
 ## Expert consultation
 
@@ -98,7 +100,7 @@ Draft the technical plan as working notes, then compare the settled need and not
 
 ## Frame the implementation
 
-Invoke `vibe:clarify` again with `mode: implementation` on its first line, then the settled need (the synthesis), the experts' `REQUIREMENTS` and `RISKS` (or "none"), and your plan notes. It reads the code, its tests, `CLAUDE.md` and `.vibe/modules/` before asking anything; a technical question reaches the user only when no source and no expert settles it, and it is phrased for a Product Owner. Fold its decisions into the plan: approach, files to touch, test strategy, runtime verification command. Each decision keeps its source for the plan's working notes.
+Invoke `vibe:clarify` again with `mode: implementation` on its first line, then the settled need (the synthesis), the experts' `REQUIREMENTS` and `RISKS` (or "none"), and your plan notes. It reads the code, its tests, `CLAUDE.md` and `.vibe/modules/` before asking anything; a technical question reaches the user only when no source and no expert settles it, and it is phrased for a Product Owner. Fold its decisions into the plan: approach, files to touch, test strategy, runtime verification command. Each decision keeps its source for the plan's working notes. Its result line routes like the need's.
 
 ## Presenting the plan
 
@@ -110,13 +112,13 @@ From approval on, before any action no approved plan item covers — a file not 
 
 ## Task list
 
-Once the plan is approved, invoke the `vibe:tasks` skill once with the skill's task list, subjects ≤ 30 chars, chained with `blockedBy` in the order given. Per development sub-task: `Red → green` → `Runtime smoke` → `Refactor + lint`; then `Internal review` → `Update CHANGELOG.md` → `Update docs` → `Sync .vibe/` → `Commit` → `Final checks` → `Write report`, plus `Update backlog status` when the brief came from a backlog item. `vibe:tasks` governs how each task is marked as the steps below progress, and how the list is rebuilt when the review loop goes back (its "Going back" section).
+Once the plan is approved, invoke the `vibe:tasks` skill once with the skill's task list, subjects ≤ 30 chars, chained with `blockedBy` in the order given. Per development sub-task: `Red → green` → `Runtime smoke` → `Refactor + lint`; then `Internal review` → `Final checks` → `Update CHANGELOG.md` → `Update docs` → `Sync .vibe/` → `Commit` → `Write report`, plus `Update backlog status` when the brief came from a backlog item. `vibe:tasks` governs how each task is marked as the steps below progress, and how the list is rebuilt when the review loop goes back (its "Going back" section).
 
 ## Red → green — delegated
 
-Each sub-task's tests and code are written by the `vibe:task-implementer` agent (Agent tool, `subagent_type: "vibe:task-implementer"`, `run_in_background: false`), out of your context: your context stays short and the task list stays in front of you. Count `report brick task-implementer`. Its prompt contains the sub-task (subject, description, completion criterion, the tests the skill specifies), the settled framing (the need's synthesis and decisions, the implementation's decisions, the files to touch), the project's test and lint commands, and the two rule blocks below **quoted verbatim**. On a correction round, add the findings to handle with their level.
+Each sub-task's tests and code are written by the `vibe:task-implementer` agent (Agent tool, `subagent_type: "vibe:task-implementer"`, `run_in_background: false`), out of your context: your context stays short and the task list stays in front of you. Count `report brick task-implementer`. Its prompt contains the sub-task (subject, description, completion criterion, the tests the skill specifies), the settled framing (the need's synthesis and decisions, the implementation's decisions, the files to touch), the project's conventions (`CLAUDE.md`) and test command, and the Red and Green rule blocks below (four paragraphs) **quoted verbatim**. On a correction round, add the findings to handle with their level.
 
-Its `## IMPLEMENTATION report` is a claim, not a proof: re-run the test command yourself once and compare with its last line. A report whose commands do not show a failing run before a passing one is a red step skipped: re-launch with that remark. Its **Doubts** go through the "Framing round" gate (ask the user in plain words, or take the recommended option in `--auto`), then re-launch with the answers. Three launches on the same sub-task without a green, sourced report → escalation-log entry and escalate. The red and green rules it must apply:
+Its `## IMPLEMENTATION report` is a claim, not a proof: re-run the test command yourself once and compare with the last entry of its **Commands run**. A report whose commands do not show a failing run before a passing one is a red step skipped: re-launch with that remark. Its **Doubts** go through the "Framing round" gate, then re-launch with the answers — that re-launch does not count below. **Attempts are yours alone**: three launches on the same sub-task in the same round without a green, sourced report → the "3 failed attempts" gate. The count restarts with each round. The red and green rules it must apply:
 
 **Red — tests first.** Create or update the test file and write the tests the skill specifies. Run them and confirm they **fail** — a test that passes before implementation is wrong. Test names describe behaviour ("returns 404 when user does not exist"), not implementation.
 
@@ -124,32 +126,47 @@ Its `## IMPLEMENTATION report` is a claim, not a proof: re-run the test command 
 
 **Green — implement.** Write the minimum change that makes the tests pass without breaking existing ones; run the full suite after each meaningful change.
 
-**Smallest complete change.** Before writing, list every place the change must reach: callers, tests, fixtures, config, exports. Then take the first option that fully works: already in this codebase (use it the way the surrounding code does) → standard library or platform feature → installed dependency → minimum new code. Never add a dependency for a few lines. No abstraction, option or "for later" code nobody asked for. Code you move or merge keeps its validation and error handling. A shortcut with a known limit gets a one-line comment `shortcut: <limit>, <when to upgrade>`. Minimal never means skipping tests, validation at trust boundaries, error handling or security. If tests fail: diagnose, fix the code (not the tests, unless a test was wrong), re-run — up to 3 attempts, then escalation-log entry and escalate with a precise diagnosis.
+**Smallest complete change.** Before writing, list every place the change must reach: callers, tests, fixtures, config, exports. Then take the first option that fully works: already in this codebase (use it the way the surrounding code does) → standard library or platform feature → installed dependency → minimum new code. Never add a dependency for a few lines. No abstraction, option or "for later" code nobody asked for. Code you move or merge keeps its validation and error handling. A shortcut with a known limit gets a one-line comment `shortcut: <limit>, <when to upgrade>`. Minimal never means skipping tests, validation at trust boundaries, error handling or security. If tests fail: diagnose, fix the code (not the tests, unless a test was wrong), re-run; if they still fail, report the failure as it stands.
 
 ## Runtime verification — assume it is broken
 
 Green tests are not proof. Invoke the `run` skill (Skill tool, `skill: "run"`) to launch and drive the app and observe the real behaviour, giving it the verification scenario from the plan, the acceptance criteria or expected behaviour, and at least one edge case or error path to trigger for real — not only the nominal path.
 
-If `run` cannot launch the app for missing configuration (env var, config file, secret): create a minimal stub (`.env.test` with placeholders, a stub config) and re-invoke it. If the behaviour is wrong or the app cannot be launched: diagnose, fix the code (not the stub, unless the stub was wrong), re-invoke — 3 attempts total, then escalation-log entry and escalate with `run`'s exact findings. Do not complete the task until `run` confirms correct behaviour.
+If `run` cannot launch the app for missing configuration (env var, config file, secret): create a minimal stub (`.env.test` with placeholders, a stub config) and re-invoke it. If the behaviour is wrong or the app cannot be launched: diagnose, fix the code (not the stub, unless the stub was wrong), re-invoke — 3 attempts total, then the "3 failed attempts" gate with `run`'s exact findings. Do not complete the task until `run` confirms correct behaviour.
 
 ## Refactor and lint
 
-Remove dead code, unused imports, and debug artifacts; run the lint command and fix issues; re-run the tests, the runtime smoke, and the build command if the Baseline check found one — a regression here is fixed before the task completes. These fixes are yours, in your context: small and local. One that changes the approach or the behaviour goes back through the implementer instead. A failing build is treated exactly like a failing test: diagnose, fix the code, re-run — up to 3 attempts, then escalation-log entry and escalate. The task cannot reach Commit on a broken build. If more sub-tasks remain, return to Red for the next one.
+Remove dead code, unused imports, and debug artifacts; run the lint command and fix issues; re-run the tests, the runtime smoke, and the build command if the Baseline check found one — a regression here is fixed before the task completes. These fixes are yours, in your context: small and local. One that changes the approach or the behaviour goes back through the implementer instead. A failing build is treated exactly like a failing test: diagnose, fix the code, re-run — up to 3 attempts, then the "3 failed attempts" gate. The task cannot reach Commit on a broken build. If more sub-tasks remain, return to Red for the next one.
 
 ## Internal review
 
-Once every sub-task is green, review the change before shipping it. Launch in one message:
-- the `vibe:review` skill (Skill tool) with `internal` then the changed files (`git diff --name-only` since the baseline commit, plus new files): it runs the active review agents on that scope and returns their raw findings;
-- the `vibe:requirements-reviewer` agent (Agent tool, `subagent_type: "vibe:requirements-reviewer"`) with the request (the need's `### Decisions made`, quoted verbatim, and the backlog item's acceptance criteria when there is one), the changed files, and "code against its brief".
+Once every sub-task is green, review the change before shipping it. The scope is every file changed since the baseline commit (`git diff --name-only <baseline>` plus untracked files), whatever `wip:` commits happened since.
 
-Count `report incr findings.raised <n>` with the total. Then launch the `vibe:review-classifier` agent with every raw finding (agent, reference, observation), the same request, "code" as the type of deliverable, and the working directory. Count `findings.dropped`, `findings.merged`, `findings.high`, `findings.medium`, `findings.low` from its output. Its `DOUBTS` go through the matching gate; each answer reclassifies the finding it was about.
+**Collect.** Launch in one message:
+- the `vibe:review` skill (Skill tool) with `internal` then the scope: it runs the active review agents and returns their raw findings under `## REVIEW findings`;
+- the `vibe:requirements-reviewer` agent (Agent tool, `subagent_type: "vibe:requirements-reviewer"`) with the request (the need's `### Decisions made`, quoted verbatim, and the backlog item's acceptance criteria when there is one), the scope, and "code against its brief".
+
+Count `report incr findings.raised <n>` with the total. A brick that errors, times out or returns no parseable heading is launched once more; a second failure is an escalation-log entry and the "3 failed attempts" gate — never "no findings".
+
+**Classify.** Launch the `vibe:review-classifier` agent with every raw finding (agent, reference, observation), the same request, "code" as the type of deliverable, and the working directory. Count `findings.dropped`, `findings.merged`, `findings.high`, `findings.medium`, `findings.low` from its output. Its `DOUBTS` go through the "Framing round" gate; each answer reclassifies the finding it was about. The same relaunch rule applies to a failed classifier.
 
 **Route.** Read `## CLASSIFIED findings` from the top:
-- a `high` or `medium` finding in the `need` space → the need was misread or incomplete. Go back to **Frame the need** with the finding as input (`vibe:clarify`, `mode: need`, "Round <n>: <finding and its consequence>"); then redo the steps that follow for what changed. Count `incr returns.need`.
-- otherwise, a `high` or `medium` finding in the `implementation` space → go back to **Frame the implementation** with the finding, the current plan and the affected files; adjust the plan, then redo Red → green (through `vibe:task-implementer`, with the findings and their level) and Runtime → Refactor for the affected sub-tasks. Count `incr returns.implementation`.
+- a `high` or `medium` finding in the `need` space → the need was misread or incomplete: go back to **Frame the need**. Count `incr returns.need`.
+- otherwise, a `high` or `medium` finding in the `implementation` space → go back to **Frame the implementation**. Count `incr returns.implementation`.
 - only `low` findings left → the loop ends. Low findings are not fixed in this run; their count goes to the usage report, not to the user.
 
-Every return is a new round: apply `vibe:tasks`' "Going back" (the `Internal review` task completes, stale tasks are abandoned, the new round's tasks carry `Round <n> — `), and count `incr rounds` and one `incr fixes` per finding corrected. The loop has no fixed cap — the result is judged, not the number of rounds. A finding that comes back unchanged after the round meant to fix it is a failed attempt: 3 of them on the same finding → escalation-log entry and escalate. In `--auto` mode a finding can only be fixed or escalated, never set aside.
+**New round.** A return opens round `n+1`: apply `vibe:tasks`' "Going back" and count `incr rounds`. The framing is re-run **on top of the previous one**: its prompt carries the previous `### Synthesis` and `### Decisions made` (priorities and sources included), the expert lists for the implementation mode, then "Round <n>: <the finding and its consequence>"; it returns the full merged set, which becomes the request. Then redo what changed: for the need, the implementation framing and the plan; for both, Red → green through `vibe:task-implementer` with the findings and their level, then Runtime → Refactor for the affected sub-tasks, then this review again. Count one `incr fixes` per finding corrected.
+
+The loop has no fixed cap — the result is judged, not the number of rounds. A finding that comes back after the round meant to fix it — same place and same cause, whatever its wording or space — is a failed attempt; three on the same finding → the "3 failed attempts" gate. In `--auto` mode a finding can only be fixed or escalated, never set aside.
+
+## Final checks
+
+Draft the report the skill lists, complete with the workflow's own lines (**Skipped**, **Pre-existing failures**, see Report) and without any finding, agent name or file name. Then launch the `vibe:claim-verifier` agent on the draft with the proofs: the test and lint commands run and their output, the `run` skill's findings, the changed files. Use: "report of a run".
+- `(unproven)` or `(contradicted)` about the run itself (tests, lint, build, runtime) → re-run the command and write what it actually says. If the result is now a failure, fix it as in Refactor and lint, then re-draft.
+- `(contradicted)` about what the code does → a finding: classify and route it as in Internal review; the loop then comes back here.
+- `(conclusion)` → remove the conclusion, keep the fact.
+
+Then invoke the `vibe:rewrite` skill with `mode: direct` on its first line, "Reader: the Product Owner, who does not read code" on the second, then the corrected draft. Of its output, **the rewritten text is the report**; its questions to the author are yours to answer — fix the draft and invoke it once more, or leave the passage as it was; its closing block is kept for the Report step.
 
 ## CHANGELOG
 
@@ -167,23 +184,14 @@ If `.vibe/` exists: invoke the `vibe:sync` skill — it detects changed files vi
 
 Stage all created and modified files (never `.env` or secrets) and commit `<prefix> [changelog entry text, written for a developer]`.
 
-If the brief came from a backlog item: `git mv .vibe/backlog/NNN-slug.md .vibe/backlog/done/NNN-slug.md` (create `done/` if needed), set `status: done`, and make a second commit `chore: close backlog item NNN`.
-
-## Final checks
-
-Draft the report the skill lists, then launch the `vibe:claim-verifier` agent on the draft with the proofs: the test and lint commands run and their output, the `run` skill's findings, the changed files. Use: "report of a run".
-- `(unproven)` or `(contradicted)` about the run itself (tests, lint, build, runtime) → re-run the command and write what it actually says; a result that is now wrong is a regression: fix it before the report (Refactor rules, 3 attempts).
-- `(contradicted)` about what the code does → a finding: classify and route it as in Internal review.
-- `(conclusion)` → remove the conclusion, keep the fact.
-
-Then invoke the `vibe:rewrite` skill with `mode: direct` on its first line, "Reader: the Product Owner, who does not read code" on the second, then the corrected draft. Its output is the report.
+If the brief came from a backlog item: `git mv .vibe/backlog/NNN-slug.md .vibe/backlog/done/NNN-slug.md` (create `done/` if needed), set `status: done`, and make a second commit `chore: close backlog item NNN`. Nothing changes the code after this step: Final checks ran before it.
 
 ## Report
 
-Short, plain sentences, no filler, covering the points the skill lists, then:
+The report is the text Final checks returned. The skill lists its points; the workflow adds:
 - **Skipped:** one line naming the features, options or abstractions deliberately left out, if any.
 - **Pre-existing failures:** if the baseline recorded any (beyond the reported bug itself), check the active backlog for an item already covering them (compare against the failing test names). If found, say "already tracked by backlog item NNN"; otherwise end with "N tests were already failing before this work — do you want me to log them to the backlog?" and, on confirmation, invoke `vibe:backlog` with a one-line description listing them.
 
 Never a finding, an agent name or a file name: what the review found is what the code now does.
 
-Finally, invoke `vibe:report` with `write` (its two closing lines come after the report), then, outside `--auto`, the `vibe:debrief` skill.
+After the report come, in this order: `vibe:rewrite`'s closing block, then `vibe:report` `write` and its two closing lines, then — in `--auto` — the `AUTO-RESULT:` line as the very last line, or — otherwise — the `vibe:debrief` skill.

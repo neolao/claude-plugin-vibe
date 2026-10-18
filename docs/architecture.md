@@ -2,7 +2,7 @@
 
 # Architecture
 
-This plugin has **no runtime of its own**: it is a set of Markdown instruction files (skills and agents) consumed directly by Claude Code, plus one shell script and three JSON manifests. There is no build step, no package manifest, no test framework — deliberately (see `docs/development.md`).
+This plugin has **no runtime of its own**: it is a set of Markdown instruction files (skills and agents) consumed directly by Claude Code, plus three POSIX shell scripts and three JSON manifests. There is no build step, no package manifest, no test framework — deliberately (see `docs/development.md`).
 
 ## Repository layout
 
@@ -11,7 +11,7 @@ claude-plugin-vibe/
 ├── .claude-plugin/
 │   ├── plugin.json        # plugin identity: name "vibe", version, keywords
 │   └── marketplace.json   # marketplace listing pointing at this repo
-├── skills/<name>/SKILL.md # one directory per skill (20 /vibe:* slash commands + 3 internal)
+├── skills/<name>/SKILL.md # one directory per skill (15 /vibe:* slash commands + 6 internal)
 ├── agents/review-*.md     # one file per review dimension (20 agents, after-the-fact critics)
 ├── agents/expert-*.md     # one file per domain expert (9 agents, before/during prescriptive consultants)
 ├── agents/{review-classifier,requirements-reviewer,claim-verifier}.md  # control agents of the build loop
@@ -41,7 +41,7 @@ flowchart LR
 
 Each `/vibe:<name>` command is a self-contained instruction set in `skills/<name>/SKILL.md`, with frontmatter `name`, `description`, and optional `argument-hint`. Fifteen skills are user-invocable slash commands covering the full workflow: `init`, `backlog`, `challenge`, `consult`, `feature`, `fix`, `auto`, `debrief`, `learn`, `sync`, `changelog`, `docs`, `release`, `workspace-init`, `next-task`. Six more set `user-invocable: false` — hidden from the `/` menu, callable only by the others through the Skill tool: `clarify` (the two framings), `review` (the review agents on a change), `rewrite` (the report made readable), `report` (usage statistics), `tasks` and `publish`.
 
-Skills invoke each other through the Skill tool rather than duplicating logic: `feature` and `fix` call `sync` (and `docs`/`changelog` steps) before committing; `init` calls `sync` to bootstrap `.vibe/`; `release` refreshes docs and changelog. `backlog`, `init`, and `workspace-init` also invoke `clarify` conditionally — only when what they have to work with (a one-line item description, an empty project's stated idea, a new workspace's purpose) is too thin to act on safely — and fold its settled synthesis back into their own flow instead of guessing. `init`, `feature`, `fix`, `review`, `docs`, `release`, and `workspace-init` all delegate task-list creation to `tasks`, which owns the only fallback logic (a scratchpad checklist) for when `TaskCreate` is unavailable in the environment. `auto` is the only skill that drives other skills through sub-agents — one per backlog item, strictly sequential since they share the Git working tree — so its own context stays constant over a long unattended run. Runtime verification is delegated to Claude Code's native `run` skill. `next-task` is the only skill in the plugin that pushes and publishes on its own — every other skill, including `auto`, stops at a local commit by design. The dynamic side of these flows is documented in `docs/workflows.md`.
+Skills invoke each other through the Skill tool rather than duplicating logic: `feature` and `fix` call `sync` (and `docs`/`changelog` steps) before committing; `init` calls `sync` to bootstrap `.vibe/`; `release` refreshes docs and changelog. `backlog`, `init`, and `workspace-init` also invoke `clarify` conditionally — only when what they have to work with (a one-line item description, an empty project's stated idea, a new workspace's purpose) is too thin to act on safely — and fold its settled synthesis back into their own flow instead of guessing. `init`, `feature`, `fix`, `docs`, `release`, and `workspace-init` all delegate task-list creation to `tasks`, which owns the only fallback logic (a scratchpad checklist) for when `TaskCreate` is unavailable in the environment. `auto` is the only skill that drives other skills through sub-agents — one per backlog item, strictly sequential since they share the Git working tree — so its own context stays constant over a long unattended run. Runtime verification is delegated to Claude Code's native `run` skill. `next-task` is the only skill in the plugin that pushes and publishes on its own — every other skill, including `auto`, stops at a local commit by design. The dynamic side of these flows is documented in `docs/workflows.md`.
 
 ## Interviewing for missing detail (`clarify`)
 
@@ -78,8 +78,8 @@ Where review agents critique code that already exists, `agents/expert-<domain>.m
 
 ## Status line (`scripts/` + `settings.json`)
 
-`settings.json` declares a `subagentStatusLine` hook pointing at `scripts/subagent-statusline.sh`. The script reads a JSON payload (`{columns, tasks: [...]}`) on stdin, and emits one `{id, content}` JSON line per agent row via `jq` — status icon (looked up from the task's status through a small alias table), bold name, description, token count, truncated to the terminal width. Both failure modes — a stdin read that fails, or malformed JSON that `jq` can't parse — log a diagnostic to stderr and exit cleanly instead of aborting silently. It is most visible during `/vibe:review`, which can run up to 20 agents side by side.
+`settings.json` declares a `subagentStatusLine` hook pointing at `scripts/subagent-statusline.sh`. The script reads a JSON payload (`{columns, tasks: [...]}`) on stdin, and emits one `{id, content}` JSON line per agent row via `jq` — status icon (looked up from the task's status through a small alias table), bold name, description, token count, truncated to the terminal width. Both failure modes — a stdin read that fails, or malformed JSON that `jq` can't parse — log a diagnostic to stderr and exit cleanly instead of aborting silently. It is most visible during the internal review of every feature and fix, which can run up to 20 agents side by side.
 
 ## Generated state in target projects
 
-The plugin writes into the *target* project (not into this repo, except for dogfooding): `CLAUDE.md` and `README.md` (by `init`, which delegates the README's managed sections to `docs`), the `.vibe/` context map — `index.md`, `modules/`, `models.md`, a fully code-derived `glossary.md`, plus work data `backlog/`, `decisions/`, `escalations.md`, `last-review.md`, and `auto-state.md` (by `sync` and the workflow skills), and `reports/` (by `report`: statistics of each run, self-ignored in git, shared only if the user chooses to). The lifecycle of each entry is recorded in the generated `.vibe/README.md`.
+The plugin writes into the *target* project (not into this repo, except for dogfooding): `CLAUDE.md` and `README.md` (by `init`, which delegates the README's managed sections to `docs`), the `.vibe/` context map — `index.md`, `modules/`, `models.md`, a fully code-derived `glossary.md`, plus work data `backlog/`, `decisions/`, `escalations.md`, and `auto-state.md` (by `sync` and the workflow skills), and `reports/` (by `report`: statistics of each run, self-ignored in git, shared only if the user chooses to). The lifecycle of each entry is recorded in the generated `.vibe/README.md`.

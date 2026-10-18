@@ -8,7 +8,9 @@
 #   report.sh <counters> show
 #   report.sh <counters> write <project root>
 #
-# Exit: 0 = done, 1 = refused (file unchanged), 2 = usage error.
+# init overwrites an existing counters file (one run = one init); write removes it once the
+# report is on disk, so a run that stopped early never pollutes the next one.
+# Exit: 0 = done, 1 = refused (file unchanged), 2 = usage error or write failure.
 set -u
 
 TAB=$(printf '\t')
@@ -35,11 +37,17 @@ in_list() { # in_list <word> <list>
   for w in $2; do [ "$w" = "$1" ] && return 0; done
   return 1
 }
+fail() { # fail <message>: an I/O failure, after cleaning the temp file
+  rm -f "$FILE.tmp.$$"
+  echo "error: $1" >&2
+  exit 2
+}
 get() { awk -F "$TAB" -v k="$1" '$1 == k { v = $2 } END { print v }' "$FILE"; }
 put() { # put <key> <value>: replace or append the line, through a temp file then mv
   tmp="$FILE.tmp.$$"
   awk -F "$TAB" -v OFS="$TAB" -v k="$1" -v v="$2" \
-    '$1 == k { print k, v; done = 1; next } { print } END { if (!done) print k, v }' "$FILE" > "$tmp" && mv "$tmp" "$FILE"
+    '$1 == k { print k, v; done = 1; next } { print } END { if (!done) print k, v }' "$FILE" > "$tmp" && mv "$tmp" "$FILE" \
+    || fail "could not write $FILE"
 }
 
 case $CMD in
@@ -47,14 +55,15 @@ case $CMD in
     [ $# -eq 3 ] || usage
     in_list "$1" "$ENTRIES" || refuse "unknown entry: $1 (expected: $ENTRIES)"
     case $3 in yes | no) ;; *) usage ;; esac
-    [ -s "$FILE" ] && refuse "$FILE already exists: one report per run"
-    mkdir -p "$(dirname "$FILE")" || exit 2
+    case $2 in '' | *[!a-z0-9.-]*) refuse "invalid model id: $2 (lowercase letters, digits, dots and dashes)" ;; esac
+    mkdir -p "$(dirname "$FILE")" || fail "could not create $(dirname "$FILE")"
+    tmp="$FILE.tmp.$$"
     {
       printf 'entry\t%s\n' "$1"
-      printf 'model\t%s\n' "$(printf '%s' "$2" | tr '\t\r\n' '   ')"
+      printf 'model\t%s\n' "$2"
       printf 'backlog\t%s\n' "$3"
       printf 'start\t%s\n' "$(date +%s)"
-    } > "$FILE"
+    } > "$tmp" && mv "$tmp" "$FILE" || fail "could not write $FILE"
     echo "ok counters initialized: $FILE"
     ;;
   incr | brick)
@@ -87,12 +96,15 @@ case $CMD in
     start=$(get start)
     now=$(date +%s)
     stamp=$(date +%Y-%m-%dT%H-%M-%S)
+    in_list "$entry" "$ENTRIES" || refuse "$FILE has no valid entry: run init first"
+    is_int "$start" || refuse "$FILE has no valid start: run init first"
     dir="$ROOT/.vibe/reports"
-    mkdir -p "$dir" || exit 2
+    mkdir -p "$dir" || fail "could not create $dir"
     # The directory ignores itself: a report never reaches the project's history unless the user copies it out.
-    [ -e "$dir/.gitignore" ] || echo '*' > "$dir/.gitignore"
+    grep -qx '\*' "$dir/.gitignore" 2>/dev/null || echo '*' >> "$dir/.gitignore" || fail "could not write $dir/.gitignore"
     out="$dir/$stamp-$entry.md"
     [ -e "$out" ] && refuse "$out already exists"
+    tmp="$out.tmp.$$"
     {
       echo '---'
       echo "date: $(date +%Y-%m-%d)"
@@ -104,7 +116,8 @@ case $CMD in
       echo 'bricks:'
       awk -F "$TAB" '$1 ~ /^brick\./ { sub(/^brick\./, "", $1); print "  " $1 ": " $2 }' "$FILE" | sort
       echo '---'
-    } > "$out"
+    } > "$tmp" && mv "$tmp" "$out" || { rm -f "$tmp"; fail "could not write $out"; }
+    rm -f "$FILE"
     echo "$out"
     ;;
   *) usage ;;

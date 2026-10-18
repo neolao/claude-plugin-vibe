@@ -147,7 +147,7 @@ Experts prescribe requirements *before* the code exists; the review agents criti
 
 ## Subagent status line
 
-The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-statusline.sh`), applied automatically once the plugin is enabled. It replaces the default `name · description · token count` row in the agent panel with a compact, color-coded line — most visible during `/vibe:review`, which runs up to 20 agents in parallel.
+The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-statusline.sh`), applied automatically once the plugin is enabled. It replaces the default `name · description · token count` row in the agent panel with a compact, color-coded line — most visible during the internal review of every feature and fix, which runs up to 20 agents in parallel.
 
 ## Typical flow
 

@@ -18,7 +18,7 @@ This plan turns [the strategy](strategy/README.md) into work packages, starting 
 | Sequence held by tasks | `tasks` 2.0.0 (native or `tasks.tsv`) | Kept. Add: bulk abandon of stale tasks when the loop goes back to a framing, round prefix, counters for the usage report. |
 | Frame the need / the implementation | `clarify` 1.1.0: one design tree, standalone or called by `backlog`, `init`, `workspace-init` | Two modes of the same skill, `need` and `implementation`, each with its own sources (request and `.vibe/` first; code first) and the rule "the PO is asked only when neither holds the answer". Hidden from the menu. |
 | Expert consultation | `expert-*` agents called from `workflow.md` at plan time | Kept. Called by the `implementation` framing. |
-| Write the code | The main session codes itself (`Red`, `Green`, `Refactor` in `workflow.md`) | Kept in the main session for now: the task list stays in front of it. Delegating to an implementer agent is a later package, once the loop is measured. |
+| Write the code | The main session codes itself (`Red`, `Green`, `Refactor` in `workflow.md`) | Delegated to `task-implementer`, one sub-task per launch (package 7). |
 | Internal review | `review` 1.1.0: picks agents from CLAUDE.md, dedups, fixes high and medium, reports low | Hidden brick. Returns raw findings to the loop; it no longer decides severity or fixes. |
 | Classify findings | Step 4 of `review` (merge, normalize severity) | New agent `review-classifier`: re-checks each finding against its source, drops false positives, merges, sets level (high / medium / low) and space (problem / solution). |
 | Conformity to the request | `verify` 1.0.0, scope grid | New agent `requirements-reviewer`, from the scope grid. The rigor and finish grids are covered by `review-correctness`, the claim check and the clarity pass. `verify` is removed. |
@@ -42,8 +42,8 @@ This plan turns [the strategy](strategy/README.md) into work packages, starting 
 
 ### 2. Transverse bricks
 
-- **`review-classifier`** (new agent): input the raw findings and the files; output each kept finding with its level and space, the dropped ones with the reason, the doubts it cannot settle alone as questions with a recommended option. Fixture: findings with a false positive, a duplicate pair, a problem-space finding.
-- **`requirements-reviewer`** (new agent): from `skills/verify/references/grids/scope.md`. Input the request verbatim, the plan and the diff.
+- **`review-classifier`** (new agent): input the raw findings and the files; output each kept finding with its level and space, the dropped ones with the reason, the doubts it cannot settle alone as questions with a recommended option. Fixture: findings with a false positive, a duplicate pair, a need-space finding.
+- **`requirements-reviewer`** (new agent): from the former `verify` skill's scope grid (removed in package 5). Input the request verbatim, the plan and the diff.
 - **`claim-verifier`** (new agent): input a report and the trace (commands run, files). Flags a claim with no proof or contradicted by its source.
 - **`rewrite` `direct` mode**: first line of `$ARGUMENTS`; rewrites and returns, no question.
 - **Done when:** each agent has one positive and one negative case at 1.00 (a decoy from its "what is not a finding" section); `rewrite`'s existing case stays green.
@@ -59,7 +59,7 @@ This plan turns [the strategy](strategy/README.md) into work packages, starting 
 
 ### 4. The build loop
 
-- `workflow.md` is reshaped: `need` framing → `implementation` framing → plan approval → task list → Red / Green / Runtime / Refactor per sub-task → **internal review** (`review` brick, then `review-classifier`) → route: problem-space finding back to `need`, solution-space finding back to `implementation`, only low left → `requirements-reviewer` + `claim-verifier` on the report → `rewrite direct` → CHANGELOG, docs, sync, commit → `report write` → `debrief`.
+- `workflow.md` is reshaped: `need` framing → `implementation` framing → plan approval → task list → Red / Green / Runtime / Refactor per sub-task → **internal review** (`review` brick, then `review-classifier`) → route: need-space finding back to `need`, implementation-space finding back to `implementation`, only low left → `requirements-reviewer` + `claim-verifier` on the report → `rewrite direct` → CHANGELOG, docs, sync, commit → `report write` → `debrief`.
 - The loop has no fixed cap; each return is a new task round. `--auto` resolves the classifier's doubts by its gate table.
 - `review` becomes a hidden brick: no fixes, no `.vibe/last-review.md`, no cadence hint; the orchestrator owns the commit.
 - `feature` and `fix` SKILL.md only list their specifics, as today.
@@ -86,6 +86,12 @@ This plan turns [the strategy](strategy/README.md) into work packages, starting 
 - A `task-implementer` agent writes one sub-task out of the orchestrator's context, as the strategy suggests for long tasks. Planned after packages 1–6 were measured; the maintainer chose to write it at once and measure everything in one eval round.
 - **Progress (2026-10-18):** written — `agents/task-implementer.md` 1.0.0 (sonnet · medium, writes code, `## IMPLEMENTATION report`), `workflow.md` "Red → green — delegated" (rule blocks quoted to the agent, the workflow re-runs the tests, doubts through the framing gate, three launches then escalation; runtime, lint, build and commit stay in the orchestrator), `feature`/`fix` 2.1.0, cases `task-implementer-implements-test-first` and `task-implementer-raises-doubt-instead-of-deciding`; the `feature-*`/`fix-*` graders that watched `Edit` calls now read the implementer's report and the files (a sub-agent's tool calls are not in the trace). Not run.
 
+### 8. Review of packages 1–7
+
+- Thirteen review agents on the change set, findings classified by `review-classifier` (its first real run): 5 high, 22 medium, 15 low, 6 doubts. The high and medium findings are fixed here; the doubts are the maintainer's.
+- **Fixed (2026-10-18):** `report.sh` — `init` overwrites, `write` removes the counters and fails loudly, model id validated, `.gitignore` appended not clobbered, `entry`/`start` validated; `report` 1.1.0 writes on every exit and its lines come before `AUTO-RESULT:`; `workflow.md` — baseline commit recorded and used as review scope, Final checks before CHANGELOG/Commit and the report drafted whole before them, one owner for attempts (the workflow, per sub-task per round; the implementer only reports), "compare with the last entry of **Commands run**", all `CLARIFY-RESULT` forms routed with their `--auto` rows, two missing gates (design challenge, expert reopening the plan), a failed or empty brick relaunched once then escalated, a return round re-runs the framing on top of the previous synthesis and decisions, "same finding" defined by place and cause, Internal review split into Collect / Classify / Route / New round; `clarify` 1.3.0 — one tree file per mode, result forms defined once for every caller, merged set on a new round; `tasks` 2.1.1 — `abandon` prints the subject; routine — give-up rule by location, a rejected inbox file is deleted and flagged for history purge, inbox README asks for redaction before sharing; a guard in `evals/report-script-test.sh` checks the counter keys against the skill table, the workflow's `incr` calls and the routine's signals; stale docs and `.vibe/` files corrected (counts, fallback, next-task, `last-review.md` deleted, `models.md` contracts table). Not run.
+- **Left as low or pending a doubt:** unread counters, prompt redites, `review`'s path mode and `internal` token, `rewrite`'s standalone body, renames (`review-classifier`, `report`, `abandon`), claim check on the framing's self-sourced decisions, a round cap.
+
 ## Order
 
-1 → 2 → 3 → 4 → 5 → 6, then 7. Packages 2 and 3 are independent of each other once 1 is done.
+1 → 2 → 3 → 4 → 5 → 6, then 7, then 8 (review). Packages 2 and 3 are independent of each other once 1 is done.

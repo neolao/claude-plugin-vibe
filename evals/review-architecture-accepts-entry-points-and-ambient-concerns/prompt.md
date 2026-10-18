@@ -8,7 +8,7 @@ timeout_seconds: 300
 allowed_tools: [Read, Grep, Glob, Agent]
 ---
 
-Invoke the `vibe:review-architecture` sub-agent (Agent tool, `subagent_type: "vibe:review-architecture"`) to review `fixtures/` in this case directory. `.vibe/` is present at the workspace root, as it is when `/vibe:review` runs for real. Give it exactly this prompt:
+Invoke the `vibe:review-architecture` sub-agent (Agent tool, `subagent_type: "vibe:review-architecture"`) to review `fixtures/` in this case directory. `.vibe/` is present at the workspace root, as it is when the internal review runs for real. Give it exactly this prompt:
 
 ```
 Review the code in scope for your dimension only. Read-only: never edit, create, or run anything the agent definition does not explicitly allow.

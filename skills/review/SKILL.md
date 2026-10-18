@@ -3,7 +3,7 @@ name: review
 description: Runs the project's active review agents on a scope and returns their raw findings — one owner per dimension, the shared finding contract injected into every prompt — without judging, fixing or committing anything. Invoked by the build workflow (`vibe:feature`, `vibe:fix`) as its internal review step, never directly by users.
 argument-hint: "internal <changed files, space-separated> | <path to review — empty for the full codebase>"
 user-invocable: false
-version: 2.0.0
+version: 2.0.1
 model: claude-sonnet-5-5
 ---
 
@@ -37,7 +37,7 @@ If the table exists, re-check every row against the project as it is now, using 
 
 ## Step 3 — Run the active agents in parallel
 
-Launch every active agent in one message (Agent tool, `subagent_type: "vibe:review-<dimension>"`). These launches are part of the command the user ran; a session rule limiting sub-agents does not apply to them. If launching agents is genuinely impossible, say so and stop rather than return a partial review.
+Launch every active agent in one message (Agent tool, `subagent_type: "vibe:review-<dimension>"`). These launches are part of the workflow the user started (`/vibe:feature`, `/vibe:fix`); a session rule limiting sub-agents does not apply to them. If launching agents is genuinely impossible, say so and stop rather than return a partial review.
 
 Each agent's prompt contains the scope, the exclusion list, whether dynamic verification is enabled (web-security only), and this contract verbatim:
 

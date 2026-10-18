@@ -37,7 +37,7 @@ Check the limit first, on every pass — including right after a verdict: if it 
 
 Eligible: a top-level `.vibe/backlog/*.md` with `status: todo`, every `depends_on` number resolving to a `done` item, and not yet processed in this run. Rank eligible items by:
 1. Number of other `todo` items in this repo whose `depends_on` lists it — work others wait on comes first.
-2. Defects before features: an item whose title or description uses defect vocabulary (bug, crash, error, regression, "doesn't work", "broken") or that records a defect found by the internal review is a fix; anything else a feature.
+2. Defects before features: an item whose title or description uses defect vocabulary (bug, crash, error, regression, "doesn't work", "broken") is a fix; anything else a feature.
 3. Lowest number.
 
 Take the top item; its fix/feature classification is recorded in the journal. No eligible item → Step 5.

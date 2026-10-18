@@ -3,7 +3,7 @@ name: tasks
 description: Creates and tracks a vibe workflow's task list and keeps it up to date until the end — through the native task system (TaskCreate / TaskUpdate / TaskList / TaskGet) when it is available, otherwise through a `tasks.tsv` file in the scratchpad, kept by a script that reproduces the same model (ids, statuses, blockedBy dependencies, owner). Invoked internally by other vibe skills, never directly by users.
 argument-hint: "[file: <path>] then <one task per line: '<subject> ← blockedBy \"<other subject>\"' or '<subject> ← no dependency'>"
 user-invocable: false
-version: 2.1.0
+version: 2.1.1
 model: claude-sonnet-5-5
 ---
 
@@ -77,7 +77,7 @@ A workflow that loops sometimes returns to a step already done (a finding sends 
 2. Every `pending` task is now stale and goes `deleted`: `abandon` through the script, or one `deleted` transition per task (`TaskUpdate`, or `Edit` by hand), lowest id first. Never delete a `completed` task: it is the trace of the previous round.
 3. The tasks of the new round are created with the prefix `Round <n> — ` in their subject (`Round 2 — Plan`), chained by their dependencies. The first round has no prefix.
 
-Each transition keeps its status line (`✓` for the completed task), and each deletion is announced on one line: `✗ <subject> — stale`.
+Each transition keeps its status line (`✓` for the completed task), and each deletion is announced on one line: `✗ <subject> — stale` (the subject comes from `abandon`'s own output, or from the list read before deleting).
 
 ## Resume
 After a `/compact`, an interruption or at the start of a new turn, reread the state before any action: `TaskList`, or `tasks.sh <file> list` (the whole file in manual mode). The file path is in the fallback announcement and in your final answers. Do not rely on what remains of the conversation: a `completed` task summarized by the compaction could be redone, an `in_progress` task forgotten.

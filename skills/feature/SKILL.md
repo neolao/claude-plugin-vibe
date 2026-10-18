@@ -2,7 +2,7 @@
 name: feature
 description: Implement a new feature using TDD, then update CHANGELOG.md under [Unreleased] > Added
 argument-hint: <feature description in natural language>
-version: 2.1.0
+version: 2.2.0
 model: claude-sonnet-5-5
 ---
 
@@ -10,7 +10,7 @@ model: claude-sonnet-5-5
 
 Implement the feature described in `$ARGUMENTS`: the user is the Product Owner only and never tests code manually.
 
-**First read `workflow.md` next to this file** (`${CLAUDE_PLUGIN_ROOT}/skills/feature/workflow.md`) — the shared implementation workflow: standing commit rule, `--auto` mode and its verdict line, escalation log, usage report, backlog resolution, baseline check, need framing, expert consultation, implementation framing, plan presentation, task list, red/green (delegated to `vibe:task-implementer`)/runtime/refactor loop, internal review and its routing, CHANGELOG, docs, sync, commit, final checks, report, debrief. This file only defines what is specific to a feature. Prefix: `feat:`; entry: `feature`.
+**First read `workflow.md` next to this file** (`${CLAUDE_PLUGIN_ROOT}/skills/feature/workflow.md`) — every shared step lives there and only there. This file defines what is specific to a feature. Prefix: `feat:`; entry: `feature`.
 
 ## Step 1 — Understand the requirement
 

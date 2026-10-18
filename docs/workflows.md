@@ -32,19 +32,19 @@ Expert consultation is selection-based, not mandatory: an expert is invoked only
 
 ## Task tracking
 
-`init`, `feature`, `fix`, `review`, `docs`, `release`, and `workspace-init` never call `TaskCreate` directly — each invokes the internal `skills/tasks/SKILL.md` once per run, passing the task list (subjects + `blockedBy` chains) as `$ARGUMENTS`; `feature` and `fix` share this and every other common step through `skills/feature/workflow.md`, read at invocation:
+`init`, `feature`, `fix`, `docs`, `release`, and `workspace-init` never call `TaskCreate` directly — each invokes the internal `skills/tasks/SKILL.md` once per run, passing the task list (subjects + `blockedBy` chains) as `$ARGUMENTS`; `feature` and `fix` share this and every other common step through `skills/feature/workflow.md`, read at invocation:
 
 ```mermaid
 flowchart LR
     S["Calling skill's plan approved"] --> T["vibe:tasks invoked"]
     T --> A{"TaskCreate available?"}
     A -- yes --> C["Tasks created via TaskCreate<br/>+ addBlockedBy chains"]
-    A -- no --> F["Fallback announced explicitly<br/>+ task-list.md checklist written to scratchpad"]
+    A -- no --> F["Fallback announced explicitly<br/>+ tasks.tsv kept by tasks.sh in the scratchpad"]
     C --> M["Calling skill's 'mark task ...' steps<br/>→ TaskUpdate"]
-    F --> N["Calling skill's 'mark task ...' steps<br/>→ edit task-list.md"]
+    F --> N["Calling skill's 'mark task ...' steps<br/>→ tasks.sh update"]
 ```
 
-`tasks` owns the only fallback logic in the plugin for this failure mode, so every caller degrades the same way instead of each reinventing its own message. The scratchpad checklist preserves the declared order but does not enforce `blockedBy` — unlike a real `TaskCreate` chain, nothing stops a step from being checked out of order; the constraint holds only because the calling skill always executes its own steps sequentially.
+`tasks` owns the only fallback logic in the plugin for this failure mode, so every caller degrades the same way instead of each reinventing its own message. The fallback is `tasks.tsv` kept by `skills/tasks/scripts/tasks.sh`, which reproduces the native model (ids never reused, statuses, `blockedBy`, `owner`) and refuses what the rules forbid — two `in_progress`, `pending → completed`, a start on an open dependency — so the fallback is not a degraded version.
 
 When a calling workflow loops back to an earlier step (a review finding reopens planning), `tasks` prescribes the order: the current task goes `completed` (it did happen), every `pending` task is abandoned (`abandon` in the script, one `deleted` transition each otherwise) and announced as `✗ <subject> — stale`, and the new round's tasks are created with a `Round <n> — ` prefix. Completed tasks are never deleted: they are the trace of the previous round.
 
@@ -167,7 +167,7 @@ flowchart TD
     E --> G["Present pick + confirm<br/>(skipped in auto mode)"]
     F --> G
     G --> H1["Normal/forced: /vibe:feature|fix NNN"]
-    G --> H2["Auto mode: drive the loop directly<br/>in the picked repo (own ranking, same<br/>as /vibe:auto) — /vibe:feature|fix NNN --auto<br/>per item, until N/drained/aborted"]
+    G --> H2["auto [N]: delegate to /vibe:auto N --push<br/>in the picked repo"]
     H1 --> I["git push"]
     H2 --> I
     I --> J{"CHANGELOG.md<br/>[Unreleased] non-empty?"}
@@ -179,7 +179,7 @@ flowchart TD
     M --> N["Report: implemented, pushed, released,<br/>CI result, downstream unblocked<br/>(a CI failure leads the report)"]
 ```
 
-**Auto mode drives the loop itself instead of delegating to `/vibe:auto`**: Step 5 already picked the exact repo, so handing off to `/vibe:auto`'s own selection would risk it picking a different item there. Each iteration re-collects the repo's eligible items, ranks them the same way `/vibe:auto` does (unblock-count → fix-over-feature → lowest number), and invokes `/vibe:feature NNN --auto` or `/vibe:fix NNN --auto` directly; the loop stops when `N` is reached, the backlog is drained, or an item comes back `aborted`.
+**Auto mode delegates to `/vibe:auto N --push`**: `next-task` has already picked the repo, and `auto` selects and ranks eligible items there exactly as `next-task` would, then publishes at the end — one item loop, written once.
 
 If Step 8 (release) is blocked by a *pre-existing* test failure rather than a dirty tree or lint, `next-task` attempts one self-heal: it looks for an eligible backlog item that names the exact failing test file (the trace `/vibe:feature`/`/vibe:fix` leave when they defer an out-of-scope failure instead of silently fixing it). Exactly one match gets run via `/vibe:fix|feature NNN --auto` and the release is retried once; zero or multiple matches, or a retry that still fails, is reported as a follow-up blocker instead of retried further.
 

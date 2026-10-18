@@ -3,7 +3,7 @@ name: report
 description: "Usage report of a vibe workflow: counts, while the work runs, the bricks called, the loop rounds, the findings, the questions asked to the user and the fixes, then writes these statistics to `.vibe/reports/` in the project at the end. Invoked by `vibe:feature` and `vibe:fix` through their shared workflow, at the start of the work and at the end. Never triggered by a user request."
 argument-hint: "init <entry> <model> <backlog: yes|no> | write"
 user-invocable: false
-version: 1.0.0
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
@@ -23,7 +23,9 @@ sh <base>/scripts/report.sh <counters> show
 sh <base>/scripts/report.sh <counters> write <project root>
 ```
 
-The script refuses an unknown entry, counter or brick name (exit 1, `refused: …`). A refusal signals an error on your side: never work around it by editing the counters by hand. Without Bash, or if the call is refused, skip the report and say so in one line: the work itself does not depend on it.
+The script refuses an unknown entry or counter, a model id or brick name outside lowercase letters, digits and dashes (exit 1, `refused: …`); it exits 2 when it cannot write. A brick name is otherwise free: spell it exactly as the agent or skill is named (`task-implementer`, `review-naming`), a typo would make a new line in the report. A refusal signals an error on your side: never work around it by editing the counters by hand. Without Bash, or if the call fails, skip the report and say so in one line: the work itself does not depend on it.
+
+`init` overwrites a counters file left by a run that stopped early; `write` removes the counters once the report is on disk. One `init`, one `write` per run.
 
 ## At the start: `init`
 The workflow calls `init` before its first step, with its entry (`feature` or `fix`), the full model id of the session, and `yes` when the brief came from a backlog item, `no` otherwise.
@@ -40,9 +42,10 @@ Each event is counted when it happens, not reconstructed at the end: the session
 | The classifier drops some, merges some | `incr findings.dropped <n>`, `incr findings.merged <n>` |
 | Kept findings, per level | `incr findings.high <n>`, `incr findings.medium <n>`, `incr findings.low <n>` |
 | A finding sends the loop back to the need, to the implementation | `incr returns.need`, `incr returns.implementation` |
-| A fix is made | `incr fixes` |
+| A finding is corrected (one per finding, in a correction round) | `incr fixes` |
 | A self-correction loop exhausts its attempts | `incr escalations` |
 
 ## At the end: `write`
-1. `write <project root>`: the script creates `.vibe/reports/<timestamp>-<entry>.md` and prints its path. The directory carries its own `.gitignore`, so a report never enters the project's history.
-2. Close with one line: `📊 Report — <path>`, followed by: "Local only. Share it with the plugin's maintainers if you want it to feed the evals."
+At every end of the run — the report, an escalation, an early stop:
+1. `write <project root>`: the script creates `.vibe/reports/<timestamp>-<entry>.md`, prints its path and removes the counters. The directory carries its own `.gitignore`, so a report never enters the project's history.
+2. Close with one line: `📊 Report — <path>`, followed by: "Local only. Share it with the plugin's maintainers if you want it to feed the evals." In `--auto`, both lines come before the `AUTO-RESULT:` line, which stays last.

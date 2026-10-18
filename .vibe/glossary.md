@@ -27,16 +27,16 @@ _Sources: `skills/backlog/SKILL.md`, `skills/feature/workflow.md`_
 
 ## Review agent
 A specialized sub-agent auditing exactly one quality dimension during the internal review of a feature or fix; the set active for a project is recorded in its `CLAUDE.md` and re-checked against the project's real state at every run — deliberate opt-outs are never overridden, and every check belongs to exactly one agent so the same issue is never reported twice.
-_Sources: `skills/review/SKILL.md`, `agents/`_
+_Sources: `skills/review/SKILL.md`, `agents/`, `agents/review-classifier.md`_
 
 ## Self-correction loop
 The bounded retry cycle (3 attempts maximum) in which `/vibe:feature` and `/vibe:fix` diagnose and repair their own failing step (test, lint, runtime verification) before escalating to the user; exhausting the attempts produces an Escalation.
 **Do not confuse with:** Escalation — the recorded outcome of an exhausted loop, not the loop itself
-_Sources: `skills/feature/workflow.md`, `skills/review/SKILL.md`_
+_Sources: `skills/feature/workflow.md`_
 
 ## Escalation
 The append-only diagnosis entry written to `.vibe/escalations.md` when a self-correction loop exhausts its attempts (context, attempts, precise cause, `Status: open`), read back at the start of every `/vibe:feature` and `/vibe:fix` run so a dead end hit once is never rediscovered; later work that resolves it flips its status to `resolved`.
-_Sources: `skills/feature/workflow.md`, `skills/review/SKILL.md`_
+_Sources: `skills/feature/workflow.md`_
 
 ## Workspace root
 The parent folder holding several sibling repo checkouts as a multi-repo project — never itself a Git repo. `/vibe:workspace-init` writes a local, never-committed `CLAUDE.md` there indexing the hub repo and every sibling; `/vibe:next-task` is meant to be run from it (or, absent one, falls back to operating on the single repo it's run from).

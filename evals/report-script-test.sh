@@ -24,7 +24,8 @@ check "incr before init: refused" 1 "$(code sh "$R" "$F" incr rounds)"
 check "init: unknown entry" 1 "$(code sh "$R" "$F" init review claude-x yes)"
 check "init: invalid backlog flag" 2 "$(code sh "$R" "$F" init feature claude-x maybe)"
 check "init" 0 "$(code sh "$R" "$F" init feature claude-sonnet-5-5 no)"
-check "init twice: refused" 1 "$(code sh "$R" "$F" init feature claude-sonnet-5-5 no)"
+check "init: invalid model text" 1 "$(code sh "$R" "$F" init feature 'claude: 5' no)"
+check "init twice overwrites" 0 "$(code sh "$R" "$F" init feature claude-sonnet-5-5 no)"
 check "incr rounds" "ok rounds = 1" "$(sh "$R" "$F" incr rounds)"
 check "incr rounds 2" "ok rounds = 3" "$(sh "$R" "$F" incr rounds 2)"
 check "incr findings.low 4" "ok findings.low = 4" "$(sh "$R" "$F" incr findings.low 4)"
@@ -45,6 +46,25 @@ check "report: rounds" "rounds: 3" "$(grep '^rounds:' "$out")"
 check "report: never-incremented counter at 0" "questions: 0" "$(grep '^questions:' "$out")"
 check "report: brick" "  review-classifier: 2" "$(grep 'review-classifier' "$out")"
 check "report: closed frontmatter" 2 "$(grep -c '^---$' "$out")"
+check "write removes the counters" "absent" "$([ -e "$F" ] && echo present || echo absent)"
+check "incr after write: refused" 1 "$(code sh "$R" "$F" incr rounds)"
+printf 'node_modules/\n' > "$P/.vibe/reports/.gitignore"
+sh "$R" "$F" init fix claude-sonnet-5-5 yes >/dev/null; out2=$(sh "$R" "$F" write "$P")
+check "write keeps an existing .gitignore and adds *" "node_modules/
+*" "$(cat "$P/.vibe/reports/.gitignore")"
+check "write: a second run gets its own file" "fix.md" "$(basename "$out2" | sed "s/^[0-9T-]*//")"
+
+# coordination: the counter keys live in KEYS and nowhere else may invent one
+keys=$(sed -n "s/^KEYS='\(.*\)'$/\1/p" "$R")
+for k in $keys; do
+  check "SKILL.md table names $k" 1 "$(grep -c "incr $k" "$here/../skills/report/SKILL.md" | awk '{print ($1 >= 1)}')"
+done
+for k in $(grep -o 'incr [a-z.]*' "$here/../skills/feature/workflow.md" | awk '{print $2}' | sort -u); do
+  case " $keys " in *" $k "*) echo "ok   workflow.md counts a known key: $k" ;; *) echo "FAIL workflow.md counts an unknown key: $k"; fails=$((fails + 1)) ;; esac
+done
+for k in $(grep -o '`[a-z.]*` [≥>]' "$here/../scheduled-tasks/improve-skills-and-agents/SKILL.md" | tr -d '`' | awk '{print $1}' | sort -u); do
+  case " $keys " in *" $k "*) echo "ok   routine reads a known key: $k" ;; *) echo "FAIL routine reads an unknown key: $k"; fails=$((fails + 1)) ;; esac
+done
 
 echo
 if [ "$fails" -eq 0 ]; then echo "All tests pass."; else echo "$fails test(s) failed."; exit 1; fi
