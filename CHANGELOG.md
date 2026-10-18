@@ -7,11 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Removed
+## [3.0.0] - 2026-10-18
 
-- `/vibe:verify`: its request check, rigor check and claim check now run inside every feature and fix, on the change and on the report, before you see either.
-- `/vibe:report-issue`: eval cases are written by the plugin's maintainers, from the usage reports you choose to share.
-- The "from review" mode of `/vibe:backlog`, which read the former review report.
+### Added
+
+- Each run can now write a usage report — how many bricks were called, loop rounds, questions asked, findings and fixes — as plain statistics under `.vibe/usage-reports/`. The report stays on your machine; sharing it with the plugin's maintainers is your choice — drop it in the repository's `evals/inbox/` and the improvement routine turns it into a test case.
+- A workflow that has to go back to an earlier step (a review finding reopens planning) now keeps a clean task list: finished steps stay as the trace of the previous round, stale steps are dropped and announced, and the new round's steps are numbered.
+- Each sub-task's tests and code are now written by a dedicated implementer agent, one sub-task at a time, so a long feature keeps the main session's attention on the plan; its report is re-checked before anything moves on, and a point it cannot settle comes back to you as a question.
+- Three control agents for the build loop: one re-checks every review finding against the code, drops false positives, merges duplicates and says whether it questions what was asked or how it was done; one checks the result against the request (missing criteria, unrequested additions, breached constraints); one checks that every fact in a report is backed by its source.
+- Before building, the need and then the implementation are each framed in their own pass: the interview reads the backlog item, the project notes and the code first, and asks you only what none of them answers; every answer it found itself says where it comes from, and a question that would take research is flagged as such instead of guessed.
+- The clarity rewrite has a direct mode for text a workflow is about to show you: it returns the clearer text at once, without a before/after table or a question.
 
 ### Changed
 
@@ -22,14 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `/vibe:review` is no longer a command: the review runs inside every feature and fix. The review-reminder after several changes is gone with it.
 - `/vibe:clarify` is no longer a command: the interview runs on its own when a backlog item, a new project or a workspace is too thin, and inside every feature or fix.
 
-### Added
+### Removed
 
-- Each run can now write a usage report — how many bricks were called, loop rounds, questions asked, findings and fixes — as plain statistics under `.vibe/usage-reports/`. The report stays on your machine; sharing it with the plugin's maintainers is your choice — drop it in the repository's `evals/inbox/` and the improvement routine turns it into a test case.
-- A workflow that has to go back to an earlier step (a review finding reopens planning) now keeps a clean task list: finished steps stay as the trace of the previous round, stale steps are dropped and announced, and the new round's steps are numbered.
-- Each sub-task's tests and code are now written by a dedicated implementer agent, one sub-task at a time, so a long feature keeps the main session's attention on the plan; its report is re-checked before anything moves on, and a point it cannot settle comes back to you as a question.
-- Three control agents for the build loop: one re-checks every review finding against the code, drops false positives, merges duplicates and says whether it questions what was asked or how it was done; one checks the result against the request (missing criteria, unrequested additions, breached constraints); one checks that every fact in a report is backed by its source.
-- Before building, the need and then the implementation are each framed in their own pass: the interview reads the backlog item, the project notes and the code first, and asks you only what none of them answers; every answer it found itself says where it comes from, and a question that would take research is flagged as such instead of guessed.
-- The clarity rewrite has a direct mode for text a workflow is about to show you: it returns the clearer text at once, without a before/after table or a question.
+- `/vibe:verify`: its request check, rigor check and claim check now run inside every feature and fix, on the change and on the report, before you see either.
+- `/vibe:report-issue`: eval cases are written by the plugin's maintainers, from the usage reports you choose to share.
+- The "from review" mode of `/vibe:backlog`, which read the former review report.
 
 ## [2.2.0] - 2026-10-16
 
@@ -322,7 +324,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/neolao/claude-plugin-vibe/compare/v2.2.0...v3.0.0
 [2.2.0]: https://github.com/neolao/claude-plugin-vibe/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/neolao/claude-plugin-vibe/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/neolao/claude-plugin-vibe/compare/v1.15.0...v2.0.0
