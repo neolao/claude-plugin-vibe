@@ -79,6 +79,7 @@ This plan turns [the strategy](strategy/README.md) into work packages, starting 
 - `scheduled-tasks/improve-skills-and-agents/SKILL.md` gains a step: read shared usage reports and `.vibe/escalations.md` entries given to it, write one red eval case per distinct misbehavior, then fix the brick to green before its usual cost pass.
 - The eval corpus is mostly synthetic: each package above adds the cases that cover its brick's failure modes, since no real usage stream is expected.
 - **Done when:** the routine runs once end to end on a planted escalation and produces a red-then-green case.
+- **Progress (2026-10-18):** written — section 1b of the routine (inbox first, usable or rejected, brick named from the signal, synthetic red case, fix to green, file moved to `done/`), `evals/inbox/README.md`, `CLAUDE.md`, `docs/development.md`, README. The end-to-end run on a planted escalation is the maintainer's: it runs evals.
 
 ### 7. Later: delegate the code
 

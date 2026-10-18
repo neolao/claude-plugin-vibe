@@ -121,6 +121,8 @@ Each command is a Claude Code slash command, with natural-language arguments whe
 | `/vibe:workspace-init` | Bootstrap/refresh a multi-repo workspace's hub repo and local workspace-root `CLAUDE.md` |
 | `/vibe:next-task` | Pick the next eligible task across a workspace (or the current repo), implement it, then push and release |
 
+To help improve the plugin, share a usage report (the statistics file a run leaves under `.vibe/reports/`) or an escalation entry by adding it to `evals/inbox/` in this repository — a pull request is enough; nothing of your project is in those files.
+
 Six internal skills are hidden from the `/` menu: `vibe:review` (the review agents on a change, run inside every feature and fix), `vibe:rewrite` (makes the final report readable, rule by rule, without losing a fact), `vibe:clarify` (the round-by-round interview, run by `backlog`, `init` and `workspace-init` on thin input, and twice by `feature`/`fix` — once to frame the need, once to frame the implementation, each looking in its own sources before asking you anything), `vibe:tasks` (task-list creation with a scratchpad fallback), `vibe:report` (statistics of a run, written locally under `.vibe/reports/`, never shared unless you choose to) and `vibe:publish` (push and release, used by `/vibe:auto --push` and `/vibe:next-task`).
 
 ## Review agents

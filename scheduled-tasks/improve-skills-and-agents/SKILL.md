@@ -23,12 +23,23 @@ An agent always sets both `model:` and `effort:` in its frontmatter; `effort` is
 `git status --porcelain` must be empty and `git pull --rebase` must succeed. Otherwise, stop without doing anything: someone is working in the repo, or a previous run has not finished.
 
 ## 1. Choosing the target
-For each target, its first pending objective is the first one that applies:
+Before the targets: if `evals/inbox/` holds a file outside `done/`, the oldest one (by name) is the run's target — see section 1b. Otherwise, for each target, its first pending objective is the first one that applies:
 1. one of its cases has no non-obsolete row in `evals/results/history.md` (search for `<case-name> |` without the leading pipe: an obsolete row has ⚠️ in the Case cell);
 2. the latest non-obsolete row of one of its cases is below 1.00;
 3. all its cases are at 1.00.
 A target with a case whose latest row is marked `**Manual follow-up needed:**` is excluded: that case is in the user's hands.
 Pick the target whose first pending objective has the lowest number. On a tie, pick the one whose most recent row is the oldest.
+
+## 1b. The inbox: a red case from real usage
+`evals/inbox/` is where the user drops what reaches them from real runs (see `evals/inbox/README.md`): a usage report written by `vibe:report` (`.vibe/reports/<timestamp>-<entry>.md`, statistics only) or an escalation entry copied from a project's `.vibe/escalations.md` (`## [date] /vibe:<skill> — title`, `Context`, `Attempts`, `Diagnosis`). Nobody reports a misbehavior by hand any more: these files are the only signal from outside the repo.
+
+1. **Read it, then decide if it is usable.** A file that carries a project path, a ticket, a product name or any free text that is not the escalation's own fields is rejected: move it to `evals/inbox/done/` with a line `rejected: carries project detail` appended, commit, and stop the run. The repo is public.
+2. **Name the brick and the misbehavior.** An escalation names its skill and its diagnosis: the brick is the one the diagnosis points at (the skill, or the agent it launched). A report only names bricks and counts: read it for a signal — `rounds` ≥ 3, `returns.need` ≥ 2, `escalations` ≥ 1, `findings.dropped` above half of `findings.raised`, `questions` high on a run with a backlog item — and name the brick the signal implicates (the classifier for mass drops, the need framing for repeated returns to the need, the review agents for raised-then-dropped findings…). A report with no signal is not a bug: append `no signal` to it, move it to `done/`, commit, and fall through to the targets of section 1.
+3. **Write one red case per distinct misbehavior**, synthetic — nothing from the report or the escalation is copied into a fixture: build a fixture that *would* make the brick misbehave the way the signal suggests, under the case rules of `CLAUDE.md` (a fixture never names the defect, one grader = one verifiable claim, the injected prompt reproduces the contract word for word, a case must be able to reach 1.00). The graders describe the **correct** behavior, so the case is red while the misbehavior exists. Validate it with `--runs 1`: red confirms the misbehavior reproduces; green means it does not — keep the case anyway if it is a sound hardening case, otherwise delete it, and either way note the result.
+4. **Fix the brick to green** (section 4), then continue with the target's remaining objectives (cost cut, hardening) as in section 2.
+5. **Close the inbox item**: move the file to `evals/inbox/done/` with a trailer naming the case(s) written and the brick fixed, in the same commit as the fix.
+
+A run processes one inbox file at most.
 
 ## 2. Working on the target, in this order
 1. **Evaluate**: run each of its cases that has no non-obsolete row.
@@ -77,5 +88,5 @@ End the run with a closing message made of a one-line verdict (target, objective
 - `What was tried`: a few plain words (first evaluation, trimmed prompt, effort raised, case fixed, new hardening case...).
 - `Outcome`: one of ✅ kept, ↩️ reverted, 🔧 case fixed, ⚠️ manual follow-up needed, with a few words of reason.
 - Add a last row `Total` summing the cost and the tokens of the table.
-Below the table, list in short bullets only what the user must act on or know: commits pushed (hash and subject), lessons written in `CLAUDE.md` or `evals/docker/README.md`, flakiness seen, problems noticed on other targets, and the next pending objective (target and case).
+Below the table, list in short bullets only what the user must act on or know: commits pushed (hash and subject), lessons written in `CLAUDE.md` or `evals/docker/README.md`, flakiness seen, problems noticed on other targets, the inbox item processed (file, signal read, case written, red or green on first run) if there was one, and the next pending objective (target and case).
 Figures come from the rows just written: never recompute or round them differently from history.md.

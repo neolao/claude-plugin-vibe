@@ -46,6 +46,10 @@ One file `agents/expert-<domain>.md`, frontmatter `name` + `description` (the de
 - The `.vibe/` map of this repo is dogfooding — regenerate it with `/vibe:sync` rather than editing it by hand (entry lifecycles are listed in `.vibe/README.md`).
 - Generated `.vibe/` content and every skill's end-of-run report use short, plain sentences — no filler, one fact per line (`.vibe/decisions/002-concise-writing-convention.md`).
 
+## Feeding the evals from real usage
+
+There is no command to report a misbehaving skill or agent. A user who wants a real run to improve the plugin shares what that run left on their machine — the statistics file `vibe:report` wrote under `.vibe/reports/`, or an escalation entry from `.vibe/escalations.md` — by adding it to `evals/inbox/` (a pull request is enough). The scheduled routine `scheduled-tasks/improve-skills-and-agents/SKILL.md` processes the inbox before any other objective: it names the brick the signal implicates, writes a synthetic red case under the usual case rules, fixes the brick to green, and moves the file to `evals/inbox/done/` with a trailer naming the case. Files carrying project detail are rejected unread.
+
 ## Releasing
 
 Run `/vibe:release patch|minor|major` (or an explicit version): it finalizes the changelog, refreshes the docs, bumps `version` in `.claude-plugin/plugin.json`, commits and tags. Install locally for testing via `/plugin marketplace add neolao/claude-plugin-vibe` + `/plugin install vibe`.
