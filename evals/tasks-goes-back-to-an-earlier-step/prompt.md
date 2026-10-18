@@ -1,6 +1,6 @@
 ---
 name: tasks-goes-back-to-an-earlier-step
-description: vibe:tasks (internal) must apply its "Going back" section when a workflow returns to an earlier step — the current task goes completed, every pending task is abandoned (deleted, announced with ✗ … — stale), no completed task is touched, and the new round's tasks carry the `Round 2 — ` prefix. Runs in Docker (Bash granted for the script) so the fallback path is the one measured; requires --allow-tools Bash Write Edit.
+description: vibe:tasks (internal) must apply its "Going back" section when a workflow returns to an earlier step — the current task goes completed, every pending task is dropped (deleted, announced with ✗ … — stale), no completed task is touched, and the new round's tasks carry the `Round 2 — ` prefix. Runs in Docker (Bash granted for the script) so the fallback path is the one measured; requires --allow-tools Bash Write Edit.
 tags: [tasks, going-back]
 runs: 3
 max_turns: 25

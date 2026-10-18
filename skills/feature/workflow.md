@@ -60,7 +60,7 @@ The only permitted later mutation: `Status:` → `resolved (YYYY-MM-DD)` when la
 
 ## Usage report
 
-Before the first step, invoke the `vibe:report` skill with `init <entry> <full model id of the session> <yes|no>` (`yes` when the brief is a backlog reference). From then on, count each event through its script the moment it happens — a brick called (`brick <name>`, every `vibe:*` skill or agent launched below), a question put to the user (`incr questions`), the counters named in the steps below. `write` closes every run, whatever its end: the Report step, an escalation, a `blocked`/`aborted` verdict, a rejected plan, a stop on a spike. `init` is called once Backlog resolution has succeeded. Without Bash, or on a refused call, skip the report and say so in one line: the work does not depend on it.
+Before the first step, invoke the `vibe:usage-report` skill with `init <entry> <full model id of the session> <yes|no>` (`yes` when the brief is a backlog reference). From then on, count each event through its script the moment it happens — a brick called (`brick <name>`, every `vibe:*` skill or agent launched below), a question put to the user (`incr questions`), the counters named in the steps below. `write` closes every run, whatever its end: the Report step, an escalation, a `blocked`/`aborted` verdict, a rejected plan, a stop on a spike. `init` is called once Backlog resolution has succeeded. Without Bash, or on a refused call, skip the report and say so in one line: the work does not depend on it.
 
 ## Backlog resolution
 
@@ -87,9 +87,11 @@ Before planning: record the baseline commit (`git rev-parse HEAD`) in your worki
 
 Invoke the `vibe:clarify` skill with `mode: need` on its first line, then the brief (and the backlog item's path when there is one). It reads the brief, the backlog item, `.vibe/` and the project memory before asking anything; the user answers only what no source settles. Its `### Synthesis` replaces the brief for the rest of the run; its `### Decisions made`, with their priorities and sources, are **the request** the deliverable will be checked against. Its result line routes: `settled` → go on; `partial — spike: <question>`, `partial — <open points>`, `abandoned` → the matching gate.
 
+**Check what it settled alone.** Every decision carrying a `(source: …)` is a claim the user never saw: launch the `vibe:claim-verifier` agent on those decisions with use "framing answers" and the working directory. A `(contradicted)` or `(unproven)` decision goes back to `vibe:clarify` in the same mode with the verifier's finding as input (the sources did not say that: ask the user, or find the right source); `(conclusion)` → keep the fact, drop the inference. Count `brick claim-verifier`.
+
 ## Expert consultation
 
-Draft the technical plan as working notes, then compare the settled need and notes against the descriptions of the `vibe:expert-*` agents. They prescribe requirements before implementation; `review-*` agents critique after. Launching them is what the user asked for by running the skill; a session rule limiting sub-agents does not apply. If launching agents is genuinely impossible, say so in the plan.
+Draft the technical plan as working notes, then compare the checked need and notes against the descriptions of the `vibe:expert-*` agents. They prescribe requirements before implementation; `review-*` agents critique after. Launching them is what the user asked for by running the skill; a session rule limiting sub-agents does not apply. If launching agents is genuinely impossible, say so in the plan.
 
 - Pick the experts whose domain clearly matches, **3 maximum**; none if none matches (often the case for a bug fix).
 - Invoke them **in parallel** (Agent tool, `subagent_type: "vibe:expert-<name>"`) with a *plan consultation* prompt: the brief, the relevant plan notes, and this request verbatim: "Reply with three bulleted lists, ≤5 entries each, task-specific only (no generic checklists): `REQUIREMENTS:` (non-negotiable), `RISKS:` (domain pitfalls here), `TEST SCENARIOS:` (user action → expected result). Add a fourth list, `OPEN QUESTIONS:` (≤3), only when a real product decision in your domain is genuinely undetermined by the brief — not a technical detail you can decide yourself; phrase each for a non-technical Product Owner."
@@ -100,7 +102,7 @@ Draft the technical plan as working notes, then compare the settled need and not
 
 ## Frame the implementation
 
-Invoke `vibe:clarify` again with `mode: implementation` on its first line, then the settled need (the synthesis), the experts' `REQUIREMENTS` and `RISKS` (or "none"), and your plan notes. It reads the code, its tests, `CLAUDE.md` and `.vibe/modules/` before asking anything; a technical question reaches the user only when no source and no expert settles it, and it is phrased for a Product Owner. Fold its decisions into the plan: approach, files to touch, test strategy, runtime verification command. Each decision keeps its source for the plan's working notes. Its result line routes like the need's.
+Invoke `vibe:clarify` again with `mode: implementation` on its first line, then the settled need (the synthesis), the experts' `REQUIREMENTS` and `RISKS` (or "none"), and your plan notes. It reads the code, its tests, `CLAUDE.md` and `.vibe/modules/` before asking anything; a technical question reaches the user only when no source and no expert settles it, and it is phrased for a Product Owner. Fold its decisions into the plan: approach, files to touch, test strategy, runtime verification command. Each decision keeps its source for the plan's working notes. Its result line routes like the need's, and its self-sourced decisions are checked the same way.
 
 ## Presenting the plan
 
@@ -143,12 +145,12 @@ Remove dead code, unused imports, and debug artifacts; run the lint command and 
 Once every sub-task is green, review the change before shipping it. The scope is every file changed since the baseline commit (`git diff --name-only <baseline>` plus untracked files), whatever `wip:` commits happened since.
 
 **Collect.** Launch in one message:
-- the `vibe:review` skill (Skill tool) with `internal` then the scope: it runs the active review agents and returns their raw findings under `## REVIEW findings`;
+- the `vibe:review` skill (Skill tool) with `mode: internal` on its first line, then the scope, one file per line: it runs the active review agents and returns their raw findings under `## REVIEW findings`;
 - the `vibe:requirements-reviewer` agent (Agent tool, `subagent_type: "vibe:requirements-reviewer"`) with the request (the need's `### Decisions made`, quoted verbatim, and the backlog item's acceptance criteria when there is one), the scope, and "code against its brief".
 
 Count `report incr findings.raised <n>` with the total. A brick that errors, times out or returns no parseable heading is launched once more; a second failure is an escalation-log entry and the "3 failed attempts" gate — never "no findings".
 
-**Classify.** Launch the `vibe:review-classifier` agent with every raw finding (agent, reference, observation), the same request, "code" as the type of deliverable, and the working directory. Count `findings.dropped`, `findings.merged`, `findings.high`, `findings.medium`, `findings.low` from its output. Its `DOUBTS` go through the "Framing round" gate; each answer reclassifies the finding it was about. The same relaunch rule applies to a failed classifier.
+**Classify.** Launch the `vibe:findings-classifier` agent with every raw finding (agent, reference, observation), the same request, "code" as the type of deliverable, and the working directory. Count `findings.dropped`, `findings.merged`, `findings.high`, `findings.medium`, `findings.low` from its output. Its `DOUBTS` go through the "Framing round" gate; each answer reclassifies the finding it was about. The same relaunch rule applies to a failed classifier.
 
 **Route.** Read `## CLASSIFIED findings` from the top:
 - a `high` or `medium` finding in the `need` space → the need was misread or incomplete: go back to **Frame the need**. Count `incr returns.need`.
@@ -194,4 +196,4 @@ The report is the text Final checks returned. The skill lists its points; the wo
 
 Never a finding, an agent name or a file name: what the review found is what the code now does.
 
-After the report come, in this order: `vibe:rewrite`'s closing block, then `vibe:report` `write` and its two closing lines, then — in `--auto` — the `AUTO-RESULT:` line as the very last line, or — otherwise — the `vibe:debrief` skill.
+After the report come, in this order: `vibe:rewrite`'s closing block, then `vibe:usage-report` `write` and its two closing lines, then — in `--auto` — the `AUTO-RESULT:` line as the very last line, or — otherwise — the `vibe:debrief` skill.

@@ -126,4 +126,4 @@ With a check in `[FAIL]` after 2 passes, add `· left untouched: <passages>` on 
 In the awaiting form, the two applied forms and the direct form, add before the final `---` one line per detected shift:
 `↪ Responsibility shift — <rule>: <actor now named, or now hidden>`
 
-This block appears only when this skill has actually run: its absence directly signals that no diagnosis took place. Other skills (`vibe:report`, `vibe:debrief`) may add their own block after this one.
+This block appears only when this skill has actually run: its absence directly signals that no diagnosis took place. Other skills (`vibe:usage-report`, `vibe:debrief`) may add their own block after this one.

@@ -1,15 +1,15 @@
 ---
 name: review
 description: Runs the project's active review agents on a scope and returns their raw findings — one owner per dimension, the shared finding contract injected into every prompt — without judging, fixing or committing anything. Invoked by the build workflow (`vibe:feature`, `vibe:fix`) as its internal review step, never directly by users.
-argument-hint: "internal <changed files, space-separated> | <path to review — empty for the full codebase>"
+argument-hint: "[mode: internal] <changed files, space-separated — or a path to review, empty for the full codebase>"
 user-invocable: false
-version: 2.0.1
+version: 2.1.0
 model: claude-sonnet-5-5
 ---
 
 # vibe:review — Review Agents Brick
 
-Run the specialized `vibe:review-*` agents declared in `CLAUDE.md` on a scope and hand their findings back to the caller. Each agent covers one dimension; the shared finding contract below is what makes their output mergeable. Deciding which findings hold, their level and their space is `vibe:review-classifier`'s job; fixing is the caller's. This skill edits no code and commits nothing.
+Run the specialized `vibe:review-*` agents declared in `CLAUDE.md` on a scope and hand their findings back to the caller. Each agent covers one dimension; the shared finding contract below is what makes their output mergeable. Deciding which findings hold, their level and their space is `vibe:findings-classifier`'s job; fixing is the caller's. This skill edits no code and commits nothing.
 
 ## Step 1 — Determine the active agents
 
@@ -33,7 +33,7 @@ If the table exists, re-check every row against the project as it is now, using 
 
 ## Step 2 — Scope
 
-`$ARGUMENTS` starting with `internal` lists the changed files to review: the agents read anything they need but report only on those files. Otherwise `$ARGUMENTS` is a path; empty means the full codebase. Do not enumerate files yourself beyond the list given — each agent scans on its own. Exclusions passed to every agent: `node_modules/`, `vendor/`, `.venv/`, `dist/`, `build/`, `out/`, `target/`, generated files, `*.config.*`, `*.json` without logic (dependency manifests and lockfiles always stay in scope), migration files.
+A first line `mode: internal` in `$ARGUMENTS` (the same convention as `clarify` and `rewrite`) means the lines that follow list the changed files to review: the agents read anything they need but report only on those files. Without it, `$ARGUMENTS` is a path; empty means the full codebase. Do not enumerate files yourself beyond the list given — each agent scans on its own. Exclusions passed to every agent: `node_modules/`, `vendor/`, `.venv/`, `dist/`, `build/`, `out/`, `target/`, generated files, `*.config.*`, `*.json` without logic (dependency manifests and lockfiles always stay in scope), migration files.
 
 ## Step 3 — Run the active agents in parallel
 

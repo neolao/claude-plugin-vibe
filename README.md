@@ -121,9 +121,9 @@ Each command is a Claude Code slash command, with natural-language arguments whe
 | `/vibe:workspace-init` | Bootstrap/refresh a multi-repo workspace's hub repo and local workspace-root `CLAUDE.md` |
 | `/vibe:next-task` | Pick the next eligible task across a workspace (or the current repo), implement it, then push and release |
 
-To help improve the plugin, share a usage report (the statistics file a run leaves under `.vibe/reports/`) or an escalation entry by adding it to `evals/inbox/` in this repository — a pull request is enough; nothing of your project is in those files.
+To help improve the plugin, share a usage report (the statistics file a run leaves under `.vibe/usage-reports/`) by adding it to `evals/inbox/` in this repository — a pull request is enough; nothing of your project is in that file.
 
-Six internal skills are hidden from the `/` menu: `vibe:review` (the review agents on a change, run inside every feature and fix), `vibe:rewrite` (makes the final report readable, rule by rule, without losing a fact), `vibe:clarify` (the round-by-round interview, run by `backlog`, `init` and `workspace-init` on thin input, and twice by `feature`/`fix` — once to frame the need, once to frame the implementation, each looking in its own sources before asking you anything), `vibe:tasks` (task-list creation with a scratchpad fallback), `vibe:report` (statistics of a run, written locally under `.vibe/reports/`, never shared unless you choose to) and `vibe:publish` (push and release, used by `/vibe:auto --push` and `/vibe:next-task`).
+Six internal skills are hidden from the `/` menu: `vibe:review` (the review agents on a change, run inside every feature and fix), `vibe:rewrite` (makes the final report readable, rule by rule, without losing a fact), `vibe:clarify` (the round-by-round interview, run by `backlog`, `init` and `workspace-init` on thin input, and twice by `feature`/`fix` — once to frame the need, once to frame the implementation, each looking in its own sources before asking you anything), `vibe:tasks` (task-list creation with a scratchpad fallback), `vibe:usage-report` (statistics of a run, written locally under `.vibe/usage-reports/`, never shared unless you choose to) and `vibe:publish` (push and release, used by `/vibe:auto --push` and `/vibe:next-task`).
 
 ## Review agents
 
@@ -133,7 +133,7 @@ Every feature and fix runs these specialized agents in parallel on its own chang
 
 Activation per project is recorded in the `CLAUDE.md` table written by `/vibe:init`.
 
-One agent writes the code: `task-implementer` takes one sub-task at a time with the settled framing, writes the failing test, then the code, and reports every command it ran with its result; the workflow re-runs the tests before trusting it and asks you about any point the agent could not settle. Three control agents serve the build loop rather than a review dimension: `review-classifier` (re-checks every finding against its source, drops false positives, merges duplicates, sets its level and whether it questions the need or the implementation), `requirements-reviewer` (the deliverable against the request: gaps, unrequested additions, breached constraints) and `claim-verifier` (every fact a report states, checked against its source — "tests pass" needs the command and its output).
+One agent writes the code: `task-implementer` takes one sub-task at a time with the settled framing, writes the failing test, then the code, and reports every command it ran with its result; the workflow re-runs the tests before trusting it and asks you about any point the agent could not settle. Three control agents serve the build loop rather than a review dimension: `findings-classifier` (re-checks every finding against its source, drops false positives, merges duplicates, sets its level and whether it questions the need or the implementation), `requirements-reviewer` (the deliverable against the request: gaps, unrequested additions, breached constraints) and `claim-verifier` (every fact a report states, checked against its source — "tests pass" needs the command and its output).
 
 ## Expert agents
 

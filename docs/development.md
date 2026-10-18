@@ -31,7 +31,7 @@ Same approach: one file `agents/review-<dimension>.md` with frontmatter `name` +
 
 ## Adding or changing a control agent
 
-`review-classifier`, `requirements-reviewer` and `claim-verifier` are not review dimensions: each has its own input list and its own output contract, stated in full in its file, because the build loop parses their headings. Keep the "what is NOT a finding" section: it is what the negative eval case plants its decoy from. A control agent never fixes anything and, apart from the classifier, never gives a level.
+`findings-classifier`, `requirements-reviewer` and `claim-verifier` are not review dimensions: each has its own input list and its own output contract, stated in full in its file, because the build loop parses their headings. Keep the "what is NOT a finding" section: it is what the negative eval case plants its decoy from. A control agent never fixes anything and, apart from the classifier, never gives a level.
 
 ## Adding or changing an expert agent
 
@@ -48,7 +48,7 @@ One file `agents/expert-<domain>.md`, frontmatter `name` + `description` + `mode
 
 ## Feeding the evals from real usage
 
-There is no command to report a misbehaving skill or agent. A user who wants a real run to improve the plugin shares what that run left on their machine — the statistics file `vibe:report` wrote under `.vibe/reports/`, or an escalation entry from `.vibe/escalations.md` — by adding it to `evals/inbox/` (a pull request is enough). The scheduled routine `scheduled-tasks/improve-skills-and-agents/SKILL.md` processes the inbox before any other objective: it names the brick the signal implicates, writes a synthetic red case under the usual case rules, fixes the brick to green, and moves the file to `evals/inbox/done/` with a trailer naming the case. Files carrying project detail are rejected unread.
+There is no command to report a misbehaving skill or agent. A user who wants a real run to improve the plugin shares what that run left on their machine — the statistics file `vibe:usage-report` wrote under `.vibe/usage-reports/` (never an escalation entry: its fields describe the project's code) — by adding it to `evals/inbox/` (a pull request is enough). The scheduled routine `scheduled-tasks/improve-skills-and-agents/SKILL.md` processes the inbox before any other objective: it names the brick the signal implicates, writes a synthetic red case under the usual case rules, fixes the brick to green, and moves the file to `evals/inbox/done/` with a trailer naming the case. Files carrying project detail are rejected unread.
 
 ## Releasing
 

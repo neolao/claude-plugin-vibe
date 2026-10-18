@@ -2,10 +2,10 @@
 type: llm
 focus: trace
 criteria: |
-  Read the `report.sh` calls in the trace (Bash tool). Each event of the
+  Read the `usage-report.sh` calls in the trace (Bash tool). Each event of the
   prompt must have been counted with the matching operation, at the moment
   it was listed, not all at once at the end:
-  - `brick clarify`, `brick review`, `brick review-classifier` (one each);
+  - `brick clarify`, `brick review`, `brick findings-classifier` (one each);
   - `incr questions 2` (or two `incr questions`);
   - `incr findings.raised 5`;
   - `incr findings.dropped 1`, `incr findings.merged 2`,
@@ -17,7 +17,7 @@ criteria: |
   high finding) is a FAIL. Counting everything in a single batch right
   before `write`, after narrating all the events, is a FAIL.
   PASS when every event above is counted with the right key and quantity
-  and no counter was edited by hand (Write/Edit on `report.tsv`).
+  and no counter was edited by hand (Write/Edit on `usage-report.tsv`).
 weight: 3
 ---
 

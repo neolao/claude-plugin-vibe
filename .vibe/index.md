@@ -4,7 +4,7 @@
 ## Modules
 - [`modules/skills.md`](modules/skills.md) — the `/vibe:*` slash-command definitions driving the workflow (15 commands), plus six internal skills
 - [`modules/agents.md`](modules/agents.md) — specialized sub-agents: `review-*` run by the internal review of `feature`/`fix`, `expert-*` consulted by `/vibe:feature`/`/vibe:fix`
-- [`modules/scripts.md`](modules/scripts.md) — the status-line script, plus the two skill scripts (`tasks.sh`, `report.sh`) described in `modules/skills.md`
+- [`modules/scripts.md`](modules/scripts.md) — the status-line script, plus the two skill scripts (`tasks.sh`, `usage-report.sh`) described in `modules/skills.md`
 - [`modules/plugin-manifest.md`](modules/plugin-manifest.md) — plugin/marketplace/settings manifests
 
 ## Observed patterns
@@ -15,7 +15,7 @@
   - `skills/review/SKILL.md` holds the finding contract (format, severity scale, read-only rule) and injects it into every review agent's prompt.
   - `vibe:publish` holds push-and-release, used by `/vibe:auto --push` and `/vibe:next-task`.
 - `feature`, `fix`, `docs`, `release`, `init`, and `workspace-init` create their task list through `vibe:tasks`, which owns the fallback (a `tasks.tsv` kept by `skills/tasks/scripts/tasks.sh` with the native model and rules) and the `●`/`✓` status-line convention; `auto` prints the same glyphs per item. A caller that loops back to an earlier step applies `tasks`' "Going back" rule (`✗ … — stale`, `Round <n> — ` prefix).
-- `vibe:report` counts a run's events as they happen and writes statistics only, locally (`.vibe/reports/`, self-ignored in git); nothing leaves the user's machine unless they share it.
+- `vibe:usage-report` counts a run's events as they happen and writes statistics only, locally (`.vibe/usage-reports/`, self-ignored in git); nothing leaves the user's machine unless they share it.
 - Standalone judgement skills (`challenge`, `consult`, `debrief`, `learn`) share one shape: single pass, read-only sub-agents fed a grid from `references/`, nothing written before the user validates, a fixed closing block proving the skill ran.
 - `clarify` is internal, with two modes for the build workflow (`need`, then `implementation`): each looks in its own sources before asking the PO, cites the source of what it settles itself, and reports a spike instead of guessing. Every settled `clarify` decision carries a priority (`🔒 MUST` / `⚖️ SHOULD` / `✨ NICE`); `workflow.md` uses it to arbitrate conflicts and stops before any action the approved plan does not cover (scope drift gate, resolved as "stay in scope" under `--auto`).
 - Every agent lives in `agents/<name>.md` with `name` + `description`; review agents also declare `tools` (read-only, plus `Bash` for `review-tests`, `review-dependencies`, `review-web-security`, and `review-comments` to print a file without a comment).
@@ -23,7 +23,7 @@
   - `expert-*`: one domain each, body = scope sentence (with out-of-scope routing) + checklist; the consultation formats are stated in `workflow.md`.
   - Experts cover domains without a `review-*` counterpart (`decisions/001`), except `expert-realtime-rendering` (`decisions/003`) and `expert-architecture` (`decisions/005`).
   - `task-implementer`: the one agent that writes code — one sub-task per launch, test first, `## IMPLEMENTATION report` with every command and its result; the workflow re-runs the tests on its report and routes its doubts through the framing gate.
-  - Control agents (`review-classifier`, `requirements-reviewer`, `claim-verifier`): bricks of the build loop with their own output contracts; review agents raise findings, the classifier alone decides level and space.
+  - Control agents (`findings-classifier`, `requirements-reviewer`, `claim-verifier`): bricks of the build loop with their own output contracts; review agents raise findings, the classifier alone decides level and space.
   - Every agent pins a full model id (`claude-haiku-5-5` / `claude-sonnet-5-5` / `claude-opus-5-5`) and an `effort:`.
 - `/vibe:feature` and `/vibe:fix` consult up to 3 experts at plan time, in parallel (`expert-architecture` whenever the brief involves a real design choice), and one precise question per expert per sub-task during implementation; `/vibe:consult` asks one expert one question on demand.
 - Runtime verification is delegated to the native `run` skill; 3 failed attempts write an entry to `.vibe/escalations.md` and escalate.
@@ -33,7 +33,7 @@
 - `--auto` resolves every human gate by a fixed table and ends with an `AUTO-RESULT:` line — the only contract `/vibe:auto` relies on.
 - `/vibe:auto` runs one item per sub-agent, strictly sequentially, and commits `.vibe/auto-state.md` at every item boundary so a run resumes; restarts come from `/loop`.
 - `/vibe:auto` ranks eligible items by unblock count, then defects first, then lowest number; `/vibe:next-task` delegates its auto mode to `/vibe:auto --push`.
-- Every `feature`/`fix` run reviews itself: `vibe:review` (brick) + `requirements-reviewer` → `review-classifier` → back to the need or the implementation framing, until only low findings remain; then `claim-verifier` on the report and `rewrite` direct. No `/vibe:review` command, no `last-review.md`, no cadence hint.
+- Every `feature`/`fix` run reviews itself: `vibe:review` (brick) + `requirements-reviewer` → `findings-classifier` → back to the need or the implementation framing, until only low findings remain; then `claim-verifier` on the report and `rewrite` direct. No `/vibe:review` command, no `last-review.md`, no cadence hint.
 - `.vibe/glossary.md` is code-derived and self-cleaning through `_Sources:_` lines.
 - `/vibe:workspace-init` and `/vibe:next-task` work above the single-repo level; a hub repo is recognized by `.git/` + `repos.md`; cross-repo blockers are prose, never `depends_on`.
 - `/vibe:changelog` only fills `[Unreleased]`; `/vibe:release` cuts the version section; only `vibe:publish` pushes.

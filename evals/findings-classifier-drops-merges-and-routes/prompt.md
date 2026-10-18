@@ -1,14 +1,14 @@
 ---
-name: review-classifier-drops-merges-and-routes
-description: review-classifier must drop the false positive (None is handled at pricing.py:15), merge the two findings on the same boundary bug, keep that bug as high · implementation, and route the missing VIP tier to the need space; output in the three-section contract
-tags: [review-classifier, recall]
+name: findings-classifier-drops-merges-and-routes
+description: findings-classifier must drop the false positive (None is handled at pricing.py:15), merge the two findings on the same boundary bug, keep that bug as high · implementation, and route the missing VIP tier to the need space; output in the three-section contract
+tags: [findings-classifier, recall]
 runs: 3
 max_turns: 10
 timeout_seconds: 300
 allowed_tools: [Read, Grep, Glob, Agent]
 ---
 
-Invoke the `vibe:review-classifier` sub-agent (Agent tool, `subagent_type: "vibe:review-classifier"`) with exactly this prompt:
+Invoke the `vibe:findings-classifier` sub-agent (Agent tool, `subagent_type: "vibe:findings-classifier"`) with exactly this prompt:
 
 ```
 Classify the findings below. Working directory: the current directory; the deliverable is the code in `fixtures/`. Type of deliverable: code.

@@ -1,7 +1,7 @@
 ---
 type: regex
 target: last_message
-pattern: "📊 Report —[^\\n]*\\.vibe/reports/[^\\n]*feature\\.md[\\s\\S]*Local only\\. Share it with the plugin's maintainers if you want it to feed the evals\\."
+pattern: "📊 Report —[^\\n]*\\.vibe/usage-reports/[^\\n]*feature\\.md[\\s\\S]*Local only\\. Share it with the plugin's maintainers if you want it to feed the evals\\."
 weight: 1
 ---
 

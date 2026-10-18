@@ -5,7 +5,7 @@ criteria: |
   The report is for a Product Owner. The workflow says: never a finding, an
   agent name or a file name in it.
 
-  PASS if the report names no `review-*` agent, no `review-classifier`,
+  PASS if the report names no `review-*` agent, no `findings-classifier`,
   no `requirements-reviewer`, and no source file (`stats.js`,
   `stats.test.js`); describing *what the code now does* (medians skip
   missing readings) is fine. The extra line about the number of rounds asked

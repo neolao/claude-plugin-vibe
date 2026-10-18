@@ -7,5 +7,5 @@ max: 999
 weight: 1
 ---
 
-Sanity check: `vibe:report` was invoked at least twice (`init`, then
+Sanity check: `vibe:usage-report` was invoked at least twice (`init`, then
 `write`), rather than the session running the script from memory.

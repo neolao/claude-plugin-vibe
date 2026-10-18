@@ -27,7 +27,7 @@ _Sources: `skills/backlog/SKILL.md`, `skills/feature/workflow.md`_
 
 ## Review agent
 A specialized sub-agent auditing exactly one quality dimension during the internal review of a feature or fix; the set active for a project is recorded in its `CLAUDE.md` and re-checked against the project's real state at every run — deliberate opt-outs are never overridden, and every check belongs to exactly one agent so the same issue is never reported twice.
-_Sources: `skills/review/SKILL.md`, `agents/`, `agents/review-classifier.md`_
+_Sources: `skills/review/SKILL.md`, `agents/`, `agents/findings-classifier.md`_
 
 ## Self-correction loop
 The bounded retry cycle (3 attempts maximum) in which `/vibe:feature` and `/vibe:fix` diagnose and repair their own failing step (test, lint, runtime verification) before escalating to the user; exhausting the attempts produces an Escalation.

@@ -83,8 +83,8 @@ check "20 parallel creations" "20" "$(awk 'NR > 1' "$P" | wc -l | tr -d ' ')"
 check "unique ids" "20" "$(awk -F "$TAB" 'NR > 1 { print $1 }' "$P" | sort -u | wc -l | tr -d ' ')"
 check "lock released" "absent" "$([ -e "$P.lock" ] && echo present || echo absent)"
 
-# abandon: every pending task deleted, in_progress and completed kept, dependencies purged
-A="$dir/abandon.tsv"
+# drop-pending: every pending task deleted, in_progress and completed kept, dependencies purged
+A="$dir/drop-pending.tsv"
 sh "$T" "$A" create --subject 'Plan' --active-form 'Planning' >/dev/null
 sh "$T" "$A" create --subject 'Implement' --active-form 'Implementing' --blocked-by 1 >/dev/null
 sh "$T" "$A" create --subject 'Review' --active-form 'Reviewing' --blocked-by 2 >/dev/null
@@ -92,17 +92,17 @@ sh "$T" "$A" create --subject 'Commit' --active-form 'Committing' --blocked-by 3
 sh "$T" "$A" update 1 --status in_progress >/dev/null && sh "$T" "$A" update 1 --status completed >/dev/null
 sh "$T" "$A" update 2 --status in_progress >/dev/null && sh "$T" "$A" update 2 --status completed >/dev/null
 check "in_progress #3" "ok #3 in_progress" "$(sh "$T" "$A" update 3 --status in_progress)"
-check "abandon" "ok #4 deleted · Commit" "$(sh "$T" "$A" abandon)"
-check "abandon keeps in_progress and completed" "#1 [completed] Plan
+check "drop-pending" "ok #4 deleted · Commit" "$(sh "$T" "$A" drop-pending)"
+check "drop-pending keeps in_progress and completed" "#1 [completed] Plan
 #2 [completed] Implement
 #3 [in_progress] Review" "$(sh "$T" "$A" list)"
-check "completed #3 after abandon" "ok #3 completed" "$(sh "$T" "$A" update 3 --status completed)"
-check "abandon with nothing pending" "(nothing to abandon)" "$(sh "$T" "$A" abandon)"
-check "abandon: extra argument" 2 "$(code sh "$T" "$A" abandon now)"
-check "round 2 task after abandon" "ok #5 created" "$(sh "$T" "$A" create --subject 'Round 2 — Plan' --active-form 'Round 2 — Planning')"
+check "completed #3 after drop-pending" "ok #3 completed" "$(sh "$T" "$A" update 3 --status completed)"
+check "drop-pending with nothing pending" "(no pending task)" "$(sh "$T" "$A" drop-pending)"
+check "drop-pending: extra argument" 2 "$(code sh "$T" "$A" drop-pending now)"
+check "round 2 task after drop-pending" "ok #5 created" "$(sh "$T" "$A" create --subject 'Round 2 — Plan' --active-form 'Round 2 — Planning')"
 check "round 2 chain" "ok #6 created" "$(sh "$T" "$A" create --subject 'Round 2 — Implement' --active-form 'Round 2 — Implementing' --blocked-by 5)"
-check "abandon purges dependencies" "ok #5 deleted · Round 2 — Plan
-ok #6 deleted · Round 2 — Implement" "$(sh "$T" "$A" abandon)"
+check "drop-pending purges dependencies" "ok #5 deleted · Round 2 — Plan
+ok #6 deleted · Round 2 — Implement" "$(sh "$T" "$A" drop-pending)"
 check "#6 purged of #5" "blockedBy: -" "$(sh "$T" "$A" get 6 | grep '^blockedBy')"
 
 echo

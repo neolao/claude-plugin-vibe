@@ -1,5 +1,5 @@
 schema_version: "1.1"
-name: report-counts-then-writes
+name: usage-report-counts-then-writes
 context:
   add_dirs: [fixtures]
   scaffold_script: fixture.sh

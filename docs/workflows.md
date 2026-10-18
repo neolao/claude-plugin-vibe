@@ -17,13 +17,13 @@ flowchart TD
     I --> C2["Plan approved — non-obvious decisions recorded<br/>as ADRs in .vibe/decisions/NNN-slug.md"]
     C2 --> D["TDD, delegated to task-implementer per sub-task:<br/>failing test → implementation → green,<br/>report re-checked by the workflow"]
     D --> E["run: exercise the change for real<br/>(nominal path + edge/error path)"]
-    E --> R["Internal review: review agents + requirements-reviewer<br/>→ review-classifier (level, space)"]
+    E --> R["Internal review: review agents + requirements-reviewer<br/>→ findings-classifier (level, space)"]
     R -- "need finding" --> N
     R -- "implementation finding" --> I
     R -- "only low left" --> F["CHANGELOG.md under Unreleased"]
     F --> G["/vibe:docs + /vibe:sync refresh"]
     G --> H["Commit feat:/fix: — a turn never ends<br/>with uncommitted files (wip: on early exit)"]
-    H --> K["Final checks: claim-verifier on the report,<br/>vibe:rewrite direct; then vibe:report, vibe:debrief"]
+    H --> K["Final checks: claim-verifier on the report,<br/>vibe:rewrite direct; then vibe:usage-report, vibe:debrief"]
 ```
 
 `run` launches the app itself — finding or establishing how to start the project — so no separate fallback skill is needed if launch mechanics are the blocker; after 3 failed attempts the skill escalates directly.
@@ -46,13 +46,13 @@ flowchart LR
 
 `tasks` owns the only fallback logic in the plugin for this failure mode, so every caller degrades the same way instead of each reinventing its own message. The fallback is `tasks.tsv` kept by `skills/tasks/scripts/tasks.sh`, which reproduces the native model (ids never reused, statuses, `blockedBy`, `owner`) and refuses what the rules forbid — two `in_progress`, `pending → completed`, a start on an open dependency — so the fallback is not a degraded version.
 
-When a calling workflow loops back to an earlier step (a review finding reopens planning), `tasks` prescribes the order: the current task goes `completed` (it did happen), every `pending` task is abandoned (`abandon` in the script, one `deleted` transition each otherwise) and announced as `✗ <subject> — stale`, and the new round's tasks are created with a `Round <n> — ` prefix. Completed tasks are never deleted: they are the trace of the previous round.
+When a calling workflow loops back to an earlier step (a review finding reopens planning), `tasks` prescribes the order: the current task goes `completed` (it did happen), every `pending` task is dropped (`drop-pending` in the script, one `deleted` transition each otherwise) and announced as `✗ <subject> — stale`, and the new round's tasks are created with a `Round <n> — ` prefix. Completed tasks are never deleted: they are the trace of the previous round.
 
 `tasks` also owns the compact chat status-line convention for every transition it governs: `● <subject>` when a task starts, `✓ <subject>` when it completes (plus a concrete detail — a hash, a count — never restated prose). `/vibe:auto` and `/vibe:next-task` reuse the same three glyphs (adding `⚠` for blocked/aborted) one level down, per backlog item, since their item loops sit outside the task-list mechanism entirely.
 
 ## Usage report
 
-The internal `skills/report/SKILL.md` counts a run's events as they happen — bricks called, loop rounds, questions asked to the user, findings raised / dropped / merged / per level, returns to a framing, fixes, escalations — through `scripts/report.sh` (`init`, `incr`, `brick`, `write`). At the end, `write` produces `.vibe/reports/<timestamp>-<entry>.md`: statistics only, never a path, a title or free text. The directory carries its own `.gitignore`, so the report stays on the user's machine; sharing it with the plugin's maintainers is the user's choice, and the only way real usage reaches the evals.
+The internal `skills/usage-report/SKILL.md` counts a run's events as they happen — bricks called, loop rounds, questions asked to the user, findings raised / dropped / merged / per level, returns to a framing, fixes, escalations — through `scripts/usage-report.sh` (`init`, `incr`, `brick`, `write`). At the end, `write` produces `.vibe/usage-reports/<timestamp>-<entry>.md`: statistics only, never a path, a title or free text. The directory carries its own `.gitignore`, so the report stays on the user's machine; sharing it with the plugin's maintainers is the user's choice, and the only way real usage reaches the evals.
 
 ## Clarify: settling under-specified input
 
@@ -132,7 +132,7 @@ Escalation entries are read back at the start of every `feature`/`fix` run, so a
 
 ## The review loop
 
-Every feature and fix reviews itself before shipping; the Product Owner never reads a finding. Once every sub-task is green, the workflow launches the `vibe:review` brick on the changed files (the active `review-*` agents, raw findings back) together with `requirements-reviewer` (the deliverable against the need's decisions), then hands every raw finding to `review-classifier`. The classifier re-checks each against the source it cites, drops false positives, merges duplicates, and gives a level and a space:
+Every feature and fix reviews itself before shipping; the Product Owner never reads a finding. Once every sub-task is green, the workflow launches the `vibe:review` brick on the changed files (the active `review-*` agents, raw findings back) together with `requirements-reviewer` (the deliverable against the need's decisions), then hands every raw finding to `findings-classifier`. The classifier re-checks each against the source it cites, drops false positives, merges duplicates, and gives a level and a space:
 
 - a `high`/`medium` finding in the `need` space sends the run back to the need framing — the request was misread or incomplete;
 - a `high`/`medium` finding in the `implementation` space sends it back to the implementation framing, then through Red → Refactor for the affected sub-tasks;

@@ -13,10 +13,10 @@ criteria: |
 
   (b) **Caught at review.** The need framing missed it; a review agent
       (typically `review-architecture`, active because `.vibe/` exists) or
-      `requirements-reviewer` raised it; `review-classifier` put it in the
+      `requirements-reviewer` raised it; `findings-classifier` put it in the
       `need` space at high or medium; the run then went back to the need
       framing — visible as a second `vibe:clarify … mode: need` invocation
-      mentioning "Round 2", a `report.sh … incr returns.need` call, or
+      mentioning "Round 2", a `usage-report.sh … incr returns.need` call, or
       `Round 2 — ` tasks created through `vibe:tasks` — and the code was
       changed afterwards.
 

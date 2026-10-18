@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Each run can now write a usage report — how many bricks were called, loop rounds, questions asked, findings and fixes — as plain statistics under `.vibe/reports/`. The report stays on your machine; sharing it with the plugin's maintainers is your choice — drop it in the repository's `evals/inbox/` and the improvement routine turns it into a test case.
+- Each run can now write a usage report — how many bricks were called, loop rounds, questions asked, findings and fixes — as plain statistics under `.vibe/usage-reports/`. The report stays on your machine; sharing it with the plugin's maintainers is your choice — drop it in the repository's `evals/inbox/` and the improvement routine turns it into a test case.
 - A workflow that has to go back to an earlier step (a review finding reopens planning) now keeps a clean task list: finished steps stay as the trace of the previous round, stale steps are dropped and announced, and the new round's steps are numbered.
 - Each sub-task's tests and code are now written by a dedicated implementer agent, one sub-task at a time, so a long feature keeps the main session's attention on the plan; its report is re-checked before anything moves on, and a point it cannot settle comes back to you as a question.
 - Three control agents for the build loop: one re-checks every review finding against the code, drops false positives, merges duplicates and says whether it questions what was asked or how it was done; one checks the result against the request (missing criteria, unrequested additions, breached constraints); one checks that every fact in a report is backed by its source.

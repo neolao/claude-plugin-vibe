@@ -2,11 +2,11 @@
 # Counters and writing of a workflow's usage report (see ../SKILL.md).
 # POSIX sh + awk only: must run with macOS BWK awk as well as mawk, gawk and BusyBox awk.
 #
-#   report.sh <counters> init <entry> <model> <backlog: yes|no>
-#   report.sh <counters> incr <key> [n]
-#   report.sh <counters> brick <name>
-#   report.sh <counters> show
-#   report.sh <counters> write <project root>
+#   usage-report.sh <counters> init <entry> <model> <backlog: yes|no>
+#   usage-report.sh <counters> incr <key> [n]
+#   usage-report.sh <counters> brick <name>
+#   usage-report.sh <counters> show
+#   usage-report.sh <counters> write <project root>
 #
 # init overwrites an existing counters file (one run = one init); write removes it once the
 # report is on disk, so a run that stopped early never pollutes the next one.
@@ -19,7 +19,7 @@ ENTRIES='feature fix'
 KEYS='rounds questions fixes escalations returns.need returns.implementation findings.raised findings.dropped findings.merged findings.high findings.medium findings.low'
 
 usage() {
-  echo "usage: report.sh <counters> init|incr|brick|show|write … (see the header of the script)" >&2
+  echo "usage: usage-report.sh <counters> init|incr|brick|show|write … (see the header of the script)" >&2
   exit 2
 }
 refuse() {
@@ -98,7 +98,7 @@ case $CMD in
     stamp=$(date +%Y-%m-%dT%H-%M-%S)
     in_list "$entry" "$ENTRIES" || refuse "$FILE has no valid entry: run init first"
     is_int "$start" || refuse "$FILE has no valid start: run init first"
-    dir="$ROOT/.vibe/reports"
+    dir="$ROOT/.vibe/usage-reports"
     mkdir -p "$dir" || fail "could not create $dir"
     # The directory ignores itself: a report never reaches the project's history unless the user copies it out.
     grep -qx '\*' "$dir/.gitignore" 2>/dev/null || echo '*' >> "$dir/.gitignore" || fail "could not write $dir/.gitignore"

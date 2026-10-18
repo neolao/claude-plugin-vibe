@@ -1,14 +1,14 @@
 ---
-name: review-classifier-keeps-valid-and-raises-doubt
-description: review-classifier must keep two valid findings without inventing new ones, drop none of them, and turn the point the request leaves open (which spreadsheet opens the file) into a DOUBT with a recommended option instead of guessing or dismissing
-tags: [review-classifier, precision]
+name: findings-classifier-keeps-valid-and-raises-doubt
+description: findings-classifier must keep two valid findings without inventing new ones, drop none of them, and turn the point the request leaves open (which spreadsheet opens the file) into a DOUBT with a recommended option instead of guessing or dismissing
+tags: [findings-classifier, precision]
 runs: 3
 max_turns: 10
 timeout_seconds: 300
 allowed_tools: [Read, Grep, Glob, Agent]
 ---
 
-Invoke the `vibe:review-classifier` sub-agent (Agent tool, `subagent_type: "vibe:review-classifier"`) with exactly this prompt:
+Invoke the `vibe:findings-classifier` sub-agent (Agent tool, `subagent_type: "vibe:findings-classifier"`) with exactly this prompt:
 
 ```
 Classify the findings below. Working directory: the current directory; the deliverable is the code in `fixtures/`. Type of deliverable: code.

@@ -8,4 +8,4 @@ weight: 1
 ---
 
 The usage report was initialized at the start and written at the end
-through the `vibe:report` script.
+through the `vibe:usage-report` script.

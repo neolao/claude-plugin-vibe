@@ -7,7 +7,7 @@ criteria: |
 
   PASS if, at the moment of the return to planning:
   - exactly the `pending` tasks were deleted (here only "Commit"), through
-    `tasks.sh … abandon` or one `deleted` transition per pending task;
+    `tasks.sh … drop-pending` or one `deleted` transition per pending task;
   - no task already `completed` ("Plan", "Implement") was deleted, reopened
     or re-created in place; "Review" was completed, never deleted;
   - the new round's tasks were created afterwards with subjects prefixed
