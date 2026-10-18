@@ -15,7 +15,7 @@ flowchart TD
     N --> C["Up to 3 matching agents/expert-*.md<br/>consulted in parallel"]
     C --> I["Frame the implementation — vibe:clarify<br/>mode: implementation (code, tests, CLAUDE.md first)"]
     I --> C2["Plan approved — non-obvious decisions recorded<br/>as ADRs in .vibe/decisions/NNN-slug.md"]
-    C2 --> D["TDD: failing test → implementation → green<br/>(self-checked against tautological tests)"]
+    C2 --> D["TDD, delegated to task-implementer per sub-task:<br/>failing test → implementation → green,<br/>report re-checked by the workflow"]
     D --> E["run: exercise the change for real<br/>(nominal path + edge/error path)"]
     E --> R["Internal review: review agents + requirements-reviewer<br/>→ review-classifier (level, space)"]
     R -- "need finding" --> N

@@ -110,17 +110,19 @@ From approval on, before any action no approved plan item covers — a file not 
 
 ## Task list
 
-Once the plan is approved, invoke the `vibe:tasks` skill once with the skill's task list, subjects ≤ 30 chars, chained with `blockedBy` in the order given. Per development sub-task: `Write tests` → `Implement` → `Runtime smoke` → `Refactor + lint`; then `Internal review` → `Update CHANGELOG.md` → `Update docs` → `Sync .vibe/` → `Commit` → `Final checks` → `Write report`, plus `Update backlog status` when the brief came from a backlog item. `vibe:tasks` governs how each task is marked as the steps below progress, and how the list is rebuilt when the review loop goes back (its "Going back" section).
+Once the plan is approved, invoke the `vibe:tasks` skill once with the skill's task list, subjects ≤ 30 chars, chained with `blockedBy` in the order given. Per development sub-task: `Red → green` → `Runtime smoke` → `Refactor + lint`; then `Internal review` → `Update CHANGELOG.md` → `Update docs` → `Sync .vibe/` → `Commit` → `Final checks` → `Write report`, plus `Update backlog status` when the brief came from a backlog item. `vibe:tasks` governs how each task is marked as the steps below progress, and how the list is rebuilt when the review loop goes back (its "Going back" section).
 
-## Red — tests first
+## Red → green — delegated
 
-Create or update the test file and write the tests the skill specifies. Run them and confirm they **fail** — a test that passes before implementation is wrong. Test names describe behaviour ("returns 404 when user does not exist"), not implementation.
+Each sub-task's tests and code are written by the `vibe:task-implementer` agent (Agent tool, `subagent_type: "vibe:task-implementer"`, `run_in_background: false`), out of your context: your context stays short and the task list stays in front of you. Count `report brick task-implementer`. Its prompt contains the sub-task (subject, description, completion criterion, the tests the skill specifies), the settled framing (the need's synthesis and decisions, the implementation's decisions, the files to touch), the project's test and lint commands, and the two rule blocks below **quoted verbatim**. On a correction round, add the findings to handle with their level.
+
+Its `## IMPLEMENTATION report` is a claim, not a proof: re-run the test command yourself once and compare with its last line. A report whose commands do not show a failing run before a passing one is a red step skipped: re-launch with that remark. Its **Doubts** go through the "Framing round" gate (ask the user in plain words, or take the recommended option in `--auto`), then re-launch with the answers. Three launches on the same sub-task without a green, sourced report → escalation-log entry and escalate. The red and green rules it must apply:
+
+**Red — tests first.** Create or update the test file and write the tests the skill specifies. Run them and confirm they **fail** — a test that passes before implementation is wrong. Test names describe behaviour ("returns 404 when user does not exist"), not implementation.
 
 **No tautological tests.** A test a wrong implementation would still pass is worse than none. Reject: an expected value derived with the same computation as the code under test (pin an independently derived value); trivially true assertions (`expect(true).toBe(true)`, a mock returning what it was configured to return); mocks so pervasive that only the mock call is asserted; assertions unrelated to the behaviour claimed ("didn't throw" when the risk is a wrong value). Failing before implementation is not sufficient proof: ask of each test "could a subtly wrong implementation still pass this?" and rewrite the assertion if yes.
 
-## Green — implement
-
-Write the minimum change that makes the tests pass without breaking existing ones; run the full suite after each meaningful change.
+**Green — implement.** Write the minimum change that makes the tests pass without breaking existing ones; run the full suite after each meaningful change.
 
 **Smallest complete change.** Before writing, list every place the change must reach: callers, tests, fixtures, config, exports. Then take the first option that fully works: already in this codebase (use it the way the surrounding code does) → standard library or platform feature → installed dependency → minimum new code. Never add a dependency for a few lines. No abstraction, option or "for later" code nobody asked for. Code you move or merge keeps its validation and error handling. A shortcut with a known limit gets a one-line comment `shortcut: <limit>, <when to upgrade>`. Minimal never means skipping tests, validation at trust boundaries, error handling or security. If tests fail: diagnose, fix the code (not the tests, unless a test was wrong), re-run — up to 3 attempts, then escalation-log entry and escalate with a precise diagnosis.
 
@@ -132,7 +134,7 @@ If `run` cannot launch the app for missing configuration (env var, config file, 
 
 ## Refactor and lint
 
-Remove dead code, unused imports, and debug artifacts; run the lint command and fix issues; re-run the tests, the runtime smoke, and the build command if the Baseline check found one — a regression here is fixed before the task completes. A failing build is treated exactly like a failing test: diagnose, fix the code, re-run — up to 3 attempts, then escalation-log entry and escalate. The task cannot reach Commit on a broken build. If more sub-tasks remain, return to Red for the next one.
+Remove dead code, unused imports, and debug artifacts; run the lint command and fix issues; re-run the tests, the runtime smoke, and the build command if the Baseline check found one — a regression here is fixed before the task completes. These fixes are yours, in your context: small and local. One that changes the approach or the behaviour goes back through the implementer instead. A failing build is treated exactly like a failing test: diagnose, fix the code, re-run — up to 3 attempts, then escalation-log entry and escalate. The task cannot reach Commit on a broken build. If more sub-tasks remain, return to Red for the next one.
 
 ## Internal review
 
@@ -144,7 +146,7 @@ Count `report incr findings.raised <n>` with the total. Then launch the `vibe:re
 
 **Route.** Read `## CLASSIFIED findings` from the top:
 - a `high` or `medium` finding in the `need` space → the need was misread or incomplete. Go back to **Frame the need** with the finding as input (`vibe:clarify`, `mode: need`, "Round <n>: <finding and its consequence>"); then redo the steps that follow for what changed. Count `incr returns.need`.
-- otherwise, a `high` or `medium` finding in the `implementation` space → go back to **Frame the implementation** with the finding, the current plan and the affected files; adjust the plan, then redo Red → Refactor for the affected sub-tasks (a finding that changes behaviour gets its test first; one that does not is fixed in Refactor). Count `incr returns.implementation`.
+- otherwise, a `high` or `medium` finding in the `implementation` space → go back to **Frame the implementation** with the finding, the current plan and the affected files; adjust the plan, then redo Red → green (through `vibe:task-implementer`, with the findings and their level) and Runtime → Refactor for the affected sub-tasks. Count `incr returns.implementation`.
 - only `low` findings left → the loop ends. Low findings are not fixed in this run; their count goes to the usage report, not to the user.
 
 Every return is a new round: apply `vibe:tasks`' "Going back" (the `Internal review` task completes, stale tasks are abandoned, the new round's tasks carry `Round <n> — `), and count `incr rounds` and one `incr fixes` per finding corrected. The loop has no fixed cap — the result is judged, not the number of rounds. A finding that comes back unchanged after the round meant to fix it is a failed attempt: 3 of them on the same finding → escalation-log entry and escalate. In `--auto` mode a finding can only be fixed or escalated, never set aside.

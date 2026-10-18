@@ -22,6 +22,7 @@
   - `review-*`: one dimension each, body = scope sentence + checklist + `## Categories`.
   - `expert-*`: one domain each, body = scope sentence (with out-of-scope routing) + checklist; the consultation formats are stated in `workflow.md`.
   - Experts cover domains without a `review-*` counterpart (`decisions/001`), except `expert-realtime-rendering` (`decisions/003`) and `expert-architecture` (`decisions/005`).
+  - `task-implementer`: the one agent that writes code — one sub-task per launch, test first, `## IMPLEMENTATION report` with every command and its result; the workflow re-runs the tests on its report and routes its doubts through the framing gate.
   - Control agents (`review-classifier`, `requirements-reviewer`, `claim-verifier`): bricks of the build loop with their own output contracts; review agents raise findings, the classifier alone decides level and space.
   - Every agent pins a full model id (`claude-haiku-5-5` / `claude-sonnet-5-5` / `claude-opus-5-5`) and an `effort:`.
 - `/vibe:feature` and `/vibe:fix` consult up to 3 experts at plan time, in parallel (`expert-architecture` whenever the brief involves a real design choice), and one precise question per expert per sub-task during implementation; `/vibe:consult` asks one expert one question on demand.

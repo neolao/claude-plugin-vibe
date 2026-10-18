@@ -83,7 +83,8 @@ This plan turns [the strategy](strategy/README.md) into work packages, starting 
 
 ### 7. Later: delegate the code
 
-- A `task-implementer` agent writes one sub-task out of the orchestrator's context, as the strategy suggests for long tasks. Only once packages 1–6 are measured: it changes what the review brick sees and what the report counts.
+- A `task-implementer` agent writes one sub-task out of the orchestrator's context, as the strategy suggests for long tasks. Planned after packages 1–6 were measured; the maintainer chose to write it at once and measure everything in one eval round.
+- **Progress (2026-10-18):** written — `agents/task-implementer.md` 1.0.0 (sonnet · medium, writes code, `## IMPLEMENTATION report`), `workflow.md` "Red → green — delegated" (rule blocks quoted to the agent, the workflow re-runs the tests, doubts through the framing gate, three launches then escalation; runtime, lint, build and commit stay in the orchestrator), `feature`/`fix` 2.1.0, cases `task-implementer-implements-test-first` and `task-implementer-raises-doubt-instead-of-deciding`; the `feature-*`/`fix-*` graders that watched `Edit` calls now read the implementer's report and the files (a sub-agent's tool calls are not in the trace). Not run.
 
 ## Order
 

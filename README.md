@@ -133,7 +133,7 @@ Every feature and fix runs these specialized agents in parallel on its own chang
 
 Activation per project is recorded in the `CLAUDE.md` table written by `/vibe:init`.
 
-Three control agents serve the build loop rather than a review dimension: `review-classifier` (re-checks every finding against its source, drops false positives, merges duplicates, sets its level and whether it questions the need or the implementation), `requirements-reviewer` (the deliverable against the request: gaps, unrequested additions, breached constraints) and `claim-verifier` (every fact a report states, checked against its source — "tests pass" needs the command and its output).
+One agent writes the code: `task-implementer` takes one sub-task at a time with the settled framing, writes the failing test, then the code, and reports every command it ran with its result; the workflow re-runs the tests before trusting it and asks you about any point the agent could not settle. Three control agents serve the build loop rather than a review dimension: `review-classifier` (re-checks every finding against its source, drops false positives, merges duplicates, sets its level and whether it questions the need or the implementation), `requirements-reviewer` (the deliverable against the request: gaps, unrequested additions, breached constraints) and `claim-verifier` (every fact a report states, checked against its source — "tests pass" needs the command and its output).
 
 ## Expert agents
 

@@ -15,6 +15,7 @@ claude-plugin-vibe/
 ├── agents/review-*.md     # one file per review dimension (20 agents, after-the-fact critics)
 ├── agents/expert-*.md     # one file per domain expert (9 agents, before/during prescriptive consultants)
 ├── agents/{review-classifier,requirements-reviewer,claim-verifier}.md  # control agents of the build loop
+├── agents/task-implementer.md  # the one agent that writes code, one sub-task per launch
 ├── skills/*/references/   # grids and rule sets a skill reads at invocation
 ├── skills/tasks/scripts/tasks.sh   # task-file fallback of vibe:tasks (POSIX sh + awk, tested by evals/tasks-script-test.sh)
 ├── skills/report/scripts/report.sh # counters and writer of vibe:report (POSIX sh + awk, tested by evals/report-script-test.sh)
@@ -62,6 +63,10 @@ Two skills extend the plugin above the single-repo level, for a project split ac
 Each `agents/review-<dimension>.md` audits exactly one quality dimension (frontmatter: `name`, `description`, `tools`). The finding format, severity scale, and read-only rule are not repeated per agent: the internal `vibe:review` brick injects that shared contract into every agent prompt, returns the raw findings, and leaves judgement to `review-classifier` and fixes to the build workflow. It reads the activation table in the target project's `CLAUDE.md`, re-checks each activation condition against the project's current state, then runs the active agents in parallel. Overlapping checks are explicitly delegated: each check belongs to one owning agent, so the same issue is never reported from two angles.
 
 Agents are read-only by their `tools` frontmatter; four also get Bash: `review-tests` executes the project's real test suite, `review-dependencies` runs the stack's audit tool, `review-web-security` probes a locally-launched instance when its opt-in dynamic mode is enabled, and `review-comments` prints files with a comment's lines removed to judge the code without it. `review-architecture` also covers ports & adapters for projects that explicitly adopted them. Six dimensions were added in 2.2.0: `review-correctness` (real bugs, each with its triggering scenario), `review-comments`, `review-signatures` (the shape of arguments and of fields added to shared types), `review-coordination` (the same knowledge in two places with no guard), `review-docs` (Markdown docs against each other and the file system, never against the code) and the opt-in `review-alternative-design` (a named pattern proposed only when it measurably beats the code as written).
+
+## Implementer (`agents/task-implementer.md`)
+
+The one agent that writes code. The build workflow launches it once per sub-task (and once more per correction round, with the classified findings and their level), with the sub-task, the settled framing, the files to touch and the red/green rule blocks of `workflow.md` quoted verbatim. It writes the failing test, runs it, writes the code, runs the tests, and returns an `## IMPLEMENTATION report` whose every claim carries its command and exact result. The workflow re-runs the test command itself before trusting the report, asks the Product Owner (or, in `--auto`, takes the recommended option) for each doubt the agent returns, and keeps runtime verification, lint, build and commit in its own context. This is what keeps the orchestrator's context short and its task list in front of it on long tasks.
 
 ## Control agents (`agents/review-classifier.md`, `requirements-reviewer.md`, `claim-verifier.md`)
 
