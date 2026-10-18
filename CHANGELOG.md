@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Each run can now write a usage report — how many bricks were called, loop rounds, questions asked, findings and fixes — as plain statistics under `.vibe/reports/`. The report stays on your machine; sharing it with the plugin's maintainers is your choice.
+- A workflow that has to go back to an earlier step (a review finding reopens planning) now keeps a clean task list: finished steps stay as the trace of the previous round, stale steps are dropped and announced, and the new round's steps are numbered.
+
 ## [2.2.0] - 2026-10-16
 
 ### Added

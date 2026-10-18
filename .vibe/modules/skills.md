@@ -1,7 +1,7 @@
 # Module: skills
 
 **Role:** Slash-command definitions (`/vibe:*`) that drive the vibe-coding workflow — each is an instruction set read by Claude Code when the command is invoked. Shared steps live in one file per concern, read at invocation, never copied.
-**Files:** `skills/*/SKILL.md` (one directory per skill), `skills/feature/workflow.md` (shared by `feature` and `fix`), `skills/*/references/*.md` (grids and rule sets read at invocation), `skills/tasks/scripts/tasks.sh` (the task-file script of the `tasks` fallback)
+**Files:** `skills/*/SKILL.md` (one directory per skill), `skills/feature/workflow.md` (shared by `feature` and `fix`), `skills/*/references/*.md` (grids and rule sets read at invocation), `skills/tasks/scripts/tasks.sh` (the task-file script of the `tasks` fallback), `skills/report/scripts/report.sh` (the counters and writer of `report`)
 **Exports:**
 - `/vibe:init` (`skills/init/SKILL.md`) — sets up `CLAUDE.md` for vibe coding.
   - Asks once for the project's language; creates `README.md` via `vibe:docs`.
@@ -30,7 +30,8 @@
 - `/vibe:release` (`skills/release/SKILL.md`) — pre-release checks (test, lint, build), runs `changelog`, cuts the version section, refreshes docs, bumps the version, commits and tags. Never pushes.
 - `/vibe:workspace-init` (`skills/workspace-init/SKILL.md`) — sets up or refreshes a hub repo (`.git/` + `repos.md`) and the local workspace-root `CLAUDE.md`. Never pushes.
 - `/vibe:next-task` (`skills/next-task/SKILL.md`) — picks the next eligible item across a workspace (or the current repo), hands it to `feature`/`fix` or to `auto --push`, publishes, checks downstream unblocks.
-- `vibe:tasks` (`skills/tasks/SKILL.md`) — internal: creates the caller's task list via `TaskCreate` or, without it, a `tasks.tsv` in the scratchpad kept by `scripts/tasks.sh` (same model and rules as the native system: ids, statuses, `blockedBy`, `owner`; refuses a skipped transition); `file:` option for a dedicated list; owns the `●`/`✓` status-line convention.
+- `vibe:tasks` (`skills/tasks/SKILL.md`) — internal: creates the caller's task list via `TaskCreate` or, without it, a `tasks.tsv` in the scratchpad kept by `scripts/tasks.sh` (same model and rules as the native system: ids, statuses, `blockedBy`, `owner`; refuses a skipped transition); `file:` option for a dedicated list; owns the `●`/`✓` status-line convention; "Going back" rule for a looping caller (current task completed, pending tasks abandoned with `✗ … — stale`, new round prefixed `Round <n> — `; `abandon` command in the script).
+- `vibe:report` (`skills/report/SKILL.md`) — internal: counts a workflow's events through `scripts/report.sh` (`init`, `incr <key>`, `brick <name>`, `write`) and writes a statistics-only report to `.vibe/reports/<timestamp>-<entry>.md` in the project; the directory ignores itself in git; the report stays local unless the user shares it. Refuses an unknown entry, counter or brick name.
 - `vibe:publish` (`skills/publish/SKILL.md`) — internal: pushes, releases when `[Unreleased]` is non-empty (bump inferred), pushes tags, verifies the pushed commit's CI/deploy run (best-effort, GitHub only) and surfaces a failure as a blocker, creates a GitHub release when possible; one self-heal retry on a tracked pre-existing test failure. The only skill that pushes.
 
 **Depends on:** [`modules/plugin-manifest.md`](plugin-manifest.md) (skills are registered/shipped as part of the plugin)

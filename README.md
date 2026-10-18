@@ -132,7 +132,7 @@ Each command is a Claude Code slash command, with natural-language arguments whe
 | `/vibe:workspace-init` | Bootstrap/refresh a multi-repo workspace's hub repo and local workspace-root `CLAUDE.md` |
 | `/vibe:next-task` | Pick the next eligible task across a workspace (or the current repo), implement it, then push and release |
 
-Two internal skills are hidden from the `/` menu: `vibe:tasks` (task-list creation with a scratchpad fallback) and `vibe:publish` (push and release, used by `/vibe:auto --push` and `/vibe:next-task`).
+Three internal skills are hidden from the `/` menu: `vibe:tasks` (task-list creation with a scratchpad fallback), `vibe:report` (statistics of a run, written locally under `.vibe/reports/`, never shared unless you choose to) and `vibe:publish` (push and release, used by `/vibe:auto --push` and `/vibe:next-task`).
 
 ## Review agents
 

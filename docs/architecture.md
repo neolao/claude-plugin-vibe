@@ -11,11 +11,12 @@ claude-plugin-vibe/
 ├── .claude-plugin/
 │   ├── plugin.json        # plugin identity: name "vibe", version, keywords
 │   └── marketplace.json   # marketplace listing pointing at this repo
-├── skills/<name>/SKILL.md # one directory per skill (20 /vibe:* slash commands + 2 internal)
+├── skills/<name>/SKILL.md # one directory per skill (20 /vibe:* slash commands + 3 internal)
 ├── agents/review-*.md     # one file per review dimension (20 agents, after-the-fact critics)
 ├── agents/expert-*.md     # one file per domain expert (9 agents, before/during prescriptive consultants)
 ├── skills/*/references/   # grids and rule sets a skill reads at invocation
 ├── skills/tasks/scripts/tasks.sh   # task-file fallback of vibe:tasks (POSIX sh + awk, tested by evals/tasks-script-test.sh)
+├── skills/report/scripts/report.sh # counters and writer of vibe:report (POSIX sh + awk, tested by evals/report-script-test.sh)
 ├── scripts/subagent-statusline.sh  # renders the agent-panel status line
 ├── settings.json          # wires the subagentStatusLine hook to the script
 └── docs/                  # this developer documentation + the GitHub Pages site
@@ -71,4 +72,4 @@ Where review agents critique code that already exists, `agents/expert-<domain>.m
 
 ## Generated state in target projects
 
-The plugin writes into the *target* project (not into this repo, except for dogfooding): `CLAUDE.md` and `README.md` (by `init`, which delegates the README's managed sections to `docs`), the `.vibe/` context map — `index.md`, `modules/`, `models.md`, a fully code-derived `glossary.md`, plus work data `backlog/`, `decisions/`, `escalations.md`, `last-review.md`, and `auto-state.md` (by `sync` and the workflow skills). The lifecycle of each entry is recorded in the generated `.vibe/README.md`.
+The plugin writes into the *target* project (not into this repo, except for dogfooding): `CLAUDE.md` and `README.md` (by `init`, which delegates the README's managed sections to `docs`), the `.vibe/` context map — `index.md`, `modules/`, `models.md`, a fully code-derived `glossary.md`, plus work data `backlog/`, `decisions/`, `escalations.md`, `last-review.md`, and `auto-state.md` (by `sync` and the workflow skills), and `reports/` (by `report`: statistics of each run, self-ignored in git, shared only if the user chooses to). The lifecycle of each entry is recorded in the generated `.vibe/README.md`.

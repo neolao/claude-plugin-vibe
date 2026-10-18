@@ -40,7 +40,13 @@ flowchart LR
 
 `tasks` owns the only fallback logic in the plugin for this failure mode, so every caller degrades the same way instead of each reinventing its own message. The scratchpad checklist preserves the declared order but does not enforce `blockedBy` — unlike a real `TaskCreate` chain, nothing stops a step from being checked out of order; the constraint holds only because the calling skill always executes its own steps sequentially.
 
+When a calling workflow loops back to an earlier step (a review finding reopens planning), `tasks` prescribes the order: the current task goes `completed` (it did happen), every `pending` task is abandoned (`abandon` in the script, one `deleted` transition each otherwise) and announced as `✗ <subject> — stale`, and the new round's tasks are created with a `Round <n> — ` prefix. Completed tasks are never deleted: they are the trace of the previous round.
+
 `tasks` also owns the compact chat status-line convention for every transition it governs: `● <subject>` when a task starts, `✓ <subject>` when it completes (plus a concrete detail — a hash, a count — never restated prose). `/vibe:auto` and `/vibe:next-task` reuse the same three glyphs (adding `⚠` for blocked/aborted) one level down, per backlog item, since their item loops sit outside the task-list mechanism entirely.
+
+## Usage report
+
+The internal `skills/report/SKILL.md` counts a run's events as they happen — bricks called, loop rounds, questions asked to the user, findings raised / dropped / merged / per level, returns to a framing, fixes, escalations — through `scripts/report.sh` (`init`, `incr`, `brick`, `write`). At the end, `write` produces `.vibe/reports/<timestamp>-<entry>.md`: statistics only, never a path, a title or free text. The directory carries its own `.gitignore`, so the report stays on the user's machine; sharing it with the plugin's maintainers is the user's choice, and the only way real usage reaches the evals.
 
 ## Clarify: settling under-specified input
 

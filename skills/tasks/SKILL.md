@@ -3,7 +3,7 @@ name: tasks
 description: Creates and tracks a vibe workflow's task list and keeps it up to date until the end — through the native task system (TaskCreate / TaskUpdate / TaskList / TaskGet) when it is available, otherwise through a `tasks.tsv` file in the scratchpad, kept by a script that reproduces the same model (ids, statuses, blockedBy dependencies, owner). Invoked internally by other vibe skills, never directly by users.
 argument-hint: "[file: <path>] then <one task per line: '<subject> ← blockedBy \"<other subject>\"' or '<subject> ← no dependency'>"
 user-invocable: false
-version: 2.0.0
+version: 2.1.0
 model: claude-sonnet-5-5
 ---
 
@@ -44,6 +44,7 @@ The file is the one chosen at input (by default `tasks.tsv` in the scratchpad di
 ```
 sh <base>/scripts/tasks.sh <file> create --subject "…" --active-form "…" --description "…" [--blocked-by 1,2]
 sh <base>/scripts/tasks.sh <file> update <id> --status in_progress|completed|pending|deleted [--owner …] [--add-blocked-by …] [--add-blocks …]
+sh <base>/scripts/tasks.sh <file> abandon
 sh <base>/scripts/tasks.sh <file> list
 sh <base>/scripts/tasks.sh <file> get <id>
 ```
@@ -69,6 +70,14 @@ Once this skill has run, every status transition goes through `TaskUpdate` (nati
 The status line reports a transition already recorded, it does not replace it: the call comes first, the line second. This also holds for `in_progress`, even when the task fits in a single action. No transition is silent: a `completed` or an `in_progress` directly followed by another tool call, without its line in your message, is an error, even when several tasks follow each other (one `✓` line per completed task).
 
 These lines are text of your reply: the user does not read your reasoning, a line that only appears there has not been written. Prose belongs in the final report, not in these lines. Do not re-invoke this skill for an update: this instruction covers them until the end of the session.
+
+## Going back
+A workflow that loops sometimes returns to a step already done (a finding sends it back to planning, for example). The list is then updated in this order:
+1. The current task (the one that triggered the return, often the review) goes `completed`: it did happen.
+2. Every `pending` task is now stale and goes `deleted`: `abandon` through the script, or one `deleted` transition per task (`TaskUpdate`, or `Edit` by hand), lowest id first. Never delete a `completed` task: it is the trace of the previous round.
+3. The tasks of the new round are created with the prefix `Round <n> — ` in their subject (`Round 2 — Plan`), chained by their dependencies. The first round has no prefix.
+
+Each transition keeps its status line (`✓` for the completed task), and each deletion is announced on one line: `✗ <subject> — stale`.
 
 ## Resume
 After a `/compact`, an interruption or at the start of a new turn, reread the state before any action: `TaskList`, or `tasks.sh <file> list` (the whole file in manual mode). The file path is in the fallback announcement and in your final answers. Do not rely on what remains of the conversation: a `completed` task summarized by the compaction could be redone, an `in_progress` task forgotten.

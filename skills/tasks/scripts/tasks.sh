@@ -5,6 +5,7 @@
 #   tasks.sh <file> create --subject S --active-form A [--description D] [--blocked-by 1,2]
 #   tasks.sh <file> update <id> [--status S] [--subject S] [--active-form A] [--description D]
 #                              [--owner O] [--add-blocked-by 1,2] [--add-blocks 4,5]
+#   tasks.sh <file> abandon
 #   tasks.sh <file> list
 #   tasks.sh <file> get <id>
 #
@@ -15,7 +16,7 @@ TAB=$(printf '\t')
 HEADER="# tasks v1${TAB}id${TAB}status${TAB}owner${TAB}blockedBy${TAB}subject${TAB}activeForm${TAB}description"
 
 usage() {
-  echo "usage: tasks.sh <file> create|update|list|get … (see the header of the script)" >&2
+  echo "usage: tasks.sh <file> create|update|abandon|list|get … (see the header of the script)" >&2
   exit 2
 }
 
@@ -69,7 +70,7 @@ case $CMD in
     [ $# -eq 1 ] && is_id "$1" || usage
     T_ID=$1
     ;;
-  list) [ $# -eq 0 ] || usage ;;
+  list | abandon) [ $# -eq 0 ] || usage ;;
   *) usage ;;
 esac
 
@@ -194,6 +195,20 @@ END {
     if (s == "deleted") for (k = 1; k <= count; k++) by[ids[k]] = drop(by[ids[k]], id)
     if (s != "") st[id] = s
     msg = "ok #" id " " st[id]
+  }
+
+  # abandon: every pending task goes deleted (a loop went back to an earlier step).
+  # in_progress and completed tasks are kept: they are the trace of the round that happened.
+  if (m == "abandon") {
+    msg = ""
+    for (k = 1; k <= count; k++) {
+      x = ids[k]
+      if (st[x] != "pending") continue
+      st[x] = "deleted"
+      for (j = 1; j <= count; j++) by[ids[j]] = drop(by[ids[j]], x)
+      msg = (msg == "") ? "ok #" x " deleted" : msg "\nok #" x " deleted"
+    }
+    if (msg == "") msg = "(nothing to abandon)"
   }
 
   out = ENVIRON["T_OUT"]

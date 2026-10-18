@@ -1,5 +1,5 @@
 #!/bin/sh
-# Runs evals/tasks-script-test.sh under Linux, once per awk implementation:
+# Runs evals/tasks-script-test.sh and evals/report-script-test.sh under Linux, once per awk implementation:
 #   mawk    — Debian / Ubuntu (default awk)
 #   gawk    — Fedora, Arch, and Debian as soon as gawk is installed
 #   busybox — Alpine and minimal images
@@ -21,7 +21,7 @@ for c in $configs; do
   echo "=== $c ($image)"
   # The awk actually used is printed: an image that changed its default awk would show up here.
   out=$(docker run --rm -v "$repo:/work:ro" -w /work "$image" sh -c \
-    "$prep && echo \"awk: \$(readlink -f \"\$(command -v awk)\")\" && sh evals/tasks-script-test.sh; echo \"exit=\$?\"" 2>&1)
+    "$prep && echo \"awk: \$(readlink -f \"\$(command -v awk)\")\" && sh evals/tasks-script-test.sh && sh evals/report-script-test.sh; echo \"exit=\$?\"" 2>&1)
   printf '%s\n' "$out" | grep -v '^ok '
   case $out in *"exit=0") ;; *) failed="$failed $c" ;; esac
 done

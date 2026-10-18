@@ -7,7 +7,7 @@
 
 `claude-plugin-vibe` is a **Claude Code plugin**: it is not an application with its own runtime, but a set of Markdown definitions (skills and agents) that support the "vibe coding" methodology — the human stays Product Owner (describes the need and evaluates the result), Claude writes, tests, reviews and delivers the code of the *other* projects on which this plugin is installed.
 
-**Stack:** none — no language manifest (`package.json`, `pyproject.toml`, etc.). The content is Markdown (skills, agents) + two Bash scripts (`scripts/subagent-statusline.sh` for the status bar, `skills/tasks/scripts/tasks.sh` for the task-file fallback of `vibe:tasks`) + JSON manifests (`plugin.json`, `marketplace.json`, `settings.json`).
+**Stack:** none — no language manifest (`package.json`, `pyproject.toml`, etc.). The content is Markdown (skills, agents) + three shell scripts (`scripts/subagent-statusline.sh` for the status bar, `skills/tasks/scripts/tasks.sh` for the task-file fallback of `vibe:tasks`, `skills/report/scripts/report.sh` for the counters of `vibe:report`) + JSON manifests (`plugin.json`, `marketplace.json`, `settings.json`).
 **Type:** Claude Code plugin (meta-tooling), not an executable application.
 
 ## Architecture
@@ -15,7 +15,7 @@
 ```
 claude-plugin-vibe/
 ├── .claude-plugin/   # plugin manifest (plugin.json) and marketplace manifest (marketplace.json)
-├── skills/           # /vibe:* slash commands — one folder per skill, each with a SKILL.md (+ references/ grids, + tasks/scripts/tasks.sh)
+├── skills/           # /vibe:* slash commands — one folder per skill, each with a SKILL.md (+ references/ grids, + tasks/scripts/tasks.sh, report/scripts/report.sh)
 ├── agents/           # specialized review sub-agents, one per quality dimension
 ├── scripts/          # shell scripts (e.g. subagent-statusline.sh for the status bar)
 ├── settings.json     # wires the subagentStatusLine hook to the script above
@@ -142,11 +142,13 @@ Up one notch = next line; down = previous line. The order is model then effort: 
 - Do not leave an orphan skill/agent file or obsolete content after a rename/deletion
 - Keep the README as an up-to-date index of the skills and of `docs/` (see `/vibe:docs`)
 - Do not add an application stack (Node, Python, etc.) to this repo without an explicit request — this is not that kind of project
-  - Exception: `evals/` contains everything the evaluations need and can therefore host scripts (Python, Bash…) — fixtures, scaffolds, tools like `evals/tokens.py`, and the unit test of the task-file script (`sh evals/tasks-script-test.sh`, `evals/tasks-script-linux.sh` for mawk/gawk/BusyBox under Docker). They do not constitute an application stack of the plugin.
+  - Exception: `evals/` contains everything the evaluations need and can therefore host scripts (Python, Bash…) — fixtures, scaffolds, tools like `evals/tokens.py`, and the unit tests of the task-file and report scripts (`sh evals/tasks-script-test.sh`, `sh evals/report-script-test.sh`, `evals/tasks-script-linux.sh` for both under mawk/gawk/BusyBox in Docker). They do not constitute an application stack of the plugin.
 
 ## Task-file script <!-- keep -->
 
-`skills/tasks/scripts/tasks.sh` is the fallback of `vibe:tasks` when the native task system is absent: a POSIX `sh` + `awk` script (BWK awk on macOS, mawk, gawk, BusyBox) keeping `tasks.tsv` with the native model (ids never reused, `pending`/`in_progress`/`completed`/`deleted`, `blockedBy`, `owner`) and refusing what the rules forbid (two `in_progress`, `pending → completed`, open dependency). It locks with an atomic `mkdir` (`flock` does not exist on macOS), writes through a temp file + `mv`, passes values to awk via the environment (`awk -v` would interpret backslashes). The spec is `skills/tasks/references/model.md`; run `sh evals/tasks-script-test.sh` after any change to the script.
+`skills/tasks/scripts/tasks.sh` is the fallback of `vibe:tasks` when the native task system is absent: a POSIX `sh` + `awk` script (BWK awk on macOS, mawk, gawk, BusyBox) keeping `tasks.tsv` with the native model (ids never reused, `pending`/`in_progress`/`completed`/`deleted`, `blockedBy`, `owner`) and refusing what the rules forbid (two `in_progress`, `pending → completed`, open dependency). `abandon` deletes every `pending` task at once when a caller loops back to an earlier step (the skill's "Going back" section). It locks with an atomic `mkdir` (`flock` does not exist on macOS), writes through a temp file + `mv`, passes values to awk via the environment (`awk -v` would interpret backslashes). The spec is `skills/tasks/references/model.md`; run `sh evals/tasks-script-test.sh` after any change to the script.
+
+`skills/report/scripts/report.sh` follows the same constraints (POSIX `sh` + `awk`, temp file + `mv`) for the counters of `vibe:report`: `init <entry> <model> <yes|no>`, `incr <key> [n]`, `brick <name>`, `show`, `write <project root>`. The allowed entries and counter keys are the two lists at the top of the script and nowhere else: an unknown one is refused so every report stays comparable. `write` creates `.vibe/reports/` in the project with a `.gitignore` of `*`: a report never enters the project's history. Run `sh evals/report-script-test.sh` after any change; `evals/tasks-script-linux.sh` runs both test files under mawk, gawk and BusyBox.
 
 ## Review agents
 
@@ -170,7 +172,7 @@ Active agents for `/vibe:review` on this project:
 | `vibe:review-web-security` | ❌ | no exposed HTTP surface (neither static nor dynamic mode) |
 | `vibe:review-correctness` | ✅ | logic of the shell scripts and of the step sequences in the skills |
 | `vibe:review-comments` | ✅ | comments in the shell scripts and the Markdown definitions |
-| `vibe:review-signatures` | ✅ | option and argument shapes of `scripts/*.sh` and `skills/tasks/scripts/tasks.sh` |
+| `vibe:review-signatures` | ✅ | option and argument shapes of `scripts/*.sh`, `skills/tasks/scripts/tasks.sh` and `skills/report/scripts/report.sh` |
 | `vibe:review-coordination` | ✅ | the same rule written in a skill, its docs and the README with no guard |
 | `vibe:review-docs` | ✅ | `docs/`, `.vibe/` and the README must agree with each other |
 | `vibe:review-alternative-design` | ❌ | explicit opt-in only; no application code to remodel |

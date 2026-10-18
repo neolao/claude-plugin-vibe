@@ -36,8 +36,9 @@ This plan turns [the strategy](strategy/README.md) into work packages, starting 
 ### 1. Base: tasks and usage report
 
 - **`tasks`**: bulk abandon of `pending` tasks made stale by a return to a framing (`deleted`, one by one, never a `completed` one), new round tasks prefixed `Round <n> — `. Tested in `evals/tasks-script-test.sh`.
-- **`report`** (hidden skill, `user-invocable: false`): `init`, one call per event (brick called, round, question asked to the PO, findings per level and space, returns to a framing, fixes), `write` at the end. A POSIX `sh` + `awk` script, like `tasks.sh`, refuses an unknown counter so reports stay comparable. Output in `.vibe/reports/`, gitignored by `vibe:init`.
+- **`report`** (hidden skill, `user-invocable: false`): `init`, one call per event (brick called, round, question asked to the PO, findings per level and space, returns to a framing, fixes), `write` at the end. A POSIX `sh` + `awk` script, like `tasks.sh`, refuses an unknown counter so reports stay comparable. Output in `.vibe/reports/`, which carries its own `.gitignore` (no change to `vibe:init` needed).
 - **Done when:** the task script handles bulk abandon; a sample report passes a format check; both skills have a case at 1.00.
+- **Progress (2026-10-18):** written — `tasks` 2.1.0 (`abandon`, "Going back" section), `report` 1.0.0, both script tests green on the host, cases `tasks-goes-back-to-an-earlier-step` and `report-counts-then-writes` written, not run (both need Docker and a maintainer's go).
 
 ### 2. Transverse bricks
 

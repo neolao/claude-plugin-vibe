@@ -37,6 +37,11 @@ Each operation matches a native tool. Each entry gives the script call, then the
 - Script: `tasks.sh <file> update <id> [--status S] [--subject S] [--active-form A] [--description D] [--owner O] [--add-blocked-by 1,2] [--add-blocks 4,5]` → `ok #<id> <status>`.
 - By hand: edit the task's single line (`Edit`). `--add-blocks 4` applies to line `4`: add the task's id to its `blockedBy`. `deleted` also removes this id from the `blockedBy` of the other lines.
 
+### `abandon` — no native equivalent
+Used when a loop goes back to an earlier step (see "Going back" in `SKILL.md`): every `pending` task becomes stale at once.
+- Script: `tasks.sh <file> abandon` → one `ok #<id> deleted` line per task deleted, or `(nothing to abandon)`. `in_progress` and `completed` tasks are untouched; each deleted id is removed from the other lines' `blockedBy`.
+- By hand, and in native mode: one `deleted` transition per `pending` task (`TaskUpdate` or `Edit`), lowest id first.
+
 ### `list` ↔ `TaskList`
 - Script: `tasks.sh <file> list`.
 - By hand: reread the file and print the same summary, one line per non-deleted task:
