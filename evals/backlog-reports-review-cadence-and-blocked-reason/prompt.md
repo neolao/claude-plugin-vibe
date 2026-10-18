@@ -1,10 +1,11 @@
 ---
 name: backlog-reports-review-cadence-and-blocked-reason
 description: >-
-  vibe:backlog in list mode must report the recorded review date, count
-  exactly the 6 feat/fix commits since its hash (not the 3 chore ones), and
-  surface 002's own blocked reason plus how to put it back in play.
-tags: [backlog, list, cadence]
+  vibe:backlog in list mode must surface 002's own blocked reason plus how to
+  put it back in play, without editing anything. (The review-cadence hint this
+  case used to check was removed with the `/vibe:review` command; the fixture's
+  `.vibe/last-review.md` is now a legacy file the skill must ignore.)
+tags: [backlog, list, blocked]
 runs: 3
 max_turns: 15
 timeout_seconds: 300

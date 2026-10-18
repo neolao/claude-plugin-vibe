@@ -27,8 +27,8 @@ claude-plugin-vibe/
 
 ```mermaid
 flowchart LR
-    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>20 slash commands + tasks, publish (internal)"]
-    skills -- "/vibe:review fans out" --> agents["agents/review-*.md<br/>20 review agents"]
+    user([User]) -- "/vibe:*" --> skills["skills/*/SKILL.md<br/>slash commands + clarify, tasks, report, review, publish (internal)"]
+    skills -- "internal review of feature/fix fans out" --> agents["agents/review-*.md<br/>20 review agents + 3 control agents"]
     skills -- "/vibe:feature, /vibe:fix, /vibe:consult" --> experts["agents/expert-*.md<br/>9 domain experts"]
     skills -- "generate & read" --> vibe[".vibe/ context map<br/>(in the target project)"]
     manifests[".claude-plugin/*.json<br/>settings.json"] -- "register commands & hook" --> skills
@@ -59,7 +59,7 @@ Two skills extend the plugin above the single-repo level, for a project split ac
 
 ## Review agents (`agents/`)
 
-Each `agents/review-<dimension>.md` audits exactly one quality dimension (frontmatter: `name`, `description`, `tools`). The finding format, severity scale, and read-only rule are not repeated per agent: `/vibe:review` injects that shared contract into every agent prompt. It reads the activation table in the target project's `CLAUDE.md`, re-checks each activation condition against the project's current state, then runs the active agents in parallel. Overlapping checks are explicitly delegated: each check belongs to one owning agent, so the same issue is never reported from two angles.
+Each `agents/review-<dimension>.md` audits exactly one quality dimension (frontmatter: `name`, `description`, `tools`). The finding format, severity scale, and read-only rule are not repeated per agent: the internal `vibe:review` brick injects that shared contract into every agent prompt, returns the raw findings, and leaves judgement to `review-classifier` and fixes to the build workflow. It reads the activation table in the target project's `CLAUDE.md`, re-checks each activation condition against the project's current state, then runs the active agents in parallel. Overlapping checks are explicitly delegated: each check belongs to one owning agent, so the same issue is never reported from two angles.
 
 Agents are read-only by their `tools` frontmatter; four also get Bash: `review-tests` executes the project's real test suite, `review-dependencies` runs the stack's audit tool, `review-web-security` probes a locally-launched instance when its opt-in dynamic mode is enabled, and `review-comments` prints files with a comment's lines removed to judge the code without it. `review-architecture` also covers ports & adapters for projects that explicitly adopted them. Six dimensions were added in 2.2.0: `review-correctness` (real bugs, each with its triggering scenario), `review-comments`, `review-signatures` (the shape of arguments and of fields added to shared types), `review-coordination` (the same knowledge in two places with no guard), `review-docs` (Markdown docs against each other and the file system, never against the code) and the opt-in `review-alternative-design` (a named pattern proposed only when it measurably beats the code as written).
 

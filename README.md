@@ -118,7 +118,6 @@ Each command is a Claude Code slash command, with natural-language arguments whe
 | `/vibe:feature` | Implement a new feature using TDD, then update the changelog |
 | `/vibe:fix` | Fix a bug using TDD (reproduce first), then update the changelog |
 | `/vibe:auto` | Work the backlog autonomously — no human gates, resumes after any interruption, `--push` publishes |
-| `/vibe:review` | Run a multi-agent code quality review and auto-apply fixes |
 | `/vibe:verify` | Definition-of-Done check of a deliverable through three parallel control grids (scope, rigor, finish) |
 | `/vibe:rewrite` | Rework an existing text for clarity, defect by defect, with a meaning-preservation check |
 | `/vibe:debrief` | End-of-task retrospective turned into durable project memory |
@@ -131,11 +130,11 @@ Each command is a Claude Code slash command, with natural-language arguments whe
 | `/vibe:workspace-init` | Bootstrap/refresh a multi-repo workspace's hub repo and local workspace-root `CLAUDE.md` |
 | `/vibe:next-task` | Pick the next eligible task across a workspace (or the current repo), implement it, then push and release |
 
-Four internal skills are hidden from the `/` menu: `vibe:clarify` (the round-by-round interview, run by `backlog`, `init` and `workspace-init` on thin input, and twice by `feature`/`fix` — once to frame the need, once to frame the implementation, each looking in its own sources before asking you anything), `vibe:tasks` (task-list creation with a scratchpad fallback), `vibe:report` (statistics of a run, written locally under `.vibe/reports/`, never shared unless you choose to) and `vibe:publish` (push and release, used by `/vibe:auto --push` and `/vibe:next-task`).
+Five internal skills are hidden from the `/` menu: `vibe:review` (the review agents on a change, run inside every feature and fix), `vibe:clarify` (the round-by-round interview, run by `backlog`, `init` and `workspace-init` on thin input, and twice by `feature`/`fix` — once to frame the need, once to frame the implementation, each looking in its own sources before asking you anything), `vibe:tasks` (task-list creation with a scratchpad fallback), `vibe:report` (statistics of a run, written locally under `.vibe/reports/`, never shared unless you choose to) and `vibe:publish` (push and release, used by `/vibe:auto --push` and `/vibe:next-task`).
 
 ## Review agents
 
-`/vibe:review` orchestrates these specialized agents in parallel, each owning one dimension:
+Every feature and fix runs these specialized agents in parallel on its own changes, each owning one dimension, before it ships:
 
 - `review-alternative-design` (opt-in), `review-antipatterns`, `review-architecture` (also ports & adapters, for projects that adopted them), `review-comments`, `review-coordination`, `review-correctness`, `review-ddd`, `review-dependencies`, `review-docs`, `review-hygiene`, `review-naming`, `review-overengineering`, `review-performance`, `review-robustness`, `review-security`, `review-signatures`, `review-simplicity`, `review-solid`, `review-tests`, `review-web-security` (with an opt-in dynamic verification mode against a locally-run instance)
 
@@ -162,7 +161,7 @@ The plugin ships a `subagentStatusLine` (`settings.json` + `scripts/subagent-sta
 1. `/vibe:init` once, to set up `CLAUDE.md` and `.vibe/`
 2. `/vibe:backlog "some feature idea"` to queue work
 3. `/vibe:feature 001` (or `/vibe:fix "bug description"`) to implement, TDD-first, with the matching experts weighing in on the plan; or `/vibe:auto` to work the whole backlog without supervision
-4. `/vibe:review` periodically to catch quality issues; `/vibe:verify` on any deliverable produced outside that flow
+4. `/vibe:verify` on any deliverable produced outside that flow
 5. `/vibe:release patch|minor|major` to ship a version
 
 `/vibe:init` and `/vibe:sync` generate `CLAUDE.md` and the `.vibe/` context map inside *your* project — both are meant to be committed with it, so every session (and every teammate) starts from the same conventions and codebase map.

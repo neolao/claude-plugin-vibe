@@ -1,6 +1,6 @@
 ---
 name: rewrite
-description: Rework an existing text for clarity by named rules — Williams, Clark & Haviland's given-new contract, Gibson's dependency locality, ISO 24495-1, Ousterhout for code comments — defect-by-defect rewrite, meaning-preservation check by a sub-agent, writes only after validation; the output is always in the source text's language. Triggers on "rephrase", "make this clearer", "this is unreadable", "too heavy", "improve the writing", "proofread this document", "simplify this paragraph". Not for writing new text, translating, spelling-only fixes, or reviewing code (that is /vibe:review).
+description: Rework an existing text for clarity by named rules — Williams, Clark & Haviland's given-new contract, Gibson's dependency locality, ISO 24495-1, Ousterhout for code comments — defect-by-defect rewrite, meaning-preservation check by a sub-agent, writes only after validation; the output is always in the source text's language. Triggers on "rephrase", "make this clearer", "this is unreadable", "too heavy", "improve the writing", "proofread this document", "simplify this paragraph". Not for writing new text, translating, spelling-only fixes, or reviewing code (the build workflow's internal review does that).
 argument-hint: "[mode: direct] [sentence, paragraph, file path or folder — empty uses the text under discussion]"
 version: 1.1.0
 model: claude-sonnet-5-5
@@ -14,7 +14,7 @@ A shorter sentence is not a clearer sentence. Flesch, Gunning Fog and SMOG score
 ## When to run
 On a text **that already exists** and that the user wants reworked. Not on a text to be produced: there, nothing can be diagnosed, and these principles belong to revision, not drafting — Williams is explicit, thinking about them while drafting prevents finishing.
 
-Do not trigger for a translation, a spelling or grammar fix alone, or a code review (the code itself is never touched here — see the matching invariant; code review is `/vibe:review`).
+Do not trigger for a translation, a spelling or grammar fix alone, or a code review (the code itself is never touched here — see the matching invariant; code review belongs to the build workflow's internal review).
 
 ## Scope & language
 The target is one of five kinds, and the kind changes the protocol:

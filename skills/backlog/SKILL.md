@@ -33,7 +33,7 @@ Otherwise, for each top-level file (sorted): `status`, title (first `# ` heading
 | 002 | Export as CSV | `todo` | — |
 | 003 | Dark mode | `todo` | ⚠ 002 |
 
-Then: "N item(s) done — see `.vibe/backlog/done/`." if `done/` has files; for each `blocked` item, its number and `## Blocked` reason, plus that running `/vibe:feature NNN` (or `/vibe:fix NNN`) puts it back in play; for each `(missing)` reference, that the item stays ineligible for `/vibe:auto` until the number is removed from its `depends_on`; and the review cadence — if `.vibe/last-review.md` exists, its date and the number of `feat:`/`fix:` commits since its hash, otherwise "No review recorded yet — running `/vibe:review` will establish the baseline." Stop.
+Then: "N item(s) done — see `.vibe/backlog/done/`." if `done/` has files; for each `blocked` item, its number and `## Blocked` reason, plus that running `/vibe:feature NNN` (or `/vibe:fix NNN`) puts it back in play; for each `(missing)` reference, that the item stays ineligible for `/vibe:auto` until the number is removed from its `depends_on`. Stop.
 
 ## Step 3 — Remove
 

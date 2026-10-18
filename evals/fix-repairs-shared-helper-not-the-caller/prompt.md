@@ -7,8 +7,8 @@ description: >-
   `AUTO-RESULT: done`. Requires `--allow-tools Bash,Write,Edit` to run.
 tags: [fix, tdd, auto, root-cause]
 runs: 1
-max_turns: 80
-timeout_seconds: 900
+max_turns: 140
+timeout_seconds: 1800
 allowed_tools: [Read, Glob, Grep, Skill, Agent, Bash, Write, Edit, TaskCreate, TaskUpdate]
 ---
 

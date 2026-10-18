@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Every feature and fix now reviews its own change before shipping: the review agents and a request check run on the change, a classifier re-checks each finding against the code, and the work goes back to the drawing board — to what was asked, or to how it was done — until only minor points remain. You see the result, never the findings.
+- The report of a feature or fix is checked before you read it: every claim (tests pass, the change works) is verified against the commands actually run, then the text is made readable.
+- `/vibe:review` is no longer a command: the review runs inside every feature and fix. The review-reminder after several changes is gone with it.
 - `/vibe:clarify` is no longer a command: the interview runs on its own when a backlog item, a new project or a workspace is too thin, and inside every feature or fix.
 
 ### Added

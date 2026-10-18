@@ -37,7 +37,7 @@ Check the limit first, on every pass — including right after a verdict: if it 
 
 Eligible: a top-level `.vibe/backlog/*.md` with `status: todo`, every `depends_on` number resolving to a `done` item, and not yet processed in this run. Rank eligible items by:
 1. Number of other `todo` items in this repo whose `depends_on` lists it — work others wait on comes first.
-2. Defects before features: an item whose title or description uses defect vocabulary (bug, crash, error, regression, "doesn't work", "broken") or that came from a `/vibe:review` finding is a fix; anything else a feature.
+2. Defects before features: an item whose title or description uses defect vocabulary (bug, crash, error, regression, "doesn't work", "broken") or that records a defect found by the internal review is a fix; anything else a feature.
 3. Lowest number.
 
 Take the top item; its fix/feature classification is recorded in the journal. No eligible item → Step 5.
@@ -66,7 +66,7 @@ No eligible item, the limit reached, or an `aborted` verdict (keep the reason fo
 
 Set `status: idle` (`stopped` after an `aborted` verdict), journal kept, clear `current`, commit `chore: auto run — N items (M done, K blocked)` — unless the run is new and started no item: then write and commit nothing, so a `/loop` firing on a drained backlog adds no commit, and the report only says why nothing was eligible (empty backlog, every item blocked or waiting on a dependency). If `--push` was given, invoke the `vibe:publish` skill now and include its result below.
 
-Report, short and plain: a table `# | Type | Verdict | Commit`; each blocked item with its one-line reason; why the run stopped; the publish result if any; if `.vibe/last-review.md` exists and 5 or more `feat:`/`fix:` commits landed since its hash, "💡 N changes since the last review — consider running `/vibe:review`."; if eligible items remain, that `/loop 45m /vibe:auto` continues unattended.
+Report, short and plain: a table `# | Type | Verdict | Commit`; each blocked item with its one-line reason; why the run stopped; the publish result if any; if eligible items remain, that `/loop 45m /vibe:auto` continues unattended.
 
 If the run aborted, or the publish result includes a CI failure, lead the whole report with it (before the item table) and drop the `/loop` continuation suggestion — a human needs to look before another run ships more items on top of a broken build or deploy.
 

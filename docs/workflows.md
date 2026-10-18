@@ -11,13 +11,19 @@ The lifecycles implemented by the `/vibe:*` commands. Static structure is covere
 ```mermaid
 flowchart TD
     A["/vibe:feature 'description' or NNN"] --> B["Terminology check against .vibe/glossary.md<br/>+ duplicate check (backlog, modules)"]
-    B --> C["Plan drafted, then up to 3 matching<br/>agents/expert-*.md consulted in parallel"]
-    C --> C2["Plan — non-obvious decisions recorded<br/>as ADRs in .vibe/decisions/NNN-slug.md"]
-    C2 --> D["TDD: failing test → implementation → green<br/>(self-checked against tautological tests,<br/>experts answer on-demand questions)"]
+    B --> N["Frame the need — vibe:clarify mode: need<br/>(brief, backlog item, .vibe/, memory first)"]
+    N --> C["Up to 3 matching agents/expert-*.md<br/>consulted in parallel"]
+    C --> I["Frame the implementation — vibe:clarify<br/>mode: implementation (code, tests, CLAUDE.md first)"]
+    I --> C2["Plan approved — non-obvious decisions recorded<br/>as ADRs in .vibe/decisions/NNN-slug.md"]
+    C2 --> D["TDD: failing test → implementation → green<br/>(self-checked against tautological tests)"]
     D --> E["run: exercise the change for real<br/>(nominal path + edge/error path)"]
-    E --> F["CHANGELOG.md under Unreleased"]
+    E --> R["Internal review: review agents + requirements-reviewer<br/>→ review-classifier (level, space)"]
+    R -- "need finding" --> N
+    R -- "implementation finding" --> I
+    R -- "only low left" --> F["CHANGELOG.md under Unreleased"]
     F --> G["/vibe:docs + /vibe:sync refresh"]
     G --> H["Commit feat:/fix: — a turn never ends<br/>with uncommitted files (wip: on early exit)"]
+    H --> K["Final checks: claim-verifier on the report,<br/>vibe:rewrite direct; then vibe:report, vibe:debrief"]
 ```
 
 `run` launches the app itself — finding or establishing how to start the project — so no separate fallback skill is needed if launch mechanics are the blocker; after 3 failed attempts the skill escalates directly.
@@ -124,9 +130,18 @@ flowchart LR
 
 Escalation entries are read back at the start of every `feature`/`fix` run, so a dead end hit in one session informs the next; resolving work flips the entry to `resolved`. In `--auto` mode there is no one to escalate to: the entry is still written, the partial work is still committed as `wip:`, and the item is set to `blocked` so the autonomous run can move on.
 
+## The review loop
+
+Every feature and fix reviews itself before shipping; the Product Owner never reads a finding. Once every sub-task is green, the workflow launches the `vibe:review` brick on the changed files (the active `review-*` agents, raw findings back) together with `requirements-reviewer` (the deliverable against the need's decisions), then hands every raw finding to `review-classifier`. The classifier re-checks each against the source it cites, drops false positives, merges duplicates, and gives a level and a space:
+
+- a `high`/`medium` finding in the `need` space sends the run back to the need framing — the request was misread or incomplete;
+- a `high`/`medium` finding in the `implementation` space sends it back to the implementation framing, then through Red → Refactor for the affected sub-tasks;
+- only `low` left ends the loop; low findings are counted in the usage report, not fixed in this run.
+
+Each return is a round: the task list is rebuilt through `vibe:tasks`' "Going back" (`Round <n> — `), the usage report counts `rounds` and `returns.*`. The loop has no fixed cap; a finding that survives the round meant to fix it is a failed attempt, three of them escalate. What only the Product Owner can settle comes back from the classifier as a doubt and is asked in plain words (in `--auto`, its recommended option is taken as an assumption). After the commit, `claim-verifier` checks the report's claims against the commands actually run, and `vibe:rewrite` in direct mode makes it readable.
+
 ## Feedback loops around review
 
-- Each `/vibe:review` run rewrites `.vibe/last-review.md`; once 5+ `feat:`/`fix:` commits accumulate since that marker, feature/fix reports and the backlog list surface a "review is due" hint.
 - At the start of every review, the agent activation table in `CLAUDE.md` is re-checked against the project's actual shape: audits whose surface appeared are switched on, vanished surfaces are switched off, deliberate opt-outs are never overridden — every change is reported.
 - Pre-existing test failures discovered during a run are offered as backlog items instead of being silently ignored.
 

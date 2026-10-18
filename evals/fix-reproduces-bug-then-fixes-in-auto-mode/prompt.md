@@ -9,8 +9,8 @@ description: >-
   sync, commit) and is expensive: validate alone with `--runs 1` first.
 tags: [fix, tdd, auto]
 runs: 1
-max_turns: 80
-timeout_seconds: 900
+max_turns: 140
+timeout_seconds: 1800
 allowed_tools: [Read, Glob, Grep, Skill, Agent, Bash, Write, Edit, TaskCreate, TaskUpdate]
 ---
 

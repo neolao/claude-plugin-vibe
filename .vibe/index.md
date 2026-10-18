@@ -3,7 +3,7 @@
 
 ## Modules
 - [`modules/skills.md`](modules/skills.md) — the `/vibe:*` slash-command definitions driving the workflow (20 commands), plus two internal skills
-- [`modules/agents.md`](modules/agents.md) — specialized sub-agents: `review-*` used by `/vibe:review`, `expert-*` consulted by `/vibe:feature`/`/vibe:fix`
+- [`modules/agents.md`](modules/agents.md) — specialized sub-agents: `review-*` run by the internal review of `feature`/`fix`, `expert-*` consulted by `/vibe:feature`/`/vibe:fix`
 - [`modules/scripts.md`](modules/scripts.md) — the shell script rendering the subagent status line
 - [`modules/plugin-manifest.md`](modules/plugin-manifest.md) — plugin/marketplace/settings manifests
 
@@ -32,7 +32,7 @@
 - `--auto` resolves every human gate by a fixed table and ends with an `AUTO-RESULT:` line — the only contract `/vibe:auto` relies on.
 - `/vibe:auto` runs one item per sub-agent, strictly sequentially, and commits `.vibe/auto-state.md` at every item boundary so a run resumes; restarts come from `/loop`.
 - `/vibe:auto` ranks eligible items by unblock count, then defects first, then lowest number; `/vibe:next-task` delegates its auto mode to `/vibe:auto --push`.
-- `/vibe:review` records each run in `.vibe/last-review.md`; feature, fix, backlog, and auto surface a cadence hint after 5 unreviewed changes.
+- Every `feature`/`fix` run reviews itself: `vibe:review` (brick) + `requirements-reviewer` → `review-classifier` → back to the need or the implementation framing, until only low findings remain; then `claim-verifier` on the report and `rewrite` direct. No `/vibe:review` command, no `last-review.md`, no cadence hint.
 - `.vibe/glossary.md` is code-derived and self-cleaning through `_Sources:_` lines.
 - `/vibe:workspace-init` and `/vibe:next-task` work above the single-repo level; a hub repo is recognized by `.git/` + `repos.md`; cross-repo blockers are prose, never `depends_on`.
 - `/vibe:changelog` only fills `[Unreleased]`; `/vibe:release` cuts the version section; only `vibe:publish` pushes.

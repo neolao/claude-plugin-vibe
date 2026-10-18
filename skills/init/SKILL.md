@@ -80,7 +80,7 @@ The user is the **Product Owner only**: they describe requirements and evaluate 
 
 ## Review agents
 
-Agents active for `/vibe:review` on this project:
+Review agents active on this project (run by the internal review of every feature and fix):
 
 | Agent | Active | Reason |
 |---|---|---|

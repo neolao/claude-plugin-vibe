@@ -6,7 +6,7 @@ description: >
   that stopped being true must flip and have its reason rewritten; a row whose
   reason records a deliberate user choice must never be overridden. The table
   here activates two agents only, so the case stays cheap. Needs
-  --allow-tools Bash,Write,Edit to run.
+  --allow-tools Bash,Edit to run.
 context:
   scaffold_script: fixture.sh
   add_dirs: [fixtures]

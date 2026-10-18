@@ -8,7 +8,7 @@ model: claude-sonnet-5-5
 
 # /vibe:consult — Expert Opinion
 
-Get a reasoned, outside opinion from one of the plugin's `vibe:expert-*` agents on **one** precise point: where to put a boundary, which pattern, which HTTP shape, which schema, how it should run in production. An opinion is worth its question and its context: without a precise point and real constraints it produces only generalities. Not for reviewing a diff (`/vibe:review`), attacking a decision already settled (`/vibe:challenge`), or a local detail with no structural stake — answer those directly.
+Get a reasoned, outside opinion from one of the plugin's `vibe:expert-*` agents on **one** precise point: where to put a boundary, which pattern, which HTTP shape, which schema, how it should run in production. An opinion is worth its question and its context: without a precise point and real constraints it produces only generalities. Not for reviewing a diff (the build workflow's internal review), attacking a decision already settled (`/vibe:challenge`), or a local detail with no structural stake — answer those directly.
 
 Everything said to the user is written in the language the conversation is being conducted in — never a fixed one.
 

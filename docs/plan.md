@@ -64,6 +64,7 @@ This plan turns [the strategy](strategy/README.md) into work packages, starting 
 - `review` becomes a hidden brick: no fixes, no `.vibe/last-review.md`, no cadence hint; the orchestrator owns the commit.
 - `feature` and `fix` SKILL.md only list their specifics, as today.
 - **Done when:** the `feature-*` and `fix-*` cases are green with a trace showing one review round and the classifier call; a new case with a planted problem-space defect shows a return to `need`; `auto` and `next-task` cases stay green.
+- **Progress (2026-10-18):** written — `workflow.md` reshaped (need framing → experts → implementation framing → plan → TDD → internal review → route → CHANGELOG/docs/sync/commit → final checks → report → `vibe:report write` → `debrief`), `review` 2.0.0 as a hidden brick (`## REVIEW …` contract, no fix, no commit, no `last-review.md`), `feature`/`fix` 2.0.0, cadence hints removed from `backlog` and `auto`. Cases: `feature-returns-to-need-on-problem-space-finding` (accepts the rule caught at framing or at review — the fixture cannot force the review path), three `review-*` cases rewritten for the brick, `feature-*`/`fix-*` happy paths get classifier/requirements/report graders and `max_turns: 140`; `backlog-reports-review-cadence-and-blocked-reason` loses its two cadence graders. Left for package 5: `backlog`'s "from review" step (dead: no review report exists any more), README usage snippet and website. Not run.
 
 ### 5. Surface
 
