@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-10-21
+
+### Added
+
+- `/vibe:audit` audits an existing codebase: the active review agents run on the whole repo (or a path you give), the findings are re-checked and classified, and you pick which ones become backlog items, grouped by cause. It fixes nothing and writes nothing before you choose.
+- On a project that already has code, `/vibe:init` now offers to run a first audit at the end.
+
 ## [3.0.0] - 2026-10-18
 
 ### Added
@@ -324,7 +331,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A color-coded subagent status line shown in the agent panel during multi-agent reviews
 - Installation instructions and an MIT license
 
-[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/neolao/claude-plugin-vibe/compare/v3.1.0...HEAD
+[3.1.0]: https://github.com/neolao/claude-plugin-vibe/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/neolao/claude-plugin-vibe/compare/v2.2.0...v3.0.0
 [2.2.0]: https://github.com/neolao/claude-plugin-vibe/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/neolao/claude-plugin-vibe/compare/v2.0.0...v2.1.0
