@@ -9,6 +9,7 @@
   - `remove NNN` needs confirmation; done items can't be removed. Commits its own changes.
 - `vibe:clarify` (`skills/clarify/SKILL.md`) — internal: round-by-round interview ending with a `CLARIFY-RESULT:` line parsed by `backlog`, `init`, `workspace-init`; `mode: need` / `mode: implementation` for the build workflow, each with its own sources read before asking, sourced self-answers (`(source: …)`), `partial — spike: <question>` when an answer must be searched or tried.
   - Every settled decision carries a priority (`🔒 MUST` / `⚖️ SHOULD` / `✨ NICE`, asked, never defaulted); the tree persists in `<scratchpad>/clarify-tree.md`; a contradicting answer reopens a settled decision.
+- `/vibe:audit` (`skills/audit/SKILL.md`) — audits the whole codebase or a path: `vibe:review` → `findings-classifier` → report by level → backlog items grouped by cause, after the user picks; fixes nothing; closes with `🔎 Audit — …`. Offered by `init` on a project that already had code.
 - `/vibe:challenge` (`skills/challenge/SKILL.md`) — one devil's-advocate sub-agent against a settled decision; every objection reported with an opinion; closes with `⚔️ Challenge — …`.
 - `/vibe:consult` (`skills/consult/SKILL.md`) — one precise question to one `vibe:expert-*` agent (architecture by default); closes with `🏛️ Expert <domain> — …`.
 - `/vibe:feature` (`skills/feature/SKILL.md`) — implements a feature with TDD; free-form brief or backlog `NNN`.

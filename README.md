@@ -69,6 +69,7 @@ Each command is a Claude Code slash command, with natural-language arguments whe
 
 ```
 /vibe:init
+/vibe:audit
 /vibe:challenge "we picked PostgreSQL over SQLite for the desktop app"
 /vibe:consult architecture "where should the export pipeline live"
 /vibe:backlog "Add a dark mode toggle to the settings page"
@@ -95,6 +96,7 @@ Each command is a Claude Code slash command, with natural-language arguments whe
 - `/vibe:backlog` with no argument lists pending items. `remove NNN` deletes an active item after confirmation. A description too thin to act on triggers a round-by-round interview first; so does a vague project idea in `/vibe:init` or a first `/vibe:workspace-init`.
 - `/vibe:feature` and `/vibe:fix` take a description or a backlog number; the item is closed automatically once shipped. Each run frames what is needed, then how to build it, asking you only what no source answers; builds test-first; reviews its own change and goes back to the drawing board until only minor points remain; checks its report before you read it. You see the plan, the questions, and the result — never a finding.
 - `/vibe:auto` works the backlog with no approval step: with no argument until nothing is eligible, with a number for that many items. Run it again after an interruption to resume. `--push` publishes at the end. Pair it with `/loop 45m /vibe:auto` to keep going unattended, or `/loop 30m /vibe:auto 1` to space items apart.
+- `/vibe:audit` reviews the whole codebase (or a path) with the active review agents, reports the classified findings, then creates backlog items for the ones you pick; it fixes nothing. `/vibe:init` offers it on a project that already has code.
 - `/vibe:challenge` attacks a decision already settled (one devil's-advocate pass, every objection reported with an opinion); `/vibe:consult [domain] "question"` asks one expert a precise question.
 - `/vibe:debrief` asks one to three retrospective questions and stores the lessons as project memory; `/vibe:learn` turns an "always / never" correction into a global rule after confirmation.
 - `/vibe:changelog` brings `[Unreleased]` up to date from git history. `/vibe:release` takes a version or `major`/`minor`/`patch`, or suggests the bump from the changelog when run without an argument.
@@ -107,6 +109,7 @@ Each command is a Claude Code slash command, with natural-language arguments whe
 |---|---|
 | `/vibe:init` | Initialize or regenerate the project's `CLAUDE.md` and `README.md` for vibe coding |
 | `/vibe:backlog` | List, add, or remove feature backlog items (`.vibe/backlog/`) |
+| `/vibe:audit` | Audit the existing codebase — classified findings, then backlog items for the ones you pick |
 | `/vibe:challenge` | Devil's advocate on a settled structuring decision — one adversarial pass, every objection reported |
 | `/vibe:consult` | Ask one of the plugin's experts a precise question (architecture by default) |
 | `/vibe:feature` | Implement a new feature using TDD, then update the changelog |

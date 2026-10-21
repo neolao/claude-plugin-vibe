@@ -2,7 +2,7 @@
 name: init
 description: Initialize or regenerate the project CLAUDE.md and README.md for vibe coding (TDD-first, no manual testing)
 argument-hint: "[optional: project description]"
-version: 1.0.0
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
@@ -102,3 +102,7 @@ Invoke the `vibe:docs` skill: it creates a README with managed sections when the
 ## Step 7 — Report
 
 Short, plain sentences: detected stack and type; project language; what was installed or configured; lint and test status; one sentence on what `CLAUDE.md` now enforces; README status (created / sections added / up to date). No `CLAUDE.md` dump unless asked.
+
+## Step 8 — First audit
+
+Only when the project already had code before this run (not for a new or empty one): ask "Run a first audit of the existing code now? (`/vibe:audit`)". Yes → invoke the `vibe:audit` skill; no → stop.

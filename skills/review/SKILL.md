@@ -1,9 +1,9 @@
 ---
 name: review
-description: Runs the project's active review agents on a scope and returns their raw findings — one owner per dimension, the shared finding contract injected into every prompt — without judging, fixing or committing anything. Invoked by the build workflow (`vibe:feature`, `vibe:fix`) as its internal review step, never directly by users.
+description: Runs the project's active review agents on a scope and returns their raw findings — one owner per dimension, the shared finding contract injected into every prompt — without judging, fixing or committing anything. Invoked by the build workflow (`vibe:feature`, `vibe:fix`) as its internal review step and by `vibe:audit`, never directly by users.
 argument-hint: "[mode: internal] <changed files, space-separated — or a path to review, empty for the full codebase>"
 user-invocable: false
-version: 2.1.0
+version: 2.1.1
 model: claude-sonnet-5-5
 ---
 
