@@ -3,13 +3,13 @@ name: publish
 description: Pushes the current repo's commits, cuts a release when the changelog warrants one, pushes the tag, and creates a forge release when possible. Invoked internally by vibe:auto (--push) and vibe:next-task — the only place in the plugin that pushes.
 argument-hint: "(no arguments — operates on the current repo)"
 user-invocable: false
-version: 1.0.0
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
 # vibe:publish — Push and Release
 
-Runs unattended, in the current repo, after work has been committed locally. Nothing here asks the user anything. Print one status line per transition: `✓ pushed` / `⚠ push failed — <reason>`, `✓ vX.Y.Z tagged, pushed` / `⚠ release skipped — <reason>`, `✓ CI green` / `⚠ CI still running after 600s — check <URL>` / `⚠ CI failed — <workflow> — <URL>`.
+Runs unattended, in the current repo, after work has been committed locally. Nothing here asks the user anything, and neither does a skill invoked from here: when a nested skill reaches a point where it would ask, answer in its place and go on in the same turn — the turn never ends on a question. `vibe:release` never asks, its bump is explicit (Step 2); `vibe:docs`, which `vibe:release` runs when `docs/` exists, asks which sections to manage on a README without `vibe:` markers — the answer is none: the README stays as it is, `docs/` is still refreshed. Any other question gets the option that changes nothing beyond what the step already does. Every answer given this way is listed in Step 5. Print one status line per transition: `✓ pushed` / `⚠ push failed — <reason>`, `✓ vX.Y.Z tagged, pushed` / `⚠ release skipped — <reason>`, `✓ CI green` / `⚠ CI still running after 600s — check <URL>` / `⚠ CI failed — <workflow> — <URL>`.
 
 ## Step 1 — Push commits
 
@@ -43,4 +43,4 @@ If a version was tagged, `gh` is available and authenticated, and `origin` is a 
 
 ## Step 5 — Result
 
-Return, for the caller's report: push result (branch and commit range, or the exact reason it failed); release result (version tagged and pushed, "no release needed", or why it was skipped, naming the self-heal item and its outcome if one ran); CI result (green, still running past the bound with its URL, failed with workflow/URL/reason, or not observable); forge release (created, skipped, not applicable); any blocker needing the user's attention — **a CI failure is such a blocker and the caller must lead its report with it**, not fold it into the push/release summary.
+Return, for the caller's report: push result (branch and commit range, or the exact reason it failed); release result (version tagged and pushed, "no release needed", or why it was skipped, naming the self-heal item and its outcome if one ran); CI result (green, still running past the bound with its URL, failed with workflow/URL/reason, or not observable); forge release (created, skipped, not applicable); each answer given in a nested skill's place, if any; any blocker needing the user's attention — **a CI failure is such a blocker and the caller must lead its report with it**, not fold it into the push/release summary.
