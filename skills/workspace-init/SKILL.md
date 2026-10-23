@@ -25,7 +25,7 @@ Run `git rev-parse --show-toplevel` in cwd — a subdirectory of a repo has no `
 
 Prefer the pointer: the `## Hub repo` line of a workspace-root `CLAUDE.md` from a previous run — valid if that directory still has the marker. Otherwise scan cwd's direct subdirectories for the marker.
 
-Not found → first bootstrap. `AskUserQuestion` for the hub directory name (pre-fill `$ARGUMENTS`, else suggest a neutral name such as "roadmap") and an optional Git remote; `mkdir` + `git init` (+ `git remote add origin`), or `git init` in place if the directory exists without `.git/`. Then invoke the `vibe:clarify` skill with "the purpose of this new multi-repo workspace — why these repos belong together and what it's meant to achieve": `settled`/`partial` → its `### Synthesis` is the workspace vision used in Step 5; `abandoned` → no vision paragraph.
+Not found → first bootstrap. The hub directory name is `$ARGUMENTS` when given — do not ask it again — otherwise `AskUserQuestion` for it, suggesting a neutral name such as "roadmap"; ask for an optional Git remote either way; `mkdir` + `git init` (+ `git remote add origin`), or `git init` in place if the directory exists without `.git/`. Then invoke the `vibe:clarify` skill with "the purpose of this new multi-repo workspace — why these repos belong together and what it's meant to achieve": `settled`/`partial` → its `### Synthesis` is the workspace vision used in Step 5; `abandoned` → no vision paragraph.
 
 ## Step 3 — Task list
 
