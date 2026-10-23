@@ -8,16 +8,16 @@ model: claude-sonnet-5-5
 
 # /vibe:next-task — Cross-Repo Task Runner
 
-Picks the next eligible piece of work, hands it to `/vibe:feature`/`/vibe:fix` (or to `/vibe:auto` in auto mode), then pushes and releases through `vibe:publish`. Two scopes, chosen automatically:
+Picks the next eligible piece of work, hands it to `/vibe:feature`/`/vibe:fix` (with `--auto` in auto mode), then pushes and releases through `vibe:publish`. Two scopes, chosen automatically:
 - **Workspace scope** — a hub repo (see `/vibe:workspace-init`) is detected: candidates come from every `active` repo in `repos.md`, cross-repo blockers and priorities are resolved, and downstream unblocks are checked after publishing.
-- **Mono-repo scope** — no workspace, but the current directory has `.vibe/backlog/`: pick in this repo, then publish — what `/vibe:auto` alone does not do.
+- **Mono-repo scope** — no workspace, but the current directory has `.vibe/backlog/`: pick in this repo, then publish — like `/vibe:auto 1 --push`, but with a confirmation and the build skill's normal human gates outside auto mode.
 
-**Only Step 8 talks to the user.** Every nested skill (`vibe:feature`, `vibe:fix`, `vibe:auto`, `vibe:publish`, and what they pull in) ends with its own report, often looking like a final answer. Here it is intermediate data: capture it and continue to the next step in the same turn.
+**Only Step 8 talks to the user.** Every nested skill (`vibe:feature`, `vibe:fix`, `vibe:publish`, and what they pull in) ends with its own report, often looking like a final answer. Here it is intermediate data: capture it and continue to the next step in the same turn.
 
 ## Step 1 — Parse `$ARGUMENTS`
 
 - `NNN` alone (mono-repo) or `NNN in <repo>` (workspace): **forced pick** — read that item; found → Step 6, not found → report and stop.
-- `auto [N]`: **auto mode** — pick normally (Steps 2–5), skip confirmation, run the loop in the picked repo bounded by `N`. Meant for `/loop 1h /vibe:next-task auto 1`.
+- `auto [N]`: **auto mode** — pick normally (Steps 2–5), skip confirmation, hand off up to `N` items (empty = until nothing is eligible), each picked afresh after the previous verdict. Unattended, meant for `/loop 1h /vibe:next-task auto 1`: nothing asks a question in this mode — the stops of Steps 1, 2 and 5 are reports, the build skills run with `--auto`, and `vibe:publish` answers nested questions in its place — so the turn never ends waiting for an answer.
 - Empty: **normal mode** — pick, confirm, hand off.
 
 ## Step 2 — Determine scope
@@ -53,12 +53,12 @@ Skipped in auto mode. Show the pick (repo, number, title, one-paragraph reasonin
 
 ## Step 7 — Hand off, publish, verify
 
-Record the starting directory (to return to it in Step 8), then move into the picked repo.
+Record the starting directory (to return to it in Step 8), then move into the picked repo. Classify the item: defect vocabulary in its title or description (bug, crash, error, regression, "doesn't work", "broken") → `vibe:fix`, otherwise `vibe:feature`.
 
-- **Auto mode**: invoke `vibe:auto` with `N --push` (or `--push` alone when unbounded) — it selects and ranks eligible items exactly as this skill would, runs them with `--auto`, and publishes at the end.
-- **Normal mode / forced pick**: classify the item (defect vocabulary → fix, otherwise feature) and invoke `vibe:feature NNN` or `vibe:fix NNN` with its normal human gates. Whatever it reports — done, plan rejected, early exit — continue: invoke `vibe:publish` so that everything committed locally, including a `wip:` commit, reaches the remote.
+- **Normal mode / forced pick**: invoke `vibe:feature NNN` or `vibe:fix NNN` with its normal human gates. Whatever it reports — done, plan rejected, early exit — continue: invoke `vibe:publish` so that everything committed locally, including a `wip:` commit, reaches the remote.
+- **Auto mode**: the pick is handed to the build skill itself, never to `vibe:auto` — it ranks within one repo and knows nothing of the cross-repo blockers of Step 4, so it could start an item this skill holds back. Invoke `vibe:feature NNN --auto` or `vibe:fix NNN --auto` and read its `AUTO-RESULT:` line; without a usable line, the item under `done/` is `done`, `status: blocked` is `blocked`, anything else stops the run and is reported as an item left mid-way. `done` or `blocked` with items left under `N` → run Steps 2–5 again (the item just shipped may have unblocked others) and hand off the next pick, one at a time, moving into its repo; `aborted`, or nothing eligible → stop handing off. Then invoke `vibe:publish` in every repo that received a commit, one after the other.
 
-Then, **workspace scope only**, re-check downstream: for every other active repo, any item or `CLAUDE.md` passage waiting on this repo or item. Apply the done-vs-published distinction — a version-phrased wait is resolved only if a tag was actually pushed; if nothing was released and a downstream item needs a published version, it is still blocked, say so. List newly unblocked items by repo, number, title.
+Then, **workspace scope only**, re-check downstream: for every other active repo, any item or `CLAUDE.md` passage waiting on a repo or item shipped in this run. Apply the done-vs-published distinction — a version-phrased wait is resolved only if a tag was actually pushed; if nothing was released and a downstream item needs a published version, it is still blocked, say so. List newly unblocked items by repo, number, title.
 
 ## Step 8 — Report
 
