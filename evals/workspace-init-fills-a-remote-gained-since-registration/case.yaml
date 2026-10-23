@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: workspace-init-fills-a-remote-gained-since-registration
+description: >
+  Precision side of workspace-init-keeps-a-hand-made-registry-layout:
+  leaving a registry as found does not mean freezing a fact that
+  changed. `orders-api` was registered with `—` as Remote and has an
+  `origin` now: the refresh fills that cell from `git remote get-url
+  origin`, while the row's status and role, the other row (its human
+  `planned` status although it has `.vibe/backlog/`, its `—` Remote
+  since it has no origin) and the naming convention stay as written.
+  Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

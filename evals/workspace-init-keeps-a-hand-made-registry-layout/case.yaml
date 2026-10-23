@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: workspace-init-keeps-a-hand-made-registry-layout
+description: >
+  vibe:workspace-init refreshing a hub whose `repos.md` was laid out by
+  hand: five columns (`Path` and `Owner` on top of the template's), a
+  written naming convention and an extra `## Ownership` section. The new
+  sibling `orders-web` must be added as a row in those columns, and
+  everything else — header row, existing row, both sections — must be
+  left as found, not rewritten to the four-column template. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
