@@ -30,7 +30,7 @@ Invoke the `vibe:changelog` skill (no argument) so every commit since the last t
 
 No argument → suggest the bump, the first that applies: `major` if any `### Removed` entry or an entry marked breaking; `minor` if any `### Added`, `### Changed` or `### Deprecated` entry; `patch` otherwise (`### Fixed`, `### Security`) — the rule `vibe:publish` applies when it decides in the user's place; **wait for confirmation**.
 
-Then cut the release: rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD`, insert a fresh empty `## [Unreleased]` above it, and add or update the compare links at the bottom (`git remote get-url origin` for the base URL).
+Then cut the release: rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD`, insert a fresh empty `## [Unreleased]` above it, and add or update the links at the bottom in the form the file already uses: `[X.Y.Z]` compares the previous version tag to `vX.Y.Z` (`…/compare/vPREV...vX.Y.Z`; a first version has nothing to compare to and links its tag, `…/releases/tag/vX.Y.Z`), `[Unreleased]` compares `vX.Y.Z` to `HEAD`. The base URL is `git remote get-url origin`, rewritten as `https://host/owner/repo` when it is an SSH URL; no remote → no links.
 
 ## Step 4 — Refresh docs
 
