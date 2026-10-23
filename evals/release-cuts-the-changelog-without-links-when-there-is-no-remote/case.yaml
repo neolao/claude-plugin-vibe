@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: release-cuts-the-changelog-without-links-when-there-is-no-remote
+description: >
+  Precision side of release-writes-https-links-from-an-ssh-remote: a repo
+  with no remote at all and a CHANGELOG.md that has never carried links.
+  The cut must still happen — [1.2.4] dated, fresh [Unreleased] above —
+  but no link may be added: there is no base URL, and one guessed from the
+  package name would point at a repo that does not exist. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

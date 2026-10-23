@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: release-writes-https-links-from-an-ssh-remote
+description: >
+  vibe:release with the argument `patch` on a repo whose origin is an SSH
+  URL (git@github.com:example/fixture-app.git). The links the cut adds at
+  the bottom of CHANGELOG.md must be https compare links in the form the
+  file already uses — [1.2.4] comparing v1.2.3 to v1.2.4, [Unreleased]
+  comparing v1.2.4 to HEAD — never the SSH URL pasted as is. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
