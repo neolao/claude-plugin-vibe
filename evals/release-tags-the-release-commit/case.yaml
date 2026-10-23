@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: release-tags-the-release-commit
+description: >
+  Precision side of release-creates-an-annotated-tag: whatever the tag's
+  kind, it must point at the release commit — the one that carries the
+  cut changelog and the bumped manifest, `chore: release v1.2.4` — not at
+  the commit before it, and that commit must leave a clean tree (nothing
+  the steps changed left unstaged). The prompt has the agent print
+  fixed-format git lines so the checks do not depend on prose. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

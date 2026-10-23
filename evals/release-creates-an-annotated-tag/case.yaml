@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: release-creates-an-annotated-tag
+description: >
+  vibe:release with the argument `patch`: the tag it creates must be an
+  annotated tag object (git for-each-ref reports objecttype `tag`), with
+  the version as its subject and the cut section's entries in its body —
+  not the lightweight tag `git tag vX.Y.Z` makes, which git describe and
+  the forges do not see. The prompt has the agent print a fixed-format
+  for-each-ref line so the check does not depend on prose. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
