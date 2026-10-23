@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: next-task-ranks-an-unblocking-feature-before-a-defect
+description: >
+  Precision side of next-task-ranks-a-defect-before-a-feature-in-monorepo:
+  the same feature (001) and defect (002), plus a third item whose
+  `depends_on` lists 001. The unblock count is the first tier, so the
+  feature 001 is the pick although 002 is a defect. The run is stopped at
+  Step 6's confirmation. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: next-task-ranks-a-defect-before-a-feature-in-monorepo
+description: >
+  Mono-repo pick for vibe:next-task where the lowest-numbered item is a
+  feature (001) and the next one a defect (002), nothing waiting on
+  either. Picking the lowest number takes 001; the tiers shared with
+  vibe:auto put the defect first, so 002 is the pick. The run is stopped
+  at Step 6's confirmation. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
