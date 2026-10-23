@@ -11,7 +11,7 @@ allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit, TaskCreate, TaskUpda
 
 Invoke the `vibe:release` skill (Skill tool, `skill: "vibe:release"`) with the argument `patch`.
 
-This is a non-interactive eval: if the skill asks you to confirm anything, confirm it and continue through every remaining step without waiting for further input. 
+This is a non-interactive eval: if the skill asks you to confirm anything, confirm it and continue through every remaining step without waiting for further input.
 
 Do not push anything. `/vibe:release` never pushes, and neither should you.
 
