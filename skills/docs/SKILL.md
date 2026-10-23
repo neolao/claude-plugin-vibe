@@ -37,8 +37,8 @@ Only the content between a marker pair is rewritten:
 | Usage | `vibe:begin:usage` / `vibe:end:usage` | manifest scripts and real entry points — every user-facing command with realistic examples checked against the code |
 | Documentation | `vibe:begin:docs-index` / `vibe:end:docs-index` | every Markdown file in `docs/`, filled in Step 3 once `docs/` is final |
 
-- README with managed sections → rewrite inside each pair.
-- README without managed sections → never insert them silently into a hand-written file: list the sections that could be managed and ask which to add (end of file by default).
+- README with managed sections → rewrite inside each pair present; a pair that is missing is reported as absent, never inserted (to manage that section too, paste its markers where the section belongs and run the skill again).
+- README without any managed section → never insert them silently into a hand-written file: list the sections that could be managed and ask which to add (end of file by default).
 - No README → create it: title, one-paragraph description (manifest + `CLAUDE.md`), the four managed sections.
 
 ## Step 3 — docs/
@@ -70,7 +70,7 @@ Guardrails: never an empty or near-empty file, and no `docs/` directory at all w
 
 **Non-Markdown files in `docs/`** (`.html`, `.css`, `.js`, images, `.nojekyll`, …) are never modified, never deleted and never indexed.
 
-**Documentation index**: once `docs/` is final, rewrite the `docs-index` section so it lists every Markdown file in `docs/` — generated or hand-written — one line each (relative link + one user-facing sentence), sorted by path, entries for vanished files removed; "No additional documentation yet." if `docs/` is absent or holds no Markdown file.
+**Documentation index**: once `docs/` is final, rewrite the `docs-index` section (when its markers exist) so it lists every Markdown file in `docs/` — generated or hand-written — one line each (relative link + one user-facing sentence), sorted by path, entries for vanished files removed; "No additional documentation yet." if `docs/` is absent or holds no Markdown file.
 
 ## Step 4 — Report
 
