@@ -62,15 +62,15 @@ Only the content between a marker pair is rewritten:
 | `docs/development.md` | local setup, build, project conventions | setup takes more than one obvious command |
 | `docs/<aspect>.md` | any other substantial aspect, name kept stable across runs | it would confuse a new developer otherwise |
 
-Guardrails: never an empty or near-empty file; never a paraphrase of `.vibe/` or the README — each doc gives a reading those sources do not; a generated file whose aspect disappeared from the code is deleted and reported; a `docs/` file without the banner is hand-written — leave it alone and mention it.
+Guardrails: never an empty or near-empty file, and no `docs/` directory at all when no aspect qualifies; never a paraphrase of `.vibe/` or the README — each doc gives a reading those sources do not; a generated file whose aspect disappeared from the code is deleted and reported; a `docs/` file without the banner is hand-written — leave it alone and mention it.
 
 **Diagrams**: when one explains better than prose, embed a ` ```mermaid ` block derived from the code, ~15 nodes max, always paired with explanatory text.
 
 **Incremental by default**: regenerate a file only when its sources changed; `--full` regenerates every applicable file.
 
-**Non-Markdown files in `docs/`** (`.html`, `.css`, `.js`, images, `.nojekyll`, …) are never modified and never indexed.
+**Non-Markdown files in `docs/`** (`.html`, `.css`, `.js`, images, `.nojekyll`, …) are never modified, never deleted and never indexed.
 
-**Documentation index**: once `docs/` is final, rewrite the `docs-index` section so it lists every Markdown file in `docs/` — generated or hand-written — one line each (relative link + one user-facing sentence), sorted by path, entries for vanished files removed; "No additional documentation yet." if `docs/` is empty.
+**Documentation index**: once `docs/` is final, rewrite the `docs-index` section so it lists every Markdown file in `docs/` — generated or hand-written — one line each (relative link + one user-facing sentence), sorted by path, entries for vanished files removed; "No additional documentation yet." if `docs/` is absent or holds no Markdown file.
 
 ## Step 4 — Report
 
