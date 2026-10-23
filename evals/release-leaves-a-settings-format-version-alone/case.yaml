@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: release-leaves-a-settings-format-version-alone
+description: >
+  Precision side of release-bumps-the-lock-file-with-the-manifest: the
+  repo has no lock file but a config/settings.json whose "version": 2 is
+  the settings format version the code switches on, not the project's.
+  The release bumps package.json to 1.2.4 and must leave that field at 2.
+  Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: release-bumps-the-lock-file-with-the-manifest
+description: >
+  vibe:release with the argument `patch` on a repo whose package.json has
+  a package-lock.json next to it. The lock file carries the version twice
+  (root and packages[""]); both must read 1.2.4 after the release, in the
+  same commit as package.json, so the next npm install does not rewrite
+  the lock. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
