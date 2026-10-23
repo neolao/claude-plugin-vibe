@@ -66,7 +66,7 @@ Guardrails: never an empty or near-empty file, and no `docs/` directory at all w
 
 **Diagrams**: when one explains better than prose, embed a ` ```mermaid ` block derived from the code, ~15 nodes max, always paired with explanatory text.
 
-**Incremental by default**: regenerate a file only when its sources changed; `--full` regenerates every applicable file.
+**Incremental by default**: a generated file is rewritten only when something it describes changed since its last commit — `git log -1 --format=%cI -- docs/<file>` for the date, then `git log --since=<date> --name-only --pretty=format:` and `git status --porcelain` on the paths it names — or when it was never committed; without git history every applicable file is rewritten. `--full` rewrites every applicable file. The stale-aspect check above runs on every generated file either way.
 
 **Non-Markdown files in `docs/`** (`.html`, `.css`, `.js`, images, `.nojekyll`, …) are never modified, never deleted and never indexed.
 
