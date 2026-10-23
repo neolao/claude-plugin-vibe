@@ -45,7 +45,7 @@ Set the version field of every project manifest to `X.Y.Z` (`package.json`, `Car
 
 ## Step 6 — Commit and tag
 
-Stage the files Steps 3–5 changed, nothing else; commit `chore: release vX.Y.Z`; `git tag vX.Y.Z`.
+Stage the files Steps 3–5 changed, nothing else; commit `chore: release vX.Y.Z`; then an annotated tag, which `git describe` and the forges see where a lightweight one is invisible: `git tag -a vX.Y.Z --cleanup=verbatim -F <file>`, the file holding `vX.Y.Z`, a blank line, then the section's entries as cut in Step 3 (`--cleanup=verbatim` keeps the `###` headings, which git would otherwise drop as comments).
 
 ## Step 7 — Report
 
