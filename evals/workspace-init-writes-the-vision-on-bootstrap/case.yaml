@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: workspace-init-writes-the-vision-on-bootstrap
+description: >
+  Precision side of workspace-init-keeps-the-vision-on-refresh: on a
+  first bootstrap there is no existing paragraph to carry over, so the
+  vision must come from the Step 2 interview (`vibe:clarify`) and land
+  under `## Role` of the hub's `CLAUDE.md`. The prompt answers the
+  purpose question with a fixed sentence about a florist's online
+  orders, so the paragraph's presence can be checked by its subject.
+  Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
