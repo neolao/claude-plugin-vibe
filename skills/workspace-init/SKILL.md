@@ -33,7 +33,7 @@ Invoke the `vibe:tasks` skill with: `Update repos registry` → `Ensure .vibe/ s
 
 ## Step 4 — `repos.md`
 
-Scan the workspace root's direct subdirectories with `.git/`, excluding the hub. Already listed → keep `status` and `role` exactly as they are (never overwrite a human judgment). New sibling → `status: active` if it has `.vibe/backlog/`, otherwise `AskUserQuestion` for the status (`active` picked by `/vibe:next-task` / `planned` no code yet / `idea` no repo yet) and a one-line role — never guess the role. Listed but gone → report the discrepancy and ask before removing.
+Scan the workspace root's direct subdirectories with `.git/`, excluding the hub. Already listed → keep `status` and `role` exactly as they are (never overwrite a human judgment). New sibling → `status: active` if it has `.vibe/backlog/`, otherwise `AskUserQuestion` for the status (`active` picked by `/vibe:next-task` / `planned` no code yet / `idea` no repo yet / `archived` retired, kept for the record, never picked) and a one-line role — never guess the role. An `active` row whose directory is gone → report it and ask: mark it `archived` (the default — the row keeps what the workspace knew of it) or remove the row. A `planned`, `idea` or `archived` row needs no directory: never question it.
 
 ```markdown
 # Repos registry
@@ -44,6 +44,7 @@ Maintained by /vibe:workspace-init — re-run after adding, retiring, or renamin
 |---|---|---|---|
 | api | active | REST backend, owns the `orders` domain | git@github.com:acme/api.git |
 | sdk | planned | Shared TS client — not started | — |
+| legacy-portal | archived | Old customer portal, replaced by `api` | — |
 
 ## Naming convention
 [the workspace's repo-naming pattern, or "None documented yet."]
