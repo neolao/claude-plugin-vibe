@@ -22,7 +22,7 @@ Read `## [Unreleased]` in `CHANGELOG.md`. Empty or missing → nothing to releas
 Otherwise decide the bump without asking, the first that applies: `major` if any `### Removed` entry or an entry marked breaking; `minor` if any `### Added`, `### Changed` or `### Deprecated` entry; `patch` otherwise (`### Fixed`, `### Security`). Invoke the `vibe:release` skill with that word as its argument — always explicit, never blank.
 
 If its pre-release checks fail:
-- lint failure, or a dirty tree that is not ours → report it and move on; the push already succeeded, only the version is missing.
+- lint failure, or an uncommitted change (the caller commits before invoking this skill, which never leaves one itself) → report it and move on; the push already succeeded, only the version is missing.
 - test failure → **one** self-heal attempt: if exactly one eligible backlog item (`status: todo`, dependencies done, top-level `.vibe/backlog/`) names the failing test file, run it now (`vibe:fix NNN --auto`, or `vibe:feature NNN --auto` if it is not a defect — `--auto` either way, no one is there to approve a plan), repeat Step 1, and retry `vibe:release` once with the bump decided again from the updated `[Unreleased]`. Zero or several matches, or a second failure → report it as a blocker.
 
 On success `vibe:release` has committed and tagged locally: `git push && git push origin vX.Y.Z` — the one tag it created, never `--tags`, which would also push every stale local tag. A rejected push here stops this skill like Step 1's: report the exact Git error, say the release (commit and tag) exists only locally, never force.
