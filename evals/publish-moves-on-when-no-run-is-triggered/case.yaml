@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: publish-moves-on-when-no-run-is-triggered
+description: >
+  vibe:publish's Step 3 on a repo whose only workflow runs on manual
+  dispatch: the gh stand-in never lists a run for the pushed commit, and
+  the step must stop looking after its two-minute bound, report CI as not
+  observable with no blocker, and finish well inside the case timeout —
+  not wait the full ten minutes. Step 1/2 are pre-satisfied (nothing to
+  push, empty changelog) so the run isolates Step 3. `gh` is a local
+  stand-in documented in the fixture's own CLAUDE.md (`./bin/gh`). Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

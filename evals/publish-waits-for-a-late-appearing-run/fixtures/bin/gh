@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Stand-in for the real `gh` CLI inside this eval's sandbox — no real GitHub
+# account or network call is involved. Permissive: matches on the
+# subcommand only, ignores extra flags, so it answers any reasonable way an
+# agent might invoke it. The run for the commit takes a moment to be
+# listed, as on the real service: the first two listings are empty.
+args="$*"
+calls="$(cd "$(dirname "$0")" && pwd)/.calls"
+run='{"databaseId": 555111000, "status": "completed", "conclusion": "success", "workflowName": "Deploy", "name": "Deploy", "url": "https://github.com/example/fixture-app/actions/runs/555111000", "headSha": "__SHA__"}'
+api_run='{"id": 555111000, "status": "completed", "conclusion": "success", "name": "Deploy", "html_url": "https://github.com/example/fixture-app/actions/runs/555111000", "head_sha": "__SHA__"}'
+listed() {
+  n="$(cat "$calls" 2>/dev/null || echo 0)"
+  n=$((n + 1))
+  echo "$n" > "$calls"
+  [ "$n" -gt 2 ]
+}
+case "$args" in
+  "auth status"*)
+    echo "✓ Logged in to github.com account eval-user (keyring)"
+    exit 0
+    ;;
+  "run view"*)
+    echo "$run"
+    exit 0
+    ;;
+  "run list"*)
+    if listed; then echo "[$run]"; else echo '[]'; fi
+    exit 0
+    ;;
+  "api"*"runs"*)
+    if listed; then echo "{\"total_count\": 1, \"workflow_runs\": [$api_run]}"; else echo '{"total_count": 0, "workflow_runs": []}'; fi
+    exit 0
+    ;;
+  "--version"*)
+    echo "gh version 2.60.0 (mock)"
+    exit 0
+    ;;
+  *)
+    exit 0
+    ;;
+esac

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Stand-in for the real `gh` CLI inside this eval's sandbox — no real GitHub
+# account or network call is involved. Permissive: matches on the
+# subcommand only, ignores extra flags, so it answers any reasonable way an
+# agent might invoke it.
+args="$*"
+case "$args" in
+  "auth status"*)
+    echo "✓ Logged in to github.com account eval-user (keyring)"
+    exit 0
+    ;;
+  "run view"*)
+    echo "could not find any workflow run with the given id or for the current branch" >&2
+    exit 1
+    ;;
+  "run list"*)
+    echo '[]'
+    exit 0
+    ;;
+  "api"*"runs"*)
+    echo '{"total_count": 0, "workflow_runs": []}'
+    exit 0
+    ;;
+  "--version"*)
+    echo "gh version 2.60.0 (mock)"
+    exit 0
+    ;;
+  *)
+    exit 0
+    ;;
+esac

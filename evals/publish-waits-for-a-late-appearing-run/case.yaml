@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: publish-waits-for-a-late-appearing-run
+description: >
+  Precision side of publish-moves-on-when-no-run-is-triggered: the
+  workflow does run on every push, but the gh stand-in lists the run only
+  from its third listing on, as the real service does for a moment after
+  a push. Step 3 must keep checking within its bound instead of concluding
+  "not observable" from the first empty result, then report the run as
+  green. Step 1/2 are pre-satisfied (nothing to push, empty changelog) so
+  the run isolates Step 3. `gh` is a local stand-in documented in the
+  fixture's own CLAUDE.md (`./bin/gh`). Needs --allow-tools Bash,Write,Edit
+  to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
