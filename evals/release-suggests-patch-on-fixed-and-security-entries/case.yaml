@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: release-suggests-patch-on-fixed-and-security-entries
+description: >
+  Precision side of release-suggests-minor-on-changed-only-entries: a
+  CHANGELOG whose Unreleased section holds a "### Fixed" and a
+  "### Security" entry and nothing else. Neither adds nor alters
+  behaviour, so the suggestion stays patch and the repo ends up tagged
+  v1.2.4, not v1.3.0. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

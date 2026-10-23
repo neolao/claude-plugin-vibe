@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: release-suggests-minor-on-changed-only-entries
+description: >
+  vibe:release with no argument on a CHANGELOG whose Unreleased section
+  holds only a "### Changed" entry: altered behaviour is a minor bump, so
+  the suggestion is minor and the repo ends up tagged v1.3.0, not v1.2.4.
+  Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
