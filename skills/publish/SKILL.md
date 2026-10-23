@@ -19,7 +19,7 @@ If `git log @{u}..` shows local commits ahead of the remote (or no upstream is c
 
 Read `## [Unreleased]` in `CHANGELOG.md`. Empty or missing → nothing to release, go to Step 3 (a plain push can still trigger CI on its own, with no release involved).
 
-Otherwise decide the bump without asking: `patch` if only `### Fixed` entries, `minor` if any `### Added`, `major` if any `### Removed` or an entry marked breaking. Invoke the `vibe:release` skill with that word as its argument — always explicit, never blank.
+Otherwise decide the bump without asking, the first that applies: `major` if any `### Removed` entry or an entry marked breaking; `minor` if any `### Added`, `### Changed` or `### Deprecated` entry; `patch` otherwise (`### Fixed`, `### Security`). Invoke the `vibe:release` skill with that word as its argument — always explicit, never blank.
 
 If its pre-release checks fail:
 - lint failure, or a dirty tree that is not ours → report it and move on; the push already succeeded, only the version is missing.
