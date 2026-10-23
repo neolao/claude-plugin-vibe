@@ -39,7 +39,7 @@ A run that concludes failed or cancelled is a first-class blocker for Step 5: na
 
 ## Step 4 — Forge release (best-effort, GitHub only)
 
-If a version was tagged, `gh` is available and authenticated, and `origin` is a `github.com` remote: `gh release create vX.Y.Z --notes-from-tag`. Otherwise skip and say so — nothing depends on it.
+If a version was tagged, `gh` is available and authenticated, and `origin` is a `github.com` remote: `gh release create vX.Y.Z --title vX.Y.Z --notes-file <file>` where the file holds the `## [X.Y.Z]` section of `CHANGELOG.md` (its entries, without the heading) — not `--notes-from-tag`: the tag `vibe:release` creates is lightweight and carries no message. Otherwise skip and say so — nothing depends on it.
 
 ## Step 5 — Result
 
