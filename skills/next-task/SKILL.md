@@ -16,7 +16,7 @@ Picks the next eligible piece of work, hands it to `/vibe:feature`/`/vibe:fix` (
 
 ## Step 1 — Parse `$ARGUMENTS`
 
-- `NNN` alone (mono-repo) or `NNN in <repo>` (workspace): **forced pick** — read that item; found → Step 6, not found → report and stop.
+- `NNN` alone or `NNN in <repo>`: **forced pick** — determine the scope (Step 2), then read that item at the top level of the repo's `.vibe/backlog/`: the current repo in mono-repo scope; in workspace scope the named `active` repo, or, with no repo named, the one `active` repo holding that number. Found → Step 6. Not found, a repo that is not listed `active`, or a number held by several repos → report it (naming those repos) and stop.
 - `auto [N]`: **auto mode** — pick normally (Steps 2–5), skip confirmation, hand off up to `N` items (empty = until nothing is eligible), each picked afresh after the previous verdict. Unattended, meant for `/loop 1h /vibe:next-task auto 1`: nothing asks a question in this mode — the stops of Steps 1, 2 and 5 are reports, the build skills run with `--auto`, and `vibe:publish` answers nested questions in its place — so the turn never ends waiting for an answer.
 - Empty: **normal mode** — pick, confirm, hand off.
 
