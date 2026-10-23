@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: publish-refreshes-a-managed-readme-on-release
+description: >
+  Precision side of publish-answers-the-docs-question-in-its-place: the same
+  repo with a README that carries the four vibe: marker pairs. vibe:docs
+  asks nothing here, so the "answer none" rule must not fire: the managed
+  sections are rewritten by the release's docs refresh, the hand-written
+  text survives, and the release reaches the remote. The remote is a bare
+  repo created inside the run workspace. Needs --allow-tools Bash,Write,Edit
+  to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

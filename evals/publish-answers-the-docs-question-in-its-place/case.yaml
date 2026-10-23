@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: publish-answers-the-docs-question-in-its-place
+description: >
+  vibe:publish on a repo whose docs/ folder makes vibe:release run
+  vibe:docs --full, with a README that carries no vibe: marker: vibe:docs
+  would ask which sections to manage, and vibe:publish must answer in its
+  place (none), keep the README as it is, and carry the release through to
+  the pushed tag in the same turn. The remote is a bare repo created inside
+  the run workspace. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
