@@ -2,7 +2,7 @@
 name: docs
 description: Generate or refresh project documentation (README managed sections + docs/) from code, CHANGELOG and .vibe/
 argument-hint: "[optional: --full to regenerate docs/ files]"
-version: 1.0.0
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
@@ -32,7 +32,7 @@ Only the content between a marker pair is rewritten:
 
 | Section | Markers | Derived from |
 |---|---|---|
-| Features | `vibe:begin:features` / `vibe:end:features` | `CHANGELOG.md`, all versions + `[Unreleased]` — deduplicated, phrased as benefits, not a changelog copy |
+| Features | `vibe:begin:features` / `vibe:end:features` | `CHANGELOG.md`, all versions + `[Unreleased]` — deduplicated, phrased as benefits, not a changelog copy; no `CHANGELOG.md` → what the code and the manifest let the user do, nothing more (a bare scaffold has no feature yet — say so in one line rather than invent one) |
 | Installation | `vibe:begin:install` / `vibe:end:install` | manifest — prerequisites, the install command that puts what the manifest exposes (a bin, an executable, a library) in the user's hands, how to verify it, update/uninstall when the method provides them |
 | Usage | `vibe:begin:usage` / `vibe:end:usage` | manifest scripts and real entry points — every user-facing command with realistic examples checked against the code |
 | Documentation | `vibe:begin:docs-index` / `vibe:end:docs-index` | every Markdown file in `docs/`, filled in Step 3 once `docs/` is final |
