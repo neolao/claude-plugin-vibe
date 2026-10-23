@@ -16,7 +16,7 @@ Both in short, plain sentences — a fact per line beats a dense paragraph — a
 
 ## Step 1 — Read the sources
 
-`README.md`; the manifest(s); `CHANGELOG.md`; `.vibe/index.md`, `modules/`, `glossary.md`; `.env.example`; `CLAUDE.md`; the code itself (tree, entry points, main modules — `.vibe/` is not the only source); every file currently in `docs/`. `--full` in `$ARGUMENTS` forces full regeneration of `docs/`.
+`README.md`; the manifest(s); `CHANGELOG.md`; `.vibe/` (`index.md`, `modules/`, `models.md`, `glossary.md`, `decisions/`); `.env.example`; `CLAUDE.md`; the code itself (tree, entry points, main modules — `.vibe/` is not the only source); every file currently in `docs/`. `--full` in `$ARGUMENTS` forces full regeneration of `docs/`.
 
 Invoke the `vibe:tasks` skill with `Update README sections` → `Update docs/`.
 
