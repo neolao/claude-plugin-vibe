@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: release-bumps-from-the-manifest-when-nothing-is-tagged
+description: >
+  Precision side of release-bumps-from-the-latest-version-tag-among-other-tags:
+  a repo with no tag at all and a package.json at 0.4.0. With `minor`, the
+  current version comes from the manifest, so the release is v0.5.0 — not
+  v0.1.0 from a `0.0.0` fallback, and not a refusal for lack of a tag.
+  Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

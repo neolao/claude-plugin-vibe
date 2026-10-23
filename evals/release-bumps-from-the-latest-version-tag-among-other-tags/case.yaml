@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: release-bumps-from-the-latest-version-tag-among-other-tags
+description: >
+  vibe:release with the argument `patch` on a repo tagged v1.2.3 and, on a
+  later commit, `deploy-2026-01-15` and `vnext`. `git tag --sort=-version:refname
+  | head -1` returns `vnext`, and the repo has no manifest to fall back on:
+  the current version must come from the latest version-shaped tag,
+  v1.2.3, so the release is v1.2.4 — not v0.0.1 from a `0.0.0` fallback,
+  not a tag derived from `vnext`. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
