@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: docs-rewrites-a-doc-whose-module-changed
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

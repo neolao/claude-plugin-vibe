@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: docs-leaves-an-up-to-date-doc-unchanged
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
