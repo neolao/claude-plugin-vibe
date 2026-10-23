@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: next-task-keeps-a-repo-with-a-blocked-item-eligible
+description: >
+  Precision side of next-task-leaves-a-busy-repo-alone: billing-api is
+  clean and holds an item at `status: blocked` (an earlier autonomous run
+  gave up on it) next to a free item 001 that billing-web 003 waits on. A
+  blocked item is not work in progress: the repo stays in, 001 is the pick
+  and the blocked item is simply not a candidate. The run is stopped at
+  Step 6's confirmation. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

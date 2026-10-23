@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: next-task-leaves-a-busy-repo-alone
+description: >
+  Workspace-scope pick for vibe:next-task where the two best-scoring
+  candidates sit in repos that are not free to work in: billing-api has an
+  uncommitted edit in its working tree, billing-jobs holds an item at
+  `status: in_progress` (another session's work, or an interrupted run —
+  nothing tells them apart). Both repos are left out of the run and named;
+  the pick is billing-web 001, the free item of the clean repo. The run is
+  stopped at Step 6's confirmation. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
