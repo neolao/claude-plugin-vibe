@@ -2,7 +2,7 @@
 name: next-task
 description: Pick the next eligible backlog item — across every active repo in a workspace if one is detected, otherwise in the current repo — implement it, then push and release
 argument-hint: "NNN [in <repo>] (force a specific item) | auto [N] (autonomous, for /loop) | (empty — pick with confirmation)"
-version: 1.0.1
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
@@ -26,7 +26,7 @@ Look in cwd only (never upward):
 1. A `CLAUDE.md` written by `/vibe:workspace-init` (a `## Hub repo` line) → read the hub directory from it and verify the marker (`.git/` + `repos.md`).
 2. Otherwise, any direct subdirectory carrying the marker.
 
-- Marker found → **workspace scope**: read `repos.md` in the hub, keep `status: active` repos. If it looks stale (a listed directory is gone, or an unlisted sibling has `.vibe/backlog/`), fill the gap for this run by scanning siblings (`.git/` + `.vibe/backlog/`, excluding the hub) and mention it in the report.
+- Marker found → **workspace scope**: read `repos.md` in the hub, keep `status: active` repos. The registry is stale when an `active` row's directory is gone, or when an unlisted sibling has `.git/` + `.vibe/backlog/` — a `planned`, `idea` or `archived` row needs no directory and is never questioned. Fill the gap for this run: add each unlisted sibling with `.git/` + `.vibe/backlog/` (the hub excluded) as `active`; a registered row keeps its status whatever the scan finds, so an `archived` repo whose directory is still there stays out. Mention it in the report.
 - No marker, but cwd has `.vibe/backlog/` → **mono-repo scope**: Steps 4–5 and the cross-repo part of Step 7 do not apply.
 - Neither → stop: "No workspace detected here (no hub repo, no `.vibe/backlog/` in the current directory). Run `/vibe:workspace-init` first if this should be a workspace root, or run this from inside a vibe-managed repo."
 
