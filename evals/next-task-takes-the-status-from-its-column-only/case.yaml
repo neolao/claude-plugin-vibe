@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: next-task-takes-the-status-from-its-column-only
+description: >
+  Precision side of next-task-reads-the-registry-by-column-name: the
+  registry has the layout vibe:workspace-init writes, with Remote filled,
+  and the archived legacy-batch row's Role text contains the word
+  "active". The status comes from the Status column alone: legacy-batch
+  stays out although its directory and backlog are present and its item
+  would unblock two billing-api items, and billing-api 001 is the pick.
+  The run is stopped at Step 6's confirmation. Needs --allow-tools Bash to
+  run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: next-task-reads-the-registry-by-column-name
+description: >
+  Workspace-scope pick for vibe:next-task on a hand-made registry whose
+  table is laid out `Owner | Status | Repo | Role`, not the layout
+  vibe:workspace-init writes. Read by position, the first column gives a
+  team name instead of a directory: every active row then looks gone, the
+  registry stale, and the sibling scan brings the archived legacy-batch
+  repo — directory and backlog still present — back as a candidate. Read
+  by column name, billing-api is the only active repo and its item 001 the
+  only unblocked candidate. The run is stopped at Step 6's confirmation.
+  Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
