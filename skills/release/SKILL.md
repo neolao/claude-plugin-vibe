@@ -2,7 +2,7 @@
 name: release
 description: Create a versioned release — bump version, finalize CHANGELOG.md, commit and tag
 argument-hint: "[version, e.g. 1.2.0 | major | minor | patch] (empty = suggest from the changelog and confirm)"
-version: 1.0.0
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
@@ -10,11 +10,11 @@ model: claude-sonnet-5-5
 
 Create a versioned release following Semantic Versioning. Everything is local: this skill never pushes — `vibe:publish` (via `/vibe:auto --push` or `/vibe:next-task`) or the user does.
 
-## Step 1 — Determine the version
+## Step 1 — Read the argument
 
 - A version number (`1.2.0`) → use it.
 - `major` / `minor` / `patch` → bump the latest tag (`git tag --sort=-version:refname | head -1`).
-- No argument → read `## [Unreleased]` in `CHANGELOG.md` and suggest `patch` if only Fixed entries, `minor` if any Added, `major` if any Removed or breaking change; **wait for confirmation**.
+- No argument → the bump is suggested in Step 3, once the changelog is complete.
 
 Then invoke the `vibe:tasks` skill with: `Run pre-release checks` → `Finalize CHANGELOG.md` → `Refresh docs` → `Bump version` → `Commit and tag`, each blocked by the previous one.
 
@@ -24,7 +24,11 @@ Run the test command, the lint command, and the build command if the project has
 
 ## Step 3 — Finalize CHANGELOG.md
 
-Invoke the `vibe:changelog` skill (no argument) so every commit since the last tag is reflected under `[Unreleased]`. Then cut the release: rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD`, insert a fresh empty `## [Unreleased]` above it, and add or update the compare links at the bottom (`git remote get-url origin` for the base URL).
+Invoke the `vibe:changelog` skill (no argument) so every commit since the last tag is reflected under `[Unreleased]` — before the version is chosen, so a bump suggested without an argument is judged on the complete section, not on the entries someone remembered to write. `[Unreleased]` still empty afterwards → nothing to release: stop and say so, whatever the argument (a change the changelog does not know of needs its entry first; the tree is as it was, the refresh wrote nothing).
+
+No argument → suggest `patch` if only Fixed entries, `minor` if any Added, `major` if any Removed or breaking change; **wait for confirmation**.
+
+Then cut the release: rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD`, insert a fresh empty `## [Unreleased]` above it, and add or update the compare links at the bottom (`git remote get-url origin` for the base URL).
 
 ## Step 4 — Refresh docs
 
