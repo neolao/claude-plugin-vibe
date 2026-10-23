@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: publish-pushes-only-the-release-tag
+description: >
+  vibe:publish on a repo holding a local tag that was never published
+  (v0.9.0-rc1) next to a releasable Fixed-only Unreleased section: the
+  release tag v1.0.1 reaches the local bare origin, the stale tag does not,
+  and the report shows a clean push. Needs --allow-tools Bash,Write,Edit
+  to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

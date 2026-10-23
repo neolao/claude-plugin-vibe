@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: publish-pushes-no-tag-without-a-release
+description: >
+  Precision side of publish-pushes-only-the-release-tag: the same local
+  never-published tag (v0.9.0-rc1), but an empty Unreleased section and a
+  housekeeping commit ahead of origin. The commit is pushed, no release is
+  cut, and no tag at all reaches the local bare origin. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
