@@ -1,0 +1,9 @@
+---
+type: regex
+target: last_message
+pattern: "✓\\s*(\\*\\*)?\\s*[Pp]ushed"
+weight: 1
+---
+
+`vibe:publish` prints `✓ pushed` on a successful Step 1 push. The starting
+tree has a local commit ahead of `origin`, so this must succeed.

@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: publish-fills-the-forge-release-notes-from-the-changelog
+description: >
+  vibe:publish's Step 4 on a GitHub-hosted repo after a patch release: the
+  GitHub release must be created for v1.0.1 with notes taken from the
+  version's CHANGELOG.md section, not from the (lightweight, message-less)
+  tag. origin is a GitHub URL rewritten by git config to a bare repo inside
+  the run workspace; `gh` is a local stand-in documented in the fixture's
+  own CLAUDE.md (`./bin/gh`) that logs what `release create` receives.
+  Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

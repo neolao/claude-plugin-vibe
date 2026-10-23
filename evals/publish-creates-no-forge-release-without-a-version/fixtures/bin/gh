@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# Stand-in for the real `gh` CLI inside this eval's sandbox — no real GitHub
+# account or network call is involved. Permissive: matches on the
+# subcommand only, ignores extra flags, so it answers any reasonable way an
+# agent might invoke it. A release creation is recorded, with the notes it
+# was given, in .eval-remote/gh-release.log.
+args="$*"
+log="$(cd "$(dirname "$0")/.." && pwd)/.eval-remote/gh-release.log"
+case "$args" in
+  "auth status"*)
+    echo "✓ Logged in to github.com account eval-user (keyring)"
+    exit 0
+    ;;
+  "release create"*)
+    {
+      echo "args: $args"
+      prev=""
+      for a in "$@"; do
+        if [ "$prev" = "--notes-file" ] || [ "$prev" = "-F" ]; then
+          echo "notes-file-content:"
+          cat "$a"
+        fi
+        case "$a" in
+          --notes-file=*)
+            echo "notes-file-content:"
+            cat "${a#--notes-file=}"
+            ;;
+        esac
+        prev="$a"
+      done
+      echo "---"
+    } >> "$log"
+    echo "https://github.com/example/tiny-pub-lib/releases/tag/${3:-}"
+    exit 0
+    ;;
+  "release view"*)
+    echo '{"tagName": "v1.0.0", "name": "v1.0.0", "url": "https://github.com/example/tiny-pub-lib/releases/tag/v1.0.0"}'
+    exit 0
+    ;;
+  "release list"*)
+    echo '[{"tagName": "v1.0.0", "name": "v1.0.0", "isLatest": true}]'
+    exit 0
+    ;;
+  "run list"*)
+    echo '[]'
+    exit 0
+    ;;
+  "api"*"runs"*)
+    echo '{"total_count": 0, "workflow_runs": []}'
+    exit 0
+    ;;
+  "--version"*)
+    echo "gh version 2.60.0 (mock)"
+    exit 0
+    ;;
+  *)
+    exit 0
+    ;;
+esac

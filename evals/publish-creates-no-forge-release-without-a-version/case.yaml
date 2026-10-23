@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: publish-creates-no-forge-release-without-a-version
+description: >
+  Precision side of publish-fills-the-forge-release-notes-from-the-changelog:
+  the same GitHub-hosted repo with the same gh stand-in, but an empty
+  Unreleased section and a housekeeping commit ahead of origin. The commit
+  is pushed, no version is cut, and Step 4 must create no GitHub release
+  at all. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
