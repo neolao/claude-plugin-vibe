@@ -2,7 +2,7 @@
 name: workspace-init
 description: Initialize or refresh a generic hub repo (repos registry, cross-repo backlog/decisions) and the local, untracked workspace-root CLAUDE.md that indexes it and its sibling repos
 argument-hint: "[hub repo dir name, e.g. roadmap] (only used on first bootstrap)"
-version: 1.0.1
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
@@ -16,9 +16,10 @@ Re-run whenever a repo is added, retired, or renamed. This skill never pushes.
 
 ## Step 1 — Where are we?
 
-- cwd has the marker → inside the hub repo: the workspace root is its parent; go to Step 3.
-- cwd has `.git/` but no `repos.md` → a code repo: stop with "Run `/vibe:workspace-init` from the workspace root (the parent folder, not inside a repo), or from the hub repo itself."
-- cwd has no `.git/` → the workspace root; go to Step 2.
+Run `git rev-parse --show-toplevel` in cwd — a subdirectory of a repo has no `.git/` of its own and would pass for a workspace root:
+- it prints a directory with the marker → inside the hub repo: the workspace root is that directory's parent; go to Step 3.
+- it prints a directory without `repos.md` → inside a code repo: stop with "Run `/vibe:workspace-init` from the workspace root (the parent folder, not inside a repo), or from the hub repo itself."
+- it fails (not in a work tree) → cwd is the workspace root; go to Step 2.
 
 ## Step 2 — Locate or create the hub repo
 
