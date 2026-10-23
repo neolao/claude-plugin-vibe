@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: workspace-init-refreshes-from-inside-the-hub
+description: >
+  Precision side of workspace-init-stops-inside-a-code-repo: run from
+  inside the hub repo itself (`roadmap/`), the skill must not stop — the
+  hub carries the marker, so Step 1 takes the workspace root as its
+  parent and refreshes in place: the new sibling `orders-web` (it has
+  `.vibe/backlog/`) is registered active without a question, the
+  existing row is kept, the commit is the refresh one, and the
+  workspace-root `CLAUDE.md` lands next to `roadmap/`, not inside it.
+  Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

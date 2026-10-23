@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: workspace-init-stops-inside-a-code-repo
+description: >
+  vibe:workspace-init run from `orders-api/src`, a subdirectory of a code
+  repo: that directory has no `.git/` of its own, so a check of cwd alone
+  takes it for a workspace root and bootstraps a hub repo inside the code
+  repo. Step 1 must recognize the enclosing repo (git rev-parse
+  --show-toplevel), stop with the "run from the workspace root" message,
+  and create nothing. The prompt has the agent print a fixed-format
+  porcelain count of orders-api so the check does not depend on prose.
+  Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
