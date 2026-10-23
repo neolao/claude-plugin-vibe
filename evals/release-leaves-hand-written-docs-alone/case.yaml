@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: release-leaves-hand-written-docs-alone
+description: >
+  Precision side of release-refreshes-generated-docs-without-asking-about-the-readme:
+  the docs/ folder holds one hand-written file (no vibe:docs banner) and
+  the README has no managed section. Nothing here is vibe:docs's to
+  refresh, so the docs step is skipped: vibe:docs is never invoked, no
+  generated file appears in docs/, the notes and the README stay
+  byte-for-byte, and the release still reaches its tag. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
