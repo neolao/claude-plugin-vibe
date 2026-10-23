@@ -26,7 +26,7 @@ Run the test command, the lint command, and the build command if the project has
 
 Invoke the `vibe:changelog` skill (no argument) so every commit since the last tag is reflected under `[Unreleased]` — before the version is chosen, so a bump suggested without an argument is judged on the complete section, not on the entries someone remembered to write. `[Unreleased]` still empty afterwards → nothing to release: stop and say so, whatever the argument (a change the changelog does not know of needs its entry first; the tree is as it was, the refresh wrote nothing).
 
-No argument → suggest `patch` if only Fixed entries, `minor` if any Added, `major` if any Removed or breaking change; **wait for confirmation**.
+No argument → suggest the bump, the first that applies: `major` if any `### Removed` entry or an entry marked breaking; `minor` if any `### Added`, `### Changed` or `### Deprecated` entry; `patch` otherwise (`### Fixed`, `### Security`) — the rule `vibe:publish` applies when it decides in the user's place; **wait for confirmation**.
 
 Then cut the release: rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD`, insert a fresh empty `## [Unreleased]` above it, and add or update the compare links at the bottom (`git remote get-url origin` for the base URL).
 
