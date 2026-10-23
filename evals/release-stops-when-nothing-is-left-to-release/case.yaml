@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: release-stops-when-nothing-is-left-to-release
+description: >
+  Precision side of release-suggests-from-the-refreshed-changelog:
+  vibe:release with the argument `patch` on a repo whose [Unreleased]
+  section is empty and whose only commit since the last tag is CI
+  housekeeping, which the changelog refresh discards. The section is still
+  empty after the refresh, so there is nothing to release: no tag, no bump,
+  no cut, and the report says so — the explicit argument does not override
+  that. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

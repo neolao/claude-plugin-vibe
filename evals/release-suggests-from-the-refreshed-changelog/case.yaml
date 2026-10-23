@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: release-suggests-from-the-refreshed-changelog
+description: >
+  vibe:release with no argument on a repo whose [Unreleased] section holds
+  one Fixed entry while a feat: commit since the last tag is not in the
+  changelog yet. The skill brings the changelog up to date first, then
+  suggests the bump from the complete section: minor, v1.3.0, with the
+  Added entry in the cut section — not the patch a reading of the stale
+  section would give. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
