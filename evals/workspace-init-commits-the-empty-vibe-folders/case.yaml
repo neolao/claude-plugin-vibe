@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: workspace-init-commits-the-empty-vibe-folders
+description: >
+  vibe:workspace-init bootstrapping a hub: the `.vibe/backlog/` and
+  `.vibe/decisions/` folders it creates are empty, and git commits no
+  empty directory, so without a `.gitkeep` the bootstrap commit never
+  carries them and a clone of the hub has no `.vibe/`. The prompt has
+  the agent print `git ls-files` of the hub's `.vibe/` and a porcelain
+  line count, so the checks read fixed-format git output, not prose.
+  Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

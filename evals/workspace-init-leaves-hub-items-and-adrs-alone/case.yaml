@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: workspace-init-leaves-hub-items-and-adrs-alone
+description: >
+  Precision side of workspace-init-commits-the-empty-vibe-folders: the
+  hub's `.vibe/backlog/` and `.vibe/decisions/` already hold a backlog
+  item and an ADR. A refresh must leave both files word for word as they
+  are and add no `.gitkeep` next to them (the placeholder is for an
+  empty folder only), while still registering the new sibling and
+  committing. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
