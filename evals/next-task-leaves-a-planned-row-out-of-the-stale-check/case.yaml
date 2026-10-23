@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: next-task-leaves-a-planned-row-out-of-the-stale-check
+description: >
+  Workspace-scope pick for vibe:next-task on a registry written by
+  vibe:workspace-init: `billing-sdk` is `planned` and has no directory,
+  `legacy-batch` is `archived` and its directory is still there with a
+  backlog whose item would unblock two billing-api items. A stale check
+  that questions every row without a directory finds the registry stale,
+  scans the siblings and brings the archived repo back as a candidate;
+  only an `active` row that is gone makes the registry stale. The run is
+  stopped at Step 6's confirmation. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

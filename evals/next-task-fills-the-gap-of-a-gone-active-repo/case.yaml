@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: next-task-fills-the-gap-of-a-gone-active-repo
+description: >
+  Precision side of next-task-leaves-a-planned-row-out-of-the-stale-check:
+  here the registry really is stale — `legacy-batch` is `active` and its
+  directory is gone, and `billing-jobs`, a sibling with `.git/` and a
+  backlog, is not listed. The skill must fill the gap for this run: take
+  billing-jobs as active, pick its item 001 because billing-api 002 waits
+  on it, and say the registry is stale. The run is stopped at Step 6's
+  confirmation. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
