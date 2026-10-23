@@ -12,8 +12,10 @@ Create a versioned release following Semantic Versioning. Everything is local: t
 
 ## Step 1 — Read the argument
 
-- A version number (`1.2.0`) → use it.
-- `major` / `minor` / `patch` → bump the latest tag (`git tag --sort=-version:refname | head -1`).
+The current version is the latest version tag: `git tag --list 'v[0-9]*' '[0-9]*' --sort=-version:refname | head -1` — the patterns matter, `--sort` alone puts a `deploy-…` or `vnext` tag first. A pre-release tag (`v1.3.0-rc.1`) sorts above its final version: skip it when `v1.3.0` is also tagged. No tag yet → the version the manifests carry (the highest when they disagree), or `0.0.0`.
+
+- A version number (`1.2.0`, `1.3.0-rc.1`) → use it.
+- `major` / `minor` / `patch` → bump the current version; a pre-release finalizes first (`patch` or `minor` on `1.3.0-rc.1` gives `1.3.0`, `major` gives `2.0.0`).
 - No argument → the bump is suggested in Step 3, once the changelog is complete.
 
 Then invoke the `vibe:tasks` skill with: `Run pre-release checks` → `Finalize CHANGELOG.md` → `Refresh docs` → `Bump version` → `Commit and tag`, each blocked by the previous one.
