@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: publish-bumps-minor-on-changed-only-entries
+description: >
+  vibe:publish on a CHANGELOG whose Unreleased section holds only a
+  "### Changed" entry: the bump is minor (altered behaviour, no fix), so
+  vibe:release is invoked with "minor" and the local bare origin ends up
+  holding v1.1.0, not v1.0.1. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

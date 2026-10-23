@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: publish-bumps-patch-on-fixed-and-security-entries
+description: >
+  Precision side of publish-bumps-minor-on-changed-only-entries: a CHANGELOG
+  whose Unreleased section holds a "### Fixed" and a "### Security" entry
+  and nothing else. Neither adds nor alters behaviour, so the bump stays
+  patch: vibe:release is invoked with "patch" and the local bare origin
+  ends up holding v1.0.1, not v1.1.0. Needs --allow-tools Bash,Write,Edit
+  to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
