@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: release-uses-an-explicit-version-as-given
+description: >
+  Precision side of release-refuses-a-version-already-tagged: the explicit
+  argument `2.0.0` on a repo tagged v1.2.3 whose pending entries are
+  Fixed only. An explicit version is used as given — v2.0.0 tagged, the
+  section cut as [2.0.0], package.json at 2.0.0 — not replaced by the
+  patch the changelog would suggest. Needs --allow-tools Bash,Write,Edit
+  to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

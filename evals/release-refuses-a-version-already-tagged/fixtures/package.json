@@ -1,0 +1,9 @@
+{
+  "name": "fixture-app",
+  "version": "1.2.3",
+  "description": "Fixture app for the vibe:release eval",
+  "scripts": {
+    "test": "true",
+    "lint": "true"
+  }
+}

@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: release-refuses-a-version-already-tagged
+description: >
+  vibe:release with the explicit argument `1.2.3` on a repo already tagged
+  v1.2.3. The skill must stop in Step 1, before anything is written: the
+  changelog keeps its pending entry, package.json stays at 1.2.3, no
+  v1.2.4 is cut in its place, and the report names the existing tag as
+  the reason. Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
