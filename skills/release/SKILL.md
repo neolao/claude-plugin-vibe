@@ -17,6 +17,9 @@ The current version is the latest version tag: `git tag --list 'v[0-9]*' '[0-9]*
 - A version number (`1.2.0`, `1.3.0-rc.1`) → use it.
 - `major` / `minor` / `patch` → bump the current version; a pre-release finalizes first (`patch` or `minor` on `1.3.0-rc.1` gives `1.3.0`, `major` gives `2.0.0`).
 - No argument → the bump is suggested in Step 3, once the changelog is complete.
+- Anything else → stop and say what the argument can be.
+
+A target version whose tag already exists stops the skill here as well — nothing has been written yet, and a second `vX.Y.Z` cannot be created.
 
 Then invoke the `vibe:tasks` skill with: `Run pre-release checks` → `Finalize CHANGELOG.md` → `Refresh docs` → `Bump version` → `Commit and tag`, each blocked by the previous one.
 
