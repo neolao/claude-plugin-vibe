@@ -31,7 +31,7 @@ On success `vibe:release` has committed and tagged locally: `git push && git pus
 
 If `gh` is not available or not authenticated, `origin` is not a `github.com` remote, or the repo has no workflow file (`.github/workflows/*.yml`): skip silently, same posture as Step 4 — nothing depends on it, report "not observable".
 
-Otherwise find the workflow run(s) the just-pushed commit triggered (the tag commit if Step 2 released, the branch commit otherwise). A run can take a little while to appear after the push: keep checking rather than concluding "no CI" from an empty result in the first moment.
+Otherwise find the workflow run(s) the just-pushed commit triggered (the tag commit if Step 2 released, the branch commit otherwise). A run can take a little while to appear after the push: keep checking for up to two minutes rather than concluding "no CI" from an empty result in the first moment. Still none after that: no workflow's trigger covers this push (another branch, pull requests only, tags only, manual dispatch) — not observable, move on, nothing to poll.
 
 Poll every triggered run until each reaches a conclusion, bounded to 10 minutes total. Still running past that bound: `⚠ CI still running after 600s — check <run URL>` and move on — never hang indefinitely.
 
