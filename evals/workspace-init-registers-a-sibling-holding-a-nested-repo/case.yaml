@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: workspace-init-registers-a-sibling-holding-a-nested-repo
+description: >
+  Precision side of workspace-init-skips-a-worktree-and-a-bare-clone:
+  two plain siblings, `orders-api` and `orders-web`, both with a `.git/`
+  directory and `.vibe/backlog/`; `orders-api` holds a nested repo under
+  `vendor/pricing-lib/`. Both siblings must be registered active, the
+  nested repo must not get a row (nothing is scanned below a sibling),
+  and the host sibling must not be skipped because of it. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

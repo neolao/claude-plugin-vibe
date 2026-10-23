@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: workspace-init-skips-a-worktree-and-a-bare-clone
+description: >
+  vibe:workspace-init bootstrapping a hub in a workspace that holds one
+  real repo (`orders-api`), a linked worktree of it (`orders-api-hotfix`,
+  whose `.git` is a file), a bare clone (`mirror.git`, no working tree)
+  and a plain folder (`notes/`). Only `orders-api` is a sibling: the
+  worktree and the bare clone are named in the report and never
+  registered, the plain folder is ignored. Needs --allow-tools
+  Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
