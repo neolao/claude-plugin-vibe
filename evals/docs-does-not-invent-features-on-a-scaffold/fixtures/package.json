@@ -1,0 +1,8 @@
+{
+  "name": "widgetcli",
+  "version": "0.1.0",
+  "description": "A tiny CLI to manage widgets from the command line.",
+  "scripts": {
+    "test": "node --test"
+  }
+}
