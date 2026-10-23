@@ -12,7 +12,7 @@ Generate or refresh two kinds of documentation, both derived from the real proje
 - **README managed sections**, written **for the end user**: no file, function, or module names. Nothing outside the managed markers is ever touched — not a character, not whitespace.
 - **`docs/` files**, written **for developers** who need to understand the project: real module names, paths, and commands are welcome as long as they come from the code.
 
-Both in short, plain sentences — a fact per line beats a dense paragraph.
+Both in short, plain sentences — a fact per line beats a dense paragraph — and in the language `CLAUDE.md`'s `## Project language` section names; failing that, the language the README already uses, then the conversation's. Whatever the language, the banner, the markers and every command, path or identifier stay verbatim.
 
 ## Step 1 — Read the sources
 
