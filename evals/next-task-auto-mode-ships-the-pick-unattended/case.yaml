@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: next-task-auto-mode-ships-the-pick-unattended
+description: >
+  Precision side of next-task-auto-mode-skips-a-cross-repo-blocked-item:
+  auto mode of vibe:next-task in mono-repo scope, with nothing blocked
+  across repos. The backlog holds a trivial defect (001) and a feature
+  (002); the skill must hand 001 to vibe:fix with --auto itself, with no
+  confirmation and no delegation to vibe:auto, then publish and report the
+  push failure (no remote) as a blocker, never ending on a question. Runs
+  a real, trivial vibe:fix cycle, one run by design. Needs --allow-tools
+  Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

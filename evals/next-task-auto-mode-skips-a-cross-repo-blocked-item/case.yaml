@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: next-task-auto-mode-skips-a-cross-repo-blocked-item
+description: >
+  Auto mode of vibe:next-task in workspace scope. orders-api has two
+  defect items: 001 waits in prose on orders-sdk publishing v0.3.0 (no tag
+  exists anywhere), 002 is free. Handing the repo to vibe:auto would start
+  001 — it ranks defects by lowest number and reads no prose; the skill
+  must hand its own pick, 002, to vibe:fix with --auto, then publish and
+  report the push failure (no remote) as a blocker, without waiting on a
+  question. Runs a real, trivial vibe:fix cycle, one run by design. Needs
+  --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
