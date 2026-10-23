@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: workspace-init-archives-a-gone-active-repo
+description: >
+  vibe:workspace-init on a hub whose registry lists `legacy-batch` as
+  `active` while its directory is gone from the workspace. The skill must
+  report it and ask, and with the user's answer "archive it" the row must
+  stay in `repos.md` with the status `archived` — the status a retired
+  repo had no way to get before: the only choices were removing the row
+  or leaving it `active`, where `/vibe:next-task` keeps picking from it.
+  Needs --allow-tools Bash,Write,Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

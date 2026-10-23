@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: workspace-init-leaves-an-idea-row-unquestioned
+description: >
+  Precision side of workspace-init-archives-a-gone-active-repo: the
+  registry lists `orders-sdk` as `idea`, a status that means "no repo
+  yet", so its directory is expected to be absent. The skill must neither
+  question that row nor change it. The prompt pre-answers any
+  remove-or-archive question with "remove it", so a run that wrongly
+  raises the question for the idea row leaves a visible trace: the row
+  is gone or no longer `idea`. Needs --allow-tools Bash,Write,Edit to
+  run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
