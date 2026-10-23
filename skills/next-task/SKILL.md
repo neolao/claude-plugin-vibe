@@ -27,7 +27,7 @@ Look in cwd only (never upward):
 2. Otherwise, any direct subdirectory carrying the marker.
 
 - Marker found → **workspace scope**: read `repos.md` in the hub, keep `status: active` repos. Only its `Repo` and `Status` columns are read, in whatever order and alongside whatever other columns the table holds (`Role`, `Remote`, a hand-added `Path` or `Owner`); `Repo` is the sibling's directory name under the workspace root. The registry is stale when an `active` row's directory is gone, or when an unlisted sibling has `.git/` + `.vibe/backlog/` — a `planned`, `idea` or `archived` row needs no directory and is never questioned. Fill the gap for this run: add each unlisted sibling with `.git/` + `.vibe/backlog/` (the hub excluded) as `active`; a registered row keeps its status whatever the scan finds, so an `archived` repo whose directory is still there stays out. Mention it in the report.
-- No marker, but cwd has `.vibe/backlog/` → **mono-repo scope**: Steps 4–5 and the cross-repo part of Step 7 do not apply.
+- No marker, but cwd has `.vibe/backlog/` → **mono-repo scope**: Step 4, the workspace tiers of Step 5 and the cross-repo part of Step 7 do not apply.
 - Neither → stop: "No workspace detected here (no hub repo, no `.vibe/backlog/` in the current directory). Run `/vibe:workspace-init` first if this should be a workspace root, or run this from inside a vibe-managed repo."
 
 ## Step 3 — Collect candidates
@@ -43,9 +43,15 @@ Cross-repo relationships live in prose (`## Notes`/`## Description`), not in `de
 
 Recommended, non-enforced phrasing for such notes: repo name plus `repo#NNN`, or "tag"/"release" plus the expected version.
 
-## Step 5 — Score and pick _(workspace scope)_
+## Step 5 — Score and pick
 
-Highest count of items unblocked, then flagged as a priority in a hub decision, then lowest number. Zero unblocked candidates anywhere → stop and list what blocks each, including hub items that need a Product Owner decision. Mono-repo scope picks the lowest-numbered candidate.
+Rank the unblocked candidates, the same tiers as `vibe:auto` with the workspace ones added:
+1. Highest count of items unblocked — the same-repo `todo` items whose `depends_on` lists it, plus, in workspace scope, the cross-repo count of Step 4.
+2. Flagged as a priority in a hub decision _(workspace scope)_.
+3. Defects before features (the classification of Step 7).
+4. Lowest number, then the registry order of the repo.
+
+Zero unblocked candidates → stop and list what blocks each, including hub items that need a Product Owner decision.
 
 ## Step 6 — Present and confirm
 
