@@ -32,7 +32,9 @@ Look in cwd only (never upward):
 
 ## Step 3 — Collect candidates
 
-For each candidate repo, the top-level `.vibe/backlog/*.md` items with `status: todo` whose every `depends_on` (same repo only, by design) is `done`. The hub repo's own items are never candidates — they are workspace decisions, not implementable work.
+For each candidate repo, the top-level `.vibe/backlog/*.md` items with `status: todo` whose every `depends_on` (same repo only, by design) is `done`. The hub repo's own items are never candidates — they are workspace decisions, not implementable work. An `active` repo with no `.vibe/backlog/` contributes nothing.
+
+A repo whose working tree is dirty (`git status --porcelain` prints anything), or which holds a top-level item at `status: in_progress`, is left out of this run and named in the report: uncommitted work would be swept into the item's commit, and this skill cannot tell another session's live work from an interrupted run — finish it there, or re-run `/vibe:feature NNN` / `/vibe:fix NNN` in that repo, which puts an interrupted item back in play. A forced pick in such a repo stops with the same reason. A `blocked` item is not in progress: its repo stays in.
 
 ## Step 4 — Cross-repo blockers and priority _(workspace scope)_
 
