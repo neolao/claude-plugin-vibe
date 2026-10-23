@@ -50,7 +50,7 @@ Maintained by /vibe:workspace-init — re-run after adding, retiring, or renamin
 [the workspace's repo-naming pattern, or "None documented yet."]
 ```
 
-Then create `.vibe/backlog/` and `.vibe/decisions/` in the hub if absent, never touching existing items or ADRs.
+Then create `.vibe/backlog/` and `.vibe/decisions/` in the hub if absent, each with a `.gitkeep` while it is empty (git commits no empty directory, so a clone of the hub would lack them), never touching existing items or ADRs.
 
 ## Step 5 — Hub repo `CLAUDE.md`
 
@@ -101,4 +101,4 @@ The `## Hub repo` line is the pointer Step 2 and `/vibe:next-task` read — keep
 
 ## Step 7 — Commit and report
 
-In the hub: if `repos.md`, `.vibe/`, `CLAUDE.md`, or `README.md` changed, one commit — `chore: bootstrap hub repo` on first init, `chore: refresh workspace registry` otherwise; nothing changed → say so. Report, short and plain: hub location (created / existed); repos added, updated, flagged missing; files refreshed; commit or "nothing to commit"; a reminder to push the hub when convenient.
+In the hub: stage everything this run wrote or changed — `repos.md`, `.vibe/`, `CLAUDE.md`, `README.md`, and whatever `vibe:docs` and `vibe:sync` produced (`docs/` included) — in one commit: `chore: bootstrap hub repo` on first init, `chore: refresh workspace registry` otherwise; nothing changed → say so. Report, short and plain: hub location (created / existed); repos added, updated, flagged missing; files refreshed; commit or "nothing to commit"; a reminder to push the hub when convenient.
