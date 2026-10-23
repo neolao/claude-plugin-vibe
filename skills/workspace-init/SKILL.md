@@ -65,7 +65,7 @@ Written here, not by `vibe:init` (whose stack detection and DoD assume applicati
 
 This repo holds no application code. It is the source of truth for cross-repo planning: [repos.md](repos.md) registers every sibling repo (status, role, remote); `.vibe/backlog/` and `.vibe/decisions/` hold Product Owner decisions and ADRs spanning more than one repo.
 
-[Vision paragraph from Step 2, in the project's language — omitted on a refresh run.]
+[Vision paragraph: on a bootstrap, the Step 2 synthesis in the project's language; on a refresh, the paragraph standing here in the existing file, carried over unchanged — a refresh never drops it.]
 
 **Items here are never implementable work** — never picked up by `/vibe:feature`, `/vibe:fix`, or `/vibe:auto`. Run `/vibe:next-task` from the workspace root to pick and ship actual work in the right repo.
 
