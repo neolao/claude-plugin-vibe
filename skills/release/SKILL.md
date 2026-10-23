@@ -41,11 +41,11 @@ If `README.md` has `vibe:` managed section markers, or `docs/` holds a Markdown 
 
 ## Step 5 — Bump the version
 
-Set the version field of every project manifest to `X.Y.Z` (`package.json`, `Cargo.toml`, `pyproject.toml`, `pom.xml`, `build.gradle`, `composer.json`, gemspec, …), using each file's own syntax.
+Set the version field of every project manifest to `X.Y.Z` (`package.json`, `Cargo.toml`, `pyproject.toml`, `pom.xml`, `build.gradle`, `composer.json`, gemspec, …), using each file's own syntax, and the lock file that mirrors it (`package-lock.json` carries it twice: at the root and under `packages[""]`). A `version` that is not the project's — a settings or schema format version, a dependency's — is left alone.
 
 ## Step 6 — Commit and tag
 
-Stage `CHANGELOG.md`, the manifests, and `README.md`/`docs/` if Step 4 changed them; commit `chore: release vX.Y.Z`; `git tag vX.Y.Z`.
+Stage the files Steps 3–5 changed, nothing else; commit `chore: release vX.Y.Z`; `git tag vX.Y.Z`.
 
 ## Step 7 — Report
 
