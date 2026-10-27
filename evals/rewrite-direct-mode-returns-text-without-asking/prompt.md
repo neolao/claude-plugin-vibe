@@ -1,6 +1,7 @@
 ---
 name: rewrite-direct-mode-returns-text-without-asking
-description: vibe:rewrite in `mode: direct` must return the rewritten paragraph itself (no before/after table, no AskUserQuestion, nothing written), still run the meaning-preservation check through one sub-agent, keep every fact of the original, and close with the direct-mode block
+description: >-
+  vibe:rewrite in `mode: direct` must return the rewritten paragraph itself (no before/after table, no AskUserQuestion, nothing written), still run the meaning-preservation check through one sub-agent, keep every fact of the original, and close with the direct-mode block
 tags: [rewrite, direct-mode]
 runs: 3
 max_turns: 12
