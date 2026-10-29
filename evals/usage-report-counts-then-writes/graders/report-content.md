@@ -2,11 +2,9 @@
 type: llm
 focus: trace
 criteria: |
-  Find the content of the written report in the trace: either a `cat` /
-  `Read` of the `.vibe/usage-reports/…-feature.md` file, or the `show` output of
-  the counters right before `write`. If neither is in the trace, judge from
-  the `usage-report.sh` calls alone whether the resulting file would hold these
-  values.
+  Find the content of the written report in the trace: the result of the
+  `cat` (or `Read`) of the `.vibe/usage-reports/…-feature.md` file made after
+  `write`. FAIL if the trace holds no such content.
   PASS if the report (frontmatter between two `---` lines) carries
   `entry: feature`, `backlog: no`, `questions: 2`, `rounds: 1`,
   `findings.raised: 5`, `findings.dropped: 1`, `findings.merged: 2`,

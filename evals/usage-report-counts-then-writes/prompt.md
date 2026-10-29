@@ -22,4 +22,4 @@ Then count these events in the order they happen, each at the moment it is liste
 
 Finally invoke the skill again with the argument `write`, verbatim, and close exactly as the skill prescribes.
 
-Report back the path of the report file and the closing lines you printed.
+Once the report is written, print the report file with `cat` so its content can be checked, then report back the path of the report file and the closing lines you printed.
