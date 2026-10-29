@@ -8,7 +8,7 @@ case_glob="${1:?usage: run.sh <case-glob> [eval flags...]}"
 shift
 
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-image="vibe-eval"
+image="${VIBE_EVAL_IMAGE:-vibe-eval}"
 
 if [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
   echo "run.sh: set CLAUDE_CODE_OAUTH_TOKEN (from \`claude setup-token\`) or ANTHROPIC_API_KEY" >&2

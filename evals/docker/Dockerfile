@@ -11,7 +11,7 @@ RUN apt-get update \
       git python3 jq bubblewrap socat ca-certificates curl ripgrep \
  && rm -rf /var/lib/apt/lists/*
 
-ARG CLAUDE_CODE_VERSION=latest
+ARG CLAUDE_CODE_VERSION=2.1.290
 RUN npm install -g "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}"
 
 # The repo is mounted, not copied: its owner differs from the container user.

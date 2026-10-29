@@ -59,6 +59,17 @@ that. Results land in `evals/results/<timestamp>-<case>/` (gitignored).
 - `--security-opt systempaths=unconfined` is needed too: without it,
   bubblewrap cannot mount `/proc` in its sandbox (`bwrap: Can't mount proc
   on /newroot/proc`) and every Bash call fails.
+- The image pins Claude Code `2.1.290` (`ARG CLAUDE_CODE_VERSION` in the
+  `Dockerfile`). From `2.1.305` on (checked 2026-10-29, `2.1.312` too), the Bash
+  sandbox is read-only for the workspace: `touch ./x`, `git tag` or `sed -i` fail
+  with "Read-only file system", and a file written to `/tmp` by one Bash call is
+  gone in the next. Every case whose skill writes through Bash (`release-*`,
+  `publish-*`, `usage-report-*`) then scores near 0 for a reason unrelated to the
+  skill (`release-tags-the-release-commit`: 0.33 on `2.1.305`, 0.89 on `2.1.290`).
+  Do not bump the pin without re-running one such case. To try another version
+  without touching the default image: `docker build --build-arg
+  CLAUDE_CODE_VERSION=<v> -t vibe-eval-<v> evals/docker`, then
+  `VIBE_EVAL_IMAGE=vibe-eval-<v> evals/docker/run.sh …`.
 - The repo is mounted at `/work`, not copied: edits on the host apply to the
   next run without rebuilding. They also reach a run already in progress: a skill
   or agent file edited on the host while a run is going is read by that run
