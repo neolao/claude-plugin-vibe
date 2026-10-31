@@ -3,7 +3,7 @@ name: clarify
 description: Interview the user round by round over a plan, idea, or decision until every open branch is settled — finds facts itself, never guesses what only the user can decide. Two modes for the build workflow, `need` (what to solve, for whom) then `implementation` (how), each looking in its own sources before asking. Invoked by other vibe skills, never directly by users.
 argument-hint: "[mode: need | mode: implementation] [subject to clarify — plan, idea, or decision; empty infers it from the current conversation]"
 user-invocable: false
-version: 1.3.0
+version: 1.4.0
 model: claude-sonnet-5-5
 ---
 
@@ -33,7 +33,9 @@ The **frontier** is every open decision whose prerequisites are settled — aska
 
 A constraint the user states ("the snapshots must not change", "it must stay compatible") is not a fact about the code: it says what must stay true, not what the solution must do about it. Before asking a risk question, or recording a deviation that constraint would force, have the sub-agent test the hypothesis when it is cheap (read the data, run the tests, try the simplest variant): if the constraint forces nothing, there is no question and no deviation. Ask the user only what the code cannot say.
 
-Ask the whole remaining frontier in one round, numbered, each with your recommended answer:
+Ask the whole remaining frontier in one round, each question with your recommended answer, through the `AskUserQuestion` tool: one entry per question, 2–4 options, your recommended answer first with its label ending in `(Recommended)`; a priority to ask is its own entry (`🔒 MUST` / `⚖️ SHOULD` / `✨ NICE`). The tool takes at most 4 questions per call: a larger frontier takes several calls in a row, in the same round. Never write the questions as text at the end of a turn while the tool is offered. Not among your tools does not mean not offered: it may be deferred, so load it first (`ToolSearch`, query `select:AskUserQuestion`).
+
+When that load finds nothing, or the caller runs in an autonomous mode where no one answers (`--auto`), write the round as text instead, numbered — the caller resolves it from the `➡️` lines:
 
 ```
 ❓ **Q1** - **<question title>**: <question body, possibly with choices>

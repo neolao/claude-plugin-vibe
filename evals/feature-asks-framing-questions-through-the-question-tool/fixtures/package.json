@@ -1,0 +1,10 @@
+{
+  "name": "shop-cart",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Order totals for the shop's checkout page.",
+  "scripts": {
+    "test": "node test/cart.test.js",
+    "lint": "node -e \"process.exit(0)\""
+  }
+}

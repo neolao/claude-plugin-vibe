@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: feature-asks-framing-questions-through-the-question-tool
+description: >-
+  vibe:feature puts its framing questions through AskUserQuestion, not as
+  plain text. Requires --allow-tools Bash Write Edit AskUserQuestion.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

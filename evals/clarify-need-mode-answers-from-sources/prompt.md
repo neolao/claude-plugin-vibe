@@ -25,6 +25,6 @@ Backlog item 007 — Export the monthly report (the item file is .vibe/backlog/0
 
 The current directory holds the project's `.vibe/` (index, decisions, backlog). No project memory directory is indicated for this session.
 
-When `vibe:clarify` presents a round of questions in its `❓ **Q1**` / `➡️` format, do not wait for a separate message — answer every question yourself, right away, decisively, as the Product Owner would (for example: a month with no transaction still produces a file with the header line only). If a later round asks anything further, answer it the same way until `vibe:clarify` reaches its end state.
+When `vibe:clarify` asks a round of questions (through `AskUserQuestion`, or as text in its `❓ **Q1**` / `➡️` format), do not wait for a separate message — answer every question yourself, right away, decisively, as the Product Owner would (for example: a month with no transaction still produces a file with the header line only). If a later round asks anything further, answer it the same way until `vibe:clarify` reaches its end state.
 
 In your final message, reproduce `vibe:clarify`'s entire run verbatim: every round of questions it asked, the answers you gave, and its closing report (the `CLARIFY-RESULT:` line and everything under it).

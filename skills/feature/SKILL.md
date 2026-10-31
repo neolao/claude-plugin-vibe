@@ -2,7 +2,7 @@
 name: feature
 description: Implement a new feature using TDD, then update CHANGELOG.md under [Unreleased] > Added
 argument-hint: <feature description in natural language>
-version: 2.3.0
+version: 2.3.1
 model: claude-sonnet-5-5
 ---
 
