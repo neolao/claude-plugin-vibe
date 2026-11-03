@@ -18,6 +18,11 @@ criteria: |
   a timeout value, the grace period, how to deduplicate, which metric to
   scale on), or phrases a question in terms a non-technical Product Owner
   could not answer.
+
+  Judge what each question asks, not the reason given after it: a business
+  question that says in passing what the answer will set (the scaling target,
+  the replica count, whether ordering can be relaxed) passes, because the
+  Product Owner can still answer it without reading code.
 weight: 1
 ---
 
