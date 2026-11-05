@@ -13,7 +13,7 @@ criteria: |
   panel's or its controls' appearance: a width or breakpoint, a color,
   shadow or overlay opacity, a type size, spacing, an animation or
   transition, the focus ring's color, thickness or style, or a button's
-  visual weight or variant. "Focus is visible", "Save is the primary action
+  visual weight or variant. "Focus is visible", "required and optional fields are visibly distinct", "required fields are marked in text, not by color alone", "Save is the primary action
   and Delete is visually demoted", and "the row shows the new values" are
   statements of what the interface does or which action is primary, and
   pass.
