@@ -23,7 +23,10 @@ Brief:
 Our shop's pricing applies a percentage coupon to the cart. We're adding a
 "buy 2, get 1 free" promotion on a set of products. Product has decided:
 these two promotions and nothing else this year, and they never stack — the
-coupon applies to what remains after the free items. We're not sure how
+coupon applies to what remains after the free items. The offer counts units
+of the same product only (3 of one product, 1 free), and the cart page keeps
+showing just the final total. The set of promoted products is fixed and
+only changes with a release. We're not sure how
 hot the pricing code is. How should we shape this?
 ```
 

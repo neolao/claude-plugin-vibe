@@ -13,10 +13,19 @@ criteria: |
   about the code (which file, whether `total()` is on a hot path, how often
   it is called), about a framework or library, and no "do you prefer
   option A or option B". Rounding, tax or currency questions are product
-  questions and pass.
-  FAIL if any OPEN QUESTIONS entry asks such a technical detail, names a
-  pattern or a code identifier as the thing to decide, or asks the Product
-  Owner to choose between the named options.
+  questions and pass, and so do questions about how a promotion behaves
+  (whether products mix, which unit is free, whether the offer repeats) or
+  about what the customer sees on the cart page. Judge the question
+  sentence itself: the per-answer explanations beneath it may name the
+  option each answer picks, and doing so does not make the question
+  technical.
+  FAIL if the question sentence of an OPEN QUESTIONS entry itself asks such
+  a technical detail, makes a pattern or a code identifier the thing to
+  decide, or asks the Product Owner to choose between the named options.
+  A question about what the business will do (promotions that may combine,
+  further promotions coming, what is shown to customers) passes even when
+  the answer lines beneath it say which option or which file that answer
+  leads to: the agent is required to say so.
 weight: 2
 ---
 
