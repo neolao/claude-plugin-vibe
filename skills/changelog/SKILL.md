@@ -2,7 +2,7 @@
 name: changelog
 description: Update CHANGELOG.md (Keep a Changelog format) from git history since the last tag — entries land under [Unreleased]; cutting a version is /vibe:release's job
 argument-hint: "(no arguments)"
-version: 1.2.0
+version: 1.3.0
 model: claude-sonnet-5-5
 ---
 
@@ -38,4 +38,4 @@ Add the new entries under `## [Unreleased]`, grouped by category in the table's 
 
 ## Step 4 — Report
 
-Short, plain sentences: commits processed, kept vs discarded, categories populated — or that the file was left as is, when every commit was covered or noise. Don't print the file unless asked.
+Short, plain sentences: commits processed, kept vs discarded, categories populated — or that the file was left as is, when every commit was covered or noise. When the tag that scoped the range has no section of its own in the file, say so: its commits are before the range and nobody has written them up, and that section is not this skill's to create. Don't print the file unless asked.
