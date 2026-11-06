@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: review-ddd-scoped-accepts-writer-through-root-method
+description: >
+  Precision mirror of review-ddd-scoped-anchors-on-the-writer-in-scope:
+  the agent reviews fixtures/promotions/ only, where `apply_bundle` adds
+  the bundle's line through `Order.add_line`, the root's own method,
+  defined outside the scope. Nothing in scope is a finding.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

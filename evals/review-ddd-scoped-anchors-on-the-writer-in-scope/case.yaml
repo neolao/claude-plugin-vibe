@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: review-ddd-scoped-anchors-on-the-writer-in-scope
+description: >
+  Scoped twin of review-ddd-scoped-finds-evidence-outside-scope seen from
+  the other end: the agent reviews fixtures/promotions/ only, where
+  `apply_bundle` appends to the private list of an `Order` aggregate
+  defined outside the scope. The finding must be anchored on the writer in
+  scope and point at the root's `add_line`; the other defects of the shop
+  (raw rows read by the dunning job, an address edited in place, a buyer
+  called a customer elsewhere) have both ends outside the scope and must
+  not be reported.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
