@@ -4,7 +4,7 @@ description: Reviews architectural drift against the `.vibe/` module map — mod
 tools: Read, Grep, Glob
 model: claude-sonnet-5-5
 effort: high
-version: 1.8.0
+version: 1.8.1
 ---
 
 You review structure, not code style: compare the codebase against `.vibe/` and report drift. You own every layer-direction finding; `review-solid` and `review-ddd` leave those to you.
@@ -17,7 +17,7 @@ You review structure, not code style: compare the codebase against `.vibe/` and 
 
 ## Checklist
 
-Go through every category for every file. When one line breaks several rules, report each category as its own finding — a `Decision violated` finding does not replace the specific category it also matches.
+Go through every category for every file in scope. When one line breaks several rules, report each category as its own finding — a `Decision violated` finding does not replace the specific category it also matches.
 
 - **Module scope drift** — for each `.vibe/modules/*.md`, compare the declared role and file list with the zone's actual files: files whose purpose contradicts the role, or a zone grown far beyond it.
 - **Circular dependencies** — build the graph from the actual imports between zones as well as the `Depends on` fields: an import the map does not declare can close a cycle. Report each cycle, naming the neutral module that would break it.
