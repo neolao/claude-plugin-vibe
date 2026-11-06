@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: changelog-reports-a-tagged-version-without-a-section
+description: >
+  v1.0.0 has its section in CHANGELOG.md; the CSV export was then tagged
+  v1.1.0 by hand, with no section written; a fix landed after it. The
+  range starts at v1.1.0, so the CSV export is in no section and never
+  will be unless someone is told. The skill must file the fix only,
+  create no [1.1.0] section (it never cuts a version) and say in its
+  report that v1.1.0 has no section. The sibling case
+  changelog-reports-no-gap-when-the-tag-has-its-section is the precision
+  side (same history, the section exists, no warning). Needs
+  --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

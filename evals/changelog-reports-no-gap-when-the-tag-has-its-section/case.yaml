@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: changelog-reports-no-gap-when-the-tag-has-its-section
+description: >
+  Precision twin of changelog-reports-a-tagged-version-without-a-section:
+  same history (v1.0.0, the CSV export tagged v1.1.0, then a fix), but
+  CHANGELOG.md has both the [1.0.0] and the [1.1.0] sections. The skill
+  must file the fix under [Unreleased] and say nothing about a missing
+  section: the warning is for a tag without one, not for every tag. Needs
+  --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
