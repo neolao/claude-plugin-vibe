@@ -2,7 +2,7 @@
 name: changelog
 description: Update CHANGELOG.md (Keep a Changelog format) from git history since the last tag — entries land under [Unreleased]; cutting a version is /vibe:release's job
 argument-hint: "(no arguments)"
-version: 1.3.0
+version: 1.3.1
 model: claude-sonnet-5-5
 ---
 
@@ -34,7 +34,7 @@ Bring `## [Unreleased]` in `CHANGELOG.md` up to date with the git history ([Keep
 
 ## Step 3 — Write
 
-Add the new entries under `## [Unreleased]`, grouped by category in the table's order; leave versioned sections untouched. Create whichever is missing — the file with the Keep a Changelog header, the `## [Unreleased]` heading above the first version section, the category heading — never a second `[Unreleased]`.
+Add the new entries under `## [Unreleased]`, grouped by category in the table's order; leave versioned sections untouched. Create whichever is missing — the file with the Keep a Changelog header, the `## [Unreleased]` heading above the first version section, the category heading — never a second `[Unreleased]`: a heading that already plays that part under another spelling (`## Unreleased`, `## [unreleased]`) is the section, fill it and keep its spelling.
 
 ## Step 4 — Report
 
