@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: review-correctness-scoped-finds-evidence-outside-scope
+description: >
+  Scoped twin of review-correctness-finds-violations: the agent reviews
+  fixtures/orders/ only, and each defect there needs a file outside the
+  scope to show (a shipping helper that returns None for an unserved
+  country, a report caller still on a one-argument contract, a thread-pool
+  server that makes a check-then-act overlap, a SKU helper whose docstring
+  promises a trim one in-scope caller does by hand). Every finding must stay
+  anchored on a file in scope.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

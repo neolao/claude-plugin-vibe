@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: review-correctness-scoped-accepts-evidence-outside-scope
+description: >
+  Precision twin of review-correctness-scoped-finds-evidence-outside-scope:
+  the agent reviews fixtures/orders/ only, where the code looks like the
+  recall fixture's but the files outside the scope show each case is sound
+  (a shipping helper that always returns a quote or raises, callers all on
+  the two-argument contract, a lock the HTTP handler holds around the
+  reservation, a receipt lookup the handler validates first), and one real
+  off-by-one lives entirely outside the scope.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
