@@ -1,0 +1,16 @@
+schema_version: "1.1"
+name: changelog-reuses-an-unreleased-heading-spelled-without-brackets
+description: >
+  CHANGELOG.md keeps its headings without brackets: `## Unreleased`
+  (empty) above `## 1.0.0 - 2026-06-01`. One feature landed since the
+  tag. Read literally, "create the `## [Unreleased]` heading when
+  missing" adds a bracketed twin and splits the pending section in two.
+  The skill must fill the existing heading, keep its spelling, and leave
+  exactly one unreleased heading in the file. The sibling case
+  changelog-inserts-the-heading-when-unreleased-is-only-an-entry is the
+  precision side (the word appears in an entry, not as a heading, and
+  the heading must still be inserted). Needs --allow-tools Bash Write
+  Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: changelog-inserts-the-heading-when-unreleased-is-only-an-entry
+description: >
+  Precision twin of
+  changelog-reuses-an-unreleased-heading-spelled-without-brackets. The
+  file has no unreleased heading at all; the word only appears in a
+  released entry ("List unreleased drafts in the report overview"). A
+  search for the word is not a search for the heading: the skill must
+  insert `## [Unreleased]` above `## [1.0.0]`, once, file the PDF export
+  under it, and leave the released entry where it is. Needs
+  --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
