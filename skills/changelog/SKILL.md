@@ -2,7 +2,7 @@
 name: changelog
 description: Update CHANGELOG.md (Keep a Changelog format) from git history since the last tag — entries land under [Unreleased]; cutting a version is /vibe:release's job
 argument-hint: "(no arguments)"
-version: 1.1.0
+version: 1.2.0
 model: claude-sonnet-5-5
 ---
 
@@ -12,7 +12,7 @@ Bring `## [Unreleased]` in `CHANGELOG.md` up to date with the git history ([Keep
 
 ## Step 1 — Read the current state
 
-`CHANGELOG.md` if it exists (current `[Unreleased]` entries); the latest tag (`git tag --sort=-version:refname | head -1`); the commits since it (`git log <tag>..HEAD --oneline --no-merges`, or the whole history when there is no tag).
+`CHANGELOG.md` if it exists (current `[Unreleased]` entries); the latest version tag — `git tag --list 'v[0-9]*' '[0-9]*' --sort=-version:refname | head -1`, the patterns matter, `--sort` alone puts a `deploy-…` or `vnext` tag first; a pre-release tag (`v1.3.0-rc.1`) sorts above its final version: skip it when `v1.3.0` is also tagged, its commits are released; the commits since it (`git log <tag>..HEAD --oneline --no-merges`, or the whole history when there is no version tag).
 
 ## Step 2 — Classify the commits
 
