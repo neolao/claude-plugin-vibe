@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: changelog-scopes-to-the-version-tag-among-other-tags
+description: >
+  The repo is tagged v1.2.0, then a feature lands and the ops team tags
+  that commit deploy-2026-10-30 and vnext, then a fix lands. `git tag
+  --sort=-version:refname | head -1` returns vnext, which would hide the
+  feature from [Unreleased]. The skill must scope to the latest
+  version-shaped tag, v1.2.0, and file both commits. The sibling case
+  changelog-scopes-to-a-pre-release-tag-without-a-final is the precision
+  side (a pre-release tag with no final version is a version tag and must
+  be used). Needs --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
