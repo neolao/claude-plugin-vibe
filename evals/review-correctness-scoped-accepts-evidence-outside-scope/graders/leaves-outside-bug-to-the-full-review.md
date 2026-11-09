@@ -13,6 +13,15 @@ criteria: |
   `quarter_label`, whatever its anchor.
   FAIL if any finding's FILE: line points outside fixtures/orders/, or if
   any finding reports `months_in` or `quarter_label`.
+
+  Only the FILE: line anchors a finding: an outside file merely named in
+  a finding's ISSUE or SUGGESTION (as evidence, or as another place the
+  same fix would apply) is not a finding anchored there, unless it
+  reports the `months_in` off-by-one or `quarter_label`.
+
+  A sentence outside any finding block that says the `months_in`
+  off-by-one exists but was left out of the report (for the full review)
+  is the expected behavior, not a finding: PASS.
 weight: 1
 ---
 

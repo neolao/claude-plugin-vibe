@@ -8,7 +8,7 @@ HALF_CENT = 0.005
 
 
 def is_settled(invoice, payments):
-    """True once the recorded payments cover the invoice total, to the cent."""
+    """True when the recorded payments match the invoice total to the cent."""
     return math.isclose(sum(p.amount for p in payments), invoice.total, abs_tol=HALF_CENT)
 
 
