@@ -7,8 +7,8 @@ description: >-
   fixtures/reports/export.py (fixtures/tests/test_export.py compares them
   with STATUSES), and at most a `low` on the "[Shop] " subject prefix
   written in fixtures/notifications/templates.py and in
-  fixtures/mail/parser.py, whose only guard is a test on the templates
-  side
+  fixtures/mail/parser.py, which a round-trip test covers for the
+  confirmation subject only
 tags: [review-coordination, precision, severity]
 runs: 3
 max_turns: 10

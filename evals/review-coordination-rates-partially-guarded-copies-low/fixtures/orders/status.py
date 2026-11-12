@@ -9,6 +9,8 @@ TRANSITIONS = {
     "cancelled": (),
 }
 
+assert set(TRANSITIONS) == set(STATUSES), "every status needs a TRANSITIONS entry"
+
 
 def can_move(current, target):
     return target in TRANSITIONS[current]

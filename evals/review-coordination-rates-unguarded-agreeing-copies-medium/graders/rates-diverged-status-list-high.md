@@ -14,8 +14,12 @@ criteria: |
   category `Duplicated case list` or `Parallel table`, or a clearly
   equivalent name) with SEVERITY `high` whose ISSUE names the missing
   "cancelled" entry or the KeyError / crash of the export.
-  FAIL if no finding names the two lists, if that finding carries SEVERITY
-  `medium` or `low`, or if it never says the copies already differ.
+  Judge only the finding on the status list: the severity of any other
+  finding in the report (for example the one on the shipping threshold)
+  is irrelevant here.
+  FAIL if no finding names the two lists, if the finding on the status
+  list carries SEVERITY `medium` or `low`, or if it never says the copies
+  already differ.
 weight: 2
 ---
 

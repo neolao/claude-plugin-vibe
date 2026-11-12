@@ -3,7 +3,7 @@ from pricing.fees import FREE_SHIPPING_THRESHOLD, shipping_fee
 
 
 def shipping_banner(cart_total):
-    if cart_total >= FREE_SHIPPING_THRESHOLD:
+    if shipping_fee(cart_total) == 0.0:
         return "Free shipping on this order"
     missing = FREE_SHIPPING_THRESHOLD - cart_total
     return f"Add {missing:.2f} EUR for free shipping"
