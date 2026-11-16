@@ -19,6 +19,11 @@ criteria: |
   error envelope (RFC 7807 problem details, a top-level `errors` array), or
   a flatter URL outside the account nesting. A different style suggested
   only in RISKS as a gap or a later migration still passes.
+
+  Only an entry that replaces one of these four named conventions counts
+  against the reply. Something the brief gives no convention for — a sort
+  parameter, an idempotency header, a page-size maximum, a validation rule
+  or a status code — is an addition, not a second style, and still passes.
 weight: 2
 ---
 
