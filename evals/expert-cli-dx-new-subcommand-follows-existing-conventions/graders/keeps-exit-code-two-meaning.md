@@ -11,6 +11,10 @@ criteria: |
   node on `fleet drain` (or at least never gives 2 another meaning), and
   gives a failed drain (a workload that could not be moved, the cordon
   failing) a non-zero exit code distinct from 2.
+  Adding new codes, other than 2 and documented, for the new failure
+  classes (a usage error, a timeout, a partial drain, a failed cordon) is
+  what the checklist asks and passes: it extends the existing scheme, it
+  does not replace it.
   FAIL if the reply assigns exit code 2 to another failure class (a usage
   error, a timeout, a partial drain), proposes a fresh exit-code scheme for
   the new subcommand that remaps 2, or lets a failed drain exit 0.
