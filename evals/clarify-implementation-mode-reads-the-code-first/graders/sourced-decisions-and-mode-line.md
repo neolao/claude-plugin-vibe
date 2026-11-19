@@ -2,7 +2,8 @@
 type: llm
 focus: last_message
 criteria: |
-  The closing report must open with
+  The final message reproduces the run's rounds first, so the closing
+  report starts further down: its `CLARIFY-RESULT:` line must read
   `CLARIFY-RESULT: settled — mode: implementation`, and `### Decisions
   made` must settle, each with a `(source: …)` citation into the fixture
   (`CLAUDE.md`, `exports/base.py`, `exports/__init__.py`, `tests/…`):
