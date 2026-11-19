@@ -1,9 +1,10 @@
 ---
 type: regex
 target: last_message
-pattern: "●\\s*Write tests"
+pattern: "●\\s*Writing tests"
 weight: 1
 ---
 
-The `in_progress` transition used the exact `● <subject>` glyph line the
-skill specifies, not paraphrased prose like "Starting Write tests".
+The `in_progress` transition used the exact `● <activeForm>` glyph line the
+skill specifies (the progressive form of "Write tests"), not paraphrased prose
+like "Starting the tests".
