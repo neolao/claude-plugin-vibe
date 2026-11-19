@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The documentation a feature or fix updates is now checked against the code before it ships: a sentence the code does not back is corrected or removed.
+- The implementer now writes code knowing the checks the review will apply and your global rules, so fewer review rounds are needed.
+- Fewer false alarms from the review: a comment that disagrees with buggy code no longer gets "fixed" to match the bug, names imposed by a framework or an external API are left alone, a value object that checks its own rules is no longer called a mixed responsibility, a long but flat function or a business rule with many cases is no longer flagged for its size alone, and two words for one concept in two separate business areas are no longer flagged.
+- The review now catches a half-done migration (old and new ways mixed in one place, or a TODO the change made false) and hidden exits inside expressions.
+- The interview no longer asks you to prioritise technical decisions it settled from the code, and decides where each new type lives one by one.
+- A "never do X" said in the middle of a feature no longer interrupts it; a rule you already have is not saved twice, and a rule you declined is not offered again in the same session.
+
 ## [3.1.0] - 2026-10-21
 
 ### Added
