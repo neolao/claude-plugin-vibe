@@ -1,0 +1,18 @@
+schema_version: "1.1"
+name: review-dependencies-application-finds-ranges-without-lockfile
+description: >
+  Recall mirror of review-dependencies-library-accepts-ranges-without-lockfile:
+  the manifest is an application, not a library. fixtures/pyproject.toml
+  declares a `[project.scripts]` entry point, fixtures/Dockerfile installs
+  the checkout itself (`pip install /app`) and runs it, and
+  fixtures/README.md deploys it the same way; it is never published to an
+  index. Its runtime dependencies are open-ended ranges (requests>=2.28,
+  click>=8.0) and no lockfile is committed: what gets deployed depends on
+  the day of the build. An agent that reads `pip install` as a library
+  signal, or that exempts every manifest from the lockfile rule, reports
+  nothing. Both packages are imported and pytest sits in the dev extra. No
+  pip-audit in the sandbox: the audit-could-not-run finding is expected
+  and not graded here. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

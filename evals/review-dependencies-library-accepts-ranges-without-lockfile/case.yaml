@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: review-dependencies-library-accepts-ranges-without-lockfile
+description: >
+  Precision case on a Python library published to PyPI (fixtures/README.md
+  says `pip install slugkit`, fixtures/pyproject.toml has no entry point
+  and a PyPI homepage): its runtime dependencies are declared as
+  lower-bounded ranges (unidecode>=1.3, python-dateutil>=2.8) and no
+  lockfile is committed, which is the convention for a package installed
+  by others. An agent that applies the application rule to every manifest
+  flags the ranges and the missing lockfile as Version hygiene. Both
+  packages are imported (python-dateutil as dateutil) and pytest sits in
+  the dev extra, so nothing else is expected either. No pip-audit in the
+  sandbox: the audit-could-not-run finding is expected and not graded
+  here. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
