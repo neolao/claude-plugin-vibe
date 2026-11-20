@@ -5,9 +5,11 @@ Usage: python3 evals/tokens.py <output-dir> [--cleanup]
 
 <output-dir> is the --output-dir passed to `claude plugin eval`. The script reads
 aggregate-result.json there, which gives each run's exact trace path: no
-directory is guessed by glob. The `result` line of each trace carries
+directory is guessed by glob. The last `result` line of each trace carries
 `modelUsage`, which breaks down every model of the session — main agent and
-sub-agents included — with the cost of each.
+sub-agents included — with the cost of each. A trace has several `result`
+lines when a background sub-agent finishes after the answer and the session
+takes another turn; each line is cumulative, so the last one covers the run.
 
 Before printing anything, the count is reconciled with the CLI's cost:
   Σ costUSD of modelUsage   == total_cost_usd of the result line
@@ -44,22 +46,23 @@ def fmt(n):
     return f"{n:,}".replace(",", " ")
 
 
-def result_line(trace_path):
+def last_result_line(trace_path):
+    last = None
     for line in open(trace_path):
         try:
             record = json.loads(line)
         except ValueError:
             continue
         if record.get("type") == "result":
-            return record
-    return None
+            last = record
+    return last
 
 
 def measure_run(label, run):
     trace = run.get("tracePath")
     if not trace or not os.path.exists(trace):
         fail(f"{label}: missing trace ({trace}). Was the run launched with --keep-temp?")
-    result = result_line(trace)
+    result = last_result_line(trace)
     if result is None:
         fail(f"{label}: no `result` line in {trace}. Interrupted run?")
     models = result.get("modelUsage") or {}
