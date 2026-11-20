@@ -1,0 +1,12 @@
+{
+  "name": "catalog-web",
+  "version": "3.2.0",
+  "private": true,
+  "scripts": {
+    "build": "node src/build.js"
+  },
+  "dependencies": {
+    "lodash": "4.17.4",
+    "date-fns": "3.6.0"
+  }
+}

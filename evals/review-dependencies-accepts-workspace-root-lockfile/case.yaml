@@ -1,0 +1,18 @@
+schema_version: "1.1"
+name: review-dependencies-accepts-workspace-root-lockfile
+description: >
+  Precision mirror of review-dependencies-finds-every-manifest on an npm
+  workspace: fixtures/package.json declares `workspaces: ["packages/*"]`
+  and fixtures/package-lock.json resolves every member's dependencies;
+  fixtures/packages/api/package.json declares caret ranges (express
+  ^4.21.2, date-fns ^3.6.0) and has no lockfile of its own, as no
+  workspace member does. An agent that audits each manifest in isolation
+  flags the member's ranges as floating with no lockfile committed, and
+  reports an `npm audit` run inside packages/api/ as if it covered
+  anything. Both packages are imported by fixtures/packages/api/src/. The
+  networked npm audit cannot run in the sandbox: the audit-could-not-run
+  finding is expected and not graded here. Needs --allow-tools Bash to
+  run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

@@ -1,0 +1,16 @@
+schema_version: "1.1"
+name: review-dependencies-finds-every-manifest
+description: >
+  A repository with two manifests of two ecosystems: fixtures/api/
+  (Python, pyproject.toml, pinned PyYAML==5.3, no lockfile) and
+  fixtures/web/ (Node, package.json with a committed package-lock.json,
+  pinned lodash 4.17.4). Each pinned version is affected by published
+  advisories and must be reported as a Vulnerability from the agent's own
+  knowledge, since neither pip-audit nor a networked npm audit can run in
+  the sandbox; the audit-could-not-run report must cover both ecosystems.
+  An agent that picks one stack and audits it alone misses the other
+  manifest entirely. Every other dependency is pinned, locked where a
+  lockfile exists, and imported. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

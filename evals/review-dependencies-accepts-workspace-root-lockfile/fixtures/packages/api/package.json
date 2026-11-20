@@ -1,0 +1,12 @@
+{
+  "name": "api",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "date-fns": "^3.6.0"
+  }
+}

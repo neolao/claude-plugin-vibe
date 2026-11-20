@@ -1,0 +1,4 @@
+[
+  { "sku": "MUG-01", "name": "Mug", "price": 12.5 },
+  { "sku": "TEE-02", "name": "T-shirt", "price": 24 }
+]
