@@ -3,7 +3,7 @@ name: clarify
 description: Interview the user round by round over a plan, idea, or decision until every open branch is settled — finds facts itself, never guesses what only the user can decide. Two modes for the build workflow, `need` (what to solve, for whom) then `implementation` (how), each looking in its own sources before asking. Invoked by other vibe skills, never directly by users.
 argument-hint: "[mode: need | mode: implementation] [subject to clarify — plan, idea, or decision; empty infers it from the current conversation]"
 user-invocable: false
-version: 1.6.0
+version: 1.6.1
 model: claude-sonnet-5-5
 ---
 
@@ -71,7 +71,7 @@ The `need` mode ends when its decisions are settled, without acting on them: the
 
 ## Step 4 — End
 
-When the frontier is empty, summarize the shared understanding and ask the user to confirm it before treating it as final or handing it to a caller. If the user stops early (declines to continue, says the rest does not matter), respect that and report what was settled, flagging the rest as open.
+When the frontier is empty, summarize the shared understanding and ask the user to confirm it before treating it as final or handing it to a caller. If the user stops early (declines to continue, says the rest does not matter), respect that and report what was settled, flagging the rest as open. Stopped before any decision was settled (the subject itself is not one) → `CLARIFY-RESULT: abandoned` alone, no synthesis.
 
 ## Step 5 — Report
 

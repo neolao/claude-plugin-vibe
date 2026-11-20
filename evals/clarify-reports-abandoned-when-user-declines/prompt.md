@@ -16,6 +16,6 @@ Invoke the `vibe:clarify` skill (Skill tool, `skill: "vibe:clarify"`) with this 
 
 This is a deliberately vague subject with no fixed scope — plenty of open decisions (which part of the app, what "faster" means, for which users) and nothing has been decided yet.
 
-When `vibe:clarify` presents its Round 1 questions, do not answer them. Instead, decline to continue: say plainly, in your own words, that you don't want to answer these questions right now and would rather stop the interview here — the way a real user might cut it short. Do not answer any of the questions, even partially, and do not ask `vibe:clarify` to guess on your behalf.
+When `vibe:clarify` presents its Round 1 questions, do not answer them, and do not end your turn on them (nobody else will reply). Instead, in a following message, decline to continue: say plainly, in your own words, that you don't want to answer these questions right now and would rather stop the interview here — the way a real user might cut it short. Do not answer any of the questions, even partially, and do not ask `vibe:clarify` to guess on your behalf.
 
 In your final message, reproduce `vibe:clarify`'s entire run verbatim: the round of questions it asked, your decline, and its closing report.
