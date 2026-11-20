@@ -12,6 +12,8 @@ criteria: |
     to the admin page);
   - tests are `unittest` files under `tests/`;
   - amounts come as integer cents and are formatted by the exporter.
+  A decision marked `(default)` is not taken from the code and needs no
+  citation.
 
   PASS if the mode line is present and those three decisions appear with a
   source each.
