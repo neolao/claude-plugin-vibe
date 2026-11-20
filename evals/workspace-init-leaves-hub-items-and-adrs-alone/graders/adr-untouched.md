@@ -3,7 +3,7 @@ type: regex
 target:
   source: file
   path: roadmap/.vibe/decisions/001-one-repo-owns-orders.md
-pattern: "^---\\nstatus: accepted\\ndate: 2026-09-14\\n---\\n# 001 — One repo owns the orders domain\\n\\n## Context\\nTwo repos were writing order records\\.\\n\\n## Decision\\n`orders-api` owns the `orders` domain; every other repo reads it through the API\\.\\n\\n## Consequences\\nThe storefront drops its local order table\\.\\n$"
+pattern: "^-{3}\\nstatus: accepted\\ndate: 2026-09-14\\n-{3}\\n# 001 — One repo owns the orders domain\\n\\n## Context\\nTwo repos were writing order records\\.\\n\\n## Decision\\n`orders-api` owns the `orders` domain; every other repo reads it through the API\\.\\n\\n## Consequences\\nThe storefront drops its local order table\\.\\n$"
 flags: ""
 match: contains
 weight: 2
