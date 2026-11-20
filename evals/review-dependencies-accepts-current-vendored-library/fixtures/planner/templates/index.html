@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Leave planner</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/planner.css') }}">
+</head>
+<body>
+  <h1>Book a day off</h1>
+  <form id="booking">
+    <input name="employee" placeholder="Your name" required>
+    <input name="day" type="date" required>
+    <button type="submit">Book</button>
+  </form>
+  <ul id="bookings"></ul>
+  <script src="{{ url_for('static', filename='js/jquery-3.7.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+</body>
+</html>

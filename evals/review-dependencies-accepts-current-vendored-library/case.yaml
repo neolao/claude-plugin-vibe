@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: review-dependencies-accepts-current-vendored-library
+description: >
+  Precision mirror of review-dependencies-finds-vendored-library: the same
+  Flask app, with fixtures/planner/static/js/jquery-3.7.1.min.js (header
+  version 3.7.1, no published advisory) committed beside the project's own
+  fixtures/planner/static/js/calendar.js, which states no version and is
+  not a package. An agent that treats every committed script as a
+  vulnerable library, or that invents a package for the project's own
+  code, fails. fixtures/requirements.txt pins a clean flask==3.0.3. No
+  pip-audit in the sandbox: the audit-could-not-run finding is expected
+  and not graded here. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

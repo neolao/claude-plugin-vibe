@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: review-dependencies-finds-vendored-library
+description: >
+  A Flask app whose only manifest (fixtures/requirements.txt) pins a clean
+  flask==3.0.3, while fixtures/planner/static/js/jquery-1.8.3.min.js is a
+  copy of jQuery 1.8.3 committed into the tree and loaded by
+  fixtures/planner/templates/index.html. No manifest declares it and no
+  audit tool sees it; that release is affected by published cross-site
+  scripting advisories (CVE-2020-11022, CVE-2020-11023, CVE-2019-11358,
+  CVE-2015-9251) that the agent must report from its own knowledge as a
+  Vulnerability finding on the file. An agent that reviews manifests only
+  reports the audit that could not run and nothing else. No pip-audit in
+  the sandbox: the audit-could-not-run finding is expected and not graded
+  here. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
