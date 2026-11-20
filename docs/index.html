@@ -608,12 +608,12 @@
   if (reduced || !("IntersectionObserver" in window)) {
     revealEls.forEach(function(el){ el.classList.add("in"); });
   } else {
-    var ro = new IntersectionObserver(function(entries){
+    var revealObserver = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
-        if (e.isIntersecting) { e.target.classList.add("in"); ro.unobserve(e.target); }
+        if (e.isIntersecting) { e.target.classList.add("in"); revealObserver.unobserve(e.target); }
       });
     }, { threshold: 0.12 });
-    revealEls.forEach(function(el){ ro.observe(el); });
+    revealEls.forEach(function(el){ revealObserver.observe(el); });
   }
 
   /* ---------- spinner ticker ---------- */
@@ -628,104 +628,104 @@
   /* ---------- demo scripts ----------
      line types:
        cmd  — typed char by char after a prompt
-       out  — printed as a whole line (html allowed); optional d = delay before it
+       out  — printed as a whole line (html allowed); optional delayMs = delay before it
        run  — printed with a spinner, swaps to `done` html after `after` ms
        gap  — blank line
   */
-  var P = '<span class="t-p">❯</span> ';
+  var PROMPT_HTML = '<span class="t-p">❯</span> ';
   var DEMOS = {
     feature: [
-      { t:"cmd", text:"/vibe:feature 001" },
-      { t:"out", d:500, html:'<span class="t-dim">●</span> backlog <span class="t-bold">001-dark-mode-toggle</span> → <span class="t-warn">in_progress</span>' },
-      { t:"out", d:600, html:'<span class="t-dim">●</span> writing the failing test first…' },
-      { t:"out", d:900, html:'  <span class="t-err">✗</span> settings.spec.ts <span class="t-dim">— "toggles dark mode" fails (good: nothing implemented yet)</span>' },
-      { t:"out", d:700, html:'<span class="t-dim">●</span> implementing…' },
-      { t:"out", d:1100, html:'  <span class="t-ok">✓</span> settings.spec.ts <span class="t-dim">—</span> <span class="t-ok">13 passed</span><span class="t-dim">, 0 failed</span>' },
-      { t:"run", d:400, html:'<span class="t-dim">●</span> verify: exercising the change for real…', after:1600, done:'<span class="t-dim">●</span> verify: exercising the change for real… <span class="t-ok">ok</span>' },
-      { t:"out", d:1000, html:'  <span class="t-ok">✓</span> nominal <span class="t-dim">— toggle switches the theme</span>' },
-      { t:"out", d:500, html:'  <span class="t-ok">✓</span> edge <span class="t-dim">— preference survives a reload</span>' },
-      { t:"out", d:600, html:'<span class="t-dim">●</span> CHANGELOG.md <span class="t-dim">updated under</span> [Unreleased] › Added' },
-      { t:"out", d:600, html:'<span class="t-dim">●</span> git commit <span class="t-cyan" style="color:#6ec6ea">-m</span> <span class="t-warn">"feat: dark mode toggle in settings"</span>' },
-      { t:"gap" },
-      { t:"out", d:400, html:'<span class="t-ok">✔ shipped</span> <span class="t-dim">— backlog 001 moved to</span> done/' }
+      { type:"cmd", text:"/vibe:feature 001" },
+      { type:"out", delayMs:500, html:'<span class="t-dim">●</span> backlog <span class="t-bold">001-dark-mode-toggle</span> → <span class="t-warn">in_progress</span>' },
+      { type:"out", delayMs:600, html:'<span class="t-dim">●</span> writing the failing test first…' },
+      { type:"out", delayMs:900, html:'  <span class="t-err">✗</span> settings.spec.ts <span class="t-dim">— "toggles dark mode" fails (good: nothing implemented yet)</span>' },
+      { type:"out", delayMs:700, html:'<span class="t-dim">●</span> implementing…' },
+      { type:"out", delayMs:1100, html:'  <span class="t-ok">✓</span> settings.spec.ts <span class="t-dim">—</span> <span class="t-ok">13 passed</span><span class="t-dim">, 0 failed</span>' },
+      { type:"run", delayMs:400, html:'<span class="t-dim">●</span> verify: exercising the change for real…', after:1600, done:'<span class="t-dim">●</span> verify: exercising the change for real… <span class="t-ok">ok</span>' },
+      { type:"out", delayMs:1000, html:'  <span class="t-ok">✓</span> nominal <span class="t-dim">— toggle switches the theme</span>' },
+      { type:"out", delayMs:500, html:'  <span class="t-ok">✓</span> edge <span class="t-dim">— preference survives a reload</span>' },
+      { type:"out", delayMs:600, html:'<span class="t-dim">●</span> CHANGELOG.md <span class="t-dim">updated under</span> [Unreleased] › Added' },
+      { type:"out", delayMs:600, html:'<span class="t-dim">●</span> git commit <span class="t-cyan" style="color:#6ec6ea">-m</span> <span class="t-warn">"feat: dark mode toggle in settings"</span>' },
+      { type:"gap" },
+      { type:"out", delayMs:400, html:'<span class="t-ok">✔ shipped</span> <span class="t-dim">— backlog 001 moved to</span> done/' }
     ],
     review: [
-      { t:"cmd", text:"/vibe:feature 001" },
-      { t:"out", d:500, html:'<span class="t-dim">●</span> tests green, runtime ok <span class="t-dim">— internal review:</span> <span class="t-bold">16 review agents</span> in parallel…' },
-      { t:"run", d:300, html:'  <span class="t-bold">correctness</span> <span class="t-dim">hunting bugs that can fail</span>', after:3100, done:'  <span class="t-ok">✓</span> <span class="t-bold">correctness</span> <span class="t-err">1 bug</span> <span class="t-dim">— off-by-one, scenario attached</span>' },
-      { t:"run", d:150, html:'  <span class="t-bold">security</span>    <span class="t-dim">scanning for secrets & injections</span>', after:2300, done:'  <span class="t-ok">✓</span> <span class="t-bold">security</span>    <span class="t-ok">clean</span>' },
-      { t:"run", d:150, html:'  <span class="t-bold">naming</span>      <span class="t-dim">auditing identifiers</span>', after:2900, done:'  <span class="t-ok">✓</span> <span class="t-bold">naming</span>      <span class="t-dim">1 finding</span>' },
-      { t:"run", d:150, html:'  <span class="t-bold">simplicity</span>  <span class="t-dim">measuring nesting & length</span>', after:3400, done:'  <span class="t-ok">✓</span> <span class="t-bold">simplicity</span>  <span class="t-dim">1 finding</span>' },
-      { t:"run", d:150, html:'  <span class="t-bold">robustness</span>  <span class="t-dim">tracing error paths</span>', after:2600, done:'  <span class="t-ok">✓</span> <span class="t-bold">robustness</span>  <span class="t-ok">clean</span>' },
-      { t:"run", d:150, html:'  <span class="t-bold">tests</span>       <span class="t-dim">running the real suite…</span>', after:4200, done:'  <span class="t-ok">✓</span> <span class="t-bold">tests</span>       <span class="t-warn">1 tautological test flagged</span>' },
-      { t:"out", d:4600, html:'<span class="t-dim">●</span> classifier <span class="t-dim">— 5 raised,</span> <span class="t-warn">1 dropped</span> <span class="t-dim">(handled two lines below),</span> <span class="t-bold">4 kept</span> <span class="t-dim">· all about how, none about what</span>' },
-      { t:"out", d:700, html:'<span class="t-dim">●</span> round 2 <span class="t-dim">— back to the plan, then red → green again</span>' },
-      { t:"out", d:800, html:'  <span class="t-ok">✓</span> last page no longer dropped <span class="t-dim">— paginate.ts, &lt; became &lt;=</span>' },
-      { t:"out", d:600, html:'  <span class="t-ok">✓</span> renamed <span class="t-dim">data2</span> → <span class="t-bold">pendingInvoices</span>' },
-      { t:"out", d:600, html:'  <span class="t-ok">✓</span> split a 62-line function in parser.ts' },
-      { t:"out", d:600, html:'  <span class="t-ok">✓</span> rewrote an assertion that could never fail' },
-      { t:"gap" },
-      { t:"out", d:400, html:'<span class="t-ok">✔ shipped</span> <span class="t-dim">— 4 findings fixed before the commit · you read the result, not the findings</span>' }
+      { type:"cmd", text:"/vibe:feature 001" },
+      { type:"out", delayMs:500, html:'<span class="t-dim">●</span> tests green, runtime ok <span class="t-dim">— internal review:</span> <span class="t-bold">16 review agents</span> in parallel…' },
+      { type:"run", delayMs:300, html:'  <span class="t-bold">correctness</span> <span class="t-dim">hunting bugs that can fail</span>', after:3100, done:'  <span class="t-ok">✓</span> <span class="t-bold">correctness</span> <span class="t-err">1 bug</span> <span class="t-dim">— off-by-one, scenario attached</span>' },
+      { type:"run", delayMs:150, html:'  <span class="t-bold">security</span>    <span class="t-dim">scanning for secrets & injections</span>', after:2300, done:'  <span class="t-ok">✓</span> <span class="t-bold">security</span>    <span class="t-ok">clean</span>' },
+      { type:"run", delayMs:150, html:'  <span class="t-bold">naming</span>      <span class="t-dim">auditing identifiers</span>', after:2900, done:'  <span class="t-ok">✓</span> <span class="t-bold">naming</span>      <span class="t-dim">1 finding</span>' },
+      { type:"run", delayMs:150, html:'  <span class="t-bold">simplicity</span>  <span class="t-dim">measuring nesting & length</span>', after:3400, done:'  <span class="t-ok">✓</span> <span class="t-bold">simplicity</span>  <span class="t-dim">1 finding</span>' },
+      { type:"run", delayMs:150, html:'  <span class="t-bold">robustness</span>  <span class="t-dim">tracing error paths</span>', after:2600, done:'  <span class="t-ok">✓</span> <span class="t-bold">robustness</span>  <span class="t-ok">clean</span>' },
+      { type:"run", delayMs:150, html:'  <span class="t-bold">tests</span>       <span class="t-dim">running the real suite…</span>', after:4200, done:'  <span class="t-ok">✓</span> <span class="t-bold">tests</span>       <span class="t-warn">1 tautological test flagged</span>' },
+      { type:"out", delayMs:4600, html:'<span class="t-dim">●</span> classifier <span class="t-dim">— 5 raised,</span> <span class="t-warn">1 dropped</span> <span class="t-dim">(handled two lines below),</span> <span class="t-bold">4 kept</span> <span class="t-dim">· all about how, none about what</span>' },
+      { type:"out", delayMs:700, html:'<span class="t-dim">●</span> round 2 <span class="t-dim">— back to the plan, then red → green again</span>' },
+      { type:"out", delayMs:800, html:'  <span class="t-ok">✓</span> last page no longer dropped <span class="t-dim">— paginate.ts, &lt; became &lt;=</span>' },
+      { type:"out", delayMs:600, html:'  <span class="t-ok">✓</span> renamed <span class="t-dim">data2</span> → <span class="t-bold">pendingInvoices</span>' },
+      { type:"out", delayMs:600, html:'  <span class="t-ok">✓</span> split a 62-line function in parser.ts' },
+      { type:"out", delayMs:600, html:'  <span class="t-ok">✓</span> rewrote an assertion that could never fail' },
+      { type:"gap" },
+      { type:"out", delayMs:400, html:'<span class="t-ok">✔ shipped</span> <span class="t-dim">— 4 findings fixed before the commit · you read the result, not the findings</span>' }
     ],
     backlog: [
-      { t:"cmd", text:'/vibe:backlog "Export reports as PDF and add a weekly email digest"' },
-      { t:"out", d:600, html:'<span class="t-dim">●</span> detected <span class="t-bold">2 independent capabilities</span> — splitting:' },
-      { t:"out", d:500, html:'  <span class="t-ok">+</span> 004-export-reports-pdf' },
-      { t:"out", d:300, html:'  <span class="t-ok">+</span> 005-weekly-email-digest' },
-      { t:"out", d:500, html:'<span class="t-dim">●</span> git commit <span style="color:#6ec6ea">-m</span> <span class="t-warn">"chore: backlog items 004, 005"</span>' },
-      { t:"gap" },
-      { t:"cmd", d:900, text:"/vibe:backlog" },
-      { t:"out", d:500, html:'  <span class="t-dim">002</span> onboarding-tour         <span class="t-warn">pending</span>' },
-      { t:"out", d:200, html:'  <span class="t-dim">003</span> csv-import              <span class="t-warn">pending</span>' },
-      { t:"out", d:200, html:'  <span class="t-dim">004</span> export-reports-pdf      <span class="t-warn">pending</span>' },
-      { t:"out", d:200, html:'  <span class="t-dim">005</span> weekly-email-digest     <span class="t-warn">pending</span>' }
+      { type:"cmd", text:'/vibe:backlog "Export reports as PDF and add a weekly email digest"' },
+      { type:"out", delayMs:600, html:'<span class="t-dim">●</span> detected <span class="t-bold">2 independent capabilities</span> — splitting:' },
+      { type:"out", delayMs:500, html:'  <span class="t-ok">+</span> 004-export-reports-pdf' },
+      { type:"out", delayMs:300, html:'  <span class="t-ok">+</span> 005-weekly-email-digest' },
+      { type:"out", delayMs:500, html:'<span class="t-dim">●</span> git commit <span style="color:#6ec6ea">-m</span> <span class="t-warn">"chore: backlog items 004, 005"</span>' },
+      { type:"gap" },
+      { type:"cmd", delayMs:900, text:"/vibe:backlog" },
+      { type:"out", delayMs:500, html:'  <span class="t-dim">002</span> onboarding-tour         <span class="t-warn">pending</span>' },
+      { type:"out", delayMs:200, html:'  <span class="t-dim">003</span> csv-import              <span class="t-warn">pending</span>' },
+      { type:"out", delayMs:200, html:'  <span class="t-dim">004</span> export-reports-pdf      <span class="t-warn">pending</span>' },
+      { type:"out", delayMs:200, html:'  <span class="t-dim">005</span> weekly-email-digest     <span class="t-warn">pending</span>' }
     ],
     auto: [
-      { t:"cmd", text:"/vibe:auto" },
-      { t:"out", d:500, html:'<span class="t-dim">●</span> <span class="t-bold">3 eligible items</span> <span class="t-dim">— no approval step, no questions</span>' },
-      { t:"run", d:400, html:'  <span class="t-dim">002</span> export-reports-pdf <span class="t-dim">— feature</span>', after:2400, done:'  <span class="t-ok">✓</span> <span class="t-dim">002</span> export-reports-pdf <span class="t-dim">— shipped</span> <span class="t-warn">a1b2c3d</span>' },
-      { t:"run", d:2600, html:'  <span class="t-dim">003</span> csv-import <span class="t-dim">— feature</span>', after:2200, done:'  <span class="t-err">⚠</span> <span class="t-dim">003</span> csv-import <span class="t-warn">blocked</span> <span class="t-dim">— import fails above 50 MB, 3 attempts</span>' },
-      { t:"out", d:2400, html:'    <span class="t-dim">set aside with its reason — the queue keeps going</span>' },
-      { t:"run", d:500, html:'  <span class="t-dim">004</span> login-crash <span class="t-dim">— fix</span>', after:1800, done:'  <span class="t-warn">⚑</span> <span class="t-dim">004</span> login-crash <span class="t-dim">— session cut: usage limit reached</span>' },
-      { t:"gap" },
-      { t:"cmd", d:900, text:"/vibe:auto" },
-      { t:"out", d:500, html:'<span class="t-dim">●</span> <span class="t-bold">resuming</span> <span class="t-dim">— 004 was in flight, partial work committed as</span> <span class="t-warn">wip:</span>' },
-      { t:"run", d:500, html:'  <span class="t-dim">004</span> login-crash <span class="t-dim">— fix</span>', after:2000, done:'  <span class="t-ok">✓</span> <span class="t-dim">004</span> login-crash <span class="t-dim">— shipped</span> <span class="t-warn">e5f6a7b</span>' },
-      { t:"gap" },
-      { t:"out", d:600, html:'<span class="t-ok">✔ run complete</span> <span class="t-dim">— 2 shipped, 1 blocked · backlog drained</span>' }
+      { type:"cmd", text:"/vibe:auto" },
+      { type:"out", delayMs:500, html:'<span class="t-dim">●</span> <span class="t-bold">3 eligible items</span> <span class="t-dim">— no approval step, no questions</span>' },
+      { type:"run", delayMs:400, html:'  <span class="t-dim">002</span> export-reports-pdf <span class="t-dim">— feature</span>', after:2400, done:'  <span class="t-ok">✓</span> <span class="t-dim">002</span> export-reports-pdf <span class="t-dim">— shipped</span> <span class="t-warn">a1b2c3d</span>' },
+      { type:"run", delayMs:2600, html:'  <span class="t-dim">003</span> csv-import <span class="t-dim">— feature</span>', after:2200, done:'  <span class="t-err">⚠</span> <span class="t-dim">003</span> csv-import <span class="t-warn">blocked</span> <span class="t-dim">— import fails above 50 MB, 3 attempts</span>' },
+      { type:"out", delayMs:2400, html:'    <span class="t-dim">set aside with its reason — the queue keeps going</span>' },
+      { type:"run", delayMs:500, html:'  <span class="t-dim">004</span> login-crash <span class="t-dim">— fix</span>', after:1800, done:'  <span class="t-warn">⚑</span> <span class="t-dim">004</span> login-crash <span class="t-dim">— session cut: usage limit reached</span>' },
+      { type:"gap" },
+      { type:"cmd", delayMs:900, text:"/vibe:auto" },
+      { type:"out", delayMs:500, html:'<span class="t-dim">●</span> <span class="t-bold">resuming</span> <span class="t-dim">— 004 was in flight, partial work committed as</span> <span class="t-warn">wip:</span>' },
+      { type:"run", delayMs:500, html:'  <span class="t-dim">004</span> login-crash <span class="t-dim">— fix</span>', after:2000, done:'  <span class="t-ok">✓</span> <span class="t-dim">004</span> login-crash <span class="t-dim">— shipped</span> <span class="t-warn">e5f6a7b</span>' },
+      { type:"gap" },
+      { type:"out", delayMs:600, html:'<span class="t-ok">✔ run complete</span> <span class="t-dim">— 2 shipped, 1 blocked · backlog drained</span>' }
     ],
     challenge: [
-      { t:"cmd", text:'/vibe:challenge "PostgreSQL over SQLite for the desktop app"' },
-      { t:"out", d:600, html:'<span class="t-dim">●</span> decision stated <span class="t-dim">— reasons: team knows it, JSON columns · rejected: SQLite (concurrency)</span>' },
-      { t:"run", d:400, html:'<span class="t-dim">●</span> advocate <span class="t-dim">attacking the decision…</span>', after:2600, done:'<span class="t-dim">●</span> advocate <span class="t-warn">3 objections</span>' },
-      { t:"out", d:2900, html:'  <span class="t-bold">O1</span> single-user desktop app: the concurrency motive does not hold <span class="t-dim">—</span> <span class="t-warn">kept</span>' },
-      { t:"out", d:700, html:'  <span class="t-bold">O2</span> every install now ships a database server <span class="t-dim">—</span> <span class="t-warn">kept</span>' },
-      { t:"out", d:700, html:'  <span class="t-bold">O3</span> JSON columns exist in SQLite too <span class="t-dim">—</span> <span class="t-dim">dismissed: query planner differs, measured</span>' },
-      { t:"gap" },
-      { t:"out", d:600, html:'<span class="t-dim">⚔️ Challenge —</span> <span class="t-bold">Blind spot found:</span> <span class="t-dim">the rejected alternative was rejected for a reason that does not apply</span>' }
+      { type:"cmd", text:'/vibe:challenge "PostgreSQL over SQLite for the desktop app"' },
+      { type:"out", delayMs:600, html:'<span class="t-dim">●</span> decision stated <span class="t-dim">— reasons: team knows it, JSON columns · rejected: SQLite (concurrency)</span>' },
+      { type:"run", delayMs:400, html:'<span class="t-dim">●</span> advocate <span class="t-dim">attacking the decision…</span>', after:2600, done:'<span class="t-dim">●</span> advocate <span class="t-warn">3 objections</span>' },
+      { type:"out", delayMs:2900, html:'  <span class="t-bold">O1</span> single-user desktop app: the concurrency motive does not hold <span class="t-dim">—</span> <span class="t-warn">kept</span>' },
+      { type:"out", delayMs:700, html:'  <span class="t-bold">O2</span> every install now ships a database server <span class="t-dim">—</span> <span class="t-warn">kept</span>' },
+      { type:"out", delayMs:700, html:'  <span class="t-bold">O3</span> JSON columns exist in SQLite too <span class="t-dim">—</span> <span class="t-dim">dismissed: query planner differs, measured</span>' },
+      { type:"gap" },
+      { type:"out", delayMs:600, html:'<span class="t-dim">⚔️ Challenge —</span> <span class="t-bold">Blind spot found:</span> <span class="t-dim">the rejected alternative was rejected for a reason that does not apply</span>' }
     ],
     release: [
-      { t:"cmd", text:"/vibe:release minor" },
-      { t:"out", d:600, html:'<span class="t-dim">●</span> CHANGELOG.md <span class="t-dim">—</span> [Unreleased] <span class="t-dim">→</span> <span class="t-bold">[1.3.0] - 2026-07-18</span>' },
-      { t:"run", d:400, html:'<span class="t-dim">●</span> refreshing README managed sections & docs/', after:1800, done:'<span class="t-dim">●</span> refreshing README managed sections & docs/ <span class="t-ok">ok</span>' },
-      { t:"out", d:2200, html:'<span class="t-dim">●</span> version <span class="t-dim">1.2.0 →</span> <span class="t-bold">1.3.0</span>' },
-      { t:"out", d:600, html:'<span class="t-dim">●</span> git commit <span style="color:#6ec6ea">-m</span> <span class="t-warn">"chore: release v1.3.0"</span>' },
-      { t:"out", d:400, html:'<span class="t-dim">●</span> git tag <span class="t-bold">v1.3.0</span>' },
-      { t:"gap" },
-      { t:"out", d:500, html:'<span class="t-ok">✔ v1.3.0</span> <span class="t-dim">ready —</span> git push --follow-tags <span class="t-dim">when you are</span>' }
+      { type:"cmd", text:"/vibe:release minor" },
+      { type:"out", delayMs:600, html:'<span class="t-dim">●</span> CHANGELOG.md <span class="t-dim">—</span> [Unreleased] <span class="t-dim">→</span> <span class="t-bold">[1.3.0] - 2026-07-18</span>' },
+      { type:"run", delayMs:400, html:'<span class="t-dim">●</span> refreshing README managed sections & docs/', after:1800, done:'<span class="t-dim">●</span> refreshing README managed sections & docs/ <span class="t-ok">ok</span>' },
+      { type:"out", delayMs:2200, html:'<span class="t-dim">●</span> version <span class="t-dim">1.2.0 →</span> <span class="t-bold">1.3.0</span>' },
+      { type:"out", delayMs:600, html:'<span class="t-dim">●</span> git commit <span style="color:#6ec6ea">-m</span> <span class="t-warn">"chore: release v1.3.0"</span>' },
+      { type:"out", delayMs:400, html:'<span class="t-dim">●</span> git tag <span class="t-bold">v1.3.0</span>' },
+      { type:"gap" },
+      { type:"out", delayMs:500, html:'<span class="t-ok">✔ v1.3.0</span> <span class="t-dim">ready —</span> git push --follow-tags <span class="t-dim">when you are</span>' }
     ],
     "next-task": [
-      { t:"cmd", text:"/vibe:next-task" },
-      { t:"out", d:500, html:'<span class="t-dim">●</span> <span class="t-bold">3 active repos</span> <span class="t-dim">— scanning eligible items</span>' },
-      { t:"out", d:900, html:'  <span class="t-dim">api</span> #012 rate-limit-headers <span class="t-dim">— unblocks 2 items downstream</span>' },
-      { t:"out", d:700, html:'  <span class="t-dim">sdk</span> #004 retry-backoff' },
-      { t:"out", d:700, html:'  <span class="t-dim">web</span> #031 dark-mode-toggle' },
-      { t:"out", d:800, html:'<span class="t-bold">picked</span> <span class="t-dim">api#012 — highest unblock count, confirmed</span>' },
-      { t:"run", d:500, html:'  <span class="t-dim">api#012</span> rate-limit-headers <span class="t-dim">— fix</span>', after:2400, done:'  <span class="t-ok">✓</span> <span class="t-dim">api#012</span> rate-limit-headers <span class="t-dim">— shipped</span> <span class="t-warn">9f1c2ab</span>' },
-      { t:"out", d:500, html:'<span class="t-dim">●</span> git push <span class="t-ok">ok</span>' },
-      { t:"out", d:600, html:'<span class="t-dim">●</span> CHANGELOG.md non-empty <span class="t-dim">→</span> <span class="t-bold">/vibe:release patch</span>' },
-      { t:"gap" },
-      { t:"out", d:500, html:'<span class="t-ok">✔ api v0.9.1</span> <span class="t-dim">tagged, pushed — unblocks</span> <span class="t-warn">sdk#004</span>' }
+      { type:"cmd", text:"/vibe:next-task" },
+      { type:"out", delayMs:500, html:'<span class="t-dim">●</span> <span class="t-bold">3 active repos</span> <span class="t-dim">— scanning eligible items</span>' },
+      { type:"out", delayMs:900, html:'  <span class="t-dim">api</span> #012 rate-limit-headers <span class="t-dim">— unblocks 2 items downstream</span>' },
+      { type:"out", delayMs:700, html:'  <span class="t-dim">sdk</span> #004 retry-backoff' },
+      { type:"out", delayMs:700, html:'  <span class="t-dim">web</span> #031 dark-mode-toggle' },
+      { type:"out", delayMs:800, html:'<span class="t-bold">picked</span> <span class="t-dim">api#012 — highest unblock count, confirmed</span>' },
+      { type:"run", delayMs:500, html:'  <span class="t-dim">api#012</span> rate-limit-headers <span class="t-dim">— fix</span>', after:2400, done:'  <span class="t-ok">✓</span> <span class="t-dim">api#012</span> rate-limit-headers <span class="t-dim">— shipped</span> <span class="t-warn">9f1c2ab</span>' },
+      { type:"out", delayMs:500, html:'<span class="t-dim">●</span> git push <span class="t-ok">ok</span>' },
+      { type:"out", delayMs:600, html:'<span class="t-dim">●</span> CHANGELOG.md non-empty <span class="t-dim">→</span> <span class="t-bold">/vibe:release patch</span>' },
+      { type:"gap" },
+      { type:"out", delayMs:500, html:'<span class="t-ok">✔ api v0.9.1</span> <span class="t-dim">tagged, pushed — unblocks</span> <span class="t-warn">sdk#004</span>' }
     ]
   };
 
@@ -737,12 +737,12 @@
     script.forEach(function(step){
       var line = document.createElement("div");
       line.className = "line";
-      if (step.t === "cmd") {
-        line.innerHTML = P + '<span class="t-cmd"></span>';
+      if (step.type === "cmd") {
+        line.innerHTML = PROMPT_HTML + '<span class="t-cmd"></span>';
         line.querySelector(".t-cmd").textContent = step.text;
       }
-      else if (step.t === "run") line.innerHTML = step.done;
-      else if (step.t === "out") line.innerHTML = step.html;
+      else if (step.type === "run") line.innerHTML = step.done;
+      else if (step.type === "out") line.innerHTML = step.html;
       else line.innerHTML = "&nbsp;";
       body.appendChild(line);
     });
@@ -751,7 +751,7 @@
   function Player(body, script){
     this.body = body;
     this.script = script;
-    this.gen = 0;
+    this.runToken = 0;
     this.timers = [];
     this.running = false;
   }
@@ -760,78 +760,78 @@
     this.timers = [];
   };
   Player.prototype.stop = function(){
-    this.gen++;
+    this.runToken++;
     this.clearTimers();
     this.running = false;
   };
-  Player.prototype.wait = function(ms, gen, fn){
+  Player.prototype.wait = function(ms, runToken, fn){
     var self = this;
     var id = setTimeout(function(){
-      if (self.gen === gen) fn();
+      if (self.runToken === runToken) fn();
     }, ms);
     this.timers.push(id);
   };
   Player.prototype.start = function(){
     if (this.running) return;
     this.running = true;
-    this.gen++;
-    this.playFrom(0, this.gen);
+    this.runToken++;
+    this.playFrom(0, this.runToken);
   };
-  Player.prototype.playFrom = function(idx, gen){
+  Player.prototype.playFrom = function(idx, runToken){
     var self = this;
-    if (gen !== this.gen) return;
+    if (runToken !== this.runToken) return;
     if (idx === 0) this.body.textContent = "";
 
     if (idx >= this.script.length) {
-      this.wait(LOOP_PAUSE, gen, function(){ self.playFrom(0, gen); });
+      this.wait(LOOP_PAUSE, runToken, function(){ self.playFrom(0, runToken); });
       return;
     }
     var step = this.script[idx];
-    var delay = step.d || 0;
+    var delay = step.delayMs || 0;
 
-    this.wait(delay, gen, function(){
+    this.wait(delay, runToken, function(){
       var line = document.createElement("div");
       line.className = "line";
 
-      if (step.t === "gap") {
+      if (step.type === "gap") {
         line.innerHTML = "&nbsp;";
         self.body.appendChild(line);
-        self.playFrom(idx + 1, gen);
+        self.playFrom(idx + 1, runToken);
 
-      } else if (step.t === "cmd") {
-        line.innerHTML = P + '<span class="t-cmd"></span><span class="cursor" aria-hidden="true"></span>';
+      } else if (step.type === "cmd") {
+        line.innerHTML = PROMPT_HTML + '<span class="t-cmd"></span><span class="cursor" aria-hidden="true"></span>';
         self.body.appendChild(line);
         var target = line.querySelector(".t-cmd");
         var i = 0;
         (function typeChar(){
-          if (gen !== self.gen) return;
+          if (runToken !== self.runToken) return;
           if (i < step.text.length) {
             target.textContent += step.text.charAt(i++);
-            self.wait(TYPE_MS, gen, typeChar);
+            self.wait(TYPE_MS, runToken, typeChar);
           } else {
-            self.wait(320, gen, function(){
+            self.wait(320, runToken, function(){
               var c = line.querySelector(".cursor");
               if (c) c.remove();
-              self.playFrom(idx + 1, gen);
+              self.playFrom(idx + 1, runToken);
             });
           }
         })();
 
-      } else if (step.t === "run") {
+      } else if (step.type === "run") {
         // the spinner takes the place of a leading "● " bullet, or prefixes the line
         var m = step.html.match(/^(\s*)([\s\S]*)$/);
         var rest = m[2].replace(/^<span class="t-dim">●<\/span> /, "");
         line.innerHTML = m[1] + '<span class="spin">⠋</span> ' + rest;
         self.body.appendChild(line);
-        self.wait(step.after, gen, function(){
+        self.wait(step.after, runToken, function(){
           line.innerHTML = step.done;
         });
-        self.playFrom(idx + 1, gen);
+        self.playFrom(idx + 1, runToken);
 
       } else { // out
         line.innerHTML = step.html;
         self.body.appendChild(line);
-        self.playFrom(idx + 1, gen);
+        self.playFrom(idx + 1, runToken);
       }
     });
   };
@@ -849,13 +849,13 @@
 
     body.textContent = "";
     var player = new Player(body, script);
-    var io = new IntersectionObserver(function(entries){
+    var playbackObserver = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
         if (e.isIntersecting) player.start();
         else player.stop();
       });
     }, { threshold: 0.25 });
-    io.observe(term);
+    playbackObserver.observe(term);
   });
 })();
 </script>
