@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: release-restores-the-tree-when-the-re-check-still-fails
+description: >
+  Precision side of release-reruns-lint-after-the-bump-and-formats-the-manifest:
+  same fixture with no formatter command. The re-check after the bump
+  fails and nothing in the project can fix it, so the skill must stop
+  without committing or tagging and restore the files it changed, leaving
+  a clean tree. Needs --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

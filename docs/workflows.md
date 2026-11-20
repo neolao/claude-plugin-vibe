@@ -151,7 +151,7 @@ Each return is a round: the task list is rebuilt through `vibe:tasks`' "Going ba
 
 ## Release
 
-`/vibe:release [major|minor|patch|X.Y.Z]` runs its pre-release checks (test, lint, and the project's build command if it has one — a release is never cut on top of a build that doesn't compile), runs `/vibe:changelog` (which only fills `[Unreleased]` from git history), cuts the version section itself, refreshes docs, bumps `version` in `.claude-plugin/plugin.json`, then commits and tags.
+`/vibe:release [major|minor|patch|X.Y.Z]` runs its pre-release checks (test, lint, and the project's build command if it has one — a release is never cut on top of a build that doesn't compile), runs `/vibe:changelog` (which only fills `[Unreleased]` from git history), cuts the version section itself, refreshes docs, bumps `version` in `.claude-plugin/plugin.json`, re-runs lint and build on what those steps edited (the project's formatter fixes a violation once; otherwise the edits are undone and nothing is cut), then commits and tags.
 
 ## Multi-repo workspace: pick, implement, publish
 

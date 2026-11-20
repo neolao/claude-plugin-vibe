@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: release-reruns-lint-after-the-bump-and-formats-the-manifest
+description: >
+  vibe:release Step 6: the project's lint only checks the JSON files
+  changed since the last tag, so it passes at Step 2 and fails once
+  Step 5 bumps package.json, whose compact array is not in the project's
+  format. The skill must re-run lint after the bump, run the project's
+  own formatter on that file, re-check, then commit and tag. Needs
+  --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

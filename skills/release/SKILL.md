@@ -2,7 +2,7 @@
 name: release
 description: Create a versioned release — bump version, finalize CHANGELOG.md, commit and tag
 argument-hint: "[version, e.g. 1.2.0 | major | minor | patch] (empty = suggest from the changelog and confirm)"
-version: 1.1.0
+version: 1.2.0
 model: claude-sonnet-5-5
 ---
 
@@ -21,7 +21,7 @@ The current version is the latest version tag: `git tag --list 'v[0-9]*' '[0-9]*
 
 A target version whose tag already exists stops the skill here as well — nothing has been written yet, and a second `vX.Y.Z` cannot be created.
 
-Then invoke the `vibe:tasks` skill with: `Run pre-release checks` → `Finalize CHANGELOG.md` → `Refresh docs` → `Bump version` → `Commit and tag`, each blocked by the previous one.
+Then invoke the `vibe:tasks` skill with: `Run pre-release checks` → `Finalize CHANGELOG.md` → `Refresh docs` → `Bump version` → `Re-check lint and build` → `Commit and tag`, each blocked by the previous one.
 
 ## Step 2 — Pre-release checks
 
@@ -43,10 +43,16 @@ If `README.md` has `vibe:` managed section markers, or `docs/` holds a Markdown 
 
 Set the version field of every project manifest to `X.Y.Z` (`package.json`, `Cargo.toml`, `pyproject.toml`, `pom.xml`, `build.gradle`, `composer.json`, gemspec, …), using each file's own syntax, and the lock file that mirrors it (`package-lock.json` carries it twice: at the root and under `packages[""]`). A `version` that is not the project's — a settings or schema format version, a dependency's — is left alone.
 
-## Step 6 — Commit and tag
+## Step 6 — Re-check lint and build
 
-Stage the files Steps 3–5 changed, nothing else; commit `chore: release vX.Y.Z`; then an annotated tag, which `git describe` and the forges see where a lightweight one is invisible: `git tag -a vX.Y.Z --cleanup=verbatim -F <file>`, the file holding `vX.Y.Z`, a blank line, then the section's entries as cut in Step 3 (`--cleanup=verbatim` keeps the `###` headings, which git would otherwise drop as comments).
+Steps 3–5 edited files after Step 2 checked them, and those edits can break the project's own lint or format rules (a manifest rewritten by a tool, a linter that only checks the files changed since the last tag). Run the lint command again, and the build command if the project has one.
 
-## Step 7 — Report
+A failure on a file Steps 3–5 changed → run the project's own formatter or lint-fix command (its `format`/`lint:fix` script, `biome check --write`, `prettier --write`, `ruff format`, …) on those files only, then run the checks once more. Still failing, or the project has no such command → stop without committing or tagging: restore every file Steps 3–5 changed to its committed state (`git restore`), so the tree is as it was before the release, and report the failing check, the file and its error, as a lint failure of Step 2 would be.
 
-Short, plain sentences: version released, changes included (N Added, N Fixed, …), tag created, docs refreshed or skipped (and the README question answered with none, when it came up), and that nothing was pushed.
+## Step 7 — Commit and tag
+
+Stage the files Steps 3–6 changed, nothing else; commit `chore: release vX.Y.Z`; then an annotated tag, which `git describe` and the forges see where a lightweight one is invisible: `git tag -a vX.Y.Z --cleanup=verbatim -F <file>`, the file holding `vX.Y.Z`, a blank line, then the section's entries as cut in Step 3 (`--cleanup=verbatim` keeps the `###` headings, which git would otherwise drop as comments).
+
+## Step 8 — Report
+
+Short, plain sentences: version released, changes included (N Added, N Fixed, …), tag created, docs refreshed or skipped (and the README question answered with none, when it came up), any file Step 6 reformatted, and that nothing was pushed.

@@ -1,0 +1,14 @@
+{
+  "name": "fixture-app",
+  "version": "1.2.3",
+  "description": "Fixture app for the vibe:release eval",
+  "files": ["dist"],
+  "scripts": {
+    "test": "node -e \"console.log('12 passed')\"",
+    "lint": "jsonfmt --check --changed",
+    "format": "jsonfmt --write --changed"
+  },
+  "devDependencies": {
+    "jsonfmt": "^2.1.0"
+  }
+}

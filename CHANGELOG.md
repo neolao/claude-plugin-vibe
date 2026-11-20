@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dependency review now covers a library copied into the tree (a minified jQuery under `static/js/`), which no manifest declares and no audit tool checks.
 - The interview no longer asks you to prioritise technical decisions it settled from the code, and decides where each new type lives one by one.
 - A "never do X" said in the middle of a feature no longer interrupts it; a rule you already have is not saved twice, and a rule you declined is not offered again in the same session.
+- `/vibe:release` re-runs lint and the build after bumping the version: a manifest the bump left failing your formatter is fixed with your own formatter command, and if nothing can fix it the release stops with its edits undone, instead of tagging a version whose CI then fails.
 
 ## [3.1.0] - 2026-10-21
 

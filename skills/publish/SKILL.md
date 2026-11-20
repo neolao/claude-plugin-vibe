@@ -3,7 +3,7 @@ name: publish
 description: Pushes the current repo's commits, cuts a release when the changelog warrants one, pushes the tag, verifies the pushed commit's CI run, and creates a forge release when possible. Invoked internally by vibe:auto (--push) and vibe:next-task — the only place in the plugin that pushes.
 argument-hint: "(no arguments — operates on the current repo)"
 user-invocable: false
-version: 1.1.0
+version: 1.1.1
 model: claude-sonnet-5-5
 ---
 
@@ -21,7 +21,7 @@ Read `## [Unreleased]` in `CHANGELOG.md`. Empty or missing → nothing to releas
 
 Otherwise decide the bump without asking, the first that applies: `major` if any `### Removed` entry or an entry marked breaking; `minor` if any `### Added`, `### Changed` or `### Deprecated` entry; `patch` otherwise (`### Fixed`, `### Security`). Invoke the `vibe:release` skill with that word as its argument — always explicit, never blank.
 
-If its pre-release checks fail:
+If its pre-release checks fail (Step 2, or the re-check after the version bump):
 - lint failure, or an uncommitted change (the caller commits before invoking this skill, which never leaves one itself) → report it and move on; the push already succeeded, only the version is missing.
 - test failure → **one** self-heal attempt: if exactly one eligible backlog item (`status: todo`, dependencies done, top-level `.vibe/backlog/`) names the failing test file, run it now (`vibe:fix NNN --auto`, or `vibe:feature NNN --auto` if it is not a defect — `--auto` either way, no one is there to approve a plan), repeat Step 1, and retry `vibe:release` once with the bump decided again from the updated `[Unreleased]`. Zero or several matches, or a second failure → report it as a blocker.
 

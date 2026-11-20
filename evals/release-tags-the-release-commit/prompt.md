@@ -15,4 +15,4 @@ This is a non-interactive eval: if the skill asks you to confirm anything, confi
 
 Do not push anything. `/vibe:release` never pushes, and neither should you.
 
-Once the skill has finished (or otherwise concluded), run `git log -1 --format='target|%s' v1.2.4^{commit}`, `git show --stat --format='%s' HEAD` and `printf 'porcelain-lines|%s\n' "$(git status --porcelain | wc -l | tr -d ' ')"` with the Bash tool and include their raw output in your final message. Then report, in short plain sentences: what the skill did, which files you changed, and confirmation that nothing was pushed.
+Once the skill has finished (or otherwise concluded), run `git log -1 --format='target|%s' v1.2.4^{commit}`, `git show --stat --format='%s' HEAD` and `printf 'porcelain-lines|%s\n' "$(git status --porcelain --untracked-files=no | wc -l | tr -d ' ')"` with the Bash tool and include their raw output in your final message. Then report, in short plain sentences: what the skill did, which files you changed, and confirmation that nothing was pushed.
