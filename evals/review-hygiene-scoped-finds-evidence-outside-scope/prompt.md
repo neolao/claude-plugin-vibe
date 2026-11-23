@@ -1,6 +1,6 @@
 ---
 name: review-hygiene-scoped-finds-evidence-outside-scope
-description: review-hygiene, scoped to fixtures/billing/, must find an export nothing in the repository calls next to a sibling called from fixtures/cli/, a formatter duplicated in fixtures/reports/, and a 30-day payment term repeated in fixtures/reminders/ and fixtures/reports/ — anchoring every finding on a file in scope
+description: review-hygiene, scoped to fixtures/billing/, must find an export nothing in the repository calls next to a sibling called from fixtures/cli/, and a formatter duplicated in fixtures/reports/ — anchoring every finding on a file in scope (the 30-day term repeated in fixtures/reminders/ and fixtures/reports/ is a constant kept aligned by hand, review-coordination's, so no grader asks for it)
 tags: [review-hygiene, recall, scoped]
 runs: 3
 max_turns: 10
