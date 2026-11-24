@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: review-robustness-scoped-finds-failures-hidden-in-helpers
+description: >
+  Harder scoped case: the agent reviews fixtures/billing/ only, where every
+  call site looks guarded or bounded, and each defect sits in the helper it
+  reaches outside the scope (a transaction context manager that rolls back
+  without re-raising, a retry helper with no cap by default, an error builder
+  that drops the provider's code and the payment id), next to a lock helper
+  that does release in a finally. Every finding must stay anchored in scope.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
