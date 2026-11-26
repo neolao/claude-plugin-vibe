@@ -1,11 +1,12 @@
 ---
-type: tool_used
-tool: Bash
-input_match: "report\\.sh .* (init|write)"
-min: 2
-max: 999
+type: regex
+target: trace
+pattern: "refused: \\S+ has no \\.vibe/ directory"
 weight: 1
 ---
 
-The usage report was initialized at the start and written at the end
-through the `vibe:usage-report` script.
+The usage report was written at the end through the `vibe:usage-report`
+script. The fixture has no `.vibe/`, so the script's `write` refuses with
+this line: it appears only if the write was attempted. A regex on the
+script's output, not on the command, because the command is often built
+from shell variables.

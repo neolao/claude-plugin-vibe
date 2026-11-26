@@ -1,12 +1,15 @@
 ---
-type: llm
-focus: { source: file, path: "test/list-utils.test.js" }
-criteria: |
-  PASS if the test file now asserts that `max` of an all-negative list
-  returns its largest element (e.g. `[-5, -2, -9]` → `-2`), in a test that
-  would have failed on the original code.
-  FAIL if no test covers an all-negative list.
+type: regex
+target:
+  source: file
+  path: test/list-utils.test.js
+pattern: "max\\(\\s*\\[\\s*-\\d+(?:\\.\\d+)?(?:\\s*,\\s*-\\d+(?:\\.\\d+)?)+\\s*\\]\\s*\\)"
 weight: 1
 ---
 
-The reproducing test exists in the project's test file.
+The reproducing test exists: the test file calls `max` on a list made only of
+negative numbers (such as the reported `[-5, -2, -9]`). The original fixture
+has no such call, and the original code returns 0 for it. A regex, not an
+`llm` grader: asked whether the test "would have failed on the original
+code", the judge split its votes on a test asserting `max([-5, -2, -9])` is
+-2 verbatim.

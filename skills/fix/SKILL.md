@@ -2,7 +2,7 @@
 name: fix
 description: Fix a bug using TDD (reproduce first), then update CHANGELOG.md under [Unreleased] > Fixed
 argument-hint: <bug description in natural language>
-version: 2.4.0
+version: 2.4.1
 model: claude-sonnet-5-5
 ---
 
@@ -11,6 +11,8 @@ model: claude-sonnet-5-5
 Fix the bug described in `$ARGUMENTS`: the user is the Product Owner only and never tests code manually.
 
 **First read the shared implementation workflow** at `${CLAUDE_PLUGIN_ROOT}/skills/feature/workflow.md` (`workflow.md` in the `feature` skill's directory) — every shared step lives there and only there. This file defines what is specific to a bug fix. Prefix: `fix:`; entry: `fix`.
+
+A small bug changes nothing: a one-line cause runs every workflow step in order — usage report, both framings, the plan, `vibe:task-implementer` for the test and the fix (you write neither yourself), the internal review, the final checks. Finding the cause yourself in Step 1 is the start of the work, not a licence to finish it alone.
 
 ## Step 1 — Understand the bug
 
@@ -38,4 +40,4 @@ CHANGELOG section: `### Fixed` ("Fixed crash when submitting an empty form", not
 
 ## Step 10 — Report
 
-Root cause (1 sentence); what changed (1 sentence); the test that now covers the bug; the runtime scenario replayed and its outcome; full suite status; lint status; the changelog entry; experts consulted, if any; then the workflow's pre-existing-failures line. The draft goes through the workflow's final checks before it reaches the user.
+Root cause (1 sentence); what changed (1 sentence); the test that now covers the bug; the runtime scenario replayed and its outcome; full suite status; lint status; the changelog entry, quoted as written and with its section; experts consulted, if any; then the workflow's pre-existing-failures line. The draft goes through the workflow's final checks before it reaches the user.
