@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: changelog-folds-a-fix-of-an-unreleased-feature-into-its-entry
+description: >
+  Since v1.0.0: a PDF export is added, then a fix for a crash in that same
+  PDF export, then a fix for the released pagination. Users of 1.0.0 never
+  had the PDF export, so its crash is not a bug they met: the next release
+  notes must list the PDF export under Added and only the pagination fix
+  under Fixed. Needs --allow-tools Bash Write Edit to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

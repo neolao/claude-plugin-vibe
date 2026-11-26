@@ -2,7 +2,7 @@
 name: changelog
 description: Update CHANGELOG.md (Keep a Changelog format) from git history since the last tag — entries land under [Unreleased]; cutting a version is /vibe:release's job
 argument-hint: "(no arguments)"
-version: 1.3.1
+version: 1.4.0
 model: claude-sonnet-5-5
 ---
 
@@ -30,6 +30,7 @@ Bring `## [Unreleased]` in `CHANGELOG.md` up to date with the git history ([Keep
 - **Skip a commit an existing `[Unreleased]` entry already covers** (`/vibe:feature` and `/vibe:fix` write theirs at implementation time) — and, when no tag scoped the range, one a released section already covers.
 - The one merge that counts: when the branch it brought in (`git log <merge>^1..<merge>^2`; merges listed by `git log --merges <tag>..HEAD`) holds only throwaway commits (`wip`, `fixup`, `typo`), the merge is the change — classify its message, a pull-request title, or failing that its diff (`git diff <merge>^1 <merge>`).
 - A revert cancels its target: when the reverted commit is in the range, drop both and remove the `[Unreleased]` entry written for it, if any; when the target was released, the revert is the change — Removed for a feature taken back, Fixed for a regression undone.
+- A fix to a change still in the range gets no entry of its own: no released user met that bug, the change's entry covers it. Judge each fix by the code it touches (`git show <sha>`), not by its wording: a fix to code already released keeps its Fixed entry.
 - Discard noise: merges, version bumps, `chore:` housekeeping unless significant, `wip:` partial work (the finished change arrives in a later `feat:`/`fix:` commit with its own entry), and any commit with no user-visible effect whatever its prefix — a refactor that changes nothing observable, tests, CI, formatting, dependency bumps, a documentation typo.
 
 ## Step 3 — Write
