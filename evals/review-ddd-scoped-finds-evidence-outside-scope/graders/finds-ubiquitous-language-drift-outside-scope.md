@@ -12,8 +12,11 @@ criteria: |
   fixtures/checkout/place_order.py handing `customer.customer_id` to `Order`,
   `CustomerOrders.for_customer` in fixtures/checkout/customer_orders.py or
   the `/customers/<customer_id>/orders` route in fixtures/api/routes.py
-  feeding `customer_id` into `find_for_buyer`. Which of the two names the
-  finding proposes to keep does not matter.
+  feeding `customer_id` into `find_for_buyer`, the dunning job in
+  fixtures/dunning/reminders.py printing `buyer_id` as "customer", or the
+  `customers` package (fixtures/customers/) as a whole. Which of the two
+  names the finding proposes to keep does not matter, nor which source the
+  finding says settles the word.
   FAIL if no finding flags the `buyer` / `customer` split for the same
   concept, or if the finding names no file outside fixtures/orders/.
 weight: 1

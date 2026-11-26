@@ -5,9 +5,9 @@ criteria: |
   PASS if the reported findings include a `Domain isolation` (or clearly
   equivalent category name) finding on `close_order_route` in
   fixtures/order_routes.py, for embedding the $500 manager-approval business
-  rule directly in the route handler and driving that domain decision off an
-  HTTP status code (403) instead of the rule living in a domain/application
-  layer.
+  rule directly in the route handler instead of the rule living in a
+  domain/application layer. Mentioning that the decision is expressed as an
+  HTTP status code (403) is welcome but not required.
   FAIL if no finding flags this rule's placement in the route handler.
 weight: 2
 ---

@@ -11,11 +11,16 @@ criteria: |
   PASS if the reported findings include an `Aggregate` (or clearly
   equivalent category name, e.g. "Entity") finding whose FILE: line is
   fixtures/promotions/bundles.py, whose ISSUE names `Order` or
-  fixtures/orders/order.py as the aggregate written from outside, and whose
-  SUGGESTION names `add_line` as the method to call.
+  fixtures/orders/order.py as the aggregate written from outside, which
+  names `add_line` somewhere in its ISSUE or SUGGESTION, and whose
+  SUGGESTION has `apply_bundle` go through a method of `Order` instead of
+  writing `_lines` — `add_line` itself, or a new root method for bundle
+  lines (the 12-unit bundle would fail `add_line`'s check, so proposing one
+  is sound).
   FAIL if no finding flags the write, if the finding is anchored on
-  fixtures/orders/order.py instead of the writer in scope, or if it never
-  mentions `add_line`.
+  fixtures/orders/order.py instead of the writer in scope, if it never
+  mentions `add_line`, or if its SUGGESTION keeps the write outside `Order`'s
+  own methods.
 weight: 2
 ---
 
