@@ -1,14 +1,14 @@
 ---
 name: challenge
-description: Devil's advocate on a structuring decision already settled (architecture, library, strategy, plan) — one read-only sub-agent hunts the blind spot or the unconsidered alternative before the decision is executed, recorded as an ADR or not; not for reversible or minor choices
+description: Devil's advocate on a structuring decision already settled (architecture, library, strategy, plan) — one read-only sub-agent hunts the blind spot or the unconsidered alternative before the decision is executed, recorded as an ADR or not; not for an open choice still to make (that is /vibe:consult), nor for reversible or minor choices
 argument-hint: "[optional: the decision to challenge, or the path of its ADR or plan; empty takes the one under discussion in the conversation]"
-version: 1.3.0
+version: 1.4.0
 model: claude-sonnet-5-5
 ---
 
 # /vibe:challenge — Devil's Advocate
 
-A decision that has never been attacked has not been tested, only assumed. Challenge a structuring decision that is already settled — an architecture, a library, a strategy, a plan — before it is executed, whether or not it is already recorded in `.vibe/decisions/`. Pairs with `vibe:clarify`, which settles a plan that is still open: `clarify` closes the branches, `challenge` attacks the result. Not for a reversible or minor choice: a pass only pays for itself when the choice is costly to undo.
+A decision that has never been attacked has not been tested, only assumed. Challenge a structuring decision that is already settled — an architecture, a library, a strategy, a plan — before it is executed, whether or not it is already recorded in `.vibe/decisions/`. Pairs with `vibe:clarify`, which settles a plan that is still open: `clarify` closes the branches, `challenge` attacks the result. An open choice ("A or B?", nothing picked yet) is not a decision: say so, point to `/vibe:consult` for an expert's opinion on it, and launch nothing — a question mark alone does not make a choice open ("we picked A, can you attack that?" is settled). Not for a reversible or minor choice: a pass only pays for itself when the choice is costly to undo.
 
 Everything said to the user is written in the language the conversation is being conducted in — never a fixed one.
 
