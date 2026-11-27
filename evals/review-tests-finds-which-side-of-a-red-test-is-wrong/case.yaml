@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: review-tests-finds-which-side-of-a-red-test-is-wrong
+description: >
+  A unittest suite that is red twice: the fee cap test fails because the
+  code never applies the cap the README states, and the ledger memo test
+  errors because it posts with a keyword the method no longer takes. The
+  agent must report each as a Failing test anchored on the test, saying
+  which side is wrong — the code for the first, the test for the second —
+  and must flag the token tests whose verdict rests on the real clock as
+  Isolation. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

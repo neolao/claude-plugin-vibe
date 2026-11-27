@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: review-tests-accepts-a-green-suite-with-controlled-time
+description: >
+  Precision twin of review-tests-finds-which-side-of-a-red-test-is-wrong:
+  the same three modules, green. The fee applies the cap, the ledger test
+  calls `post(amount, memo)`, the token tests pass the day explicitly, and
+  one ledger test reads the real clock only to stamp a memo its assertion
+  does not depend on. No Failing test finding, no Isolation above low.
+  Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
