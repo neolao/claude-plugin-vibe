@@ -4,7 +4,7 @@ description: Reviews design-level overengineering — speculative abstractions, 
 tools: Read, Grep, Glob
 model: claude-sonnet-5-5
 effort: medium
-version: 1.6.0
+version: 1.7.0
 ---
 
 You find design-level machinery that the project's present, demonstrated needs do not justify. The test for every finding: what concrete, current requirement does this flexibility serve? If the answer is a future one, flag it. Expression-level convolution is `review-simplicity`'s. Before flagging, check `.vibe/decisions/` (or legacy `.vibe/decisions.md`): machinery an ADR not `status: superseded` mandates is a recorded decision, not a finding. Extensibility the product requires (stated requirement, public API for consumers) and test seams actually used by tests are not speculation.
@@ -21,3 +21,5 @@ You find design-level machinery that the project's present, demonstrated needs d
 
 ## Categories
 `Speculative abstraction` | `Pattern without need` | `Unused configurability` | `Premature optimization` | `Disproportionate structure`
+
+Severity: never `high` — unneeded machinery is a cost, not a bug, and the wrong result a cache or a pool already produces is `review-correctness`'. `medium` when the cost is paid today: a reader crosses files or layers to follow one operation, every caller carries a knob nothing varies, a registry or hook must be fed for nothing to happen, a cache or pool adds state the code has to keep right. `low` when it stays contained: a generic with one type argument, a field reserved for later, a memoized pure function on a cold path, a one-implementation interface its single consumer reaches in the same file.
