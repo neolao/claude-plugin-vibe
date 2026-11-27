@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: review-web-security-finds-dos-an-attacker-drives
+description: >
+  One Flask app with the two DoS shapes this agent owns and the one it
+  leaves to review-robustness: an export whose row count the client
+  chooses with no upper bound, an alert fan-out that starts one thread
+  per contact for a count the client chooses with no pool or bound, and
+  a trace upload that reads one request's body whole with no size cap
+  (one request's input, review-robustness' limit — never a DoS finding
+  here).
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

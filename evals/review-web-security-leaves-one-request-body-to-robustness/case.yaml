@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: review-web-security-leaves-one-request-body-to-robustness
+description: >
+  Precision twin of review-web-security-finds-dos-an-attacker-drives:
+  the export clamps the client's row count to a fixed maximum and the
+  alert fan-out hands the contacts to a pool of four workers through a
+  queue capped at the page's size, so nothing an attacker's flood fills
+  is left; the trace upload still reads one request's body whole with no
+  size cap, review-robustness' limit, never a DoS finding here.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
