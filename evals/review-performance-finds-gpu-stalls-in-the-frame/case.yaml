@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: review-performance-finds-gpu-stalls-in-the-frame
+description: >
+  Recall case for the Real-time GPU-stall rule: a viewer's frame method that
+  reads the hovered object back from the GPU synchronously every frame and
+  compiles each material's shader the first frame it is drawn, next to a
+  camera settings file re-read and parsed from disk every frame that must be
+  reported as Blocking once, never again under Real-time.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

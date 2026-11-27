@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: review-performance-accepts-stall-free-frame
+description: >
+  Precision twin of review-performance-finds-gpu-stalls-in-the-frame: the
+  readback is requested in one frame and collected in the next, the shaders
+  are compiled and the camera file read once at load, and the textures are
+  uploaded a slice of rows per frame — nothing in the frame method stalls.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
