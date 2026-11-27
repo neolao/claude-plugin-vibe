@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: review-tests-rates-caught-elsewhere-low
+description: >
+  Precision twin of review-tests-rates-by-what-ships-green: a green
+  unittest suite where every weakness is caught elsewhere — a test that
+  asserts the public result of Memoizer.compute and then peeks at the
+  private cache, next to a test that pins the caching through the public
+  call count, and a skipped net_pay test whose reason names the active
+  test that covers the same case and a tracked issue. No finding above
+  low. Needs --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
