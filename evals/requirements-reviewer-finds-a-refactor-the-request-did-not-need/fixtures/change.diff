@@ -1,0 +1,46 @@
+--- a/export.py
++++ b/export.py
+@@ -4,19 +4,21 @@
+ import io
+ 
+ 
+-def format_label(label):
+-    words = []
+-    for word in label.strip().split():
+-        words.append(word.capitalize())
+-    return " ".join(words)
++def format_label(text):
++    return " ".join(part.capitalize() for part in text.split())
+ 
+ 
++def total_amount(rows):
++    return round(sum(row["amount"] for row in rows), 2)
++
++
+ def to_csv(rows):
+     buf = io.StringIO()
+     writer = csv.writer(buf)
+     writer.writerow(["date", "amount", "label"])
+     for row in rows:
+         writer.writerow([row["date"], row["amount"], format_label(row["label"])])
++    writer.writerow(["total", total_amount(rows)])
+     return buf.getvalue()
+ 
+ 
+--- a/test_export.py
++++ b/test_export.py
+@@ -11,6 +11,14 @@
+         self.assertIn("date,amount,label", body.decode())
+         self.assertIn("Coffee Beans", body.decode())
+ 
++    def test_csv_ends_with_the_total(self):
++        rows = [
++            {"date": "2026-03-02", "amount": 12.5, "label": "coffee"},
++            {"date": "2026-03-03", "amount": 0.333, "label": "tea"},
++        ]
++        _, body = export_report(rows, "2026-03")
++        self.assertTrue(body.decode().strip().endswith("total,12.83"))
+ 
++
+ if __name__ == "__main__":
+     unittest.main()
