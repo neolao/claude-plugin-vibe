@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: review-performance-scoped-finds-evidence-outside-scope
+description: >
+  Scoped twin of review-performance-finds-cross-module-violations: the agent
+  reviews fixtures/shipping/ only, and each defect there is hot only because
+  of a handler in fixtures/api/, outside the scope (a per-row carrier query
+  looped by the list handler, a sync subprocess behind an async handler, a
+  linear district scan fed 5 000 parcels per call, a scan store the webhook
+  feeds and nothing prunes). Every finding must stay anchored on a file in
+  scope, and the N+1 that sits wholly in fixtures/api/reports.py must not be
+  reported.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: review-performance-scoped-accepts-evidence-outside-scope
+description: >
+  Precision twin of review-performance-scoped-finds-evidence-outside-scope:
+  the same fixtures/shipping/ helpers, but the files outside the scope make
+  each of them cold or bounded (the per-call carrier query is called once per
+  detail request while the list uses the join, the sync label renderer runs
+  in a thread, the linear district scan runs three times at startup, the
+  scan store is pruned by a nightly job). The N+1 that sits wholly in
+  fixtures/api/reports.py must still not be reported.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
