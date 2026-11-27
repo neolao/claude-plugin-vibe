@@ -2,7 +2,7 @@
 name: challenge
 description: Devil's advocate on a structuring decision already settled (architecture, library, strategy, plan) — one read-only sub-agent hunts the blind spot or the unconsidered alternative before the decision is executed, recorded as an ADR or not; not for reversible or minor choices
 argument-hint: "[optional: the decision to challenge, or the path of its ADR or plan; empty takes the one under discussion in the conversation]"
-version: 1.2.0
+version: 1.3.0
 model: claude-sonnet-5-5
 ---
 
@@ -17,6 +17,8 @@ Everything said to the user is written in the language the conversation is being
 `$ARGUMENTS` if non-empty; otherwise the decision under discussion right before this skill was invoked; if nothing usable is in context, ask ("Which decision do you want challenged?") and wait. An argument that names a file — an ADR under `.vibe/decisions/`, a plan — is read, and its sections give the account below; the decision is the file's, cited by its path. A path that does not exist is nothing usable: ask.
 
 Write the decision neutrally, as an account and not a plea: the option chosen, the context, the known constraints, **the factual reasons for the choice**, and **the alternatives already rejected, each with its motive**. Without the reasons the advocate has nothing to attack and invents some; without the rejected alternatives it re-proposes what was already dismissed. Neither is yours to invent: what the conversation, the argument and the decision's own ADR (when `.vibe/decisions/` holds one) do not give is asked — the reasons for the choice, the alternatives looked at and why they lost — in one question, the same one as "Which decision" when that is asked, and waited for. A user who has none gets `none stated` in the account: that absence is the advocate's to attack, not yours to paper over.
+
+When the decision bears on an existing codebase, the account ends with **the files or directories that ground it** — the code a reason speaks of, the module the choice replaces or extends, the ADR — as absolute paths located by you, never pasted as code: a reason the code contradicts is the blind spot most worth finding, and the advocate can only find it in the code.
 
 ## Step 2 — Launch the advocate
 
