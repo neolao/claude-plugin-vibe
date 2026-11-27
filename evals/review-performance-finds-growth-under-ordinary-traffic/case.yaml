@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: review-performance-finds-growth-under-ordinary-traffic
+description: >
+  Recall case for the Unbounded ownership rule: a module-level map keyed by
+  device id that every heartbeat writes and nothing evicts, so it keeps one
+  entry per sensor ever seen (the README says the fleet is replaced every
+  couple of years), next to a request body read whole into memory with no
+  size cap that belongs to review-robustness and must not come out as an
+  Unbounded finding.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

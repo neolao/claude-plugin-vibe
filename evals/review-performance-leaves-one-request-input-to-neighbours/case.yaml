@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: review-performance-leaves-one-request-input-to-neighbours
+description: >
+  Precision twin of review-performance-finds-growth-under-ordinary-traffic:
+  no map grows for the life of the process; what is left is a request body
+  read whole with no size cap (review-robustness' limit) and a client-chosen
+  page size passed to the query with no upper bound (review-web-security's
+  DoS), neither of which is an Unbounded finding of this agent.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
