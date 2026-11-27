@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: requirements-reviewer-finds-the-gap-nothing-in-the-repository-covers
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
