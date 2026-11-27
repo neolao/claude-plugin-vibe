@@ -1,0 +1,6 @@
+[window]
+width = 1280
+height = 800
+
+[autosave]
+interval_seconds = 30
