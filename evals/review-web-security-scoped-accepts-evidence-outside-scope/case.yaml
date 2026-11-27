@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: review-web-security-scoped-accepts-evidence-outside-scope
+description: >
+  Precision twin of review-web-security-scoped-finds-evidence-outside-scope:
+  the same fixtures/portal/routes/ files, but the files outside the scope
+  make each route safe (the storage helper resolves the name and refuses
+  anything outside the upload directory, the login hook covers the admin
+  area and checks the admin role there, the order renderer filters on the
+  signed-in owner). The uncapped export that sits wholly in
+  fixtures/portal/app.py must still not be reported, and no finding may be
+  anchored outside the scope.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

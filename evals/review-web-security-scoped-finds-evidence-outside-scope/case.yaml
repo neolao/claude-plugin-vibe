@@ -1,0 +1,16 @@
+schema_version: "1.1"
+name: review-web-security-scoped-finds-evidence-outside-scope
+description: >
+  Scoped twin of review-web-security-finds-violations: the agent reviews
+  fixtures/portal/routes/ only, and each route there is exploitable only
+  because of a file in fixtures/portal/, outside the scope (a storage
+  helper that joins the client's file name under the upload directory
+  with no containment, a login hook whose prefix leaves the admin area
+  bare, an order renderer that never filters on the owner). Every finding
+  must stay anchored on a file in scope; the profile route the outside
+  hook guards is not missing authentication; the headers the outside hook
+  sets are not reported; and the uncapped export that sits wholly in
+  fixtures/portal/app.py must not be reported.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
