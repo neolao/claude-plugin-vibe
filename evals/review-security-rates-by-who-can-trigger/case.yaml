@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: review-security-rates-by-who-can-trigger
+description: >
+  One CLI file with three sinks of the same shapes and three different
+  severities: a shell command built from the upload name a supplier
+  chooses (an outsider triggers it: high), a hooks file unpickled that any
+  member of the ops group edits (a local foothold: medium), and a shell
+  call on a constant command (nothing external reaches it: low at most).
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
