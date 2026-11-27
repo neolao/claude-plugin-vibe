@@ -2,7 +2,7 @@
 name: challenge
 description: Devil's advocate on a structuring decision already settled (architecture, library, strategy, plan) — one read-only sub-agent hunts the blind spot or the unconsidered alternative before the decision is executed, recorded as an ADR or not; not for an open choice still to make (that is /vibe:consult), nor for reversible or minor choices
 argument-hint: "[optional: the decision to challenge, or the path of its ADR or plan; empty takes the one under discussion in the conversation]"
-version: 1.4.0
+version: 1.5.0
 model: claude-sonnet-5-5
 ---
 
@@ -24,7 +24,7 @@ When the decision bears on an existing codebase, the account ends with **the fil
 
 Launch **one** agent (Agent tool, `subagent_type: "general-purpose"`, `model: "opus"` — the tool takes an alias, not a full model id — `run_in_background: false`, so the analysis comes back in this turn). Its prompt opens with this sentence verbatim: "Read-only: you modify no file and produce only an analysis. Do it yourself: invoke no skill and launch no agent." Then the full content of `references/advocate.md` next to this file (`${CLAUDE_PLUGIN_ROOT}/skills/challenge/references/advocate.md`), then the decision as written in Step 1.
 
-One pass: this is not an iterative quality gate, there is no retry loop.
+One pass: this is not an iterative quality gate, there is no retry loop. An advocate that returns no analysis (an error, an empty or cut-off answer, a refusal) is launched once more, with the same prompt; a second failure ends the skill without the closing block, saying what happened. You never play the advocate yourself: an objection raised by the author of the decision is not independent, and that independence is the only thing this skill adds.
 
 ## Step 3 — Report
 
