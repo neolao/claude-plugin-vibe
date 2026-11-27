@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: review-security-finds-fixture-and-test-mode-secrets
+description: >
+  Secrets that a fixture or a comment could pass off as harmless: a
+  well-formed key in tests/fixtures/postal_account.yaml that the test sends
+  to the provider's sandbox host, a test-mode Stripe key as the default of
+  an environment lookup, and a webhook secret whose comment says it was
+  rotated. .env.example holds samples that must stay unflagged.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

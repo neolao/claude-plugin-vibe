@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: review-security-accepts-placeholder-secrets
+description: >
+  Precision twin of review-security-finds-fixture-and-test-mode-secrets:
+  the same well-formed Postal key, now handed by tests/conftest.py only to
+  the stub server the suite starts on 127.0.0.1; the same webhook value,
+  now named EXAMPLE_WEBHOOK_SECRET and printed in a setup hint; every live
+  key read from the environment; .env.example holding samples. None of
+  them is a Secret finding.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
