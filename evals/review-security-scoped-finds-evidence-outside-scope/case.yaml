@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: review-security-scoped-finds-evidence-outside-scope
+description: >
+  Scoped twin of review-security-finds-cross-module-vulnerabilities: the
+  agent reviews fixtures/archiver/lib/ only, and each helper there is
+  exploitable only because of a caller in fixtures/archiver/, outside the
+  scope (a shell helper fed the partner-chosen archive name, a containment
+  check fed the partner's manifest entries, an unpickler fed the partner's
+  MANIFEST, a random id used as the share token, a permission table missing
+  the action the restore command checks). Every finding must stay anchored
+  on a file in scope, and the concatenated INSERT that sits wholly in
+  fixtures/archiver/store.py must not be reported.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

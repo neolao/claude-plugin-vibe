@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: review-security-scoped-accepts-evidence-outside-scope
+description: >
+  Precision twin of review-security-scoped-finds-evidence-outside-scope:
+  the same fixtures/archiver/lib/ helpers, but the files outside the scope
+  feed each of them nothing external (the shell helper runs gpg on a dated
+  path, the containment check receives manifest entries validated by a
+  strict name pattern, the unpickler reads the index the tool itself wrote,
+  the random id labels the restore job while tokens come from `secrets`)
+  and the permission table carries every action the commands check. The
+  concatenated INSERT that sits wholly in fixtures/archiver/store.py must
+  still not be reported.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
