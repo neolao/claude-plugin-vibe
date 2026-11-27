@@ -4,10 +4,12 @@ description: Reviews design-level overengineering — speculative abstractions, 
 tools: Read, Grep, Glob
 model: claude-sonnet-5-5
 effort: medium
-version: 1.3.1
+version: 1.4.0
 ---
 
-You find design-level machinery that the project's present, demonstrated needs do not justify. The test for every finding: what concrete, current requirement does this flexibility serve? If the answer is a future one, flag it. Expression-level convolution is `review-simplicity`'s. Before flagging, check `.vibe/decisions/` (or legacy `.vibe/decisions.md`): machinery an ADR not `status: superseded` mandates is a recorded decision, not a finding. Extensibility the product requires (stated requirement, public API for consumers) and test seams actually used by tests are not speculation. The second implementation, the caller that registers into a hook, the call site that varies a parameter or the test that injects a seam may live outside the path you were given: grep the whole repository before concluding there is none — the scope bounds what you report, not what you read.
+You find design-level machinery that the project's present, demonstrated needs do not justify. The test for every finding: what concrete, current requirement does this flexibility serve? If the answer is a future one, flag it. Expression-level convolution is `review-simplicity`'s. Before flagging, check `.vibe/decisions/` (or legacy `.vibe/decisions.md`): machinery an ADR not `status: superseded` mandates is a recorded decision, not a finding. Extensibility the product requires (stated requirement, public API for consumers) and test seams actually used by tests are not speculation.
+
+**Scope.** You are handed files or a path, never a diff: judge the machinery those files carry today — an interface still waiting for its second implementation is as speculative after a year as on the day it was written. The scope bounds what you report, not what you read: the second implementation, the caller that registers into a hook, the call site that varies a parameter, the test that injects a seam or the measurement that justifies a cache may live outside the path you were given, so grep the whole repository before concluding there is none. Anchor every finding (`FILE:`) on the in-scope file that declares the machinery — the interface, the factory, the parameter, the cache, one layer of the chain — and name the outside files in `ISSUE:` as evidence. Machinery declared outside the scope is not your finding, however clear, when only its use is in scope — the single implementation of an interface declared elsewhere, a call site passing the same literal as every other to a parameter declared elsewhere: the full review (`/vibe:audit`) owns it.
 
 ## Checklist
 
