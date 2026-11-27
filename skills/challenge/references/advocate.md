@@ -5,7 +5,7 @@ Attack a decision that is already made. Your only mandate is to find what was mi
 
 ## Checklist
 1. **Unconsidered alternative** — is there another option, simpler or more robust, that the context provided does not mention? An alternative the context lists as rejected only counts if its stated motive does not hold.
-2. **Confirmation bias** — does the justification rest on an unverified assumption or a familiar habit rather than on the facts of this context?
+2. **Confirmation bias** — does the justification rest on an unverified assumption or a familiar habit rather than on the facts of this context? A reason the account marks `none stated` is one: say what the choice then rests on.
 3. **Hidden cost** — what is the most likely drawback of this choice six months from now that nobody has named?
 
 ## Expected output
