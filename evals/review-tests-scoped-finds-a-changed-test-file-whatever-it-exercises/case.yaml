@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: review-tests-scoped-finds-a-changed-test-file-whatever-it-exercises
+description: >
+  Internal-mode scope, a list of two changed files: fixtures/billing/
+  invoice.py and fixtures/tests/test_rates.py. The test file is in scope
+  although it exercises fixtures/shipping/rates.py, outside the scope: its
+  assertion-free test must be reported on it. The untested unknown-zone
+  branch of rates.py must not be, since that source file is out of scope;
+  the untested empty-invoice branch of invoice.py must be, after reading
+  its tests in fixtures/tests/test_invoice.py, outside the path. Needs
+  --allow-tools Bash to run.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

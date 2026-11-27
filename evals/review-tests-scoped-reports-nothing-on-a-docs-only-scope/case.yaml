@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: review-tests-scoped-reports-nothing-on-a-docs-only-scope
+description: >
+  Precision twin of
+  review-tests-scoped-finds-a-changed-test-file-whatever-it-exercises: the
+  same package, but the scope is the one changed file fixtures/README.md.
+  No code and no test in scope: the agent must say so in its header,
+  run nothing, and report no finding — not the assertion-free test of
+  fixtures/tests/test_rates.py, not the untested branches of invoice.py
+  or rates.py, however visible. Needs --allow-tools Bash to run (the
+  agent must have the tool and choose not to use it).
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
