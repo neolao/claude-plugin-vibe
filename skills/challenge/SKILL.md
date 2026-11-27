@@ -1,20 +1,20 @@
 ---
 name: challenge
-description: Devil's advocate on a structuring decision already settled (architecture, library, strategy, plan) — one read-only sub-agent hunts the blind spot or the unconsidered alternative before the decision is executed or recorded as an ADR; not for reversible or minor choices
-argument-hint: "[optional: the decision to challenge; empty takes the one under discussion in the conversation]"
-version: 1.0.0
+description: Devil's advocate on a structuring decision already settled (architecture, library, strategy, plan) — one read-only sub-agent hunts the blind spot or the unconsidered alternative before the decision is executed, recorded as an ADR or not; not for reversible or minor choices
+argument-hint: "[optional: the decision to challenge, or the path of its ADR or plan; empty takes the one under discussion in the conversation]"
+version: 1.1.0
 model: claude-sonnet-5-5
 ---
 
 # /vibe:challenge — Devil's Advocate
 
-A decision that has never been attacked has not been tested, only assumed. Challenge a structuring decision that is already settled — an architecture, a library, a strategy, a plan — before it is executed or recorded in `.vibe/decisions/`. Pairs with `vibe:clarify`, which settles a plan that is still open: `clarify` closes the branches, `challenge` attacks the result. Not for a reversible or minor choice: a pass only pays for itself when the choice is costly to undo.
+A decision that has never been attacked has not been tested, only assumed. Challenge a structuring decision that is already settled — an architecture, a library, a strategy, a plan — before it is executed, whether or not it is already recorded in `.vibe/decisions/`. Pairs with `vibe:clarify`, which settles a plan that is still open: `clarify` closes the branches, `challenge` attacks the result. Not for a reversible or minor choice: a pass only pays for itself when the choice is costly to undo.
 
 Everything said to the user is written in the language the conversation is being conducted in — never a fixed one.
 
 ## Step 1 — State the decision
 
-`$ARGUMENTS` if non-empty; otherwise the decision under discussion right before this skill was invoked; if nothing usable is in context, ask ("Which decision do you want challenged?") and wait.
+`$ARGUMENTS` if non-empty; otherwise the decision under discussion right before this skill was invoked; if nothing usable is in context, ask ("Which decision do you want challenged?") and wait. An argument that names a file — an ADR under `.vibe/decisions/`, a plan — is read, and its sections give the account below; the decision is the file's, cited by its path. A path that does not exist is nothing usable: ask.
 
 Write the decision neutrally, as an account and not a plea: the option chosen, the context, the known constraints, **the factual reasons for the choice**, and **the alternatives already rejected, each with its motive**. Without the reasons the advocate has nothing to attack and invents some; without the rejected alternatives it re-proposes what was already dismissed.
 
