@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: review-web-security-rates-by-who-can-reach
+description: >
+  One public Flask app and its deploy files, with four weaknesses of
+  four different ratings: an admin delete route no guard covers (anyone
+  reaching it: high), an order route behind the login decorator that
+  never checks the owner (a signed-in account the support team hands out:
+  medium), security headers the app never sets while the nginx config in
+  the repository adds two of them (report only the ones the proxy leaves
+  out), and a counter-reset route on a metrics sidecar the compose file
+  binds to 127.0.0.1 (nothing outside the host reaches it: low at most).
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]

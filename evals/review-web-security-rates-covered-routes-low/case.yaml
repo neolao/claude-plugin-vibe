@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: review-web-security-rates-covered-routes-low
+description: >
+  Precision twin of review-web-security-rates-by-who-can-reach: the same
+  app and sidecar, but deploy/nginx.conf authenticates every /admin/
+  request through an oauth2-proxy `auth_request` before proxying it, adds
+  every security header the app leaves out, and the order route filters
+  on the signed-in owner. The counter-reset route of the sidecar bound to
+  127.0.0.1 is unchanged. No finding above low.
+context:
+  scaffold_script: fixture.sh
+  add_dirs: [fixtures]
