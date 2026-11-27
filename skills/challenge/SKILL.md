@@ -2,7 +2,7 @@
 name: challenge
 description: Devil's advocate on a structuring decision already settled (architecture, library, strategy, plan) — one read-only sub-agent hunts the blind spot or the unconsidered alternative before the decision is executed, recorded as an ADR or not; not for an open choice still to make (that is /vibe:consult), nor for reversible or minor choices
 argument-hint: "[optional: the decision to challenge, or the path of its ADR or plan; empty takes the one under discussion in the conversation]"
-version: 1.5.0
+version: 1.5.1
 model: claude-sonnet-5-5
 ---
 
@@ -38,4 +38,4 @@ End with:
 ---
 ```
 
-`Nothing found` is allowed only when the advocate concluded so itself.
+The block reports the advocate's result, not your opinion: `Blind spot found` names the objections even when you dismissed every one of them, and `Nothing found` is allowed only when the advocate concluded so itself. The skill ends with the block and edits nothing: the decision, its plan or its ADR change by the user's hand, or on their request after the report, never by this skill.
